@@ -17,8 +17,10 @@ import { Route as LojaSlugRouteImport } from './routes/loja.$slug'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminPedidosRouteImport } from './routes/_authenticated/admin.pedidos'
 import { Route as AuthenticatedAdminOnboardingRouteImport } from './routes/_authenticated/admin.onboarding'
+import { Route as AuthenticatedAdminEntregadoresRouteImport } from './routes/_authenticated/admin.entregadores'
 import { Route as AuthenticatedAdminCuponsRouteImport } from './routes/_authenticated/admin.cupons'
 import { Route as AuthenticatedAdminConfiguracoesRouteImport } from './routes/_authenticated/admin.configuracoes'
+import { Route as AuthenticatedAdminClientesRouteImport } from './routes/_authenticated/admin.clientes'
 import { Route as AuthenticatedAdminCardapioRouteImport } from './routes/_authenticated/admin.cardapio'
 
 const AuthRoute = AuthRouteImport.update({
@@ -62,6 +64,12 @@ const AuthenticatedAdminOnboardingRoute =
     path: '/admin/onboarding',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedAdminEntregadoresRoute =
+  AuthenticatedAdminEntregadoresRouteImport.update({
+    id: '/admin/entregadores',
+    path: '/admin/entregadores',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedAdminCuponsRoute =
   AuthenticatedAdminCuponsRouteImport.update({
     id: '/admin/cupons',
@@ -72,6 +80,12 @@ const AuthenticatedAdminConfiguracoesRoute =
   AuthenticatedAdminConfiguracoesRouteImport.update({
     id: '/admin/configuracoes',
     path: '/admin/configuracoes',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedAdminClientesRoute =
+  AuthenticatedAdminClientesRouteImport.update({
+    id: '/admin/clientes',
+    path: '/admin/clientes',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 const AuthenticatedAdminCardapioRoute =
@@ -87,8 +101,10 @@ export interface FileRoutesByFullPath {
   '/loja/$slug': typeof LojaSlugRoute
   '/pedido/$id': typeof PedidoIdRoute
   '/admin/cardapio': typeof AuthenticatedAdminCardapioRoute
+  '/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
   '/admin/cupons': typeof AuthenticatedAdminCuponsRoute
+  '/admin/entregadores': typeof AuthenticatedAdminEntregadoresRoute
   '/admin/onboarding': typeof AuthenticatedAdminOnboardingRoute
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
@@ -99,8 +115,10 @@ export interface FileRoutesByTo {
   '/loja/$slug': typeof LojaSlugRoute
   '/pedido/$id': typeof PedidoIdRoute
   '/admin/cardapio': typeof AuthenticatedAdminCardapioRoute
+  '/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
   '/admin/cupons': typeof AuthenticatedAdminCuponsRoute
+  '/admin/entregadores': typeof AuthenticatedAdminEntregadoresRoute
   '/admin/onboarding': typeof AuthenticatedAdminOnboardingRoute
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
@@ -113,8 +131,10 @@ export interface FileRoutesById {
   '/loja/$slug': typeof LojaSlugRoute
   '/pedido/$id': typeof PedidoIdRoute
   '/_authenticated/admin/cardapio': typeof AuthenticatedAdminCardapioRoute
+  '/_authenticated/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/_authenticated/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
   '/_authenticated/admin/cupons': typeof AuthenticatedAdminCuponsRoute
+  '/_authenticated/admin/entregadores': typeof AuthenticatedAdminEntregadoresRoute
   '/_authenticated/admin/onboarding': typeof AuthenticatedAdminOnboardingRoute
   '/_authenticated/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
@@ -127,8 +147,10 @@ export interface FileRouteTypes {
     | '/loja/$slug'
     | '/pedido/$id'
     | '/admin/cardapio'
+    | '/admin/clientes'
     | '/admin/configuracoes'
     | '/admin/cupons'
+    | '/admin/entregadores'
     | '/admin/onboarding'
     | '/admin/pedidos'
     | '/admin/'
@@ -139,8 +161,10 @@ export interface FileRouteTypes {
     | '/loja/$slug'
     | '/pedido/$id'
     | '/admin/cardapio'
+    | '/admin/clientes'
     | '/admin/configuracoes'
     | '/admin/cupons'
+    | '/admin/entregadores'
     | '/admin/onboarding'
     | '/admin/pedidos'
     | '/admin'
@@ -152,8 +176,10 @@ export interface FileRouteTypes {
     | '/loja/$slug'
     | '/pedido/$id'
     | '/_authenticated/admin/cardapio'
+    | '/_authenticated/admin/clientes'
     | '/_authenticated/admin/configuracoes'
     | '/_authenticated/admin/cupons'
+    | '/_authenticated/admin/entregadores'
     | '/_authenticated/admin/onboarding'
     | '/_authenticated/admin/pedidos'
     | '/_authenticated/admin/'
@@ -225,6 +251,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminOnboardingRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/admin/entregadores': {
+      id: '/_authenticated/admin/entregadores'
+      path: '/admin/entregadores'
+      fullPath: '/admin/entregadores'
+      preLoaderRoute: typeof AuthenticatedAdminEntregadoresRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/admin/cupons': {
       id: '/_authenticated/admin/cupons'
       path: '/admin/cupons'
@@ -239,6 +272,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminConfiguracoesRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/admin/clientes': {
+      id: '/_authenticated/admin/clientes'
+      path: '/admin/clientes'
+      fullPath: '/admin/clientes'
+      preLoaderRoute: typeof AuthenticatedAdminClientesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/admin/cardapio': {
       id: '/_authenticated/admin/cardapio'
       path: '/admin/cardapio'
@@ -251,8 +291,10 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteChildren {
   AuthenticatedAdminCardapioRoute: typeof AuthenticatedAdminCardapioRoute
+  AuthenticatedAdminClientesRoute: typeof AuthenticatedAdminClientesRoute
   AuthenticatedAdminConfiguracoesRoute: typeof AuthenticatedAdminConfiguracoesRoute
   AuthenticatedAdminCuponsRoute: typeof AuthenticatedAdminCuponsRoute
+  AuthenticatedAdminEntregadoresRoute: typeof AuthenticatedAdminEntregadoresRoute
   AuthenticatedAdminOnboardingRoute: typeof AuthenticatedAdminOnboardingRoute
   AuthenticatedAdminPedidosRoute: typeof AuthenticatedAdminPedidosRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
@@ -260,8 +302,10 @@ interface AuthenticatedRouteChildren {
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAdminCardapioRoute: AuthenticatedAdminCardapioRoute,
+  AuthenticatedAdminClientesRoute: AuthenticatedAdminClientesRoute,
   AuthenticatedAdminConfiguracoesRoute: AuthenticatedAdminConfiguracoesRoute,
   AuthenticatedAdminCuponsRoute: AuthenticatedAdminCuponsRoute,
+  AuthenticatedAdminEntregadoresRoute: AuthenticatedAdminEntregadoresRoute,
   AuthenticatedAdminOnboardingRoute: AuthenticatedAdminOnboardingRoute,
   AuthenticatedAdminPedidosRoute: AuthenticatedAdminPedidosRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
