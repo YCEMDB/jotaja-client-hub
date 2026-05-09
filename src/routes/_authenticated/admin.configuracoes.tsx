@@ -321,3 +321,58 @@ function AreasTab({ areas, restaurantId, onSaved }: { areas: DeliveryArea[]; res
     </div>
   );
 }
+
+function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
+  const [token, setToken] = useState(r.mp_access_token ?? "");
+  const [pubKey, setPubKey] = useState(r.mp_public_key ?? "");
+  const [saving, setSaving] = useState(false);
+
+  const save = async () => {
+    setSaving(true);
+    const { error } = await supabase.from("restaurants").update({
+      mp_access_token: token.trim() || null,
+      mp_public_key: pubKey.trim() || null,
+    }).eq("id", r.id);
+    setSaving(false);
+    if (error) return toast.error(error.message);
+    toast.success("Credenciais salvas");
+    onSaved();
+  };
+
+  return (
+    <Card className="p-6 space-y-5">
+      <div>
+        <h3 className="font-semibold">PIX via Mercado Pago</h3>
+        <p className="text-sm text-muted-foreground mt-1">
+          Conecte sua conta do Mercado Pago para gerar QR Codes PIX automáticos. O dinheiro cai direto na sua conta.
+        </p>
+      </div>
+
+      <div className="text-xs bg-muted/50 p-3 rounded-lg space-y-1">
+        <p className="font-semibold">Como obter:</p>
+        <ol className="list-decimal list-inside space-y-0.5 text-muted-foreground">
+          <li>Acesse <a href="https://www.mercadopago.com.br/developers/panel/app" target="_blank" className="underline">painel de desenvolvedores</a></li>
+          <li>Crie uma aplicação (tipo: Pagamentos online)</li>
+          <li>Copie o <strong>Access Token</strong> de produção e cole abaixo</li>
+        </ol>
+      </div>
+
+      <div>
+        <Label>Access Token</Label>
+        <Input type="password" value={token} onChange={(e) => setToken(e.target.value)} placeholder="APP_USR-..." className="font-mono" />
+      </div>
+      <div>
+        <Label>Public Key (opcional)</Label>
+        <Input value={pubKey} onChange={(e) => setPubKey(e.target.value)} placeholder="APP_USR-..." className="font-mono" />
+      </div>
+
+      <div className="text-xs bg-amber-50 border border-amber-200 text-amber-900 p-3 rounded-lg">
+        <strong>Webhook:</strong> configure a URL abaixo no painel do Mercado Pago (Suas integrações → Webhooks):
+        <code className="block mt-1 bg-white p-1.5 rounded font-mono break-all">{typeof window !== "undefined" ? window.location.origin : ""}/api/public/mercadopago-webhook</code>
+        Eventos: <strong>payment</strong>
+      </div>
+
+      <Button onClick={save} disabled={saving}>{saving ? "Salvando…" : "Salvar credenciais"}</Button>
+    </Card>
+  );
+}
