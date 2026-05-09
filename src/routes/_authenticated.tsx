@@ -29,15 +29,15 @@ const NAV = [
 ] as const;
 
 function AuthLayout() {
-  const { user, signOut, loading, restaurantId } = useAuth();
+  const { user, signOut, loading, restaurantId, isSuperAdmin, restaurants, selectRestaurant } = useAuth();
   const nav = useNavigate();
 
   useEffect(() => {
     if (!loading && !user) nav({ to: "/auth" });
-    if (!loading && user && !restaurantId && window.location.pathname !== "/admin/onboarding") {
+    if (!loading && user && !isSuperAdmin && !restaurantId && window.location.pathname !== "/admin/onboarding") {
       nav({ to: "/admin/onboarding" });
     }
-  }, [user, loading, restaurantId, nav]);
+  }, [user, loading, restaurantId, isSuperAdmin, nav]);
 
   if (loading) {
     return <div className="min-h-screen grid place-items-center">Carregando…</div>;
@@ -50,7 +50,34 @@ function AuthLayout() {
           <img src={logo} alt="" className="h-8 w-8 rounded-md bg-white p-0.5" />
           <span className="font-bold text-lg">Comanda</span>
         </div>
-        <nav className="flex-1 p-3 space-y-1">
+
+        {(isSuperAdmin || restaurants.length > 1) && restaurants.length > 0 && (
+          <div className="p-3 border-b border-primary-foreground/10">
+            <label className="text-[10px] uppercase tracking-wider text-primary-foreground/60 px-1">Restaurante ativo</label>
+            <Select value={restaurantId ?? ""} onValueChange={selectRestaurant}>
+              <SelectTrigger className="mt-1 bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground">
+                <SelectValue placeholder="Selecionar..." />
+              </SelectTrigger>
+              <SelectContent>
+                {restaurants.map((r) => (
+                  <SelectItem key={r.id} value={r.id}>{r.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+
+        <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+          {isSuperAdmin && (
+            <Link
+              to="/admin/super"
+              activeProps={{ className: "bg-accent text-accent-foreground" }}
+              className="flex items-center gap-3 px-3 py-2 rounded-md text-sm hover:bg-primary-foreground/10 transition-colors mb-2 border border-accent/40"
+            >
+              <ShieldCheck className="h-4 w-4" />
+              Super-Admin
+            </Link>
+          )}
           {NAV.map((item) => (
             <Link
               key={item.to}
