@@ -59,7 +59,7 @@ const NEXT_STATUS: Partial<Record<OrderStatus, OrderStatus>> = {
   confirmed: "preparing",
   preparing: "ready",
   ready: "out_for_delivery",
-  delivering: "delivered",
+  out_for_delivery: "delivered",
 };
 
 function PedidosPage() {
