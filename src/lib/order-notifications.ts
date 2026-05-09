@@ -1,11 +1,27 @@
 // Notificações de novo pedido: som + Notification API (sem service worker)
 
-export async function ensureNotificationPermission(): Promise<boolean> {
-  if (typeof window === "undefined" || !("Notification" in window)) return false;
-  if (Notification.permission === "granted") return true;
-  if (Notification.permission === "denied") return false;
-  const res = await Notification.requestPermission();
-  return res === "granted";
+export function isInIframe(): boolean {
+  try { return typeof window !== "undefined" && window.self !== window.top; } catch { return true; }
+}
+
+export type NotifResult = "granted" | "denied" | "unsupported" | "iframe-blocked" | "error";
+
+export async function ensureNotificationPermission(): Promise<NotifResult> {
+  if (typeof window === "undefined" || !("Notification" in window)) return "unsupported";
+  if (Notification.permission === "granted") return "granted";
+  if (Notification.permission === "denied") return "denied";
+  try {
+    // Em iframes sem allow="notifications", requestPermission pode rejeitar/travar
+    const res = await Promise.race([
+      Notification.requestPermission(),
+      new Promise<"timeout">((resolve) => setTimeout(() => resolve("timeout"), 4000)),
+    ]);
+    if (res === "timeout") return isInIframe() ? "iframe-blocked" : "error";
+    return res === "granted" ? "granted" : "denied";
+  } catch (e) {
+    console.warn("requestPermission failed", e);
+    return isInIframe() ? "iframe-blocked" : "error";
+  }
 }
 
 let audioCtx: AudioContext | null = null;
