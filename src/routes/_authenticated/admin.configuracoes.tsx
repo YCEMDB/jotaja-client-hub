@@ -67,12 +67,14 @@ function ConfigPage() {
           <TabsTrigger value="aparencia">Aparência</TabsTrigger>
           <TabsTrigger value="horarios">Horários</TabsTrigger>
           <TabsTrigger value="entrega">Áreas de entrega</TabsTrigger>
+          <TabsTrigger value="pagamentos">Pagamentos</TabsTrigger>
         </TabsList>
 
         <TabsContent value="geral"><GeralTab r={r} onSaved={load} /></TabsContent>
         <TabsContent value="aparencia"><AparenciaTab r={r} restaurantId={restaurantId} onSaved={load} /></TabsContent>
         <TabsContent value="horarios"><HorariosTab r={r} onSaved={load} /></TabsContent>
         <TabsContent value="entrega"><AreasTab areas={areas} restaurantId={restaurantId} onSaved={load} /></TabsContent>
+        <TabsContent value="pagamentos"><PagamentosTab r={r} onSaved={load} /></TabsContent>
       </Tabs>
     </div>
   );
