@@ -224,11 +224,16 @@ function PedidosPage() {
                       <p className="text-xs text-muted-foreground truncate">{o.type} · {o.payment}</p>
                       <div className="flex items-center justify-between mt-2">
                         <span className="font-semibold">R$ {Number(o.total).toFixed(2)}</span>
-                        {NEXT_STATUS[o.status] && (
-                          <Button size="sm" variant="ghost" className="h-7 px-2" onClick={(e) => { e.stopPropagation(); advance(o); }}>
-                            <ChevronRight className="h-4 w-4" />
+                        <div className="flex items-center gap-1">
+                          <Button size="sm" variant="ghost" className="h-7 w-7 p-0" title="Imprimir" onClick={(e) => { e.stopPropagation(); printOrder(o); }}>
+                            <Printer className="h-3.5 w-3.5" />
                           </Button>
-                        )}
+                          {NEXT_STATUS[o.status] && (
+                            <Button size="sm" variant="ghost" className="h-7 w-7 p-0" onClick={(e) => { e.stopPropagation(); advance(o); }}>
+                              <ChevronRight className="h-4 w-4" />
+                            </Button>
+                          )}
+                        </div>
                       </div>
                     </Card>
                   ))}
