@@ -382,3 +382,88 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
     </Card>
   );
 }
+
+function StoreLinkCard({ slug }: { slug: string | null }) {
+  const [copied, setCopied] = useState(false);
+  const [qrOpen, setQrOpen] = useState(false);
+
+  if (!slug) {
+    return (
+      <Card className="p-6 mb-6 bg-muted/40 border-dashed">
+        <p className="text-sm text-muted-foreground">
+          Defina o <strong>slug</strong> da sua loja na aba "Geral" abaixo para gerar o link público do cardápio.
+        </p>
+      </Card>
+    );
+  }
+
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
+  const url = `${origin}/loja/${slug}`;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=10&data=${encodeURIComponent(url)}`;
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      toast.success("Link copiado!");
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error("Não foi possível copiar");
+    }
+  };
+
+  return (
+    <>
+      <Card className="p-6 mb-6 bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
+        <div className="flex items-start gap-4 flex-wrap">
+          <div className="flex-1 min-w-[260px]">
+            <h3 className="font-semibold text-lg mb-1 flex items-center gap-2">
+              🔗 Link da sua loja
+            </h3>
+            <p className="text-sm text-muted-foreground mb-3">
+              Compartilhe este link com seus clientes (WhatsApp, Instagram, QR code na mesa).
+            </p>
+            <div className="flex items-center gap-2 bg-background border rounded-md px-3 py-2 font-mono text-sm break-all">
+              {url}
+            </div>
+          </div>
+          <div className="flex flex-col gap-2 min-w-[160px]">
+            <Button onClick={copy} variant={copied ? "secondary" : "default"}>
+              {copied ? <><Check className="h-4 w-4 mr-2" />Copiado</> : <><Copy className="h-4 w-4 mr-2" />Copiar link</>}
+            </Button>
+            <Button variant="outline" onClick={() => setQrOpen(true)}>
+              <QrCode className="h-4 w-4 mr-2" /> QR Code
+            </Button>
+            <Button variant="ghost" size="sm" asChild>
+              <a href={url} target="_blank" rel="noopener noreferrer">
+                <ExternalLink className="h-4 w-4 mr-2" /> Abrir loja
+              </a>
+            </Button>
+          </div>
+        </div>
+      </Card>
+
+      <Dialog open={qrOpen} onOpenChange={setQrOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>QR Code da sua loja</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col items-center gap-4">
+            <img src={qrUrl} alt="QR Code da loja" className="w-full max-w-[320px] aspect-square border rounded-md" />
+            <p className="text-xs text-center text-muted-foreground">
+              Imprima e cole nas mesas, balcão ou cardápio físico. Os clientes escaneiam e acessam o cardápio digital.
+            </p>
+            <div className="flex gap-2 w-full">
+              <Button variant="outline" className="flex-1" asChild>
+                <a href={qrUrl} download={`qrcode-${slug}.png`} target="_blank" rel="noopener noreferrer">
+                  Baixar PNG
+                </a>
+              </Button>
+              <Button className="flex-1" onClick={() => window.print()}>Imprimir</Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
