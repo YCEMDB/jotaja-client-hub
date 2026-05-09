@@ -44,7 +44,7 @@ export function Header() {
               <span>(21) 2042-2913</span>
             </a>
             <Button size="lg" className="rounded-full font-bold bg-accent text-accent-foreground hover:bg-accent/90 shadow-accent-lg" asChild>
-              <a href="#cadastro"><Sparkles className="w-4 h-4 mr-1.5" /> Testar grátis</a>
+              <a href="/auth"><Sparkles className="w-4 h-4 mr-1.5" /> Testar grátis</a>
             </Button>
           </div>
 
@@ -69,7 +69,7 @@ export function Header() {
                 {item.label}
               </a>
             ))}
-            <Button asChild className="mt-2 rounded-full bg-accent text-accent-foreground hover:bg-accent/90"><a href="#cadastro">Testar grátis 14 dias</a></Button>
+            <Button asChild className="mt-2 rounded-full bg-accent text-accent-foreground hover:bg-accent/90"><a href="/auth">Testar grátis 14 dias</a></Button>
           </div>
         )}
       </div>

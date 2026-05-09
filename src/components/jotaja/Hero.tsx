@@ -43,7 +43,7 @@ export function Hero() {
 
             <div className="flex flex-wrap gap-3 mb-8">
               <Button size="lg" className="h-14 rounded-full font-bold text-base px-7 bg-accent text-accent-foreground hover:bg-accent/90 shadow-accent-lg animate-pulse-glow" asChild>
-                <a href="#cadastro">
+                <a href="/auth">
                   Testar grátis por 14 dias <ArrowRight className="ml-2 w-5 h-5" />
                 </a>
               </Button>
