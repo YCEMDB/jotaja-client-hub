@@ -14,7 +14,7 @@ import {
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { Pencil, Trash2, Plus, Upload, ImageIcon } from "lucide-react";
+import { Pencil, Trash2, Plus, Upload, ImageIcon, Sparkles, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/admin/cardapio")({
@@ -85,6 +85,7 @@ function CardapioPage() {
           <p className="text-muted-foreground">Gerencie categorias e produtos</p>
         </div>
         <div className="flex gap-2">
+          <AISuggestButton restaurantId={restaurantId} />
           <Button variant="outline" onClick={() => { setEditCat(null); setCatOpen(true); }}>
             <Plus className="h-4 w-4 mr-2" /> Categoria
           </Button>
@@ -366,7 +367,14 @@ function ProductDialog({
             </div>
           </div>
           <div>
-            <Label>Descrição</Label>
+            <div className="flex items-center justify-between">
+              <Label>Descrição</Label>
+              <AIDescriptionButton
+                productName={name}
+                price={price}
+                onResult={setDescription}
+              />
+            </div>
             <Textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} />
           </div>
           <div className="grid grid-cols-2 gap-3">
@@ -390,5 +398,75 @@ function ProductDialog({
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  );
+}
+
+function AISuggestButton({ restaurantId }: { restaurantId: string }) {
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [content, setContent] = useState("");
+
+  const generate = async () => {
+    setLoading(true);
+    setContent("");
+    const { data: rest } = await supabase.from("restaurants").select("name,description").eq("id", restaurantId).maybeSingle();
+    const { data, error } = await supabase.functions.invoke("ai-menu-suggestions", {
+      body: { mode: "categories", context: { name: rest?.name ?? "", description: rest?.description ?? "" } },
+    });
+    setLoading(false);
+    if (error) return toast.error(error.message);
+    if ((data as any)?.error) return toast.error((data as any).error);
+    setContent((data as any)?.content ?? "");
+  };
+
+  return (
+    <>
+      <Button variant="outline" onClick={() => { setOpen(true); generate(); }}>
+        <Sparkles className="h-4 w-4 mr-2" /> Sugerir com IA
+      </Button>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2"><Sparkles className="h-5 w-5 text-amber-500" /> Sugestões de cardápio</DialogTitle>
+          </DialogHeader>
+          <div className="min-h-[200px] max-h-[60vh] overflow-y-auto bg-muted/40 p-4 rounded-md text-sm whitespace-pre-wrap">
+            {loading ? (
+              <div className="flex items-center gap-2 text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" /> Gerando sugestões…</div>
+            ) : content || <span className="text-muted-foreground">Sem conteúdo</span>}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={generate} disabled={loading}>Gerar novamente</Button>
+            <Button onClick={() => setOpen(false)}>Fechar</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
+
+function AIDescriptionButton({ productName, price, onResult }: { productName: string; price: string; onResult: (s: string) => void }) {
+  const [loading, setLoading] = useState(false);
+
+  const generate = async () => {
+    if (!productName.trim()) return toast.error("Preencha o nome do produto primeiro");
+    setLoading(true);
+    const { data, error } = await supabase.functions.invoke("ai-menu-suggestions", {
+      body: { mode: "description", context: { name: productName, price } },
+    });
+    setLoading(false);
+    if (error) return toast.error(error.message);
+    if ((data as any)?.error) return toast.error((data as any).error);
+    const text = ((data as any)?.content ?? "").trim();
+    if (text) {
+      onResult(text);
+      toast.success("Descrição gerada");
+    }
+  };
+
+  return (
+    <Button type="button" variant="ghost" size="sm" onClick={generate} disabled={loading} className="h-7 text-xs">
+      {loading ? <Loader2 className="h-3 w-3 animate-spin mr-1" /> : <Sparkles className="h-3 w-3 mr-1 text-amber-500" />}
+      Gerar com IA
+    </Button>
   );
 }

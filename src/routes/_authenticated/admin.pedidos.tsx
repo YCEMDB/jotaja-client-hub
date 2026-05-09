@@ -8,7 +8,9 @@ import { Badge } from "@/components/ui/badge";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
-import { Clock, MapPin, Phone, CreditCard, ChevronRight } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { Clock, MapPin, Phone, CreditCard, ChevronRight, MessageCircle, Truck } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/admin/pedidos")({
@@ -33,7 +35,10 @@ type Order = {
   total: number;
   notes: string | null;
   created_at: string;
+  driver_id: string | null;
 };
+
+type Driver = { id: string; name: string; phone: string | null };
 
 type OrderItem = {
   id: string;
@@ -67,6 +72,7 @@ function PedidosPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [selected, setSelected] = useState<Order | null>(null);
   const [items, setItems] = useState<OrderItem[]>([]);
+  const [drivers, setDrivers] = useState<Driver[]>([]);
 
   const load = async () => {
     if (!restaurantId) return;
@@ -84,6 +90,10 @@ function PedidosPage() {
   useEffect(() => {
     load();
     if (!restaurantId) return;
+    (async () => {
+      const { data } = await supabase.from("delivery_drivers").select("id,name,phone").eq("restaurant_id", restaurantId).eq("is_active", true);
+      setDrivers((data ?? []) as Driver[]);
+    })();
     const ch = supabase
       .channel("orders-kanban")
       .on("postgres_changes",
@@ -113,6 +123,31 @@ function PedidosPage() {
     if (!confirm(`Cancelar pedido #${o.order_number}?`)) return;
     await supabase.from("orders").update({ status: "cancelled" as OrderStatus }).eq("id", o.id);
     setSelected(null);
+  };
+
+  const assignDriver = async (driverId: string) => {
+    if (!selected) return;
+    const value = driverId === "none" ? null : driverId;
+    const { error } = await supabase.from("orders").update({ driver_id: value }).eq("id", selected.id);
+    if (error) return toast.error(error.message);
+    setSelected({ ...selected, driver_id: value });
+    toast.success(value ? "Entregador atribuído" : "Entregador removido");
+  };
+
+  const notifyWhatsApp = (o: Order) => {
+    const statusMsg: Record<OrderStatus, string> = {
+      pending: "recebemos seu pedido e estamos avaliando",
+      confirmed: "seu pedido foi confirmado e já vai para a cozinha",
+      preparing: "seu pedido está em preparo",
+      ready: "seu pedido está pronto",
+      out_for_delivery: "seu pedido saiu para entrega",
+      delivered: "seu pedido foi entregue. Obrigado!",
+      cancelled: "infelizmente seu pedido foi cancelado",
+    };
+    const text = `Olá ${o.customer_name}, ${statusMsg[o.status]}. Pedido #${o.order_number} — Total R$ ${Number(o.total).toFixed(2)}`;
+    const phone = o.customer_phone.replace(/\D/g, "");
+    const fullPhone = phone.startsWith("55") ? phone : `55${phone}`;
+    window.open(`https://wa.me/${fullPhone}?text=${encodeURIComponent(text)}`, "_blank");
   };
 
   if (!restaurantId) return <div className="p-8">Configure seu restaurante primeiro.</div>;
@@ -215,10 +250,26 @@ function PedidosPage() {
                   </div>
                 )}
 
+                {selected.type === "delivery" && (
+                  <div className="border-t pt-3">
+                    <Label className="text-xs flex items-center gap-1 mb-1.5"><Truck className="h-3.5 w-3.5" />Entregador</Label>
+                    <Select value={selected.driver_id ?? "none"} onValueChange={assignDriver}>
+                      <SelectTrigger><SelectValue placeholder="Atribuir entregador..." /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">— Sem entregador —</SelectItem>
+                        {drivers.map((d) => <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+
                 <div className="flex gap-2 pt-2">
-                  <Button variant="outline" className="flex-1" onClick={() => cancel(selected)}>Cancelar</Button>
+                  <Button variant="outline" size="sm" onClick={() => notifyWhatsApp(selected)}>
+                    <MessageCircle className="h-4 w-4 mr-1" />WhatsApp
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={() => cancel(selected)}>Cancelar</Button>
                   {NEXT_STATUS[selected.status] && (
-                    <Button className="flex-1" onClick={() => advance(selected)}>
+                    <Button size="sm" className="flex-1" onClick={() => advance(selected)}>
                       Avançar → {COLUMNS.find(c => c.key === NEXT_STATUS[selected.status])?.label}
                     </Button>
                   )}
