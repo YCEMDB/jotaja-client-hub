@@ -126,10 +126,24 @@ function PedidosPage() {
   }, [restaurantId]);
 
   const enableNotifications = async () => {
-    const ok = await ensureNotificationPermission();
-    setNotifEnabled(ok);
+    // Tenta liberar áudio (gesto do usuário) mesmo se notificações falharem
     playOrderBeep();
-    toast[ok ? "success" : "error"](ok ? "Notificações ativadas" : "Permissão negada");
+    const result = await ensureNotificationPermission();
+    if (result === "granted") {
+      setNotifEnabled(true);
+      toast.success("Notificações ativadas — você ouvirá um alerta a cada novo pedido");
+      return;
+    }
+    setNotifEnabled(false);
+    if (result === "iframe-blocked") {
+      toast.error("Abra esta página em uma nova aba para ativar notificações do navegador (o preview embutido bloqueia). O som de alerta continua funcionando.", { duration: 8000 });
+    } else if (result === "denied") {
+      toast.error("Permissão negada. Habilite notificações nas configurações do navegador para este site.");
+    } else if (result === "unsupported") {
+      toast.error("Seu navegador não suporta notificações. O som de alerta continua funcionando.");
+    } else {
+      toast.error("Não foi possível ativar notificações. O som de alerta continua funcionando.");
+    }
   };
 
   const openOrder = async (o: Order) => {
