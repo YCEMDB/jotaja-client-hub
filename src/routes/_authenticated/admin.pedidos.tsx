@@ -275,7 +275,17 @@ function PedidosPage() {
                       </span>
                     </p>
                   )}
-                  <p className="flex items-center gap-2 text-muted-foreground"><CreditCard className="h-3.5 w-3.5" />{selected.payment}</p>
+                  <p className="flex items-center gap-2 text-muted-foreground">
+                    <CreditCard className="h-3.5 w-3.5" />{selected.payment}
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded font-semibold ${selected.payment_status === "paid" ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700"}`}>
+                      {selected.payment_status === "paid" ? "PAGO" : "AGUARDANDO"}
+                    </span>
+                    {selected.payment_status !== "paid" && (
+                      <Button size="sm" variant="ghost" className="h-6 text-xs" onClick={() => markPaid(selected)}>
+                        Marcar pago
+                      </Button>
+                    )}
+                  </p>
                 </div>
 
                 <div className="border-t pt-3 space-y-2">
