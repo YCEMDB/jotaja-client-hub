@@ -163,6 +163,15 @@ function PedidosPage() {
     setSelected(null);
   };
 
+  const markPaid = async (o: Order) => {
+    const { error } = await supabase.from("orders")
+      .update({ payment_status: "paid", paid_at: new Date().toISOString() })
+      .eq("id", o.id);
+    if (error) return toast.error(error.message);
+    toast.success("Pagamento confirmado");
+    if (selected?.id === o.id) setSelected({ ...o, payment_status: "paid" });
+  };
+
   const assignDriver = async (driverId: string) => {
     if (!selected) return;
     const value = driverId === "none" ? null : driverId;
