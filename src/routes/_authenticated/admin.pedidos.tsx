@@ -16,7 +16,7 @@ export const Route = createFileRoute("/_authenticated/admin/pedidos")({
   head: () => ({ meta: [{ title: "Pedidos — Comanda" }] }),
 });
 
-type OrderStatus = "pending" | "confirmed" | "preparing" | "ready" | "delivering" | "delivered" | "cancelled";
+type OrderStatus = "pending" | "confirmed" | "preparing" | "ready" | "out_for_delivery" | "delivered" | "cancelled";
 
 type Order = {
   id: string;
@@ -50,7 +50,7 @@ const COLUMNS: { key: OrderStatus; label: string; color: string }[] = [
   { key: "confirmed", label: "Confirmados", color: "bg-blue-500" },
   { key: "preparing", label: "Em preparo", color: "bg-orange-500" },
   { key: "ready", label: "Prontos", color: "bg-purple-500" },
-  { key: "delivering", label: "Saiu p/ entrega", color: "bg-cyan-500" },
+  { key: "out_for_delivery", label: "Saiu p/ entrega", color: "bg-cyan-500" },
   { key: "delivered", label: "Entregues", color: "bg-green-500" },
 ];
 
@@ -58,7 +58,7 @@ const NEXT_STATUS: Partial<Record<OrderStatus, OrderStatus>> = {
   pending: "confirmed",
   confirmed: "preparing",
   preparing: "ready",
-  ready: "delivering",
+  ready: "out_for_delivery",
   delivering: "delivered",
 };
 
