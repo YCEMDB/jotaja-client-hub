@@ -73,14 +73,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Jotajá — Pedidos | Portal do Cliente" },
+      { name: "description", content: "Plataforma de gestão de pedidos delivery via WhatsApp para restaurantes." },
+      { name: "author", content: "Jotajá" },
+      { property: "og:title", content: "Jotajá — Pedidos | Portal do Cliente" },
+      { property: "og:description", content: "Tenha sua própria base de clientes no delivery, sem comissão." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       {
