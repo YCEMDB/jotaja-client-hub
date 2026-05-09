@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Card } from "@/components/ui/card";
@@ -10,8 +10,10 @@ import {
 } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Clock, MapPin, Phone, CreditCard, ChevronRight, MessageCircle, Truck } from "lucide-react";
+import { Clock, MapPin, Phone, CreditCard, ChevronRight, MessageCircle, Truck, Printer, Bell, BellOff } from "lucide-react";
 import { toast } from "sonner";
+import { printReceipt } from "@/lib/print-receipt";
+import { ensureNotificationPermission, playOrderBeep, showOrderNotification } from "@/lib/order-notifications";
 
 export const Route = createFileRoute("/_authenticated/admin/pedidos")({
   component: PedidosPage,
@@ -73,6 +75,10 @@ function PedidosPage() {
   const [selected, setSelected] = useState<Order | null>(null);
   const [items, setItems] = useState<OrderItem[]>([]);
   const [drivers, setDrivers] = useState<Driver[]>([]);
+  const [restaurant, setRestaurant] = useState<{ name: string; phone: string | null } | null>(null);
+  const [notifEnabled, setNotifEnabled] = useState(false);
+  const knownIdsRef = useRef<Set<string>>(new Set());
+  const initializedRef = useRef(false);
 
   const load = async () => {
     if (!restaurantId) return;
@@ -84,16 +90,30 @@ function PedidosPage() {
       .eq("restaurant_id", restaurantId)
       .gte("created_at", since.toISOString())
       .order("created_at", { ascending: false });
-    setOrders((data ?? []) as Order[]);
+    const list = (data ?? []) as Order[];
+    if (initializedRef.current) {
+      const newOnes = list.filter((o) => !knownIdsRef.current.has(o.id) && o.status === "pending");
+      newOnes.forEach((o) => {
+        playOrderBeep();
+        showOrderNotification(o.order_number, o.customer_name, o.total);
+        toast.success(`🔔 Novo pedido #${o.order_number} — ${o.customer_name}`);
+      });
+    }
+    knownIdsRef.current = new Set(list.map((o) => o.id));
+    initializedRef.current = true;
+    setOrders(list);
   };
 
   useEffect(() => {
     load();
     if (!restaurantId) return;
     (async () => {
-      const { data } = await supabase.from("delivery_drivers").select("id,name,phone").eq("restaurant_id", restaurantId).eq("is_active", true);
-      setDrivers((data ?? []) as Driver[]);
+      const { data: drv } = await supabase.from("delivery_drivers").select("id,name,phone").eq("restaurant_id", restaurantId).eq("is_active", true);
+      setDrivers((drv ?? []) as Driver[]);
+      const { data: rest } = await supabase.from("restaurants").select("name,phone").eq("id", restaurantId).maybeSingle();
+      if (rest) setRestaurant(rest as any);
     })();
+    setNotifEnabled(typeof Notification !== "undefined" && Notification.permission === "granted");
     const ch = supabase
       .channel("orders-kanban")
       .on("postgres_changes",
@@ -104,10 +124,27 @@ function PedidosPage() {
     return () => { supabase.removeChannel(ch); };
   }, [restaurantId]);
 
+  const enableNotifications = async () => {
+    const ok = await ensureNotificationPermission();
+    setNotifEnabled(ok);
+    playOrderBeep();
+    toast[ok ? "success" : "error"](ok ? "Notificações ativadas" : "Permissão negada");
+  };
+
   const openOrder = async (o: Order) => {
     setSelected(o);
     const { data } = await supabase.from("order_items").select("*").eq("order_id", o.id);
     setItems((data ?? []) as OrderItem[]);
+  };
+
+  const printOrder = async (o: Order) => {
+    const { data } = await supabase.from("order_items").select("*").eq("order_id", o.id);
+    printReceipt({
+      restaurantName: restaurant?.name ?? "Comanda",
+      restaurantPhone: restaurant?.phone ?? null,
+      order: o as any,
+      items: (data ?? []) as any,
+    });
   };
 
   const advance = async (o: Order) => {
@@ -154,9 +191,14 @@ function PedidosPage() {
 
   return (
     <div className="p-6 h-screen flex flex-col">
-      <div className="mb-4 shrink-0">
-        <h1 className="text-3xl font-bold">Pedidos</h1>
-        <p className="text-muted-foreground">Acompanhe os pedidos em tempo real (últimas 24h)</p>
+      <div className="mb-4 shrink-0 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold">Pedidos</h1>
+          <p className="text-muted-foreground">Acompanhe os pedidos em tempo real (últimas 24h)</p>
+        </div>
+        <Button variant={notifEnabled ? "secondary" : "default"} size="sm" onClick={enableNotifications}>
+          {notifEnabled ? <><Bell className="h-4 w-4 mr-2" />Notificações ativas</> : <><BellOff className="h-4 w-4 mr-2" />Ativar alertas de novos pedidos</>}
+        </Button>
       </div>
 
       <div className="flex-1 overflow-x-auto">
@@ -182,11 +224,16 @@ function PedidosPage() {
                       <p className="text-xs text-muted-foreground truncate">{o.type} · {o.payment}</p>
                       <div className="flex items-center justify-between mt-2">
                         <span className="font-semibold">R$ {Number(o.total).toFixed(2)}</span>
-                        {NEXT_STATUS[o.status] && (
-                          <Button size="sm" variant="ghost" className="h-7 px-2" onClick={(e) => { e.stopPropagation(); advance(o); }}>
-                            <ChevronRight className="h-4 w-4" />
+                        <div className="flex items-center gap-1">
+                          <Button size="sm" variant="ghost" className="h-7 w-7 p-0" title="Imprimir" onClick={(e) => { e.stopPropagation(); printOrder(o); }}>
+                            <Printer className="h-3.5 w-3.5" />
                           </Button>
-                        )}
+                          {NEXT_STATUS[o.status] && (
+                            <Button size="sm" variant="ghost" className="h-7 w-7 p-0" onClick={(e) => { e.stopPropagation(); advance(o); }}>
+                              <ChevronRight className="h-4 w-4" />
+                            </Button>
+                          )}
+                        </div>
                       </div>
                     </Card>
                   ))}
@@ -263,7 +310,10 @@ function PedidosPage() {
                   </div>
                 )}
 
-                <div className="flex gap-2 pt-2">
+                <div className="flex flex-wrap gap-2 pt-2">
+                  <Button variant="outline" size="sm" onClick={() => printOrder(selected)}>
+                    <Printer className="h-4 w-4 mr-1" />Imprimir
+                  </Button>
                   <Button variant="outline" size="sm" onClick={() => notifyWhatsApp(selected)}>
                     <MessageCircle className="h-4 w-4 mr-1" />WhatsApp
                   </Button>
