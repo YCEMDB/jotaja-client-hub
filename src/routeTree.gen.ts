@@ -22,8 +22,6 @@ import { Route as AuthenticatedAdminCuponsRouteImport } from './routes/_authenti
 import { Route as AuthenticatedAdminConfiguracoesRouteImport } from './routes/_authenticated/admin.configuracoes'
 import { Route as AuthenticatedAdminClientesRouteImport } from './routes/_authenticated/admin.clientes'
 import { Route as AuthenticatedAdminCardapioRouteImport } from './routes/_authenticated/admin.cardapio'
-import { Route as AuthenticatedAdminEntregadoresRouteImport } from './routes/_authenticated/admin.entregadores'
-import { Route as AuthenticatedAdminClientesRouteImport } from './routes/_authenticated/admin.clientes'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -94,18 +92,6 @@ const AuthenticatedAdminCardapioRoute =
   AuthenticatedAdminCardapioRouteImport.update({
     id: '/admin/cardapio',
     path: '/admin/cardapio',
-    getParentRoute: () => AuthenticatedRoute,
-  } as any)
-const AuthenticatedAdminEntregadoresRoute =
-  AuthenticatedAdminEntregadoresRouteImport.update({
-    id: '/admin/entregadores',
-    path: '/admin/entregadores',
-    getParentRoute: () => AuthenticatedRoute,
-  } as any)
-const AuthenticatedAdminClientesRoute =
-  AuthenticatedAdminClientesRouteImport.update({
-    id: '/admin/clientes',
-    path: '/admin/clientes',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 
