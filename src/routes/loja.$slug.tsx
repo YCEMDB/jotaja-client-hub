@@ -342,6 +342,16 @@ function ProductSheet({ product, onClose, onAdd, brand }: {
   );
 }
 
+type DeliveryArea = {
+  id: string; neighborhood: string; fee: number;
+  min_order: number | null; estimated_minutes: number | null; is_active: boolean | null;
+};
+type Coupon = {
+  id: string; code: string; type: "percentage" | "fixed" | "free_shipping"; value: number;
+  min_order: number | null; max_uses: number | null; uses_count: number | null;
+  expires_at: string | null; is_active: boolean | null;
+};
+
 function CheckoutDialog({
   open, onOpenChange, restaurant, cart, subtotal, onSuccess,
 }: {
@@ -356,34 +366,70 @@ function CheckoutDialog({
   const [phone, setPhone] = useState("");
   const [street, setStreet] = useState("");
   const [number, setNumber] = useState("");
-  const [neighborhood, setNeighborhood] = useState("");
+  const [areaId, setAreaId] = useState<string>("");
   const [complement, setComplement] = useState("");
   const [payment, setPayment] = useState<"cash" | "pix" | "credit_card" | "debit_card">("pix");
   const [changeFor, setChangeFor] = useState("");
   const [notes, setNotes] = useState("");
+  const [couponCode, setCouponCode] = useState("");
+  const [coupon, setCoupon] = useState<Coupon | null>(null);
+  const [areas, setAreas] = useState<DeliveryArea[]>([]);
   const [submitting, setSubmitting] = useState(false);
+  const [validatingCoupon, setValidatingCoupon] = useState(false);
 
-  const total = subtotal; // delivery fee TBD per area in fase posterior
+  useEffect(() => {
+    if (!open) return;
+    supabase.from("delivery_areas")
+      .select("*").eq("restaurant_id", restaurant.id).eq("is_active", true).order("neighborhood")
+      .then(({ data }) => setAreas((data ?? []) as DeliveryArea[]));
+  }, [open, restaurant.id]);
+
+  const area = areas.find((a) => a.id === areaId) ?? null;
+  const deliveryFee = orderType === "delivery" ? Number(area?.fee ?? 0) : 0;
+
+  const discount = (() => {
+    if (!coupon) return 0;
+    if (coupon.type === "percentage") return Math.min(subtotal, (subtotal * Number(coupon.value)) / 100);
+    if (coupon.type === "fixed") return Math.min(subtotal, Number(coupon.value));
+    if (coupon.type === "free_shipping") return Math.min(deliveryFee, deliveryFee);
+    return 0;
+  })();
+  const freeShipping = coupon?.type === "free_shipping";
+  const finalShipping = freeShipping ? 0 : deliveryFee;
+  const total = Math.max(0, subtotal + finalShipping - (coupon?.type === "free_shipping" ? 0 : discount));
+
+  const applyCoupon = async () => {
+    const code = couponCode.trim().toUpperCase();
+    if (!code) return;
+    setValidatingCoupon(true);
+    const { data } = await supabase
+      .from("coupons").select("*")
+      .eq("restaurant_id", restaurant.id).eq("code", code).eq("is_active", true).maybeSingle();
+    setValidatingCoupon(false);
+    if (!data) return toast.error("Cupom inválido");
+    if (data.expires_at && new Date(data.expires_at) < new Date()) return toast.error("Cupom expirado");
+    if (data.max_uses && (data.uses_count ?? 0) >= data.max_uses) return toast.error("Cupom esgotado");
+    if (Number(data.min_order ?? 0) > subtotal) return toast.error(`Cupom requer pedido mínimo de R$ ${Number(data.min_order).toFixed(2)}`);
+    setCoupon(data as Coupon);
+    toast.success("Cupom aplicado!");
+  };
 
   const submit = async () => {
     if (!name.trim() || !phone.trim()) return toast.error("Preencha nome e telefone");
-    if (orderType === "delivery" && (!street || !number || !neighborhood)) {
-      return toast.error("Preencha o endereço de entrega");
+    if (orderType === "delivery") {
+      if (!street || !number) return toast.error("Preencha o endereço");
+      if (areas.length > 0 && !area) return toast.error("Selecione o bairro");
+      if (area && Number(area.min_order ?? 0) > subtotal) {
+        return toast.error(`Pedido mínimo para ${area.neighborhood}: R$ ${Number(area.min_order).toFixed(2)}`);
+      }
     }
     setSubmitting(true);
 
-    // 1) upsert customer (anonymous via RLS public_insert)
     const { data: cust } = await supabase
       .from("customers")
-      .insert({
-        restaurant_id: restaurant.id,
-        name: name.trim(),
-        phone: phone.trim(),
-      })
-      .select("id")
-      .single();
+      .insert({ restaurant_id: restaurant.id, name: name.trim(), phone: phone.trim() })
+      .select("id").single();
 
-    // 2) insert order
     const { data: order, error: oErr } = await supabase
       .from("orders")
       .insert({
@@ -395,24 +441,24 @@ function CheckoutDialog({
         payment,
         status: "pending",
         subtotal,
-        delivery_fee: 0,
-        discount: 0,
+        delivery_fee: finalShipping,
+        discount: coupon?.type === "free_shipping" ? 0 : discount,
         total,
+        coupon_code: coupon?.code ?? null,
+        estimated_minutes: area?.estimated_minutes ?? null,
         change_for: payment === "cash" && changeFor ? Number(changeFor) : null,
         notes: notes.trim() || null,
         delivery_address: orderType === "delivery"
-          ? { street, number, neighborhood, complement: complement || null }
+          ? { street, number, neighborhood: area?.neighborhood ?? null, complement: complement || null }
           : null,
       })
-      .select("id")
-      .single();
+      .select("id").single();
 
     if (oErr || !order) {
       setSubmitting(false);
       return toast.error(oErr?.message ?? "Erro ao criar pedido");
     }
 
-    // 3) insert items
     const itemsPayload = cart.map((i) => ({
       order_id: order.id,
       product_id: i.product.id,
@@ -427,6 +473,10 @@ function CheckoutDialog({
       return toast.error(iErr.message);
     }
 
+    if (coupon) {
+      await supabase.from("coupons").update({ uses_count: (coupon.uses_count ?? 0) + 1 }).eq("id", coupon.id);
+    }
+
     setSubmitting(false);
     toast.success("Pedido enviado!");
     onSuccess(order.id);
@@ -435,51 +485,54 @@ function CheckoutDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Finalizar pedido</DialogTitle>
-        </DialogHeader>
+        <DialogHeader><DialogTitle>Finalizar pedido</DialogTitle></DialogHeader>
         <div className="space-y-4">
-          {/* Tipo */}
           <div>
             <Label>Como você quer receber?</Label>
             <RadioGroup value={orderType} onValueChange={(v) => setOrderType(v as any)} className="grid grid-cols-2 gap-2 mt-2">
               {restaurant.accepts_delivery && (
                 <label className="border rounded-lg p-3 cursor-pointer flex items-center gap-2 has-[:checked]:border-primary has-[:checked]:bg-primary/5">
-                  <RadioGroupItem value="delivery" />
-                  <MapPin className="h-4 w-4" /> Entrega
+                  <RadioGroupItem value="delivery" /><MapPin className="h-4 w-4" /> Entrega
                 </label>
               )}
               {restaurant.accepts_pickup && (
                 <label className="border rounded-lg p-3 cursor-pointer flex items-center gap-2 has-[:checked]:border-primary has-[:checked]:bg-primary/5">
-                  <RadioGroupItem value="pickup" />
-                  <Clock className="h-4 w-4" /> Retirada
+                  <RadioGroupItem value="pickup" /><Clock className="h-4 w-4" /> Retirada
                 </label>
               )}
             </RadioGroup>
           </div>
 
           <div className="grid grid-cols-2 gap-2">
-            <div>
-              <Label>Nome *</Label>
-              <Input value={name} onChange={(e) => setName(e.target.value)} />
-            </div>
-            <div>
-              <Label>WhatsApp *</Label>
-              <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="(11) 99999-9999" />
-            </div>
+            <div><Label>Nome *</Label><Input value={name} onChange={(e) => setName(e.target.value)} /></div>
+            <div><Label>WhatsApp *</Label><Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="(11) 99999-9999" /></div>
           </div>
 
           {orderType === "delivery" && (
             <div className="space-y-2 p-3 bg-muted/40 rounded-lg">
               <p className="text-xs font-semibold text-muted-foreground">ENDEREÇO DE ENTREGA</p>
+              {areas.length > 0 ? (
+                <div>
+                  <Label>Bairro *</Label>
+                  <Select value={areaId} onValueChange={setAreaId}>
+                    <SelectTrigger><SelectValue placeholder="Selecione seu bairro" /></SelectTrigger>
+                    <SelectContent>
+                      {areas.map((a) => (
+                        <SelectItem key={a.id} value={a.id}>
+                          {a.neighborhood} — R$ {Number(a.fee).toFixed(2)} ({a.estimated_minutes ?? 30}min)
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              ) : (
+                <p className="text-xs text-destructive">Restaurante ainda não cadastrou áreas de entrega.</p>
+              )}
               <div className="grid grid-cols-3 gap-2">
                 <div className="col-span-2"><Label>Rua *</Label><Input value={street} onChange={(e) => setStreet(e.target.value)} /></div>
                 <div><Label>Nº *</Label><Input value={number} onChange={(e) => setNumber(e.target.value)} /></div>
               </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div><Label>Bairro *</Label><Input value={neighborhood} onChange={(e) => setNeighborhood(e.target.value)} /></div>
-                <div><Label>Complemento</Label><Input value={complement} onChange={(e) => setComplement(e.target.value)} /></div>
-              </div>
+              <div><Label>Complemento</Label><Input value={complement} onChange={(e) => setComplement(e.target.value)} /></div>
             </div>
           )}
 
@@ -504,22 +557,45 @@ function CheckoutDialog({
           )}
 
           <div>
+            <Label>Cupom de desconto</Label>
+            {coupon ? (
+              <div className="flex items-center justify-between p-2 mt-1 bg-green-50 border border-green-200 rounded-md">
+                <div>
+                  <code className="font-mono font-bold text-sm text-green-700">{coupon.code}</code>
+                  <p className="text-xs text-green-700">aplicado com sucesso</p>
+                </div>
+                <Button size="sm" variant="ghost" onClick={() => { setCoupon(null); setCouponCode(""); }}>Remover</Button>
+              </div>
+            ) : (
+              <div className="flex gap-2 mt-1">
+                <Input value={couponCode} onChange={(e) => setCouponCode(e.target.value.toUpperCase())} placeholder="Insira o código" className="font-mono" />
+                <Button variant="outline" onClick={applyCoupon} disabled={validatingCoupon}>
+                  {validatingCoupon ? "..." : "Aplicar"}
+                </Button>
+              </div>
+            )}
+          </div>
+
+          <div>
             <Label>Observações</Label>
             <Textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} placeholder="Ex: sem cebola" />
           </div>
 
           <div className="border-t pt-3 space-y-1 text-sm">
             <div className="flex justify-between"><span>Subtotal</span><span>R$ {subtotal.toFixed(2)}</span></div>
-            <div className="flex justify-between font-bold text-base"><span>Total</span><span>R$ {total.toFixed(2)}</span></div>
+            {orderType === "delivery" && (
+              <div className="flex justify-between">
+                <span>Entrega {freeShipping && <span className="text-green-600 text-xs">(grátis)</span>}</span>
+                <span className={freeShipping ? "line-through text-muted-foreground" : ""}>R$ {deliveryFee.toFixed(2)}</span>
+              </div>
+            )}
+            {discount > 0 && coupon?.type !== "free_shipping" && (
+              <div className="flex justify-between text-green-600"><span>Desconto ({coupon?.code})</span><span>- R$ {discount.toFixed(2)}</span></div>
+            )}
+            <div className="flex justify-between font-bold text-base pt-1"><span>Total</span><span>R$ {total.toFixed(2)}</span></div>
           </div>
 
-          <Button
-            size="lg"
-            className="w-full"
-            style={{ background: restaurant.primary_color ?? undefined }}
-            disabled={submitting}
-            onClick={submit}
-          >
+          <Button size="lg" className="w-full" style={{ background: restaurant.primary_color ?? undefined }} disabled={submitting} onClick={submit}>
             {submitting ? "Enviando…" : "Confirmar pedido"}
           </Button>
         </div>
