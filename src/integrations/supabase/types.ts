@@ -572,6 +572,7 @@ export type Database = {
           address_state: string | null
           address_street: string | null
           address_zip: string | null
+          admin_notes: string | null
           cnpj: string | null
           cover_url: string | null
           created_at: string
@@ -589,6 +590,8 @@ export type Database = {
           plan: Database["public"]["Enums"]["restaurant_plan"] | null
           primary_color: string | null
           slug: string
+          subscription_ends_at: string | null
+          trial_ends_at: string | null
           updated_at: string
           whatsapp: string | null
         }
@@ -604,6 +607,7 @@ export type Database = {
           address_state?: string | null
           address_street?: string | null
           address_zip?: string | null
+          admin_notes?: string | null
           cnpj?: string | null
           cover_url?: string | null
           created_at?: string
@@ -621,6 +625,8 @@ export type Database = {
           plan?: Database["public"]["Enums"]["restaurant_plan"] | null
           primary_color?: string | null
           slug: string
+          subscription_ends_at?: string | null
+          trial_ends_at?: string | null
           updated_at?: string
           whatsapp?: string | null
         }
@@ -636,6 +642,7 @@ export type Database = {
           address_state?: string | null
           address_street?: string | null
           address_zip?: string | null
+          admin_notes?: string | null
           cnpj?: string | null
           cover_url?: string | null
           created_at?: string
@@ -653,6 +660,8 @@ export type Database = {
           plan?: Database["public"]["Enums"]["restaurant_plan"] | null
           primary_color?: string | null
           slug?: string
+          subscription_ends_at?: string | null
+          trial_ends_at?: string | null
           updated_at?: string
           whatsapp?: string | null
         }

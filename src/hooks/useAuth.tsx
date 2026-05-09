@@ -4,32 +4,59 @@ import { supabase } from "@/integrations/supabase/client";
 
 type AppRole = "super_admin" | "owner" | "employee";
 
+export type RestaurantBrief = { id: string; name: string; slug: string };
+
 interface AuthCtx {
   user: User | null;
   session: Session | null;
   loading: boolean;
   roles: AppRole[];
+  isSuperAdmin: boolean;
+  /** Active restaurant id (own restaurant for owners; selected one for super-admin). */
   restaurantId: string | null;
+  /** Available restaurants (owner = own; super_admin = all). */
+  restaurants: RestaurantBrief[];
+  selectRestaurant: (id: string) => void;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 }
 
 const Ctx = createContext<AuthCtx | undefined>(undefined);
+const SELECTED_KEY = "comanda.selectedRestaurantId";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [roles, setRoles] = useState<AppRole[]>([]);
+  const [restaurants, setRestaurants] = useState<RestaurantBrief[]>([]);
   const [restaurantId, setRestaurantId] = useState<string | null>(null);
 
   const loadMeta = async (uid: string) => {
-    const [rolesRes, restRes] = await Promise.all([
-      supabase.from("user_roles").select("role").eq("user_id", uid),
-      supabase.from("restaurants").select("id").eq("owner_id", uid).maybeSingle(),
-    ]);
-    setRoles((rolesRes.data?.map((r) => r.role) as AppRole[]) ?? []);
-    setRestaurantId(restRes.data?.id ?? null);
+    const rolesRes = await supabase.from("user_roles").select("role").eq("user_id", uid);
+    const r = (rolesRes.data?.map((x) => x.role) as AppRole[]) ?? [];
+    setRoles(r);
+    const isSA = r.includes("super_admin");
+
+    let list: RestaurantBrief[] = [];
+    if (isSA) {
+      const { data } = await supabase
+        .from("restaurants")
+        .select("id,name,slug")
+        .order("created_at", { ascending: false });
+      list = (data ?? []) as RestaurantBrief[];
+    } else {
+      const { data } = await supabase
+        .from("restaurants")
+        .select("id,name,slug")
+        .eq("owner_id", uid);
+      list = (data ?? []) as RestaurantBrief[];
+    }
+    setRestaurants(list);
+
+    const stored = typeof window !== "undefined" ? localStorage.getItem(SELECTED_KEY) : null;
+    const valid = stored && list.some((x) => x.id === stored) ? stored : null;
+    setRestaurantId(valid ?? list[0]?.id ?? null);
   };
 
   useEffect(() => {
@@ -40,6 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setTimeout(() => loadMeta(s.user.id), 0);
       } else {
         setRoles([]);
+        setRestaurants([]);
         setRestaurantId(null);
       }
     });
@@ -55,6 +83,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signOut = async () => {
+    localStorage.removeItem(SELECTED_KEY);
     await supabase.auth.signOut();
   };
 
@@ -62,8 +91,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (user) await loadMeta(user.id);
   };
 
+  const selectRestaurant = (id: string) => {
+    localStorage.setItem(SELECTED_KEY, id);
+    setRestaurantId(id);
+  };
+
   return (
-    <Ctx.Provider value={{ user, session, loading, roles, restaurantId, signOut, refreshProfile }}>
+    <Ctx.Provider
+      value={{
+        user,
+        session,
+        loading,
+        roles,
+        isSuperAdmin: roles.includes("super_admin"),
+        restaurantId,
+        restaurants,
+        selectRestaurant,
+        signOut,
+        refreshProfile,
+      }}
+    >
       {children}
     </Ctx.Provider>
   );
