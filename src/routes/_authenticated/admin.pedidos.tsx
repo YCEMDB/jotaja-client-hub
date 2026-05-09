@@ -191,9 +191,14 @@ function PedidosPage() {
 
   return (
     <div className="p-6 h-screen flex flex-col">
-      <div className="mb-4 shrink-0">
-        <h1 className="text-3xl font-bold">Pedidos</h1>
-        <p className="text-muted-foreground">Acompanhe os pedidos em tempo real (últimas 24h)</p>
+      <div className="mb-4 shrink-0 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold">Pedidos</h1>
+          <p className="text-muted-foreground">Acompanhe os pedidos em tempo real (últimas 24h)</p>
+        </div>
+        <Button variant={notifEnabled ? "secondary" : "default"} size="sm" onClick={enableNotifications}>
+          {notifEnabled ? <><Bell className="h-4 w-4 mr-2" />Notificações ativas</> : <><BellOff className="h-4 w-4 mr-2" />Ativar alertas de novos pedidos</>}
+        </Button>
       </div>
 
       <div className="flex-1 overflow-x-auto">
