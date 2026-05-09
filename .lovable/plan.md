@@ -1,120 +1,159 @@
-# Jotajá — Portal de Pedidos + Painel Administrativo
+# Comanda — Plataforma de delivery próprio para restaurantes
 
-Vamos construir uma plataforma completa de delivery próprio para restaurantes, igual ao Jotajá: o restaurante cadastra seu cardápio, o cliente final pede pelo link sem instalar app, e o pedido cai organizado pra cozinha (com opção de envio pro WhatsApp).
-
----
-
-## Identidade visual (igual ao Jotajá)
-
-- **Vermelho vibrante** (#E30613 aproximado) como cor primária
-- Branco como fundo, cinza claro nos cards
-- Tipografia moderna sans-serif (tipo Poppins/Inter), bold nos títulos
-- Cantos arredondados, sombras suaves, ícones limpos
-- Logo "JOTAJÁ" com ícone de caixa de delivery em vermelho
+Refazendo a plataforma com **identidade própria** (não copiando o nome Jotajá), mas replicando todas as 18 funcionalidades que você listou. Nome sugerido: **Comanda** (trocável por Pratto ou Sirva).
 
 ---
 
-## Fase 1 — Landing page comercial + estrutura base
+## 🎨 Nova identidade visual
 
-A página de entrada que vende o produto pra novos restaurantes (igual à jotaja.com.br).
+**Paleta:**
+- **Azul-noite profundo** (#0A1628 aprox.) — confiança, tecnologia, profissionalismo
+- **Amarelo mostarda vibrante** (#FFC627 aprox.) — apetite, energia, calor humano (gatilho de fome 🟡)
+- **Off-white cremoso** como fundo neutro (não branco puro — mais aconchegante)
+- **Acentos em laranja queimado** pra CTAs secundários
 
-- **Header** fixo: logo, menu (Início, Vantagens, Funcionalidades, Clientes, FAQ), botões de telefone/WhatsApp, CTA "Receber ligação"
-- **Hero**: foto de restaurante ao fundo, título "Tenha sua própria base de clientes no delivery!", subtítulo, botão "Ver como funciona", e formulário de captura de lead à direita
-- **Seção Vantagens** (6 cards): sem app, WhatsApp, transparência, interface fácil, não ocupa atendente, sem comissão
-- **Seção Funcionalidades**: cardápio, cupons, multiusuário, impressoras, financeiro, agendamento, pagamento online, módulo mesa (QR code), redes/franquias, integrações
-- **Seção "Para o restaurante / Para o cliente"** com benefícios lado a lado
-- **Contadores animados**: "+X clientes ativos", "+Y colaboradores"
-- **FAQ** em accordion (12 perguntas do site original)
-- **Footer** com contatos, redes sociais, política de privacidade
-- **Botão flutuante de WhatsApp** + banner de cookies
-- **Páginas separadas** (rotas próprias para SEO): `/`, `/vantagens`, `/funcionalidades`, `/clientes`, `/faq`, `/contato`
+**Tipografia:**
+- **Plus Jakarta Sans** nos títulos (bold, moderna, redondinha — passa carinho)
+- **Inter** no corpo (legibilidade impecável)
+
+**Linguagem visual:**
+- Cantos bem arredondados (16-24px) — sensação amigável
+- Ilustrações + emojis sutis pra humanizar
+- Sombras suaves coloridas (azul/amarelo) em vez de cinza
+- Microanimações nos hovers (escala leve, brilho do amarelo)
+
+**Gatilhos psicológicos** (estilo "quero pra mim agora"):
+- **Prova social** logo no hero ("+2.500 restaurantes já usam")
+- **Urgência leve** ("Mais de 80 restaurantes começaram esta semana")
+- **Antes/depois visual** (caos sem Comanda → organização com Comanda)
+- **Demonstração de valor** ("Zero comissão = +30% de margem")
+- **Mockup do produto** visível desde o hero (screenshot do painel funcionando)
+- **Depoimentos com fotos reais** de donos de restaurante
+- **Garantia** ("Cancele quando quiser, sem fidelidade")
 
 ---
 
-## Fase 2 — Backend + Autenticação (Lovable Cloud)
+## Etapa A — Refatorar a landing page atual
 
-Ativar Lovable Cloud e criar a estrutura de dados.
+A landing já está montada, mas em vermelho/Jotajá. Vou:
+
+1. **Atualizar `src/styles.css`** — trocar paleta toda pra azul-noite + amarelo mostarda, novas fontes
+2. **Substituir nome "Jotajá" por "Comanda"** em Header, Footer, meta tags
+3. **Trocar logo** — gerar nova logo (ícone de ticket de comanda + raio amarelo)
+4. **Hero reformulado** com:
+   - Headline: "Seu delivery, sem comissão. Sua marca, seus clientes."
+   - Mockup do painel administrativo ao lado (em vez de só formulário)
+   - Badge de prova social ("+2.500 restaurantes")
+   - 2 CTAs: "Testar grátis 14 dias" (primário amarelo) + "Ver demonstração" (vídeo)
+5. **Nova seção "Como funciona"** em 3 passos visuais (cadastra → divulga link → recebe pedidos no WhatsApp)
+6. **Vantagens** — manter as 6 mas com novos ícones/copy persuasivos
+7. **Funcionalidades** — expandir pras 18 que você listou, agrupadas em 6 blocos visuais:
+   - Cardápio digital + URL própria
+   - Pedidos via WhatsApp
+   - Gestão completa (cardápio, pedidos, cupons, agendamento, impressão)
+   - Entregadores + áreas de entrega + pagamentos
+   - CRM + relatórios + multiusuário + redes/franquias
+   - Suporte humanizado + nuvem + zero comissão
+8. **Nova seção "Segmentos"** com cards: hamburguerias, pizzarias, padarias, açaiterias, etc.
+9. **Comparativo "Comanda vs iFood"** — tabela visual mostrando economia
+10. **Calculadora de economia** simples ("Quanto você paga de comissão hoje? → Economia anual com Comanda: R$ X")
+11. **Depoimentos** em carrossel com foto + nome + restaurante
+12. **Pricing** em cards (3 planos: Essencial, Profissional, Rede/Franquia)
+13. **FAQ** + **CTA final** + **Footer** atualizados
+
+---
+
+## Etapa B — Backend (Lovable Cloud)
+
+Ativar Lovable Cloud + criar estrutura completa.
 
 **Tabelas:**
-- `restaurants` — dados da loja (nome, slug/URL personalizada, logo, endereço, horários, área de entrega, pedido mínimo, taxa de entrega, formas de pagamento, status aberto/fechado, WhatsApp)
-- `profiles` — usuários do sistema (vinculado ao auth.users)
-- `user_roles` — roles separadas (`admin`, `operador`) por restaurante — segurança correta sem privilégio escalado
-- `categories` — categorias do cardápio (Pizzas, Bebidas, Sobremesas...)
-- `products` — pratos (nome, descrição, foto, preço, categoria, disponibilidade, dias/horários ativos, status "em falta")
-- `product_options` — adicionais e variações (borda, tamanho, sabores)
-- `customers` — base de clientes do restaurante (nome, telefone, endereços salvos)
-- `orders` — pedidos (cliente, itens, status, total, pagamento, entrega)
-- `order_items` — itens do pedido com adicionais
-- `coupons` — cupons de desconto (código, valor/percentual, validade, uso máximo)
+- `restaurants` — loja (nome, slug, logo, banner, cores customizadas, endereço, horários por dia, área de entrega, status aberto/fechado, WhatsApp, integrações)
+- `profiles` + `user_roles` (admin/operador/entregador, em tabela separada com `has_role()` SECURITY DEFINER)
+- `categories` — categorias do cardápio (com ordem)
+- `products` — pratos (foto, descrição, preço, categoria, disponibilidade por dia/horário, status "em falta", preço dinâmico)
+- `product_options` — adicionais, variações, combos (ex: borda da pizza, tamanho, sabores)
+- `delivery_areas` — bairros/regiões com taxa fixa ou percentual
+- `delivery_drivers` — entregadores da equipe própria
+- `customers` — base de clientes (CRM: nome, telefone, endereços salvos, histórico)
+- `orders` — pedidos (status, itens, pagamento, entregador atribuído, agendamento)
+- `order_items` — itens com adicionais selecionados
+- `coupons` — cupons (valor/percentual, validade, valor mínimo, limite de uso, link automático)
+- `printers` — impressoras configuradas (caixa/cozinha)
 
-**Auth:** email/senha + Google sign-in para o painel administrativo. Cliente final NÃO precisa fazer login (igual ao Jotajá original).
+**Auth:** Email/senha + Google sign-in pra donos de restaurante. Cliente final NÃO faz login (só na finalização).
+
+**Storage:** fotos de produtos, logos, banners.
+
+**Real-time:** pedidos novos chegam ao admin instantaneamente, cliente vê status atualizando.
+
+**RLS:** cada restaurante só acessa seus próprios dados.
 
 ---
 
-## Fase 3 — Painel Administrativo do restaurante
+## Etapa C — Painel Administrativo (`/admin`)
 
-Acessível em `/admin` (protegido por login).
-
-**Layout:** sidebar colapsável à esquerda + header com nome do restaurante e botão "Loja aberta/fechada".
+Layout: sidebar azul-noite à esquerda + header com toggle "Loja aberta/fechada" e nome do restaurante.
 
 **Páginas:**
-- **Dashboard** — pedidos do dia, faturamento, ticket médio, gráficos de vendas
-- **Pedidos** (em tempo real) — lista com filtros por status (Recebido → Em preparo → Saiu pra entrega → Entregue → Cancelado), notificação sonora ao chegar pedido novo, botão pra imprimir, botão pra enviar status pro WhatsApp do cliente
-- **Cardápio** — CRUD de categorias e produtos, upload de foto, configurar disponibilidade por dia/horário, marcar "em falta", arrastar pra reordenar
-- **Cupons** — criar/editar (valor fixo ou %, validade, limite de uso)
-- **Clientes** — base de clientes do restaurante, histórico de pedidos por cliente
-- **Configurações da loja** — dados, logo, URL personalizada, horários, área de entrega (raio em km), pedido mínimo, taxa, formas de pagamento aceitas, design (cor) do portal do cliente
-- **Usuários** — convidar admin/operador
-- **Financeiro** — extrato de pedidos com filtros de data, exportar CSV
+- **Dashboard** — pedidos do dia, faturamento, ticket médio, gráficos (vendas por dia/hora), mapa de calor de pedidos por bairro, clientes recorrentes
+- **Pedidos** (real-time) — kanban com colunas (Novo → Em preparo → Saiu pra entrega → Entregue), notificação sonora + visual em pedido novo, botão imprimir, botão atualizar status no WhatsApp do cliente
+- **Cardápio** — CRUD de categorias e produtos, upload de foto, configurar adicionais/variações/combos, disponibilidade por dia/horário, marcar "em falta", preço dinâmico, drag-and-drop pra reordenar
+- **Cupons** — criar/listar cupons (valor/%, validade, valor mínimo, link com cupom auto-aplicado)
+- **Agendamentos** — pedidos agendados pra data/hora futura
+- **Clientes (CRM)** — base completa, filtros, histórico por cliente, exportar CSV
+- **Entregadores** — cadastrar motoboys, atribuir pedidos, relatórios por entregador
+- **Áreas de entrega** — desenhar bairros, definir taxas (fixa ou %), pedido mínimo por área
+- **Pagamentos** — configurar formas aceitas (cartão, PIX, vale-refeição, dinheiro, online)
+- **Impressoras** — configurar impressão automática no caixa/cozinha
+- **Relatórios** — vendas totais, por produto, por entregador, exportar Excel/CSV
+- **Configurações da loja** — dados, logo, banner, cores do portal do cliente, URL personalizada (slug), horários, redes sociais, integrações
+- **Usuários** — convidar admin/operador/entregador
+- **Plano e cobrança** — plano atual, faturamento, sem comissão (mensalidade fixa)
 
 ---
 
-## Fase 4 — Portal de Pedidos do cliente final
+## Etapa D — Portal do Cliente (`/loja/[slug]`)
 
-URL pública: `/pedidos/[slug-do-restaurante]` (ex: `/pedidos/pizzaria-do-zé`).
+URL pública mobile-first (ex: `comanda.app/loja/pizzaria-do-ze`).
 
-**SEM necessidade de login** — só pede dados na finalização.
-
-**Telas:**
-- **Cardápio** — banner do restaurante, status (aberto/fechado), busca, categorias com scroll horizontal, cards de produtos com foto/preço/descrição
-- **Detalhe do produto** (modal/drawer) — escolher adicionais, quantidade, observação
-- **Carrinho** (drawer lateral fixo) — itens, subtotal, aplicar cupom
-- **Checkout** — nome, telefone, endereço (com salvar pra próxima vez via localStorage + telefone), forma de pagamento, troco, observações
-- **Confirmação** — número do pedido, status em tempo real, botão "Enviar pelo WhatsApp" que abre o WhatsApp do restaurante com a mensagem do pedido formatada
-- **Acompanhar pedido** — página pública `/pedido/[id]` com status atualizando
-
-**Responsivo mobile-first** (a maioria dos clientes pede pelo celular).
+- **Cardápio** — banner do restaurante, status (aberto/fechado), busca, categorias com scroll horizontal sticky, cards de produtos
+- **Detalhe do produto** (drawer) — foto grande, escolher adicionais/variações/combos, quantidade, observação
+- **Carrinho** (sheet lateral) — itens, subtotal, aplicar cupom, taxa de entrega calculada por endereço
+- **Checkout** — nome, telefone (com lookup no CRM pra auto-preencher), endereço (CEP via ViaCEP), forma de pagamento, troco, observações, opção "agendar pedido"
+- **Confirmação** — número do pedido, ETA, botão "Acompanhar via WhatsApp" abre conversa do restaurante com pedido formatado
+- **Acompanhar** (`/pedido/[id]`) — status em tempo real (Novo → Em preparo → Saiu → Entregue) com timeline visual
 
 ---
 
 ## Detalhes técnicos
 
-**Stack:** TanStack Start + React + TypeScript + Tailwind v4 + shadcn/ui + Lovable Cloud (backend gerenciado).
+**Stack:** TanStack Start + React + TypeScript + Tailwind v4 + shadcn/ui + Lovable Cloud (Supabase gerenciado).
 
 **Roteamento:**
-- Públicas: `/`, `/vantagens`, `/funcionalidades`, `/faq`, `/contato`, `/pedidos/$slug`, `/pedido/$id`
+- Públicas: `/`, `/funcionalidades`, `/precos`, `/contato`, `/loja/$slug`, `/pedido/$id`
 - Auth: `/login`, `/cadastro`, `/recuperar-senha`
-- Protegidas (`_authenticated/admin/*`): dashboard, pedidos, cardápio, cupons, clientes, config, usuários, financeiro
+- Protegidas (`_authenticated/admin/*`): todas as páginas do painel
 
-**Segurança:** RLS em todas as tabelas. Roles em tabela separada (`user_roles`) com função `has_role()` SECURITY DEFINER — nunca no profile. Cada restaurante só vê seus próprios dados.
+**Pagamento online:** Stripe integrado (Lovable built-in payments) pra cobrar a mensalidade dos restaurantes E pra processar pagamentos online dos clientes finais.
 
-**Real-time:** Lovable Cloud realtime nos pedidos (admin recebe pedido novo na hora, cliente vê status mudar).
+**WhatsApp:** integração via `wa.me` (sem API paga). Pra envio automático de status pelo Comanda, opção futura via WhatsApp Business API.
 
-**Imagens:** Storage do Lovable Cloud pra fotos de produtos e logo do restaurante.
+**CEP:** ViaCEP (gratuito) pra auto-completar endereços.
 
-**WhatsApp:** integração via `wa.me/{numero}?text={mensagem-formatada}` (sem precisar de API paga; abre o WhatsApp do usuário).
-
-**Pagamento online (Fase 4+):** opcional via Stripe ou Mercado Pago — fica pra depois das fundações estarem prontas.
+**Mapas:** Leaflet (gratuito) pra desenhar áreas de entrega e mostrar localização.
 
 ---
 
 ## Por onde começar
 
-Sugiro começar pela **Fase 1 (landing comercial)** porque:
-1. É o que o usuário vê primeiro e dá identidade visual ao projeto inteiro
-2. Não depende de backend — entrega rápida e visual
-3. Define o design system (cores, componentes) que será reutilizado nas outras fases
+Sugiro esta ordem de execução:
 
-Depois sigo na ordem: Fase 2 (backend) → Fase 3 (admin) → Fase 4 (portal do cliente).
+1. **Etapa A — Refatorar landing pra Comanda** (azul + amarelo, novo nome, novas seções persuasivas) — entrega rápida e visível
+2. **Etapa B — Backend** (ativar Cloud + criar tabelas + login)
+3. **Etapa C — Painel admin** (começando por dashboard + pedidos + cardápio, que é o coração)
+4. **Etapa D — Portal do cliente** (cardápio + carrinho + checkout)
 
-Se você aprovar, eu começo pela Fase 1.
+Cada etapa entrega valor sozinha. Se você aprovar, começo agora pela Etapa A pra você ver a nova marca rodando ainda hoje.
+
+**Confirma o nome "Comanda"** ou prefere **Pratto** / **Sirva**?
