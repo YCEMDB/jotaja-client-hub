@@ -78,9 +78,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "Plataforma de gestão de delivery via WhatsApp pra restaurantes." },
       { name: "author", content: "Comanda" },
       { property: "og:title", content: "Comanda — Delivery próprio sem comissão" },
-      { property: "og:description", content: "Sua marca, seus clientes, zero comissão." },
+      { property: "og:description", content: "Plataforma de gestão de delivery via WhatsApp pra restaurantes." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Comanda — Delivery próprio sem comissão" },
+      { name: "twitter:description", content: "Plataforma de gestão de delivery via WhatsApp pra restaurantes." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4268494b-685f-4608-a5fa-818313dae033/id-preview-b940c5bf--09ee62bb-397c-43aa-8259-32d916b1c61b.lovable.app-1778349112481.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4268494b-685f-4608-a5fa-818313dae033/id-preview-b940c5bf--09ee62bb-397c-43aa-8259-32d916b1c61b.lovable.app-1778349112481.png" },
     ],
     links: [
       {
