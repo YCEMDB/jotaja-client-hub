@@ -64,7 +64,10 @@ function ConfigPage() {
       <h1 className="text-3xl font-bold mb-2">Configurações</h1>
       <p className="text-muted-foreground mb-6">Personalize sua loja e regras de entrega</p>
 
+      <StoreLinkCard slug={r.slug} />
+
       <Tabs defaultValue="geral">
+
         <TabsList className="mb-4">
           <TabsTrigger value="geral">Geral</TabsTrigger>
           <TabsTrigger value="aparencia">Aparência</TabsTrigger>
