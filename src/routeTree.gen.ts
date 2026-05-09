@@ -12,9 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PedidoOrderIdRouteImport } from './routes/pedido.$orderId'
 import { Route as PedidoIdRouteImport } from './routes/pedido.$id'
 import { Route as LojaSlugRouteImport } from './routes/loja.$slug'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as ApiPublicMercadopagoWebhookRouteImport } from './routes/api/public/mercadopago-webhook'
 import { Route as AuthenticatedAdminSuperRouteImport } from './routes/_authenticated/admin.super'
 import { Route as AuthenticatedAdminRelatoriosRouteImport } from './routes/_authenticated/admin.relatorios'
 import { Route as AuthenticatedAdminPedidosRouteImport } from './routes/_authenticated/admin.pedidos'
@@ -39,6 +41,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PedidoOrderIdRoute = PedidoOrderIdRouteImport.update({
+  id: '/pedido/$orderId',
+  path: '/pedido/$orderId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PedidoIdRoute = PedidoIdRouteImport.update({
   id: '/pedido/$id',
   path: '/pedido/$id',
@@ -54,6 +61,12 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const ApiPublicMercadopagoWebhookRoute =
+  ApiPublicMercadopagoWebhookRouteImport.update({
+    id: '/api/public/mercadopago-webhook',
+    path: '/api/public/mercadopago-webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedAdminSuperRoute = AuthenticatedAdminSuperRouteImport.update({
   id: '/admin/super',
   path: '/admin/super',
@@ -113,6 +126,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/loja/$slug': typeof LojaSlugRoute
   '/pedido/$id': typeof PedidoIdRoute
+  '/pedido/$orderId': typeof PedidoOrderIdRoute
   '/admin/cardapio': typeof AuthenticatedAdminCardapioRoute
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
@@ -122,6 +136,7 @@ export interface FileRoutesByFullPath {
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/relatorios': typeof AuthenticatedAdminRelatoriosRoute
   '/admin/super': typeof AuthenticatedAdminSuperRoute
+  '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesByTo {
@@ -129,6 +144,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/loja/$slug': typeof LojaSlugRoute
   '/pedido/$id': typeof PedidoIdRoute
+  '/pedido/$orderId': typeof PedidoOrderIdRoute
   '/admin/cardapio': typeof AuthenticatedAdminCardapioRoute
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
@@ -138,6 +154,7 @@ export interface FileRoutesByTo {
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/relatorios': typeof AuthenticatedAdminRelatoriosRoute
   '/admin/super': typeof AuthenticatedAdminSuperRoute
+  '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesById {
@@ -147,6 +164,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/loja/$slug': typeof LojaSlugRoute
   '/pedido/$id': typeof PedidoIdRoute
+  '/pedido/$orderId': typeof PedidoOrderIdRoute
   '/_authenticated/admin/cardapio': typeof AuthenticatedAdminCardapioRoute
   '/_authenticated/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/_authenticated/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
@@ -156,6 +174,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/_authenticated/admin/relatorios': typeof AuthenticatedAdminRelatoriosRoute
   '/_authenticated/admin/super': typeof AuthenticatedAdminSuperRoute
+  '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRouteTypes {
@@ -165,6 +184,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/loja/$slug'
     | '/pedido/$id'
+    | '/pedido/$orderId'
     | '/admin/cardapio'
     | '/admin/clientes'
     | '/admin/configuracoes'
@@ -174,6 +194,7 @@ export interface FileRouteTypes {
     | '/admin/pedidos'
     | '/admin/relatorios'
     | '/admin/super'
+    | '/api/public/mercadopago-webhook'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -181,6 +202,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/loja/$slug'
     | '/pedido/$id'
+    | '/pedido/$orderId'
     | '/admin/cardapio'
     | '/admin/clientes'
     | '/admin/configuracoes'
@@ -190,6 +212,7 @@ export interface FileRouteTypes {
     | '/admin/pedidos'
     | '/admin/relatorios'
     | '/admin/super'
+    | '/api/public/mercadopago-webhook'
     | '/admin'
   id:
     | '__root__'
@@ -198,6 +221,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/loja/$slug'
     | '/pedido/$id'
+    | '/pedido/$orderId'
     | '/_authenticated/admin/cardapio'
     | '/_authenticated/admin/clientes'
     | '/_authenticated/admin/configuracoes'
@@ -207,6 +231,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/pedidos'
     | '/_authenticated/admin/relatorios'
     | '/_authenticated/admin/super'
+    | '/api/public/mercadopago-webhook'
     | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
 }
@@ -216,6 +241,8 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   LojaSlugRoute: typeof LojaSlugRoute
   PedidoIdRoute: typeof PedidoIdRoute
+  PedidoOrderIdRoute: typeof PedidoOrderIdRoute
+  ApiPublicMercadopagoWebhookRoute: typeof ApiPublicMercadopagoWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -241,6 +268,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pedido/$orderId': {
+      id: '/pedido/$orderId'
+      path: '/pedido/$orderId'
+      fullPath: '/pedido/$orderId'
+      preLoaderRoute: typeof PedidoOrderIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pedido/$id': {
       id: '/pedido/$id'
       path: '/pedido/$id'
@@ -261,6 +295,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
+    }
+    '/api/public/mercadopago-webhook': {
+      id: '/api/public/mercadopago-webhook'
+      path: '/api/public/mercadopago-webhook'
+      fullPath: '/api/public/mercadopago-webhook'
+      preLoaderRoute: typeof ApiPublicMercadopagoWebhookRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin/super': {
       id: '/_authenticated/admin/super'
@@ -364,6 +405,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   LojaSlugRoute: LojaSlugRoute,
   PedidoIdRoute: PedidoIdRoute,
+  PedidoOrderIdRoute: PedidoOrderIdRoute,
+  ApiPublicMercadopagoWebhookRoute: ApiPublicMercadopagoWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

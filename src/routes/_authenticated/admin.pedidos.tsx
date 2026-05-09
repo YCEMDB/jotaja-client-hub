@@ -38,6 +38,7 @@ type Order = {
   notes: string | null;
   created_at: string;
   driver_id: string | null;
+  payment_status: string;
 };
 
 type Driver = { id: string; name: string; phone: string | null };
@@ -162,6 +163,15 @@ function PedidosPage() {
     setSelected(null);
   };
 
+  const markPaid = async (o: Order) => {
+    const { error } = await supabase.from("orders")
+      .update({ payment_status: "paid", paid_at: new Date().toISOString() })
+      .eq("id", o.id);
+    if (error) return toast.error(error.message);
+    toast.success("Pagamento confirmado");
+    if (selected?.id === o.id) setSelected({ ...o, payment_status: "paid" });
+  };
+
   const assignDriver = async (driverId: string) => {
     if (!selected) return;
     const value = driverId === "none" ? null : driverId;
@@ -223,7 +233,14 @@ function PedidosPage() {
                       <p className="text-sm font-medium truncate">{o.customer_name}</p>
                       <p className="text-xs text-muted-foreground truncate">{o.type} · {o.payment}</p>
                       <div className="flex items-center justify-between mt-2">
-                        <span className="font-semibold">R$ {Number(o.total).toFixed(2)}</span>
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-semibold">R$ {Number(o.total).toFixed(2)}</span>
+                          {o.payment === "pix" && (
+                            <span className={`text-[10px] px-1.5 py-0.5 rounded font-semibold ${o.payment_status === "paid" ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700"}`}>
+                              {o.payment_status === "paid" ? "PAGO" : "AGUARDANDO"}
+                            </span>
+                          )}
+                        </div>
                         <div className="flex items-center gap-1">
                           <Button size="sm" variant="ghost" className="h-7 w-7 p-0" title="Imprimir" onClick={(e) => { e.stopPropagation(); printOrder(o); }}>
                             <Printer className="h-3.5 w-3.5" />
@@ -267,7 +284,17 @@ function PedidosPage() {
                       </span>
                     </p>
                   )}
-                  <p className="flex items-center gap-2 text-muted-foreground"><CreditCard className="h-3.5 w-3.5" />{selected.payment}</p>
+                  <p className="flex items-center gap-2 text-muted-foreground">
+                    <CreditCard className="h-3.5 w-3.5" />{selected.payment}
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded font-semibold ${selected.payment_status === "paid" ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700"}`}>
+                      {selected.payment_status === "paid" ? "PAGO" : "AGUARDANDO"}
+                    </span>
+                    {selected.payment_status !== "paid" && (
+                      <Button size="sm" variant="ghost" className="h-6 text-xs" onClick={() => markPaid(selected)}>
+                        Marcar pago
+                      </Button>
+                    )}
+                  </p>
                 </div>
 
                 <div className="border-t pt-3 space-y-2">
