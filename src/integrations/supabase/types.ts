@@ -299,9 +299,16 @@ export type Database = {
           driver_id: string | null
           estimated_minutes: number | null
           id: string
+          mp_payment_id: string | null
           notes: string | null
           order_number: number
+          paid_at: string | null
           payment: Database["public"]["Enums"]["payment_method"]
+          payment_status: Database["public"]["Enums"]["payment_status"]
+          pix_expires_at: string | null
+          pix_qr_code: string | null
+          pix_qr_code_base64: string | null
+          pix_txid: string | null
           restaurant_id: string
           status: Database["public"]["Enums"]["order_status"]
           subtotal: number
@@ -322,9 +329,16 @@ export type Database = {
           driver_id?: string | null
           estimated_minutes?: number | null
           id?: string
+          mp_payment_id?: string | null
           notes?: string | null
           order_number?: number
+          paid_at?: string | null
           payment?: Database["public"]["Enums"]["payment_method"]
+          payment_status?: Database["public"]["Enums"]["payment_status"]
+          pix_expires_at?: string | null
+          pix_qr_code?: string | null
+          pix_qr_code_base64?: string | null
+          pix_txid?: string | null
           restaurant_id: string
           status?: Database["public"]["Enums"]["order_status"]
           subtotal?: number
@@ -345,9 +359,16 @@ export type Database = {
           driver_id?: string | null
           estimated_minutes?: number | null
           id?: string
+          mp_payment_id?: string | null
           notes?: string | null
           order_number?: number
+          paid_at?: string | null
           payment?: Database["public"]["Enums"]["payment_method"]
+          payment_status?: Database["public"]["Enums"]["payment_status"]
+          pix_expires_at?: string | null
+          pix_qr_code?: string | null
+          pix_qr_code_base64?: string | null
+          pix_txid?: string | null
           restaurant_id?: string
           status?: Database["public"]["Enums"]["order_status"]
           subtotal?: number
@@ -583,6 +604,8 @@ export type Database = {
           is_open: boolean | null
           logo_url: string | null
           min_order_value: number | null
+          mp_access_token: string | null
+          mp_public_key: string | null
           name: string
           opening_hours: Json | null
           owner_id: string
@@ -618,6 +641,8 @@ export type Database = {
           is_open?: boolean | null
           logo_url?: string | null
           min_order_value?: number | null
+          mp_access_token?: string | null
+          mp_public_key?: string | null
           name: string
           opening_hours?: Json | null
           owner_id: string
@@ -653,6 +678,8 @@ export type Database = {
           is_open?: boolean | null
           logo_url?: string | null
           min_order_value?: number | null
+          mp_access_token?: string | null
+          mp_public_key?: string | null
           name?: string
           opening_hours?: Json | null
           owner_id?: string
@@ -730,6 +757,7 @@ export type Database = {
         | "cancelled"
       order_type: "delivery" | "pickup" | "dine_in"
       payment_method: "cash" | "pix" | "credit_card" | "debit_card" | "online"
+      payment_status: "pending" | "paid" | "failed" | "refunded" | "expired"
       restaurant_plan: "trial" | "essential" | "professional"
     }
     CompositeTypes: {
@@ -871,6 +899,7 @@ export const Constants = {
       ],
       order_type: ["delivery", "pickup", "dine_in"],
       payment_method: ["cash", "pix", "credit_card", "debit_card", "online"],
+      payment_status: ["pending", "paid", "failed", "refunded", "expired"],
       restaurant_plan: ["trial", "essential", "professional"],
     },
   },
