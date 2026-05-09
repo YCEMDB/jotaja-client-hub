@@ -38,6 +38,7 @@ type Order = {
   notes: string | null;
   created_at: string;
   driver_id: string | null;
+  payment_status: string;
 };
 
 type Driver = { id: string; name: string; phone: string | null };
