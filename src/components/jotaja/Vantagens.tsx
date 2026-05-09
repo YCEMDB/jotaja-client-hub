@@ -1,49 +1,46 @@
-import { Smartphone, MessageSquare, Shield, Heart, Users, DollarSign } from "lucide-react";
+import { Smartphone, MessageSquare, ShieldCheck, Heart, Users, DollarSign } from "lucide-react";
 
 const vantagens = [
-  { icon: Smartphone, title: "O usuário não precisa instalar aplicativo", desc: "Seu cliente faz o pedido por um link, direto no navegador." },
-  { icon: MessageSquare, title: "Pedidos via WhatsApp e redes sociais", desc: "Facilita a recepção e gestão de pedidos no canal que o cliente já usa." },
-  { icon: Shield, title: "Total transparência no pedido", desc: "Cliente e restaurante sempre alinhados. Zero ruído na comunicação." },
-  { icon: Heart, title: "Interface fácil e amigável", desc: "Layout familiar, parecido com os maiores deliveries do mundo." },
-  { icon: Users, title: "Não ocupa o atendente", desc: "Pedido entra automatizado e organizado direto na cozinha." },
-  { icon: DollarSign, title: "Sem comissões de aplicativos", desc: "Você fica com 100% do lucro. Pague apenas a mensalidade fixa." },
+  { icon: DollarSign, title: "Zero comissão por pedido", desc: "Pague apenas a mensalidade fixa. 100% do lucro fica com você.", highlight: true },
+  { icon: MessageSquare, title: "Pedidos direto no WhatsApp", desc: "Recurso exclusivo: pedido cai resumido no WhatsApp do restaurante." },
+  { icon: Smartphone, title: "Cliente não baixa app", desc: "Pedido por link no navegador, sem fricção. Conversão muito maior." },
+  { icon: Heart, title: "Sua marca, seu controle", desc: "URL própria, cores, logo e banner do seu jeito. Você dono dos clientes." },
+  { icon: Users, title: "Não ocupa atendente", desc: "Pedido entra automatizado e organizado. Equipe focada na cozinha." },
+  { icon: ShieldCheck, title: "Sem fidelidade nem letra miúda", desc: "Cancele quando quiser. Suporte humanizado todos os dias 8h-22h." },
 ];
 
 export function Vantagens() {
   return (
-    <section id="vantagens" className="py-20 md:py-28 bg-muted/30">
+    <section id="vantagens" className="py-20 md:py-28 bg-muted/40">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16 max-w-2xl mx-auto">
-          <h2 className="font-display text-3xl md:text-5xl font-black mb-4">
-            <span className="text-primary">VANTAGENS</span> de usar o{" "}
-            <span className="text-primary">JOTAJÁ</span> em seu restaurante
+          <span className="inline-block bg-accent-soft text-accent-foreground font-bold text-sm px-4 py-1.5 rounded-full mb-4">
+            Por que Comanda
+          </span>
+          <h2 className="font-display text-3xl md:text-5xl font-extrabold leading-tight">
+            Tudo que iFood te cobra <span className="marker-highlight">sem cobrar</span> nada por pedido
           </h2>
-          <div className="underline-wave" />
-          <p className="text-muted-foreground mt-6 text-lg">
-            Ajudamos seu estabelecimento a formar sua própria base de clientes no delivery.
-          </p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {vantagens.map((v, i) => (
             <div
               key={i}
-              className="group bg-card rounded-2xl p-8 shadow-card border border-border hover:shadow-elegant hover:-translate-y-1 transition-smooth"
+              className={`group rounded-3xl p-7 border transition-smooth hover:-translate-y-1 ${
+                v.highlight
+                  ? "bg-gradient-primary text-primary-foreground border-transparent shadow-elegant"
+                  : "bg-card border-border shadow-card hover:shadow-elegant"
+              }`}
             >
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-gradient-primary text-primary-foreground flex items-center justify-center shadow-soft group-hover:scale-110 transition-smooth">
-                  <v.icon className="w-7 h-7" />
-                </div>
-                <div className="flex-1">
-                  <div className="text-sm font-bold text-primary mb-2">
-                    0{i + 1}.
-                  </div>
-                  <h3 className="font-display font-bold text-lg leading-snug mb-2">
-                    {v.title}
-                  </h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{v.desc}</p>
-                </div>
+              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-5 transition-bounce group-hover:scale-110 ${
+                v.highlight ? "bg-accent text-accent-foreground" : "bg-accent-soft text-accent-foreground"
+              }`}>
+                <v.icon className="w-7 h-7" />
               </div>
+              <h3 className="font-display font-extrabold text-xl mb-2 leading-snug">{v.title}</h3>
+              <p className={`text-sm leading-relaxed ${v.highlight ? "text-primary-foreground/80" : "text-muted-foreground"}`}>
+                {v.desc}
+              </p>
             </div>
           ))}
         </div>

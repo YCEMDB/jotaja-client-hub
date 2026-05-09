@@ -1,104 +1,99 @@
-import { Play, ArrowRight } from "lucide-react";
+import { ArrowRight, Star, ShieldCheck, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useState } from "react";
-import { toast } from "sonner";
-import heroImg from "@/assets/hero-restaurant.jpg";
+import dashboard from "@/assets/dashboard-mockup.png";
 
 export function Hero() {
-  const [form, setForm] = useState({ nome: "", email: "", telefone: "" });
-  const [loading, setLoading] = useState(false);
-
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setTimeout(() => {
-      toast.success("Recebemos seu contato! Em breve um consultor entrará em contato.");
-      setForm({ nome: "", email: "", telefone: "" });
-      setLoading(false);
-    }, 800);
-  };
-
   return (
-    <section id="inicio" className="relative overflow-hidden">
-      <div className="absolute inset-0">
-        <img
-          src={heroImg}
-          alt="Restaurante elegante"
-          className="w-full h-full object-cover"
-          width={1920}
-          height={1080}
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/85 to-background/40" />
-      </div>
+    <section id="inicio" className="relative overflow-hidden bg-gradient-warm">
+      {/* Decorative blobs */}
+      <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-accent/20 blur-3xl" />
+      <div className="absolute top-40 -right-40 w-[500px] h-[500px] rounded-full bg-primary/10 blur-3xl" />
 
-      <div className="container relative mx-auto px-6 py-16 md:py-24 lg:py-32">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="container relative mx-auto px-6 pt-16 pb-20 lg:pt-24 lg:pb-32">
+        <div className="grid lg:grid-cols-[1.05fr,1fr] gap-12 items-center">
           {/* Left: copy */}
-          <div className="max-w-xl">
-            <p className="text-sm font-semibold text-primary mb-4 uppercase tracking-wide">
-              Entre em contato e conheça nossos planos!
-            </p>
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-black leading-[1.05] text-foreground mb-6">
-              Tenha sua própria base{" "}
-              <span className="text-primary">de clientes no delivery!</span>
+          <div className="max-w-2xl">
+            {/* Social proof */}
+            <div className="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 shadow-soft mb-6">
+              <div className="flex -space-x-2">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="w-6 h-6 rounded-full bg-gradient-accent border-2 border-background" />
+                ))}
+              </div>
+              <div className="flex items-center gap-1">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <Star key={i} className="w-3.5 h-3.5 fill-accent text-accent" />
+                ))}
+              </div>
+              <span className="text-sm font-semibold">+2.500 restaurantes ativos</span>
+            </div>
+
+            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-[1.05] tracking-tight mb-6">
+              Seu delivery,{" "}
+              <span className="marker-highlight">sem comissão.</span>
+              <br />
+              Sua marca,{" "}
+              <span className="text-gradient-primary">seus clientes.</span>
             </h1>
-            <div className="w-20 h-1.5 bg-primary rounded-full mb-6" />
-            <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-              O <strong className="text-foreground">Jotajá</strong> é um programa que agiliza as entregas
-              de pedidos online, feitas para seu restaurante, usando o WhatsApp e as redes sociais
-              como principais canais de comunicação.
+
+            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-8 max-w-xl">
+              A plataforma completa pra você receber pedidos pelo WhatsApp, gerenciar cardápio, entregadores e cupons —
+              <strong className="text-foreground"> tudo com a sua identidade</strong> e sem dividir lucro com aplicativo.
             </p>
-            <Button size="lg" variant="outline" className="rounded-full border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground font-semibold" asChild>
-              <a href="#funcionalidades">
-                Ver como funciona <Play className="ml-2 w-4 h-4 fill-current" />
-              </a>
-            </Button>
+
+            <div className="flex flex-wrap gap-3 mb-8">
+              <Button size="lg" className="h-14 rounded-full font-bold text-base px-7 bg-accent text-accent-foreground hover:bg-accent/90 shadow-accent-lg animate-pulse-glow" asChild>
+                <a href="#cadastro">
+                  Testar grátis por 14 dias <ArrowRight className="ml-2 w-5 h-5" />
+                </a>
+              </Button>
+              <Button size="lg" variant="outline" className="h-14 rounded-full font-bold text-base px-7 border-2" asChild>
+                <a href="#como-funciona">Ver demonstração</a>
+              </Button>
+            </div>
+
+            {/* Trust badges */}
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
+              <div className="flex items-center gap-1.5"><ShieldCheck className="w-4 h-4 text-success" /> Sem cartão de crédito</div>
+              <div className="flex items-center gap-1.5"><Zap className="w-4 h-4 text-accent" /> Configurar em 5 minutos</div>
+              <div className="flex items-center gap-1.5"><ShieldCheck className="w-4 h-4 text-success" /> Cancele quando quiser</div>
+            </div>
           </div>
 
-          {/* Right: form */}
-          <div id="contato" className="bg-card rounded-3xl shadow-elegant p-8 md:p-10 border border-border">
-            <h2 className="font-display text-2xl md:text-3xl font-black text-primary text-center mb-2">
-              RECEBA NOSSA LIGAÇÃO!
-            </h2>
-            <p className="text-center text-muted-foreground mb-6">
-              Preencha o formulário e aguarde nosso contato!
-            </p>
-            <form onSubmit={submit} className="space-y-4">
-              <Input
-                placeholder="Seu nome*"
-                required
-                value={form.nome}
-                onChange={(e) => setForm({ ...form, nome: e.target.value })}
-                className="h-12 bg-muted border-0 rounded-lg"
-              />
-              <Input
-                type="email"
-                placeholder="Seu e-mail*"
-                required
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="h-12 bg-muted border-0 rounded-lg"
-              />
-              <Input
-                placeholder="Seu ddd + telefone*"
-                required
-                value={form.telefone}
-                onChange={(e) => setForm({ ...form, telefone: e.target.value })}
-                className="h-12 bg-muted border-0 rounded-lg"
-              />
-              <Button
-                type="submit"
-                disabled={loading}
-                size="lg"
-                className="w-full h-12 rounded-lg font-bold uppercase tracking-wide shadow-elegant"
-              >
-                {loading ? "Enviando..." : (<>Receber ligação <ArrowRight className="ml-2 w-4 h-4" /></>)}
-              </Button>
-              <p className="text-xs text-muted-foreground border-l-2 border-primary pl-3">
-                *Não compartilhamos informações pessoais
-              </p>
-            </form>
+          {/* Right: dashboard mockup */}
+          <div className="relative animate-float">
+            <div className="absolute inset-0 bg-gradient-accent blur-3xl opacity-30 rounded-full" />
+            <img
+              src={dashboard}
+              alt="Painel de pedidos Comanda"
+              className="relative w-full max-w-2xl mx-auto drop-shadow-2xl"
+              width={1280}
+              height={1024}
+            />
+            {/* Floating stats card */}
+            <div className="absolute -bottom-4 left-4 md:left-0 bg-card rounded-2xl shadow-elegant p-4 flex items-center gap-3 border border-border">
+              <div className="w-12 h-12 rounded-xl bg-success/15 flex items-center justify-center">
+                <ArrowRight className="w-6 h-6 text-success -rotate-45" />
+              </div>
+              <div>
+                <div className="text-2xl font-display font-extrabold text-foreground">+38%</div>
+                <div className="text-xs text-muted-foreground font-medium">vendas no 1º mês</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Logo strip */}
+        <div className="mt-20 lg:mt-28 text-center">
+          <p className="text-sm text-muted-foreground uppercase tracking-widest font-semibold mb-6">
+            Restaurantes que aumentaram lucros com Comanda
+          </p>
+          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-14 opacity-60 grayscale font-display font-extrabold text-xl md:text-2xl">
+            <span>BURGER LAB</span>
+            <span className="italic">Pizzaria Rosa</span>
+            <span className="tracking-widest">PADARIA SOL</span>
+            <span>açaí&co</span>
+            <span>SUSHI ZEN</span>
           </div>
         </div>
       </div>

@@ -1,31 +1,33 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const faqs = [
-  { q: "Preciso pagar alguma comissão sobre os pedidos para o Jotajá?", a: "Não. O Jotajá cobra apenas a mensalidade. Você não divide seu lucro com aplicativos que cobram comissão." },
-  { q: "Como chegarão os pedidos?", a: "Os pedidos chegam detalhados e organizados para o WhatsApp e para o seu gerenciador de pedidos." },
-  { q: "Preciso ter um número de WhatsApp para usar a plataforma?", a: "Não é obrigatório, mas a plataforma é muito mais eficiente com o WhatsApp para gerenciar seu delivery." },
-  { q: "Meu cliente vai precisar instalar algum aplicativo?", a: "Não. Seu cliente faz o pedido através de um link sem precisar instalar qualquer aplicativo." },
-  { q: "Quais segmentos o Jotajá atende?", a: "Restaurantes em geral, padarias, hortifrutis, depósitos de bebidas e outros. Você cria seu cardápio e gerencia seus pedidos online." },
-  { q: "O Jotajá vai me trazer novos clientes?", a: "Não. O Jotajá é uma ferramenta para ajudar e organizar o atendimento de pedidos. Em breve teremos módulo de marketing." },
-  { q: "O Jotajá faz a entrega do pedido?", a: "Não. Somos um site de pedidos e gerenciador de delivery. Criamos seu gerenciador, mas não realizamos as entregas." },
-  { q: "O Jotajá tem suporte?", a: "Sim. Atendemos via telefone, WhatsApp e email todos os dias, inclusive feriados, das 8h às 22h." },
-  { q: "Consigo gerenciar meu cardápio?", a: "Sim. É simples e rápido. Você pode inserir, alterar, excluir, inativar e muito mais. Totalmente configurável." },
-  { q: "Consigo receber pedidos via telefone pelo Jotajá?", a: "Sim, temos esse recurso." },
-  { q: "Preciso ser Pessoa Jurídica?", a: "Não." },
-  { q: "Sou obrigado a cumprir algum tempo de contrato?", a: "No plano mensal, não há fidelidade." },
+  { q: "Quanto custa para usar o Comanda?", a: "Apenas a mensalidade fixa do plano escolhido (a partir de R$ 99/mês). Zero comissão por pedido — você fica com 100% do que vende." },
+  { q: "Como chegam os pedidos pra mim?", a: "Direto no painel do Comanda E no WhatsApp do restaurante, organizados, com itens, adicionais, endereço e forma de pagamento." },
+  { q: "Meu cliente precisa baixar algum app?", a: "Não. Ele faz o pedido por um link no navegador (celular ou desktop). Sem fricção, conversão muito maior." },
+  { q: "Preciso ter WhatsApp no restaurante?", a: "Não é obrigatório, mas é altamente recomendado. A integração com WhatsApp é um dos diferenciais que mais ajuda." },
+  { q: "Quais segmentos podem usar?", a: "Restaurantes, hamburguerias, pizzarias, padarias, hortifrutis, açaiterias, bebidas, sushi, marmitarias e qualquer outro delivery." },
+  { q: "Comanda traz novos clientes?", a: "Não — Comanda é a ferramenta que organiza o atendimento e fideliza quem você já tem. Em breve teremos módulo de marketing nativo." },
+  { q: "Comanda faz a entrega?", a: "Não. Você usa sua equipe própria de entregadores (que cadastra e gerencia no painel) ou parceiros como Loggi (integração disponível)." },
+  { q: "Tem suporte humano?", a: "Sim! Atendimento por WhatsApp, telefone, e-mail e TeamViewer. Todos os dias, inclusive feriados, das 8h às 22h." },
+  { q: "Consigo ter mais de uma loja (rede/franquia)?", a: "Sim! O plano Rede/Franquia gerencia múltiplas unidades com direcionamento por geolocalização e estatísticas separadas." },
+  { q: "Preciso ser CNPJ?", a: "Não. Pessoa Física também pode usar." },
+  { q: "Tem fidelidade ou multa?", a: "Nenhuma. Cancele quando quiser, sem letra miúda." },
+  { q: "Posso testar antes de pagar?", a: "Sim! 14 dias grátis em qualquer plano, sem cartão de crédito." },
 ];
 
 export function FAQ() {
   return (
-    <section id="faq" className="py-20 md:py-28 bg-muted/30">
+    <section id="faq" className="py-20 md:py-28">
       <div className="container mx-auto px-6 max-w-3xl">
         <div className="text-center mb-12">
-          <h2 className="font-display text-3xl md:text-5xl font-black mb-4">
-            Perguntas <span className="text-primary">Frequentes</span>
+          <span className="inline-block bg-accent-soft text-accent-foreground font-bold text-sm px-4 py-1.5 rounded-full mb-4">
+            Tira-dúvidas
+          </span>
+          <h2 className="font-display text-3xl md:text-5xl font-extrabold leading-tight">
+            Perguntas <span className="text-gradient-primary">frequentes</span>
           </h2>
-          <div className="underline-wave" />
-          <p className="text-muted-foreground mt-6">
-            Não encontrou sua dúvida? Entre em contato conosco!
+          <p className="text-muted-foreground mt-4">
+            Não encontrou sua dúvida? Fala com a gente no WhatsApp.
           </p>
         </div>
 
@@ -34,9 +36,9 @@ export function FAQ() {
             <AccordionItem
               key={i}
               value={`item-${i}`}
-              className="bg-card border border-border rounded-xl px-6 shadow-soft hover:shadow-card transition-smooth"
+              className="bg-card border border-border rounded-2xl px-6 shadow-soft hover:shadow-card transition-smooth data-[state=open]:border-accent data-[state=open]:shadow-accent-lg"
             >
-              <AccordionTrigger className="text-left font-display font-semibold hover:text-primary hover:no-underline py-5">
+              <AccordionTrigger className="text-left font-display font-bold hover:no-underline py-5">
                 {f.q}
               </AccordionTrigger>
               <AccordionContent className="text-muted-foreground leading-relaxed pb-5">

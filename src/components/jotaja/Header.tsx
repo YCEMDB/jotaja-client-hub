@@ -1,14 +1,14 @@
 import { Link } from "@tanstack/react-router";
-import { Phone, MessageCircle, Menu, X } from "lucide-react";
+import { Phone, Menu, X, Sparkles } from "lucide-react";
 import { useState } from "react";
-import logo from "@/assets/jotaja-logo.png";
+import logo from "@/assets/comanda-logo.png";
 import { Button } from "@/components/ui/button";
 
 const navItems = [
-  { label: "Início", href: "#inicio" },
-  { label: "Vantagens", href: "#vantagens" },
   { label: "Funcionalidades", href: "#funcionalidades" },
-  { label: "Clientes", href: "#clientes" },
+  { label: "Como funciona", href: "#como-funciona" },
+  { label: "Para quem é", href: "#segmentos" },
+  { label: "Planos", href: "#planos" },
   { label: "FAQ", href: "#faq" },
 ];
 
@@ -16,46 +16,35 @@ export function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
-      {/* Top bar */}
-      <div className="hidden md:block border-b border-border/50">
-        <div className="container mx-auto px-6 py-2 flex justify-end gap-8 text-sm">
-          <a href="tel:2120422913" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-smooth">
-            <span className="bg-primary/10 text-primary p-1.5 rounded-full"><Phone className="w-3.5 h-3.5" /></span>
-            <span>Telefone: <strong className="text-foreground">21 2042.2913</strong></span>
-          </a>
-          <a href="https://wa.me/5521964757948" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-smooth">
-            <span className="bg-primary/10 text-primary p-1.5 rounded-full"><MessageCircle className="w-3.5 h-3.5" /></span>
-            <span>Whatsapp: <strong className="text-foreground">21 9 6475.7948</strong></span>
-          </a>
-        </div>
-      </div>
-
-      {/* Main nav */}
+    <header className="sticky top-0 z-50 bg-background/85 backdrop-blur-xl border-b border-border/60">
       <div className="container mx-auto px-6">
-        <div className="flex items-center justify-between h-16 md:h-20">
-          <Link to="/" className="flex items-center gap-2">
-            <img src={logo} alt="Jotajá" className="h-9 w-9" width={36} height={36} />
-            <span className="font-display font-black text-2xl tracking-tight text-foreground">
-              JOTA<span className="text-primary">JÁ</span>
+        <div className="flex items-center justify-between h-18 py-4">
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <img src={logo} alt="Comanda" className="h-10 w-10 group-hover:rotate-6 transition-bounce" width={40} height={40} />
+            <span className="font-display font-extrabold text-2xl tracking-tight text-foreground">
+              Comanda<span className="text-accent">.</span>
             </span>
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-1 bg-primary text-primary-foreground rounded-full px-2 py-1.5 shadow-soft">
+          <nav className="hidden lg:flex items-center gap-1">
             {navItems.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
-                className="px-5 py-2 rounded-full font-semibold text-sm hover:bg-white/15 transition-smooth"
+                className="px-4 py-2 rounded-full font-semibold text-sm text-foreground/80 hover:text-foreground hover:bg-accent-soft transition-smooth"
               >
                 {item.label}
               </a>
             ))}
           </nav>
 
-          <div className="hidden md:block">
-            <Button variant="default" size="lg" className="rounded-full font-semibold shadow-elegant" asChild>
-              <a href="#contato">Receber ligação →</a>
+          <div className="hidden md:flex items-center gap-3">
+            <a href="tel:2120422913" className="flex items-center gap-2 text-sm font-semibold text-foreground/70 hover:text-foreground transition-smooth">
+              <Phone className="w-4 h-4" />
+              <span>(21) 2042-2913</span>
+            </a>
+            <Button size="lg" className="rounded-full font-bold bg-accent text-accent-foreground hover:bg-accent/90 shadow-accent-lg" asChild>
+              <a href="#cadastro"><Sparkles className="w-4 h-4 mr-1.5" /> Testar grátis</a>
             </Button>
           </div>
 
@@ -80,7 +69,7 @@ export function Header() {
                 {item.label}
               </a>
             ))}
-            <Button asChild className="mt-2 rounded-full"><a href="#contato">Receber ligação</a></Button>
+            <Button asChild className="mt-2 rounded-full bg-accent text-accent-foreground hover:bg-accent/90"><a href="#cadastro">Testar grátis 14 dias</a></Button>
           </div>
         )}
       </div>
