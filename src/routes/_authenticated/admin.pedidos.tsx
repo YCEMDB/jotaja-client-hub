@@ -9,6 +9,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 import { Clock, MapPin, Phone, CreditCard, ChevronRight, MessageCircle, Truck } from "lucide-react";
 import { toast } from "sonner";
 
