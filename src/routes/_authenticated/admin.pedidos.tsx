@@ -224,7 +224,14 @@ function PedidosPage() {
                       <p className="text-sm font-medium truncate">{o.customer_name}</p>
                       <p className="text-xs text-muted-foreground truncate">{o.type} · {o.payment}</p>
                       <div className="flex items-center justify-between mt-2">
-                        <span className="font-semibold">R$ {Number(o.total).toFixed(2)}</span>
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-semibold">R$ {Number(o.total).toFixed(2)}</span>
+                          {o.payment === "pix" && (
+                            <span className={`text-[10px] px-1.5 py-0.5 rounded font-semibold ${o.payment_status === "paid" ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700"}`}>
+                              {o.payment_status === "paid" ? "PAGO" : "AGUARDANDO"}
+                            </span>
+                          )}
+                        </div>
                         <div className="flex items-center gap-1">
                           <Button size="sm" variant="ghost" className="h-7 w-7 p-0" title="Imprimir" onClick={(e) => { e.stopPropagation(); printOrder(o); }}>
                             <Printer className="h-3.5 w-3.5" />
