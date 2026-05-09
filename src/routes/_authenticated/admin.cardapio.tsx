@@ -14,7 +14,7 @@ import {
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { Pencil, Trash2, Plus, Upload, ImageIcon } from "lucide-react";
+import { Pencil, Trash2, Plus, Upload, ImageIcon, Sparkles, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/admin/cardapio")({
@@ -85,6 +85,7 @@ function CardapioPage() {
           <p className="text-muted-foreground">Gerencie categorias e produtos</p>
         </div>
         <div className="flex gap-2">
+          <AISuggestButton restaurantId={restaurantId} />
           <Button variant="outline" onClick={() => { setEditCat(null); setCatOpen(true); }}>
             <Plus className="h-4 w-4 mr-2" /> Categoria
           </Button>
