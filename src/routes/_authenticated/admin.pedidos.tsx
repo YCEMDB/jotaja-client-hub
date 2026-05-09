@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Card } from "@/components/ui/card";
@@ -10,8 +10,10 @@ import {
 } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Clock, MapPin, Phone, CreditCard, ChevronRight, MessageCircle, Truck } from "lucide-react";
+import { Clock, MapPin, Phone, CreditCard, ChevronRight, MessageCircle, Truck, Printer, Bell, BellOff } from "lucide-react";
 import { toast } from "sonner";
+import { printReceipt } from "@/lib/print-receipt";
+import { ensureNotificationPermission, playOrderBeep, showOrderNotification } from "@/lib/order-notifications";
 
 export const Route = createFileRoute("/_authenticated/admin/pedidos")({
   component: PedidosPage,

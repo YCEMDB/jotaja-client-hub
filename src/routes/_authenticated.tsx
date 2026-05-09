@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, ShoppingBag, UtensilsCrossed, Users, Settings, LogOut, Tags, Truck } from "lucide-react";
+import { LayoutDashboard, ShoppingBag, UtensilsCrossed, Users, Settings, LogOut, Tags, Truck, BarChart3 } from "lucide-react";
 import logo from "@/assets/comanda-logo.png";
 
 export const Route = createFileRoute("/_authenticated")({
@@ -23,6 +23,7 @@ const NAV = [
   { to: "/admin/cupons", label: "Cupons", icon: Tags },
   { to: "/admin/entregadores", label: "Entregadores", icon: Truck },
   { to: "/admin/clientes", label: "Clientes", icon: Users },
+  { to: "/admin/relatorios", label: "Relatórios", icon: BarChart3 },
   { to: "/admin/configuracoes", label: "Configurações", icon: Settings },
 ] as const;
 
