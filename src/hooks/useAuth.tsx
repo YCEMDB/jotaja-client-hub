@@ -20,6 +20,8 @@ interface AuthCtx {
   loading: boolean;
   roles: AppRole[];
   isSuperAdmin: boolean;
+  /** True while loading roles/restaurants metadata after sign-in. */
+  metaLoading: boolean;
   /** Active restaurant id (own restaurant for owners; selected one for super-admin). */
   restaurantId: string | null;
   /** Available restaurants (owner = own; super_admin = all). */
