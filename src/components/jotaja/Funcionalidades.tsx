@@ -1,4 +1,5 @@
 import { ShoppingBag, Smartphone, BarChart3, Tag, Bike, MessageSquare, CreditCard, Users } from "lucide-react";
+import { Reveal, Stagger, StaggerItem } from "./Reveal";
 
 const features = [
   { icon: Smartphone, title: "Cardápio digital", desc: "Seu menu no link, com fotos, categorias e adicionais." },
@@ -15,7 +16,7 @@ export function Funcionalidades() {
   return (
     <section id="funcionalidades" className="py-24 md:py-32 bg-secondary border-y border-border">
       <div className="container mx-auto px-6">
-        <div className="max-w-2xl mx-auto text-center">
+        <Reveal className="max-w-2xl mx-auto text-center">
           <span className="text-xs font-semibold uppercase tracking-widest text-primary">
             Funcionalidades
           </span>
@@ -25,23 +26,24 @@ export function Funcionalidades() {
           <p className="mt-4 text-muted-foreground">
             Recursos profissionais pensados para a operação real de um restaurante.
           </p>
-        </div>
+        </Reveal>
 
-        <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Stagger className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {features.map(({ icon: Icon, title, desc }) => (
-            <div
+            <StaggerItem
               key={title}
-              className="group relative rounded-xl border border-border bg-card p-6 shadow-xs hover:shadow-card-md hover:-translate-y-0.5 transition-smooth"
+              className="group relative rounded-xl border border-border bg-card p-6 shadow-xs hover:shadow-card-md hover:-translate-y-0.5 transition-smooth h-full"
             >
               <div className="w-9 h-9 rounded-lg bg-primary/10 text-primary grid place-items-center">
                 <Icon className="w-4.5 h-4.5" strokeWidth={2} />
               </div>
               <h3 className="mt-4 text-sm font-semibold tracking-tight">{title}</h3>
               <p className="mt-1 text-xs text-muted-foreground leading-relaxed">{desc}</p>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   );
 }
+
