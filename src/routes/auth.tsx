@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
-import logo from "@/assets/comanda-logo.png";
+import logo from "@/assets/comandahub-logo.png";
 
 export const Route = createFileRoute("/auth")({
   component: AuthPage,
