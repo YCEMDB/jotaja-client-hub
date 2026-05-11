@@ -12,7 +12,15 @@ import logo from "@/assets/comandahub-logo.png";
 
 export const Route = createFileRoute("/auth")({
   component: AuthPage,
-  head: () => ({ meta: [{ title: "Entrar — ComandaHub" }] }),
+  head: () => ({
+    meta: [
+      { title: "Entrar — ComandaHub" },
+      { name: "description", content: "Acesse sua conta ComandaHub para gerenciar pedidos, cardápio e clientes do seu restaurante." },
+      { name: "robots", content: "noindex, nofollow" },
+      { property: "og:title", content: "Entrar — ComandaHub" },
+      { property: "og:description", content: "Acesse o painel ComandaHub do seu restaurante." },
+    ],
+  }),
 });
 
 const loginSchema = z.object({
