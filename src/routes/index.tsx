@@ -12,7 +12,7 @@ import { Footer } from "@/components/jotaja/Footer";
 import { WhatsAppFloat } from "@/components/jotaja/WhatsAppFloat";
 
 const SITE_URL = "https://jotaja-client-hub.lovable.app";
-const OG_IMAGE = `${SITE_URL}/og-comanda.jpg`;
+const OG_IMAGE = `${SITE_URL}/og-comandahub.jpg`;
 const TITLE = "ComandaHub — Plataforma de delivery próprio para restaurantes | Sem comissão";
 const DESCRIPTION =
   "Aumente vendas, automatize a operação e reduza custos. Cardápio digital, pedidos online, gestão e relatórios em tempo real. Teste grátis 14 dias, sem cartão.";
