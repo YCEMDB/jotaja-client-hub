@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
+import { isReservedSlug } from "@/lib/reserved-slugs";
 
 export const Route = createFileRoute("/_authenticated/admin/onboarding")({
   component: Onboarding,
@@ -42,6 +43,10 @@ function Onboarding() {
     const parsed = schema.safeParse({ name, slug, whatsapp, description });
     if (!parsed.success) {
       toast.error(parsed.error.issues[0].message);
+      return;
+    }
+    if (isReservedSlug(parsed.data.slug)) {
+      toast.error("Esse link é reservado pelo sistema. Escolha outro.");
       return;
     }
     setSubmitting(true);
@@ -79,7 +84,7 @@ function Onboarding() {
           <div>
             <Label htmlFor="slug">Link da sua loja *</Label>
             <div className="flex items-center mt-1">
-              <span className="px-3 py-2 bg-muted text-sm text-muted-foreground border border-r-0 rounded-l-md">comanda.app/loja/</span>
+              <span className="px-3 py-2 bg-muted text-sm text-muted-foreground border border-r-0 rounded-l-md">seudominio.com/</span>
               <Input id="slug" value={slug} onChange={(e) => setSlug(e.target.value.toLowerCase())} className="rounded-l-none" required />
             </div>
           </div>

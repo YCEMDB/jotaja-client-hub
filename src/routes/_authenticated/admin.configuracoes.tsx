@@ -398,7 +398,7 @@ function StoreLinkCard({ slug }: { slug: string | null }) {
   }
 
   const origin = typeof window !== "undefined" ? window.location.origin : "";
-  const url = `${origin}/loja/${slug}`;
+  const url = `${origin}/${slug}`;
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=10&data=${encodeURIComponent(url)}`;
 
   const copy = async () => {

@@ -151,7 +151,7 @@ function PedidoStatus() {
 
         {restaurant?.slug && (
           <div className="text-center">
-            <Link to="/loja/$slug" params={{ slug: restaurant.slug }} className="text-sm text-muted-foreground underline">
+            <Link to="/$slug" params={{ slug: restaurant.slug }} className="text-sm text-muted-foreground underline">
               Voltar ao cardápio
             </Link>
           </div>
