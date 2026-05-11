@@ -4,7 +4,15 @@ import { supabase } from "@/integrations/supabase/client";
 
 type AppRole = "super_admin" | "owner" | "employee";
 
-export type RestaurantBrief = { id: string; name: string; slug: string };
+export type RestaurantBrief = {
+  id: string;
+  name: string;
+  slug: string;
+  is_active?: boolean;
+  plan?: string | null;
+  trial_ends_at?: string | null;
+  subscription_ends_at?: string | null;
+};
 
 interface AuthCtx {
   user: User | null;
