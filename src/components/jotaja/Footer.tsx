@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import logo from "@/assets/comandahub-wordmark.png";
 
 export function Footer() {
   return (
@@ -6,13 +7,14 @@ export function Footer() {
       <div className="container mx-auto px-6 py-14">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
           <div className="col-span-2">
-            <Link to="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-primary grid place-items-center text-white font-bold text-sm shadow-blue">
-                C
-              </div>
-              <span className="font-display font-bold text-lg tracking-tight">
-                ComandaHub
-              </span>
+            <Link to="/" className="inline-flex items-center">
+              <img
+                src={logo}
+                alt="ComandaHub"
+                className="h-14 md:h-16 w-auto"
+                width={1488}
+                height={336}
+              />
             </Link>
             <p className="mt-4 text-sm text-muted-foreground max-w-xs leading-relaxed">
               A plataforma de delivery próprio para restaurantes que querem crescer com autonomia.
