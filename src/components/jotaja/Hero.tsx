@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden bg-gradient-radial">
-      <div className="absolute inset-0 bg-grid opacity-60 pointer-events-none" />
+    <section className="relative overflow-hidden bg-background">
+      <div className="absolute inset-0 bg-grid opacity-50 pointer-events-none" />
 
       <div className="container mx-auto px-6 pt-20 pb-16 md:pt-28 md:pb-24 relative">
         <div className="max-w-3xl mx-auto text-center animate-fade-up">
