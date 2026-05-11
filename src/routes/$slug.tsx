@@ -115,7 +115,7 @@ function LojaPage() {
       <div className="min-h-screen grid place-items-center p-6 text-center">
         <div>
           <h1 className="text-2xl font-bold mb-2">Loja não encontrada</h1>
-          <p className="text-muted-foreground mb-4">O link <code>/loja/{slug}</code> não existe.</p>
+          <p className="text-muted-foreground mb-4">Não existe nenhum restaurante com o link <code>/{slug}</code>.</p>
           <Link to="/" className="text-primary underline">Voltar ao início</Link>
         </div>
       </div>
