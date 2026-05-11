@@ -57,6 +57,8 @@ function LojaPage() {
 
   useEffect(() => {
     (async () => {
+      // Slugs reservados nunca correspondem a uma loja real
+      if (isReservedSlug(slug)) { setLoading(false); return; }
       const { data: r } = await supabase
         .from("restaurants").select("*").eq("slug", slug).maybeSingle();
       if (!r) { setLoading(false); return; }
