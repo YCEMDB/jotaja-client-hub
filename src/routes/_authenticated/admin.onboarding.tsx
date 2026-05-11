@@ -45,6 +45,10 @@ function Onboarding() {
       toast.error(parsed.error.issues[0].message);
       return;
     }
+    if (isReservedSlug(parsed.data.slug)) {
+      toast.error("Esse link é reservado pelo sistema. Escolha outro.");
+      return;
+    }
     setSubmitting(true);
     const { data, error } = await supabase
       .from("restaurants")
