@@ -41,6 +41,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [roles, setRoles] = useState<AppRole[]>([]);
   const [restaurants, setRestaurants] = useState<RestaurantBrief[]>([]);
   const [restaurantId, setRestaurantId] = useState<string | null>(null);
+  const [metaLoading, setMetaLoading] = useState(false);
 
   const loadMeta = async (uid: string) => {
     const rolesRes = await supabase.from("user_roles").select("role").eq("user_id", uid);
