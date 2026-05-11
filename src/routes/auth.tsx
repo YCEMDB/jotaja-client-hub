@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import logo from "@/assets/comanda-logo.png";
 
@@ -19,11 +18,6 @@ export const Route = createFileRoute("/auth")({
 const loginSchema = z.object({
   email: z.string().trim().email("Email inválido").max(255),
   password: z.string().min(6, "Mínimo 6 caracteres").max(100),
-});
-
-const signupSchema = loginSchema.extend({
-  fullName: z.string().trim().min(2, "Informe seu nome").max(100),
-  phone: z.string().trim().min(10, "Telefone inválido").max(20),
 });
 
 function AuthPage() {
@@ -46,7 +40,7 @@ function AuthPage() {
             Seu delivery, sua marca,<br />zero comissão.
           </h2>
           <p className="text-primary-foreground/80 text-lg">
-            Junte-se a milhares de restaurantes que reduziram custos e aumentaram a margem de lucro.
+            Acesse o painel da sua loja para gerenciar pedidos, cardápio e entregadores.
           </p>
         </div>
         <p className="text-sm text-primary-foreground/60">© 2026 Comanda</p>
@@ -59,14 +53,19 @@ function AuthPage() {
             <span className="text-2xl font-bold">Comanda</span>
           </div>
 
-          <Tabs defaultValue="login" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="login">Entrar</TabsTrigger>
-              <TabsTrigger value="signup">Criar conta</TabsTrigger>
-            </TabsList>
-            <TabsContent value="login"><LoginForm /></TabsContent>
-            <TabsContent value="signup"><SignupForm /></TabsContent>
-          </Tabs>
+          <h1 className="text-2xl font-bold mb-1">Entrar</h1>
+          <p className="text-sm text-muted-foreground mb-6">
+            Acesse o painel da sua loja com suas credenciais.
+          </p>
+
+          <LoginForm />
+
+          <p className="text-xs text-muted-foreground text-center mt-6">
+            Ainda não tem acesso?{" "}
+            <Link to="/" hash="cadastro" className="text-primary font-semibold underline">
+              Solicite seu teste grátis
+            </Link>
+          </p>
         </Card>
       </div>
     </div>
@@ -109,65 +108,6 @@ function LoginForm() {
       </div>
       <Button type="submit" className="w-full" disabled={submitting}>
         {submitting ? "Entrando..." : "Entrar"}
-      </Button>
-    </form>
-  );
-}
-
-function SignupForm() {
-  const nav = useNavigate();
-  const [fullName, setFullName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const parsed = signupSchema.safeParse({ fullName, phone, email, password });
-    if (!parsed.success) {
-      toast.error(parsed.error.issues[0].message);
-      return;
-    }
-    setSubmitting(true);
-    const { error } = await supabase.auth.signUp({
-      email: parsed.data.email,
-      password: parsed.data.password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/admin`,
-        data: { full_name: parsed.data.fullName, phone: parsed.data.phone },
-      },
-    });
-    setSubmitting(false);
-    if (error) {
-      toast.error(error.message.includes("already registered") ? "Esse email já está cadastrado" : error.message);
-      return;
-    }
-    toast.success("Conta criada! Vamos configurar seu restaurante.");
-    nav({ to: "/admin" });
-  };
-
-  return (
-    <form onSubmit={onSubmit} className="space-y-4">
-      <div>
-        <Label htmlFor="name">Nome completo</Label>
-        <Input id="name" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
-      </div>
-      <div>
-        <Label htmlFor="phone-s">Telefone</Label>
-        <Input id="phone-s" placeholder="(11) 99999-9999" value={phone} onChange={(e) => setPhone(e.target.value)} required />
-      </div>
-      <div>
-        <Label htmlFor="email-s">Email</Label>
-        <Input id="email-s" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-      </div>
-      <div>
-        <Label htmlFor="password-s">Senha</Label>
-        <Input id="password-s" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
-        <p className="text-xs text-muted-foreground mt-1">Mínimo 6 caracteres</p>
-      </div>
-      <Button type="submit" className="w-full" disabled={submitting}>
-        {submitting ? "Criando conta..." : "Criar minha conta grátis"}
       </Button>
     </form>
   );

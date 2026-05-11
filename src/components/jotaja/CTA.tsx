@@ -4,6 +4,7 @@ import { ArrowRight, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
+import { supabase } from "@/integrations/supabase/client";
 
 const schema = z.object({
   nome: z.string().trim().min(2, "Nome muito curto").max(100),
@@ -16,7 +17,7 @@ export function CTA() {
   const [form, setForm] = useState({ nome: "", email: "", telefone: "", restaurante: "" });
   const [loading, setLoading] = useState(false);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = schema.safeParse(form);
     if (!result.success) {
@@ -24,11 +25,19 @@ export function CTA() {
       return;
     }
     setLoading(true);
-    setTimeout(() => {
-      toast.success("Recebemos seu cadastro! Em breve entraremos em contato 🎉");
-      setForm({ nome: "", email: "", telefone: "", restaurante: "" });
-      setLoading(false);
-    }, 800);
+    const { error } = await supabase.from("signup_leads").insert({
+      name: result.data.nome,
+      restaurant_name: result.data.restaurante,
+      email: result.data.email,
+      phone: result.data.telefone,
+    });
+    setLoading(false);
+    if (error) {
+      toast.error("Não foi possível enviar agora. Tente novamente em instantes.");
+      return;
+    }
+    toast.success("Recebemos seu cadastro! Em até 24h entraremos em contato pra liberar seu teste 🎉");
+    setForm({ nome: "", email: "", telefone: "", restaurante: "" });
   };
 
   return (
@@ -99,10 +108,10 @@ export function CTA() {
               size="lg"
               className="w-full h-13 rounded-full font-bold bg-accent text-accent-foreground hover:bg-accent/90 shadow-accent-lg"
             >
-              {loading ? "Enviando..." : (<>Criar minha conta grátis <ArrowRight className="ml-2 w-5 h-5" /></>)}
+              {loading ? "Enviando..." : (<>Quero meu teste grátis <ArrowRight className="ml-2 w-5 h-5" /></>)}
             </Button>
             <p className="text-xs text-muted-foreground text-center">
-              Ao continuar você aceita nossos termos e política de privacidade.
+              Em até 24h liberamos seu acesso. Sem cartão. Sem compromisso.
             </p>
           </form>
         </div>

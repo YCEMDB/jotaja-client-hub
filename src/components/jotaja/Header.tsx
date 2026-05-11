@@ -43,8 +43,11 @@ export function Header() {
               <Phone className="w-4 h-4" />
               <span>(21) 2042-2913</span>
             </a>
+            <a href="/auth" className="px-3 py-2 rounded-full text-sm font-semibold text-foreground/80 hover:text-foreground hover:bg-accent-soft transition-smooth">
+              Entrar
+            </a>
             <Button size="lg" className="rounded-full font-bold bg-accent text-accent-foreground hover:bg-accent/90 shadow-accent-lg" asChild>
-              <a href="/auth"><Sparkles className="w-4 h-4 mr-1.5" /> Testar grátis</a>
+              <a href="#cadastro"><Sparkles className="w-4 h-4 mr-1.5" /> Testar grátis</a>
             </Button>
           </div>
 
@@ -69,7 +72,8 @@ export function Header() {
                 {item.label}
               </a>
             ))}
-            <Button asChild className="mt-2 rounded-full bg-accent text-accent-foreground hover:bg-accent/90"><a href="/auth">Testar grátis 14 dias</a></Button>
+            <a href="/auth" onClick={() => setOpen(false)} className="px-4 py-3 rounded-lg hover:bg-muted font-medium text-center">Entrar</a>
+            <Button asChild className="mt-2 rounded-full bg-accent text-accent-foreground hover:bg-accent/90"><a href="#cadastro" onClick={() => setOpen(false)}>Testar grátis 14 dias</a></Button>
           </div>
         )}
       </div>
