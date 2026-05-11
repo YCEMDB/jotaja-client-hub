@@ -151,9 +151,19 @@ function LojaPage() {
               {Number(restaurant.min_order_value) > 0 && (
                 <span className="opacity-80">Pedido mín. R$ {Number(restaurant.min_order_value).toFixed(2)}</span>
               )}
-            </div>
           </div>
+          <Button
+            variant="secondary"
+            size="sm"
+            className="shrink-0 gap-2"
+            onClick={() => setTrackOpen(true)}
+          >
+            <ClipboardList className="h-4 w-4" />
+            <span className="hidden sm:inline">Acompanhar pedido</span>
+            <span className="sm:hidden">Pedidos</span>
+          </Button>
         </div>
+      </div>
       </div>
 
       {/* Category nav */}
