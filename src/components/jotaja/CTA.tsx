@@ -41,7 +41,7 @@ export function CTA() {
                 </a>
               </Button>
             </div>
-          </div>
+        </Reveal>
         </div>
       </div>
     </section>
