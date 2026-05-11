@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 export function BlockedStoreScreen({ restaurantName, reason }: { restaurantName: string; reason: "trial" | "subscription" }) {
   const { signOut } = useAuth();
-  const whatsapp = "5511999999999"; // TODO: trocar pelo seu número
+  const whatsapp = "5527992877008"; // Ghabriel
   const msg = encodeURIComponent(
     `Olá! Sou da loja "${restaurantName}" e meu acesso ao Comanda foi bloqueado. Quero regularizar o pagamento.`,
   );
