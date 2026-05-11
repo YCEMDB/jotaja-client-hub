@@ -61,9 +61,10 @@ export function Depoimentos() {
                   <div className="text-xs text-muted-foreground">{t.role}</div>
                 </div>
               </figcaption>
-            </figure>
+              </figure>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   );
