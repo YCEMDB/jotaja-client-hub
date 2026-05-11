@@ -49,7 +49,7 @@ function AuthLayout() {
     return null;
   }, [activeRestaurant, isSuperAdmin]);
 
-  if (loading) {
+  if (loading || (user && metaLoading)) {
     return <div className="min-h-screen grid place-items-center">Carregando…</div>;
   }
 
