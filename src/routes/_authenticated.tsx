@@ -26,6 +26,7 @@ const NAV = [
 function AuthLayout() {
   const { user, signOut, loading, restaurantId, isSuperAdmin, restaurants, selectRestaurant } = useAuth();
   const nav = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (!loading && !user) nav({ to: "/auth" });
@@ -34,8 +35,26 @@ function AuthLayout() {
     }
   }, [user, loading, restaurantId, isSuperAdmin, nav]);
 
+  const activeRestaurant = useMemo(
+    () => restaurants.find((r) => r.id === restaurantId) ?? null,
+    [restaurants, restaurantId],
+  );
+
+  const blocked = useMemo(() => {
+    if (!activeRestaurant || isSuperAdmin) return null;
+    if (activeRestaurant.is_active === false) {
+      const isTrial = activeRestaurant.plan === "trial";
+      return { reason: isTrial ? ("trial" as const) : ("subscription" as const) };
+    }
+    return null;
+  }, [activeRestaurant, isSuperAdmin]);
+
   if (loading) {
     return <div className="min-h-screen grid place-items-center">Carregando…</div>;
+  }
+
+  if (blocked && activeRestaurant && !location.pathname.startsWith("/admin/onboarding")) {
+    return <BlockedStoreScreen restaurantName={activeRestaurant.name} reason={blocked.reason} />;
   }
 
   return (
