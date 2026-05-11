@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Clock, MapPin, Phone, CreditCard, ChevronRight, MessageCircle, Truck, Printer, Bell, BellOff } from "lucide-react";
+import { Clock, MapPin, Phone, CreditCard, ChevronRight, MessageCircle, Truck, Printer, Bell, BellOff, PrinterCheck } from "lucide-react";
 import { toast } from "sonner";
 import { printReceipt } from "@/lib/print-receipt";
 import { ensureNotificationPermission, playOrderBeep, showOrderNotification } from "@/lib/order-notifications";
