@@ -31,9 +31,8 @@ function AuthPage() {
   return (
     <div className="min-h-screen grid lg:grid-cols-2 bg-background">
       <div className="hidden lg:flex flex-col justify-between p-12 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground">
-        <Link to="/" className="flex items-center gap-2">
-          <img src={logo} alt="ComandaHub" className="h-10 w-10 rounded-lg bg-white p-1" />
-          <span className="text-2xl font-bold">ComandaHub</span>
+        <Link to="/" className="flex items-center">
+          <img src={logo} alt="ComandaHub" className="h-10 w-auto bg-white rounded-lg p-1.5" />
         </Link>
         <div>
           <h2 className="text-4xl font-bold leading-tight mb-4">
