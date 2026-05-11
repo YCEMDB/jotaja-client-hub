@@ -118,6 +118,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user,
         session,
         loading,
+        metaLoading,
         roles,
         isSuperAdmin: roles.includes("super_admin"),
         restaurantId,
