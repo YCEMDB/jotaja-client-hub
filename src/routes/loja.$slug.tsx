@@ -19,8 +19,9 @@ import {
 import {
   RadioGroup, RadioGroupItem,
 } from "@/components/ui/radio-group";
-import { ShoppingBag, Plus, Minus, Trash2, MapPin, Clock, ImageIcon } from "lucide-react";
+import { ShoppingBag, Plus, Minus, Trash2, MapPin, Clock, ImageIcon, Search, ClipboardList } from "lucide-react";
 import { toast } from "sonner";
+import { useNavigate } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/loja/$slug")({
   component: LojaPage,
