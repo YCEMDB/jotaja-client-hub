@@ -22,6 +22,7 @@ import {
 import { ShoppingBag, Plus, Minus, Trash2, MapPin, Clock, ImageIcon, Search, ClipboardList } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "@tanstack/react-router";
+import { isReservedSlug } from "@/lib/reserved-slugs";
 
 export const Route = createFileRoute("/$slug")({
   component: LojaPage,
