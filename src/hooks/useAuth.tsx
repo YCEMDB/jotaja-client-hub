@@ -50,13 +50,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (isSA) {
       const { data } = await supabase
         .from("restaurants")
-        .select("id,name,slug")
+        .select("id,name,slug,is_active,plan,trial_ends_at,subscription_ends_at")
         .order("created_at", { ascending: false });
       list = (data ?? []) as RestaurantBrief[];
     } else {
       const { data } = await supabase
         .from("restaurants")
-        .select("id,name,slug")
+        .select("id,name,slug,is_active,plan,trial_ends_at,subscription_ends_at")
         .eq("owner_id", uid);
       list = (data ?? []) as RestaurantBrief[];
     }
