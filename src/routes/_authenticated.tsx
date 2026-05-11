@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { LayoutDashboard, ShoppingBag, UtensilsCrossed, Users, Settings, LogOut, Tags, Truck, BarChart3, ShieldCheck } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import logo from "@/assets/comandahub-logo.png";
+import logoIcon from "@/assets/comandahub-icon.png";
 import { BlockedStoreScreen } from "@/components/BlockedStoreScreen";
 
 export const Route = createFileRoute("/_authenticated")({
@@ -60,9 +60,10 @@ function AuthLayout() {
   return (
     <div className="min-h-screen flex bg-muted/30">
       <aside className="w-64 bg-primary text-primary-foreground flex flex-col">
-        <div className="p-6 flex items-center border-b border-primary-foreground/10">
-          <img src={logo} alt="ComandaHub" className="h-9 w-auto bg-white rounded-md p-1" />
-        </div>
+        <Link to="/admin" className="p-5 flex items-center gap-2.5 border-b border-primary-foreground/10 hover:bg-primary-foreground/5 transition-colors">
+          <img src={logoIcon} alt="" className="h-8 w-8 rounded-md bg-white p-1" />
+          <span className="text-base font-bold tracking-tight">ComandaHub</span>
+        </Link>
 
         {(isSuperAdmin || restaurants.length > 1) && restaurants.length > 0 && (
           <div className="p-3 border-b border-primary-foreground/10">
