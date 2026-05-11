@@ -13,7 +13,7 @@ import { WhatsAppFloat } from "@/components/jotaja/WhatsAppFloat";
 
 const SITE_URL = "https://jotaja-client-hub.lovable.app";
 const OG_IMAGE = `${SITE_URL}/og-comanda.jpg`;
-const TITLE = "Comanda — Plataforma de delivery próprio para restaurantes | Sem comissão";
+const TITLE = "ComandaHub — Plataforma de delivery próprio para restaurantes | Sem comissão";
 const DESCRIPTION =
   "Aumente vendas, automatize a operação e reduza custos. Cardápio digital, pedidos online, gestão e relatórios em tempo real. Teste grátis 14 dias, sem cartão.";
 
@@ -30,7 +30,7 @@ export const Route = createFileRoute("/")({
       { property: "og:image", content: OG_IMAGE },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
-      { property: "og:image:alt", content: "Painel da Comanda mostrando faturamento, pedidos e clientes" },
+      { property: "og:image:alt", content: "Painel da ComandaHub mostrando faturamento, pedidos e clientes" },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
       { name: "twitter:image", content: OG_IMAGE },
@@ -42,7 +42,7 @@ export const Route = createFileRoute("/")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "SoftwareApplication",
-          name: "Comanda",
+          name: "ComandaHub",
           applicationCategory: "BusinessApplication",
           operatingSystem: "Web",
           description: DESCRIPTION,

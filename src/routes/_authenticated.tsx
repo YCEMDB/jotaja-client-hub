@@ -62,7 +62,7 @@ function AuthLayout() {
       <aside className="w-64 bg-primary text-primary-foreground flex flex-col">
         <div className="p-6 flex items-center gap-2 border-b border-primary-foreground/10">
           <img src={logo} alt="" className="h-8 w-8 rounded-md bg-white p-0.5" />
-          <span className="font-bold text-lg">Comanda</span>
+          <span className="font-bold text-lg">ComandaHub</span>
         </div>
 
         {(isSuperAdmin || restaurants.length > 1) && restaurants.length > 0 && (

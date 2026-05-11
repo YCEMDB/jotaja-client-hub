@@ -22,7 +22,7 @@ export function Header() {
               C
             </div>
             <span className="font-display font-bold text-lg tracking-tight">
-              Comanda
+              ComandaHub
             </span>
           </Link>
 

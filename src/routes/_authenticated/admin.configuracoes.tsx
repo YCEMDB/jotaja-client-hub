@@ -17,7 +17,7 @@ import {
 
 export const Route = createFileRoute("/_authenticated/admin/configuracoes")({
   component: ConfigPage,
-  head: () => ({ meta: [{ title: "Configurações — Comanda" }] }),
+  head: () => ({ meta: [{ title: "Configurações — ComandaHub" }] }),
 });
 
 const DAYS = [

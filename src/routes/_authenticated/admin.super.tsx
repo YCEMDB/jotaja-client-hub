@@ -24,7 +24,7 @@ import {
 
 export const Route = createFileRoute("/_authenticated/admin/super")({
   component: SuperAdminPage,
-  head: () => ({ meta: [{ title: "Super-Admin — Comanda" }] }),
+  head: () => ({ meta: [{ title: "Super-Admin — ComandaHub" }] }),
 });
 
 type Plan = "trial" | "essential" | "professional";
