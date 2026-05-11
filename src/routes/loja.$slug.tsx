@@ -19,8 +19,9 @@ import {
 import {
   RadioGroup, RadioGroupItem,
 } from "@/components/ui/radio-group";
-import { ShoppingBag, Plus, Minus, Trash2, MapPin, Clock, ImageIcon } from "lucide-react";
+import { ShoppingBag, Plus, Minus, Trash2, MapPin, Clock, ImageIcon, Search, ClipboardList } from "lucide-react";
 import { toast } from "sonner";
+import { useNavigate } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/loja/$slug")({
   component: LojaPage,
@@ -50,6 +51,7 @@ function LojaPage() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [trackOpen, setTrackOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -149,9 +151,19 @@ function LojaPage() {
               {Number(restaurant.min_order_value) > 0 && (
                 <span className="opacity-80">Pedido mín. R$ {Number(restaurant.min_order_value).toFixed(2)}</span>
               )}
-            </div>
           </div>
+          <Button
+            variant="secondary"
+            size="sm"
+            className="shrink-0 gap-2"
+            onClick={() => setTrackOpen(true)}
+          >
+            <ClipboardList className="h-4 w-4" />
+            <span className="hidden sm:inline">Acompanhar pedido</span>
+            <span className="sm:hidden">Pedidos</span>
+          </Button>
         </div>
+      </div>
       </div>
 
       {/* Category nav */}
@@ -275,6 +287,14 @@ function LojaPage() {
                 >
                   {!restaurant.is_open ? "Loja fechada" : "Finalizar pedido"}
                 </Button>
+                <Button
+                  variant="outline"
+                  className="w-full gap-2"
+                  onClick={() => setTrackOpen(true)}
+                >
+                  <ClipboardList className="h-4 w-4" />
+                  Acompanhar pedido
+                </Button>
               </div>
             </SheetFooter>
           </SheetContent>
@@ -301,6 +321,14 @@ function LojaPage() {
           setCheckoutOpen(false);
           window.location.href = `/pedido/${orderId}`;
         }}
+      />
+
+      {/* Track order */}
+      <TrackOrderDialog
+        open={trackOpen}
+        onOpenChange={setTrackOpen}
+        restaurantId={restaurant.id}
+        brand={restaurant.primary_color ?? "#0A1628"}
       />
     </div>
   );
@@ -598,6 +626,133 @@ function CheckoutDialog({
           <Button size="lg" className="w-full" style={{ background: restaurant.primary_color ?? undefined }} disabled={submitting} onClick={submit}>
             {submitting ? "Enviando…" : "Confirmar pedido"}
           </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+// ===== Track order dialog =====
+type TrackedOrder = {
+  id: string;
+  order_number: number;
+  status: string;
+  total: number;
+  created_at: string;
+};
+
+const STATUS_LABEL: Record<string, string> = {
+  pending: "Aguardando confirmação",
+  confirmed: "Confirmado",
+  preparing: "Em preparo",
+  ready: "Pronto",
+  out_for_delivery: "Saiu para entrega",
+  delivered: "Entregue",
+  cancelled: "Cancelado",
+};
+
+function normalizePhone(p: string) {
+  return p.replace(/\D/g, "");
+}
+
+function TrackOrderDialog({
+  open, onOpenChange, restaurantId, brand,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  restaurantId: string;
+  brand: string;
+}) {
+  const navigate = useNavigate();
+  const [phone, setPhone] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [orders, setOrders] = useState<TrackedOrder[] | null>(null);
+
+  useEffect(() => {
+    if (open) {
+      const last = localStorage.getItem("track-phone");
+      if (last) setPhone(last);
+    } else {
+      setOrders(null);
+    }
+  }, [open]);
+
+  const search = async () => {
+    const digits = normalizePhone(phone);
+    if (digits.length < 8) {
+      toast.error("Digite um telefone válido");
+      return;
+    }
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("orders")
+      .select("id, order_number, status, total, created_at, customer_phone")
+      .eq("restaurant_id", restaurantId)
+      .order("created_at", { ascending: false })
+      .limit(50);
+    setLoading(false);
+    if (error) {
+      toast.error("Erro ao buscar pedidos");
+      return;
+    }
+    const filtered = (data ?? []).filter(
+      (o: any) => normalizePhone(o.customer_phone ?? "") === digits
+    ) as TrackedOrder[];
+    setOrders(filtered);
+    localStorage.setItem("track-phone", phone);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>Acompanhar pedido</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div>
+            <Label>Seu telefone (WhatsApp)</Label>
+            <div className="flex gap-2 mt-1.5">
+              <Input
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="(11) 99999-9999"
+                onKeyDown={(e) => { if (e.key === "Enter") search(); }}
+              />
+              <Button onClick={search} disabled={loading} style={{ background: brand, color: "white" }}>
+                <Search className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+
+          {orders !== null && (
+            <div className="space-y-2 max-h-[55vh] overflow-y-auto">
+              {orders.length === 0 ? (
+                <p className="text-sm text-muted-foreground text-center py-6">
+                  Nenhum pedido encontrado para este telefone.
+                </p>
+              ) : (
+                orders.map((o) => (
+                  <button
+                    key={o.id}
+                    onClick={() => {
+                      onOpenChange(false);
+                      navigate({ to: "/pedido/$id", params: { id: o.id } });
+                    }}
+                    className="w-full text-left border rounded-lg p-3 hover:bg-muted/50 transition"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold">Pedido #{o.order_number}</span>
+                      <Badge variant="secondary">{STATUS_LABEL[o.status] ?? o.status}</Badge>
+                    </div>
+                    <div className="flex items-center justify-between mt-1 text-sm text-muted-foreground">
+                      <span>{new Date(o.created_at).toLocaleString("pt-BR")}</span>
+                      <span className="font-medium text-foreground">R$ {Number(o.total).toFixed(2)}</span>
+                    </div>
+                  </button>
+                ))
+              )}
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>
