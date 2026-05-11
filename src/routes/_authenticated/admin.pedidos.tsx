@@ -102,10 +102,19 @@ function PedidosPage() {
     const list = (data ?? []) as Order[];
     if (initializedRef.current) {
       const newOnes = list.filter((o) => !knownIdsRef.current.has(o.id) && o.status === "pending");
-      newOnes.forEach((o) => {
+      newOnes.forEach(async (o) => {
         playOrderBeep();
         showOrderNotification(o.order_number, o.customer_name, o.total);
         toast.success(`🔔 Novo pedido #${o.order_number} — ${o.customer_name}`);
+        if (autoPrintRef.current) {
+          const { data: its } = await supabase.from("order_items").select("*").eq("order_id", o.id);
+          printReceipt({
+            restaurantName: restaurantRef.current?.name ?? "Comanda",
+            restaurantPhone: restaurantRef.current?.phone ?? null,
+            order: o as any,
+            items: (its ?? []) as any,
+          });
+        }
       });
     }
     knownIdsRef.current = new Set(list.map((o) => o.id));
