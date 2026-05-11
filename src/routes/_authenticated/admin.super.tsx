@@ -285,7 +285,7 @@ function SuperAdminPage() {
       </Tabs>
 
       <Dialog open={!!editing} onOpenChange={(o) => !o && setEditing(null)}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           {editing && (
             <>
               <DialogHeader><DialogTitle>{editing.name}</DialogTitle></DialogHeader>
@@ -302,7 +302,7 @@ function SuperAdminPage() {
                   </Select>
                 </div>
                 <div className="flex items-center justify-between rounded border p-3">
-                  <div><Label>Restaurante ativo</Label><p className="text-xs text-muted-foreground">Inativos não aparecem no marketplace público</p></div>
+                  <div><Label>Restaurante ativo</Label><p className="text-xs text-muted-foreground">Inativos não aparecem no marketplace público e o dono vê tela de bloqueio</p></div>
                   <Switch checked={editing.is_active} onCheckedChange={(v) => setEditing({ ...editing, is_active: v })} />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
@@ -319,6 +319,14 @@ function SuperAdminPage() {
                   <Label className="text-xs">Anotações internas</Label>
                   <Textarea rows={3} value={editing.admin_notes ?? ""} onChange={(e) => setEditing({ ...editing, admin_notes: e.target.value })} placeholder="Visível apenas para super-admins" />
                 </div>
+
+                <PaymentsSection
+                  restaurantId={editing.id}
+                  currentPlan={editing.plan}
+                  onRegistered={(newEnd) => {
+                    setEditing((prev) => prev ? { ...prev, subscription_ends_at: newEnd, is_active: true } : prev);
+                  }}
+                />
               </div>
               <DialogFooter>
                 <Button variant="outline" onClick={() => setEditing(null)}>Cancelar</Button>
