@@ -9,8 +9,8 @@ async function assertSuperAdmin(supabase: any, userId: string) {
     .select("role")
     .eq("user_id", userId)
     .eq("role", "super_admin")
-    .maybeSingle();
-  if (error || !data) {
+    .limit(1);
+  if (error || !data || data.length === 0) {
     throw new Response("Forbidden: super-admin only", { status: 403 });
   }
 }
