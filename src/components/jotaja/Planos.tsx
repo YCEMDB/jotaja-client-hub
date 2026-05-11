@@ -1,5 +1,6 @@
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Reveal, Stagger, StaggerItem } from "./Reveal";
 
 const plans = [
   {
@@ -51,7 +52,7 @@ export function Planos() {
   return (
     <section id="planos" className="py-24 md:py-32 bg-secondary border-y border-border">
       <div className="container mx-auto px-6">
-        <div className="max-w-2xl mx-auto text-center">
+        <Reveal className="max-w-2xl mx-auto text-center">
           <span className="text-xs font-semibold uppercase tracking-widest text-primary">
             Planos
           </span>
@@ -61,13 +62,13 @@ export function Planos() {
           <p className="mt-4 text-muted-foreground">
             Mensalidade fixa, sem comissão por venda. Cancele quando quiser.
           </p>
-        </div>
+        </Reveal>
 
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto">
+        <Stagger className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto">
           {plans.map((plan) => (
-            <div
+            <StaggerItem
               key={plan.name}
-              className={`relative rounded-2xl p-7 flex flex-col ${
+              className={`relative rounded-2xl p-7 flex flex-col h-full ${
                 plan.highlighted
                   ? "bg-card border-2 border-primary shadow-blue"
                   : "bg-card border border-border shadow-xs"
@@ -104,9 +105,9 @@ export function Planos() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   );

@@ -1,4 +1,5 @@
 import { Star } from "lucide-react";
+import { Reveal, Stagger, StaggerItem } from "./Reveal";
 
 const testimonials = [
   {
@@ -28,21 +29,21 @@ export function Depoimentos() {
   return (
     <section id="depoimentos" className="py-24 md:py-32 bg-background">
       <div className="container mx-auto px-6">
-        <div className="max-w-2xl mx-auto text-center">
+        <Reveal className="max-w-2xl mx-auto text-center">
           <span className="text-xs font-semibold uppercase tracking-widest text-primary">
             Depoimentos
           </span>
           <h2 className="mt-3 text-3xl md:text-4xl font-bold tracking-tight">
             Restaurantes que já fizeram a virada.
           </h2>
-        </div>
+        </Reveal>
 
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-5">
+        <Stagger className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-5">
           {testimonials.map((t) => (
-            <figure
-              key={t.name}
-              className="rounded-2xl border border-border bg-card p-7 shadow-xs hover:shadow-card-md transition-smooth flex flex-col"
-            >
+            <StaggerItem key={t.name} className="h-full">
+              <figure
+                className="rounded-2xl border border-border bg-card p-7 shadow-xs hover:shadow-card-md transition-smooth flex flex-col h-full"
+              >
               <div className="flex gap-0.5 text-primary">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star key={i} className="w-4 h-4 fill-current" />
@@ -60,9 +61,10 @@ export function Depoimentos() {
                   <div className="text-xs text-muted-foreground">{t.role}</div>
                 </div>
               </figcaption>
-            </figure>
+              </figure>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   );
