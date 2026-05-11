@@ -267,7 +267,7 @@ function LojaPage() {
                 </div>
               ))}
             </div>
-            <SheetFooter className="border-t pt-4">
+            <SheetFooter className="border-t pt-4 sm:flex-col sm:space-x-0">
               <div className="w-full space-y-3">
                 <div className="flex justify-between text-sm">
                   <span>Subtotal</span>
