@@ -237,9 +237,27 @@ function PedidosPage() {
           <h1 className="text-3xl font-bold">Pedidos</h1>
           <p className="text-muted-foreground">Acompanhe os pedidos em tempo real (últimas 24h)</p>
         </div>
-        <Button variant={notifEnabled ? "secondary" : "default"} size="sm" onClick={enableNotifications}>
-          {notifEnabled ? <><Bell className="h-4 w-4 mr-2" />Notificações ativas</> : <><BellOff className="h-4 w-4 mr-2" />Ativar alertas de novos pedidos</>}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant={autoPrint ? "secondary" : "outline"}
+            size="sm"
+            onClick={() => {
+              const next = !autoPrint;
+              setAutoPrint(next);
+              localStorage.setItem("autoPrintOrders", next ? "1" : "0");
+              if (next) {
+                toast.success("Impressão automática ativada — permita pop-ups neste site");
+              } else {
+                toast.message("Impressão automática desativada");
+              }
+            }}
+          >
+            {autoPrint ? <><PrinterCheck className="h-4 w-4 mr-2" />Impressão auto: ON</> : <><Printer className="h-4 w-4 mr-2" />Impressão auto: OFF</>}
+          </Button>
+          <Button variant={notifEnabled ? "secondary" : "default"} size="sm" onClick={enableNotifications}>
+            {notifEnabled ? <><Bell className="h-4 w-4 mr-2" />Notificações ativas</> : <><BellOff className="h-4 w-4 mr-2" />Ativar alertas de novos pedidos</>}
+          </Button>
+        </div>
       </div>
 
       <div className="flex-1 overflow-x-auto">
