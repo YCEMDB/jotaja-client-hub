@@ -13,7 +13,7 @@ const features = [
 
 export function Funcionalidades() {
   return (
-    <section id="funcionalidades" className="py-24 md:py-32 bg-gradient-soft border-y border-border">
+    <section id="funcionalidades" className="py-24 md:py-32 bg-secondary border-y border-border">
       <div className="container mx-auto px-6">
         <div className="max-w-2xl mx-auto text-center">
           <span className="text-xs font-semibold uppercase tracking-widest text-primary">

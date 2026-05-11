@@ -17,15 +17,15 @@ export function Hero() {
             <ArrowRight className="w-3 h-3" />
           </a>
 
-          <h1 className="mt-6 text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-foreground">
+          <h1 className="mt-6 text-4xl sm:text-5xl md:text-[3.5rem] font-bold tracking-tight text-foreground leading-[1.05]">
             A plataforma de delivery
             <br />
-            <span className="text-gradient-primary">feita para o seu restaurante.</span>
+            <span className="text-muted-foreground font-bold">feita para o seu restaurante.</span>
           </h1>
 
-          <p className="mt-6 text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Cardápio digital, pedidos online e gestão completa em um só lugar.
-            Sem comissão por venda, com a sua marca, do seu jeito.
+          <p className="mt-6 text-base md:text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
+            Aumente vendas, automatize a operação e reduza custos com uma plataforma completa.
+            Sem comissão por venda, com a sua marca.
           </p>
 
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -66,7 +66,6 @@ export function Hero() {
         {/* Dashboard mockup */}
         <div className="mt-16 max-w-5xl mx-auto animate-fade-up" style={{ animationDelay: "0.15s" }}>
           <div className="relative">
-            <div className="absolute -inset-4 bg-gradient-primary opacity-20 blur-3xl rounded-3xl" />
             <div className="relative rounded-2xl border border-border bg-card shadow-card-xl overflow-hidden">
               {/* Browser chrome */}
               <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-muted/40">
