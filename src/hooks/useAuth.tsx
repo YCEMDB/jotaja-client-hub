@@ -4,7 +4,15 @@ import { supabase } from "@/integrations/supabase/client";
 
 type AppRole = "super_admin" | "owner" | "employee";
 
-export type RestaurantBrief = { id: string; name: string; slug: string };
+export type RestaurantBrief = {
+  id: string;
+  name: string;
+  slug: string;
+  is_active?: boolean;
+  plan?: string | null;
+  trial_ends_at?: string | null;
+  subscription_ends_at?: string | null;
+};
 
 interface AuthCtx {
   user: User | null;
@@ -42,13 +50,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (isSA) {
       const { data } = await supabase
         .from("restaurants")
-        .select("id,name,slug")
+        .select("id,name,slug,is_active,plan,trial_ends_at,subscription_ends_at")
         .order("created_at", { ascending: false });
       list = (data ?? []) as RestaurantBrief[];
     } else {
       const { data } = await supabase
         .from("restaurants")
-        .select("id,name,slug")
+        .select("id,name,slug,is_active,plan,trial_ends_at,subscription_ends_at")
         .eq("owner_id", uid);
       list = (data ?? []) as RestaurantBrief[];
     }

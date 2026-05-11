@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.deactivate_expired_restaurants() FROM PUBLIC, anon, authenticated;

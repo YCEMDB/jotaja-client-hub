@@ -1,11 +1,12 @@
-import { createFileRoute, Outlet, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { createFileRoute, Outlet, Link, useNavigate, useLocation } from "@tanstack/react-router";
+import { useEffect, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { LayoutDashboard, ShoppingBag, UtensilsCrossed, Users, Settings, LogOut, Tags, Truck, BarChart3, ShieldCheck } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import logo from "@/assets/comanda-logo.png";
+import { BlockedStoreScreen } from "@/components/BlockedStoreScreen";
 
 export const Route = createFileRoute("/_authenticated")({
   component: AuthLayout,
@@ -25,6 +26,7 @@ const NAV = [
 function AuthLayout() {
   const { user, signOut, loading, restaurantId, isSuperAdmin, restaurants, selectRestaurant } = useAuth();
   const nav = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (!loading && !user) nav({ to: "/auth" });
@@ -33,8 +35,26 @@ function AuthLayout() {
     }
   }, [user, loading, restaurantId, isSuperAdmin, nav]);
 
+  const activeRestaurant = useMemo(
+    () => restaurants.find((r) => r.id === restaurantId) ?? null,
+    [restaurants, restaurantId],
+  );
+
+  const blocked = useMemo(() => {
+    if (!activeRestaurant || isSuperAdmin) return null;
+    if (activeRestaurant.is_active === false) {
+      const isTrial = activeRestaurant.plan === "trial";
+      return { reason: isTrial ? ("trial" as const) : ("subscription" as const) };
+    }
+    return null;
+  }, [activeRestaurant, isSuperAdmin]);
+
   if (loading) {
     return <div className="min-h-screen grid place-items-center">Carregando…</div>;
+  }
+
+  if (blocked && activeRestaurant && !location.pathname.startsWith("/admin/onboarding")) {
+    return <BlockedStoreScreen restaurantName={activeRestaurant.name} reason={blocked.reason} />;
   }
 
   return (

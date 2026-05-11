@@ -580,6 +580,48 @@ export type Database = {
           },
         ]
       }
+      restaurant_payments: {
+        Row: {
+          amount: number
+          created_at: string
+          created_by: string | null
+          id: string
+          method: string | null
+          notes: string | null
+          paid_at: string
+          period_end: string
+          period_start: string
+          plan: string
+          restaurant_id: string
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          method?: string | null
+          notes?: string | null
+          paid_at?: string
+          period_end: string
+          period_start?: string
+          plan: string
+          restaurant_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          method?: string | null
+          notes?: string | null
+          paid_at?: string
+          period_end?: string
+          period_start?: string
+          plan?: string
+          restaurant_id?: string
+        }
+        Relationships: []
+      }
       restaurants: {
         Row: {
           accent_color: string | null
@@ -770,6 +812,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      deactivate_expired_restaurants: { Args: never; Returns: undefined }
       has_restaurant_access: {
         Args: { _restaurant_id: string; _user_id: string }
         Returns: boolean
