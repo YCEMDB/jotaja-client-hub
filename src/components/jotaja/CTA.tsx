@@ -108,10 +108,10 @@ export function CTA() {
               size="lg"
               className="w-full h-13 rounded-full font-bold bg-accent text-accent-foreground hover:bg-accent/90 shadow-accent-lg"
             >
-              {loading ? "Enviando..." : (<>Criar minha conta grátis <ArrowRight className="ml-2 w-5 h-5" /></>)}
+              {loading ? "Enviando..." : (<>Quero meu teste grátis <ArrowRight className="ml-2 w-5 h-5" /></>)}
             </Button>
             <p className="text-xs text-muted-foreground text-center">
-              Ao continuar você aceita nossos termos e política de privacidade.
+              Em até 24h liberamos seu acesso. Sem cartão. Sem compromisso.
             </p>
           </form>
         </div>
