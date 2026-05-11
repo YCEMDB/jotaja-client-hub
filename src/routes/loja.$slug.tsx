@@ -322,6 +322,14 @@ function LojaPage() {
           window.location.href = `/pedido/${orderId}`;
         }}
       />
+
+      {/* Track order */}
+      <TrackOrderDialog
+        open={trackOpen}
+        onOpenChange={setTrackOpen}
+        restaurantId={restaurant.id}
+        brand={restaurant.primary_color ?? "#0A1628"}
+      />
     </div>
   );
 }
