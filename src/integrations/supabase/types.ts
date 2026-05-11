@@ -694,6 +694,45 @@ export type Database = {
         }
         Relationships: []
       }
+      signup_leads: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          name: string
+          notes: string | null
+          phone: string
+          restaurant_id: string | null
+          restaurant_name: string
+          status: Database["public"]["Enums"]["lead_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          name: string
+          notes?: string | null
+          phone: string
+          restaurant_id?: string | null
+          restaurant_name: string
+          status?: Database["public"]["Enums"]["lead_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          notes?: string | null
+          phone?: string
+          restaurant_id?: string | null
+          restaurant_name?: string
+          status?: Database["public"]["Enums"]["lead_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -747,6 +786,7 @@ export type Database = {
     Enums: {
       app_role: "super_admin" | "owner" | "employee"
       coupon_type: "percentage" | "fixed" | "free_shipping"
+      lead_status: "new" | "contacted" | "approved" | "rejected"
       order_status:
         | "pending"
         | "confirmed"
@@ -888,6 +928,7 @@ export const Constants = {
     Enums: {
       app_role: ["super_admin", "owner", "employee"],
       coupon_type: ["percentage", "fixed", "free_shipping"],
+      lead_status: ["new", "contacted", "approved", "rejected"],
       order_status: [
         "pending",
         "confirmed",
