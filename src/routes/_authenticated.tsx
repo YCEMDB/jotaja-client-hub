@@ -24,16 +24,16 @@ const NAV = [
 ] as const;
 
 function AuthLayout() {
-  const { user, signOut, loading, restaurantId, isSuperAdmin, restaurants, selectRestaurant } = useAuth();
+  const { user, signOut, loading, metaLoading, restaurantId, isSuperAdmin, restaurants, selectRestaurant } = useAuth();
   const nav = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     if (!loading && !user) nav({ to: "/auth" });
-    if (!loading && user && !isSuperAdmin && !restaurantId && window.location.pathname !== "/admin/onboarding") {
+    if (!loading && !metaLoading && user && !isSuperAdmin && !restaurantId && window.location.pathname !== "/admin/onboarding") {
       nav({ to: "/admin/onboarding" });
     }
-  }, [user, loading, restaurantId, isSuperAdmin, nav]);
+  }, [user, loading, metaLoading, restaurantId, isSuperAdmin, nav]);
 
   const activeRestaurant = useMemo(
     () => restaurants.find((r) => r.id === restaurantId) ?? null,
@@ -49,7 +49,7 @@ function AuthLayout() {
     return null;
   }, [activeRestaurant, isSuperAdmin]);
 
-  if (loading) {
+  if (loading || (user && metaLoading)) {
     return <div className="min-h-screen grid place-items-center">Carregando…</div>;
   }
 

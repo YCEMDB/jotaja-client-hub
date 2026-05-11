@@ -20,6 +20,8 @@ interface AuthCtx {
   loading: boolean;
   roles: AppRole[];
   isSuperAdmin: boolean;
+  /** True while loading roles/restaurants metadata after sign-in. */
+  metaLoading: boolean;
   /** Active restaurant id (own restaurant for owners; selected one for super-admin). */
   restaurantId: string | null;
   /** Available restaurants (owner = own; super_admin = all). */
@@ -39,32 +41,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [roles, setRoles] = useState<AppRole[]>([]);
   const [restaurants, setRestaurants] = useState<RestaurantBrief[]>([]);
   const [restaurantId, setRestaurantId] = useState<string | null>(null);
+  const [metaLoading, setMetaLoading] = useState(false);
 
   const loadMeta = async (uid: string) => {
-    const rolesRes = await supabase.from("user_roles").select("role").eq("user_id", uid);
-    const r = (rolesRes.data?.map((x) => x.role) as AppRole[]) ?? [];
-    setRoles(r);
-    const isSA = r.includes("super_admin");
+    setMetaLoading(true);
+    try {
+      const rolesRes = await supabase.from("user_roles").select("role").eq("user_id", uid);
+      const r = (rolesRes.data?.map((x) => x.role) as AppRole[]) ?? [];
+      setRoles(r);
+      const isSA = r.includes("super_admin");
 
-    let list: RestaurantBrief[] = [];
-    if (isSA) {
-      const { data } = await supabase
-        .from("restaurants")
-        .select("id,name,slug,is_active,plan,trial_ends_at,subscription_ends_at")
-        .order("created_at", { ascending: false });
-      list = (data ?? []) as RestaurantBrief[];
-    } else {
-      const { data } = await supabase
-        .from("restaurants")
-        .select("id,name,slug,is_active,plan,trial_ends_at,subscription_ends_at")
-        .eq("owner_id", uid);
-      list = (data ?? []) as RestaurantBrief[];
+      let list: RestaurantBrief[] = [];
+      if (isSA) {
+        const { data } = await supabase
+          .from("restaurants")
+          .select("id,name,slug,is_active,plan,trial_ends_at,subscription_ends_at")
+          .order("created_at", { ascending: false });
+        list = (data ?? []) as RestaurantBrief[];
+      } else {
+        const { data } = await supabase
+          .from("restaurants")
+          .select("id,name,slug,is_active,plan,trial_ends_at,subscription_ends_at")
+          .eq("owner_id", uid);
+        list = (data ?? []) as RestaurantBrief[];
+      }
+      setRestaurants(list);
+
+      const stored = typeof window !== "undefined" ? localStorage.getItem(SELECTED_KEY) : null;
+      const valid = stored && list.some((x) => x.id === stored) ? stored : null;
+      setRestaurantId(valid ?? list[0]?.id ?? null);
+    } finally {
+      setMetaLoading(false);
     }
-    setRestaurants(list);
-
-    const stored = typeof window !== "undefined" ? localStorage.getItem(SELECTED_KEY) : null;
-    const valid = stored && list.some((x) => x.id === stored) ? stored : null;
-    setRestaurantId(valid ?? list[0]?.id ?? null);
   };
 
   useEffect(() => {
@@ -110,6 +118,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user,
         session,
         loading,
+        metaLoading,
         roles,
         isSuperAdmin: roles.includes("super_admin"),
         restaurantId,
