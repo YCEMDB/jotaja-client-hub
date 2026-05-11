@@ -1,4 +1,5 @@
 import { Zap, ShieldCheck, TrendingUp, HeartHandshake, Sparkles, Clock } from "lucide-react";
+import { Reveal, Stagger, StaggerItem } from "./Reveal";
 
 const benefits = [
   {
@@ -37,7 +38,7 @@ export function Vantagens() {
   return (
     <section className="py-24 md:py-32 bg-background">
       <div className="container mx-auto px-6">
-        <div className="max-w-2xl mx-auto text-center">
+        <Reveal className="max-w-2xl mx-auto text-center">
           <span className="text-xs font-semibold uppercase tracking-widest text-primary">
             Por que Comanda
           </span>
@@ -50,22 +51,22 @@ export function Vantagens() {
             Uma plataforma desenhada para restaurantes que querem crescer com autonomia,
             sem depender de marketplaces.
           </p>
-        </div>
+        </Reveal>
 
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-border rounded-2xl overflow-hidden border border-border">
+        <Stagger className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-border rounded-2xl overflow-hidden border border-border">
           {benefits.map(({ icon: Icon, title, desc }) => (
-            <div
+            <StaggerItem
               key={title}
-              className="bg-card p-8 hover:bg-accent-soft transition-smooth group"
+              className="bg-card p-8 hover:bg-accent-soft transition-smooth group h-full"
             >
               <div className="w-10 h-10 rounded-lg bg-primary/10 text-primary grid place-items-center group-hover:bg-primary group-hover:text-primary-foreground transition-smooth">
                 <Icon className="w-5 h-5" />
               </div>
               <h3 className="mt-5 text-lg font-semibold tracking-tight">{title}</h3>
               <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{desc}</p>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   );
