@@ -5,6 +5,7 @@ import { Vantagens } from "@/components/jotaja/Vantagens";
 import { Funcionalidades } from "@/components/jotaja/Funcionalidades";
 import { Depoimentos } from "@/components/jotaja/Depoimentos";
 import { Planos } from "@/components/jotaja/Planos";
+import { ComparativoPlanos } from "@/components/jotaja/ComparativoPlanos";
 import { FAQ } from "@/components/jotaja/FAQ";
 import { CTA } from "@/components/jotaja/CTA";
 import { Footer } from "@/components/jotaja/Footer";
@@ -33,6 +34,7 @@ function Index() {
         <Funcionalidades />
         <Depoimentos />
         <Planos />
+        <ComparativoPlanos />
         <FAQ />
         <CTA />
       </main>
