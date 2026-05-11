@@ -44,30 +44,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [metaLoading, setMetaLoading] = useState(false);
 
   const loadMeta = async (uid: string) => {
-    const rolesRes = await supabase.from("user_roles").select("role").eq("user_id", uid);
-    const r = (rolesRes.data?.map((x) => x.role) as AppRole[]) ?? [];
-    setRoles(r);
-    const isSA = r.includes("super_admin");
+    setMetaLoading(true);
+    try {
+      const rolesRes = await supabase.from("user_roles").select("role").eq("user_id", uid);
+      const r = (rolesRes.data?.map((x) => x.role) as AppRole[]) ?? [];
+      setRoles(r);
+      const isSA = r.includes("super_admin");
 
-    let list: RestaurantBrief[] = [];
-    if (isSA) {
-      const { data } = await supabase
-        .from("restaurants")
-        .select("id,name,slug,is_active,plan,trial_ends_at,subscription_ends_at")
-        .order("created_at", { ascending: false });
-      list = (data ?? []) as RestaurantBrief[];
-    } else {
-      const { data } = await supabase
-        .from("restaurants")
-        .select("id,name,slug,is_active,plan,trial_ends_at,subscription_ends_at")
-        .eq("owner_id", uid);
-      list = (data ?? []) as RestaurantBrief[];
+      let list: RestaurantBrief[] = [];
+      if (isSA) {
+        const { data } = await supabase
+          .from("restaurants")
+          .select("id,name,slug,is_active,plan,trial_ends_at,subscription_ends_at")
+          .order("created_at", { ascending: false });
+        list = (data ?? []) as RestaurantBrief[];
+      } else {
+        const { data } = await supabase
+          .from("restaurants")
+          .select("id,name,slug,is_active,plan,trial_ends_at,subscription_ends_at")
+          .eq("owner_id", uid);
+        list = (data ?? []) as RestaurantBrief[];
+      }
+      setRestaurants(list);
+
+      const stored = typeof window !== "undefined" ? localStorage.getItem(SELECTED_KEY) : null;
+      const valid = stored && list.some((x) => x.id === stored) ? stored : null;
+      setRestaurantId(valid ?? list[0]?.id ?? null);
+    } finally {
+      setMetaLoading(false);
     }
-    setRestaurants(list);
-
-    const stored = typeof window !== "undefined" ? localStorage.getItem(SELECTED_KEY) : null;
-    const valid = stored && list.some((x) => x.id === stored) ? stored : null;
-    setRestaurantId(valid ?? list[0]?.id ?? null);
   };
 
   useEffect(() => {
