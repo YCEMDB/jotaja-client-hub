@@ -287,6 +287,14 @@ function LojaPage() {
                 >
                   {!restaurant.is_open ? "Loja fechada" : "Finalizar pedido"}
                 </Button>
+                <Button
+                  variant="outline"
+                  className="w-full gap-2"
+                  onClick={() => setTrackOpen(true)}
+                >
+                  <ClipboardList className="h-4 w-4" />
+                  Acompanhar pedido
+                </Button>
               </div>
             </SheetFooter>
           </SheetContent>
