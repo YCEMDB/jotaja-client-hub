@@ -85,7 +85,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:locale", content: "pt_BR" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image:alt", content: "Painel da ComandaHub mostrando faturamento, pedidos e clientes" },
+      { name: "twitter:image:alt", content: "ComandaHub — Plataforma de delivery próprio para restaurantes" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

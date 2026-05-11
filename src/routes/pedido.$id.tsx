@@ -6,6 +6,13 @@ import { CheckCircle2, Clock, ChefHat, Bike, PackageCheck, XCircle } from "lucid
 
 export const Route = createFileRoute("/pedido/$id")({
   component: PedidoStatus,
+  head: () => ({
+    meta: [
+      { title: "Status do pedido — ComandaHub" },
+      { name: "description", content: "Acompanhe em tempo real o status do seu pedido." },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
 });
 
 const STEPS = [
