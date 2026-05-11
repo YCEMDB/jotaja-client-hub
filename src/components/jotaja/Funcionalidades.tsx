@@ -1,104 +1,43 @@
-import {
-  Globe, MessageCircle, ShoppingBag, BookOpen, Truck, MapPin,
-  CreditCard, Tag, CalendarClock, Printer, BarChart3, Users,
-  UserCog, Building2, Cloud, Headphones, GraduationCap, Wallet
-} from "lucide-react";
+import { ShoppingBag, Smartphone, BarChart3, Tag, Bike, MessageSquare, CreditCard, Users } from "lucide-react";
 
-const grupos = [
-  {
-    titulo: "Cardápio digital + Site próprio",
-    icon: Globe,
-    items: [
-      { icon: Globe, t: "URL personalizada", d: "comanda.app/seu-restaurante" },
-      { icon: BookOpen, t: "Cardápio com fotos", d: "Categorias, descrições, adicionais e combos" },
-      { icon: ShoppingBag, t: "Layout customizável", d: "Logo, cores e banners da sua marca" },
-    ],
-  },
-  {
-    titulo: "Recebimento de pedidos",
-    icon: MessageCircle,
-    items: [
-      { icon: MessageCircle, t: "Pedidos no WhatsApp", d: "Resumo automático no chat do restaurante" },
-      { icon: ShoppingBag, t: "Painel em tempo real", d: "Aceitar, recusar e acompanhar status" },
-      { icon: CalendarClock, t: "Agendamento", d: "Cliente escolhe data e hora da entrega" },
-    ],
-  },
-  {
-    titulo: "Logística de entrega",
-    icon: Truck,
-    items: [
-      { icon: Truck, t: "Gestão de entregadores", d: "Atribua pedidos e gere relatórios" },
-      { icon: MapPin, t: "Áreas de entrega", d: "Bairros e taxas (fixa ou %) no mapa" },
-      { icon: Printer, t: "Impressão automática", d: "Caixa e cozinha, com corte automático" },
-    ],
-  },
-  {
-    titulo: "Pagamentos e promoções",
-    icon: CreditCard,
-    items: [
-      { icon: CreditCard, t: "Online e presencial", d: "PIX, cartão, vale-refeição, dinheiro" },
-      { icon: Tag, t: "Cupons inteligentes", d: "Valor ou %, validade, link auto-aplicado" },
-      { icon: Wallet, t: "Pagamento integrado", d: "Receba antes do entregador sair" },
-    ],
-  },
-  {
-    titulo: "CRM e relatórios",
-    icon: BarChart3,
-    items: [
-      { icon: Users, t: "Base de clientes (CRM)", d: "Histórico completo, exportação CSV" },
-      { icon: BarChart3, t: "Dashboard e relatórios", d: "Vendas, ticket médio, mapa de calor" },
-      { icon: UserCog, t: "Multiusuário", d: "Admin e operadores com permissões" },
-    ],
-  },
-  {
-    titulo: "Estrutura e suporte",
-    icon: Cloud,
-    items: [
-      { icon: Building2, t: "Redes e franquias", d: "Direcionamento pra loja mais próxima" },
-      { icon: Cloud, t: "100% nuvem", d: "Backup automático, acesso de qualquer lugar" },
-      { icon: Headphones, t: "Suporte humanizado", d: "WhatsApp, telefone, e-mail e TeamViewer" },
-    ],
-  },
+const features = [
+  { icon: Smartphone, title: "Cardápio digital", desc: "Seu menu no link, com fotos, categorias e adicionais." },
+  { icon: ShoppingBag, title: "Gestão de pedidos", desc: "Painel em tempo real com fluxo do pedido até a entrega." },
+  { icon: CreditCard, title: "Pagamento online", desc: "Pix instantâneo, cartão na entrega ou dinheiro." },
+  { icon: Bike, title: "Entregas e motoboys", desc: "Áreas de entrega, taxas por bairro e atribuição de drivers." },
+  { icon: Tag, title: "Cupons e promoções", desc: "Crie cupons percentuais ou de valor fixo em segundos." },
+  { icon: BarChart3, title: "Relatórios completos", desc: "Faturamento, ticket médio e produtos mais vendidos." },
+  { icon: Users, title: "Base de clientes", desc: "Histórico de pedidos e dados de cada cliente seu." },
+  { icon: MessageSquare, title: "Acompanhamento", desc: "Cliente acompanha pedido pelo celular sem login." },
 ];
 
 export function Funcionalidades() {
   return (
-    <section id="funcionalidades" className="py-20 md:py-28">
+    <section id="funcionalidades" className="py-24 md:py-32 bg-gradient-soft border-y border-border">
       <div className="container mx-auto px-6">
-        <div className="text-center mb-16 max-w-2xl mx-auto">
-          <span className="inline-block bg-accent-soft text-accent-foreground font-bold text-sm px-4 py-1.5 rounded-full mb-4">
-            18 funcionalidades
+        <div className="max-w-2xl mx-auto text-center">
+          <span className="text-xs font-semibold uppercase tracking-widest text-primary">
+            Funcionalidades
           </span>
-          <h2 className="font-display text-3xl md:text-5xl font-extrabold leading-tight mb-4">
-            Tudo que você precisa pra <span className="text-gradient-primary">administrar seu delivery</span>
+          <h2 className="mt-3 text-3xl md:text-4xl font-bold tracking-tight">
+            Uma plataforma. Tudo integrado.
           </h2>
-          <p className="text-muted-foreground text-lg">
-            Onboarding guiado, treinamento incluso e Customer Success quando precisar.
+          <p className="mt-4 text-muted-foreground">
+            Recursos profissionais pensados para a operação real de um restaurante.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {grupos.map((g, i) => (
-            <div key={i} className="bg-card border border-border rounded-3xl p-7 shadow-card hover:shadow-elegant transition-smooth group">
-              <div className="flex items-center gap-3 mb-6 pb-5 border-b border-border">
-                <div className="w-12 h-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center group-hover:bg-accent group-hover:text-accent-foreground transition-smooth">
-                  <g.icon className="w-6 h-6" />
-                </div>
-                <h3 className="font-display font-extrabold text-lg leading-tight">{g.titulo}</h3>
+        <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {features.map(({ icon: Icon, title, desc }) => (
+            <div
+              key={title}
+              className="group relative rounded-xl border border-border bg-card p-6 shadow-xs hover:shadow-card-md hover:-translate-y-0.5 transition-smooth"
+            >
+              <div className="w-9 h-9 rounded-lg bg-primary/10 text-primary grid place-items-center">
+                <Icon className="w-4.5 h-4.5" strokeWidth={2} />
               </div>
-              <ul className="space-y-4">
-                {g.items.map((it, j) => (
-                  <li key={j} className="flex gap-3">
-                    <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-accent-soft text-accent-foreground flex items-center justify-center">
-                      <it.icon className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <div className="font-semibold text-sm">{it.t}</div>
-                      <div className="text-xs text-muted-foreground leading-snug">{it.d}</div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+              <h3 className="mt-4 text-sm font-semibold tracking-tight">{title}</h3>
+              <p className="mt-1 text-xs text-muted-foreground leading-relaxed">{desc}</p>
             </div>
           ))}
         </div>

@@ -1,117 +1,106 @@
-import { Check, Sparkles } from "lucide-react";
+import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const planos = [
+const plans = [
   {
-    nome: "Essencial",
-    preco: "99",
-    desc: "Pra quem está começando no delivery próprio",
+    name: "Starter",
+    price: "R$ 99",
+    desc: "Para quem está começando o delivery próprio.",
     features: [
-      "Cardápio digital + URL própria",
-      "Pedidos via WhatsApp",
-      "Painel de pedidos em tempo real",
-      "Até 500 pedidos/mês",
+      "Cardápio digital ilimitado",
+      "Pedidos online via link",
+      "Pix e cartão na entrega",
       "1 usuário",
       "Suporte por e-mail",
     ],
+    cta: "Começar grátis",
+    highlighted: false,
   },
   {
-    nome: "Profissional",
-    preco: "199",
-    desc: "Pra quem quer escalar e profissionalizar",
-    destaque: true,
+    name: "Pro",
+    price: "R$ 199",
+    desc: "Operação completa para restaurantes em crescimento.",
     features: [
-      "Tudo do Essencial",
-      "Pedidos ilimitados",
+      "Tudo do Starter",
       "Cupons e promoções",
-      "Gestão de entregadores",
-      "Pagamento online integrado",
-      "CRM + relatórios avançados",
-      "Multiusuário (até 5)",
-      "Suporte premium WhatsApp",
+      "Áreas de entrega e motoboys",
+      "Relatórios avançados",
+      "Até 5 usuários",
+      "Suporte prioritário no WhatsApp",
     ],
+    cta: "Testar 14 dias grátis",
+    highlighted: true,
   },
   {
-    nome: "Rede / Franquia",
-    preco: "Sob consulta",
-    desc: "Múltiplas unidades com gestão centralizada",
+    name: "Business",
+    price: "R$ 399",
+    desc: "Para redes e restaurantes de alto volume.",
     features: [
-      "Tudo do Profissional",
-      "Lojas ilimitadas",
-      "Direcionamento por geolocalização",
-      "Estatísticas por unidade",
-      "Customer Success dedicado",
-      "Onboarding presencial",
-      "API de integração",
+      "Tudo do Pro",
+      "Múltiplas unidades",
+      "API e integrações",
+      "Usuários ilimitados",
+      "Gerente de sucesso dedicado",
     ],
+    cta: "Falar com vendas",
+    highlighted: false,
   },
 ];
 
 export function Planos() {
   return (
-    <section id="planos" className="py-20 md:py-28 bg-muted/40">
+    <section id="planos" className="py-24 md:py-32 bg-gradient-soft border-y border-border">
       <div className="container mx-auto px-6">
-        <div className="text-center mb-12 max-w-2xl mx-auto">
-          <span className="inline-block bg-accent-soft text-accent-foreground font-bold text-sm px-4 py-1.5 rounded-full mb-4">
+        <div className="max-w-2xl mx-auto text-center">
+          <span className="text-xs font-semibold uppercase tracking-widest text-primary">
             Planos
           </span>
-          <h2 className="font-display text-3xl md:text-5xl font-extrabold leading-tight mb-4">
-            Mensalidade fixa, <span className="marker-highlight">zero surpresa</span>
+          <h2 className="mt-3 text-3xl md:text-4xl font-bold tracking-tight">
+            Preços simples, sem surpresa.
           </h2>
-          <p className="text-muted-foreground text-lg">
-            Sem comissão, sem fidelidade. 14 dias grátis em todos os planos.
+          <p className="mt-4 text-muted-foreground">
+            Mensalidade fixa, sem comissão por venda. Cancele quando quiser.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          {planos.map((p) => (
+        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto">
+          {plans.map((plan) => (
             <div
-              key={p.nome}
-              className={`relative rounded-3xl p-8 transition-smooth hover:-translate-y-1 ${
-                p.destaque
-                  ? "bg-gradient-primary text-primary-foreground shadow-elegant scale-105 border-2 border-accent"
-                  : "bg-card border border-border shadow-card"
+              key={plan.name}
+              className={`relative rounded-2xl p-7 flex flex-col ${
+                plan.highlighted
+                  ? "bg-card border-2 border-primary shadow-blue"
+                  : "bg-card border border-border shadow-xs"
               }`}
             >
-              {p.destaque && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent text-accent-foreground text-xs font-extrabold px-4 py-1.5 rounded-full uppercase tracking-wider flex items-center gap-1">
-                  <Sparkles className="w-3.5 h-3.5" /> Mais popular
+              {plan.highlighted && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-semibold">
+                  Mais escolhido
                 </div>
               )}
-              <h3 className="font-display font-extrabold text-2xl mb-1">{p.nome}</h3>
-              <p className={`text-sm mb-6 ${p.destaque ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
-                {p.desc}
-              </p>
-
-              <div className="mb-6">
-                {p.preco === "Sob consulta" ? (
-                  <div className="font-display font-extrabold text-3xl">Sob consulta</div>
-                ) : (
-                  <div className="flex items-baseline gap-1">
-                    <span className={`text-lg font-bold ${p.destaque ? "text-accent" : "text-muted-foreground"}`}>R$</span>
-                    <span className="font-display font-extrabold text-5xl">{p.preco}</span>
-                    <span className={`text-sm ${p.destaque ? "text-primary-foreground/70" : "text-muted-foreground"}`}>/mês</span>
-                  </div>
-                )}
+              <div>
+                <h3 className="text-base font-semibold tracking-tight">{plan.name}</h3>
+                <p className="mt-1 text-xs text-muted-foreground">{plan.desc}</p>
               </div>
-
+              <div className="mt-5 flex items-baseline gap-1">
+                <span className="text-4xl font-bold tracking-tight">{plan.price}</span>
+                <span className="text-sm text-muted-foreground">/mês</span>
+              </div>
               <Button
-                className={`w-full rounded-full font-bold mb-6 ${
-                  p.destaque
-                    ? "bg-accent text-accent-foreground hover:bg-accent/90"
-                    : "bg-primary text-primary-foreground hover:bg-primary/90"
+                className={`mt-6 w-full rounded-lg font-semibold ${
+                  plan.highlighted
+                    ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-blue"
+                    : "bg-foreground text-background hover:bg-foreground/90"
                 }`}
-                size="lg"
                 asChild
               >
-                <a href="#cadastro">Começar agora</a>
+                <a href="#cadastro">{plan.cta}</a>
               </Button>
-
-              <ul className="space-y-3">
-                {p.features.map((f) => (
-                  <li key={f} className="flex gap-2.5 text-sm">
-                    <Check className={`w-5 h-5 flex-shrink-0 ${p.destaque ? "text-accent" : "text-success"}`} />
-                    <span className={p.destaque ? "text-primary-foreground/90" : "text-foreground"}>{f}</span>
+              <ul className="mt-7 space-y-3 flex-1">
+                {plan.features.map((f) => (
+                  <li key={f} className="flex items-start gap-2.5 text-sm">
+                    <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+                    <span className="text-foreground/80">{f}</span>
                   </li>
                 ))}
               </ul>
