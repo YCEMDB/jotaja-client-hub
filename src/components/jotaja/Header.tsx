@@ -72,7 +72,8 @@ export function Header() {
                 {item.label}
               </a>
             ))}
-            <Button asChild className="mt-2 rounded-full bg-accent text-accent-foreground hover:bg-accent/90"><a href="/auth">Testar grátis 14 dias</a></Button>
+            <a href="/auth" onClick={() => setOpen(false)} className="px-4 py-3 rounded-lg hover:bg-muted font-medium text-center">Entrar</a>
+            <Button asChild className="mt-2 rounded-full bg-accent text-accent-foreground hover:bg-accent/90"><a href="#cadastro" onClick={() => setOpen(false)}>Testar grátis 14 dias</a></Button>
           </div>
         )}
       </div>
