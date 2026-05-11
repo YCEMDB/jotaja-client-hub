@@ -281,13 +281,14 @@ function LojaPage() {
                 <Button
                   className="w-full"
                   size="lg"
-                  style={{ background: "var(--brand)" }}
+                  style={{ background: "var(--brand)", color: "#fff" }}
                   disabled={!restaurant.is_open || subtotal < Number(restaurant.min_order_value ?? 0)}
                   onClick={() => setCheckoutOpen(true)}
                 >
-                  {!restaurant.is_open ? "Loja fechada" : "Finalizar pedido"}
+                  {!restaurant.is_open ? "Loja fechada" : `Finalizar pedido • R$ ${subtotal.toFixed(2)}`}
                 </Button>
                 <Button
+                  type="button"
                   variant="outline"
                   className="w-full gap-2"
                   onClick={() => setTrackOpen(true)}
