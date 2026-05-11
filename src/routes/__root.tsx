@@ -73,24 +73,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Comanda — Delivery próprio sem comissão" },
-      { name: "description", content: "Plataforma de gestão de delivery via WhatsApp pra restaurantes." },
+      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
+      { name: "theme-color", content: "#2563EB" },
+      { name: "robots", content: "index, follow, max-image-preview:large" },
       { name: "author", content: "Comanda" },
-      { property: "og:title", content: "Comanda — Delivery próprio sem comissão" },
-      { property: "og:description", content: "Plataforma de gestão de delivery via WhatsApp pra restaurantes." },
+      { httpEquiv: "content-language", content: "pt-BR" },
+      // Defaults — sobrescritos por cada rota
+      { title: "Comanda — Plataforma de delivery próprio para restaurantes" },
+      { name: "description", content: "Cardápio digital, pedidos online, gestão completa e relatórios. Sem comissão por venda, com a sua marca." },
+      { property: "og:site_name", content: "Comanda" },
+      { property: "og:locale", content: "pt_BR" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Comanda — Delivery próprio sem comissão" },
-      { name: "twitter:description", content: "Plataforma de gestão de delivery via WhatsApp pra restaurantes." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4268494b-685f-4608-a5fa-818313dae033/id-preview-b940c5bf--09ee62bb-397c-43aa-8259-32d916b1c61b.lovable.app-1778349112481.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4268494b-685f-4608-a5fa-818313dae033/id-preview-b940c5bf--09ee62bb-397c-43aa-8259-32d916b1c61b.lovable.app-1778349112481.png" },
+      { name: "twitter:image:alt", content: "Painel da Comanda mostrando faturamento, pedidos e clientes" },
     ],
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
+      { rel: "stylesheet", href: appCss },
+      { rel: "icon", type: "image/svg+xml", href: "/favicon.ico" },
     ],
   }),
   shellComponent: RootShell,
@@ -101,7 +100,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <head>
         <HeadContent />
       </head>
