@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { Check, Minus } from "lucide-react";
 import { Reveal } from "./Reveal";
 
@@ -112,8 +113,8 @@ export function ComparativoPlanos() {
                 </thead>
                 <tbody>
                   {groups.map((group) => (
-                    <>
-                      <tr key={`g-${group.title}`} className="bg-secondary/30">
+                    <Fragment key={group.title}>
+                      <tr className="bg-secondary/30">
                         <td
                           colSpan={4}
                           className="px-6 py-3 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground"
@@ -139,7 +140,7 @@ export function ComparativoPlanos() {
                           ))}
                         </tr>
                       ))}
-                    </>
+                    </Fragment>
                   ))}
                 </tbody>
               </table>
