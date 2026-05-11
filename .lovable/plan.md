@@ -1,159 +1,118 @@
-# Comanda — Plataforma de delivery próprio para restaurantes
 
-Refazendo a plataforma com **identidade própria** (não copiando o nome Jotajá), mas replicando todas as 18 funcionalidades que você listou. Nome sugerido: **Comanda** (trocável por Pratto ou Sirva).
+## Objetivo
 
----
-
-## 🎨 Nova identidade visual
-
-**Paleta:**
-- **Azul-noite profundo** (#0A1628 aprox.) — confiança, tecnologia, profissionalismo
-- **Amarelo mostarda vibrante** (#FFC627 aprox.) — apetite, energia, calor humano (gatilho de fome 🟡)
-- **Off-white cremoso** como fundo neutro (não branco puro — mais aconchegante)
-- **Acentos em laranja queimado** pra CTAs secundários
-
-**Tipografia:**
-- **Plus Jakarta Sans** nos títulos (bold, moderna, redondinha — passa carinho)
-- **Inter** no corpo (legibilidade impecável)
-
-**Linguagem visual:**
-- Cantos bem arredondados (16-24px) — sensação amigável
-- Ilustrações + emojis sutis pra humanizar
-- Sombras suaves coloridas (azul/amarelo) em vez de cinza
-- Microanimações nos hovers (escala leve, brilho do amarelo)
-
-**Gatilhos psicológicos** (estilo "quero pra mim agora"):
-- **Prova social** logo no hero ("+2.500 restaurantes já usam")
-- **Urgência leve** ("Mais de 80 restaurantes começaram esta semana")
-- **Antes/depois visual** (caos sem Comanda → organização com Comanda)
-- **Demonstração de valor** ("Zero comissão = +30% de margem")
-- **Mockup do produto** visível desde o hero (screenshot do painel funcionando)
-- **Depoimentos com fotos reais** de donos de restaurante
-- **Garantia** ("Cancele quando quiser, sem fidelidade")
+1. Landing page = só **Login** (sem opção de criar conta).
+2. Botões "Teste grátis" e o formulário do CTA viram **captura de leads** (salva no banco + e-mail pra você).
+3. Painel **Super-Admin** ganha 3 melhorias: gestão de leads, criação manual de loja+dono, métricas globais consolidadas.
 
 ---
 
-## Etapa A — Refatorar a landing page atual
+## 1. Banco de dados (1 migração)
 
-A landing já está montada, mas em vermelho/Jotajá. Vou:
+Nova tabela `signup_leads`:
+- `name`, `restaurant_name`, `email`, `phone`
+- `status`: `new` | `contacted` | `approved` | `rejected`
+- `notes` (anotação interna), `restaurant_id` (preenchido quando virar loja)
+- `created_at`, `updated_at`
 
-1. **Atualizar `src/styles.css`** — trocar paleta toda pra azul-noite + amarelo mostarda, novas fontes
-2. **Substituir nome "Jotajá" por "Comanda"** em Header, Footer, meta tags
-3. **Trocar logo** — gerar nova logo (ícone de ticket de comanda + raio amarelo)
-4. **Hero reformulado** com:
-   - Headline: "Seu delivery, sem comissão. Sua marca, seus clientes."
-   - Mockup do painel administrativo ao lado (em vez de só formulário)
-   - Badge de prova social ("+2.500 restaurantes")
-   - 2 CTAs: "Testar grátis 14 dias" (primário amarelo) + "Ver demonstração" (vídeo)
-5. **Nova seção "Como funciona"** em 3 passos visuais (cadastra → divulga link → recebe pedidos no WhatsApp)
-6. **Vantagens** — manter as 6 mas com novos ícones/copy persuasivos
-7. **Funcionalidades** — expandir pras 18 que você listou, agrupadas em 6 blocos visuais:
-   - Cardápio digital + URL própria
-   - Pedidos via WhatsApp
-   - Gestão completa (cardápio, pedidos, cupons, agendamento, impressão)
-   - Entregadores + áreas de entrega + pagamentos
-   - CRM + relatórios + multiusuário + redes/franquias
-   - Suporte humanizado + nuvem + zero comissão
-8. **Nova seção "Segmentos"** com cards: hamburguerias, pizzarias, padarias, açaiterias, etc.
-9. **Comparativo "Comanda vs iFood"** — tabela visual mostrando economia
-10. **Calculadora de economia** simples ("Quanto você paga de comissão hoje? → Economia anual com Comanda: R$ X")
-11. **Depoimentos** em carrossel com foto + nome + restaurante
-12. **Pricing** em cards (3 planos: Essencial, Profissional, Rede/Franquia)
-13. **FAQ** + **CTA final** + **Footer** atualizados
+RLS:
+- INSERT público (qualquer visitante do site pode enviar)
+- SELECT/UPDATE/DELETE apenas super-admin (`is_super_admin(auth.uid())`)
 
 ---
 
-## Etapa B — Backend (Lovable Cloud)
+## 2. Landing page — só login
 
-Ativar Lovable Cloud + criar estrutura completa.
+**`src/routes/auth.tsx`**: remover a aba "Criar conta", mostrar apenas o formulário de login (e-mail/senha). Sem Google.
 
-**Tabelas:**
-- `restaurants` — loja (nome, slug, logo, banner, cores customizadas, endereço, horários por dia, área de entrega, status aberto/fechado, WhatsApp, integrações)
-- `profiles` + `user_roles` (admin/operador/entregador, em tabela separada com `has_role()` SECURITY DEFINER)
-- `categories` — categorias do cardápio (com ordem)
-- `products` — pratos (foto, descrição, preço, categoria, disponibilidade por dia/horário, status "em falta", preço dinâmico)
-- `product_options` — adicionais, variações, combos (ex: borda da pizza, tamanho, sabores)
-- `delivery_areas` — bairros/regiões com taxa fixa ou percentual
-- `delivery_drivers` — entregadores da equipe própria
-- `customers` — base de clientes (CRM: nome, telefone, endereços salvos, histórico)
-- `orders` — pedidos (status, itens, pagamento, entregador atribuído, agendamento)
-- `order_items` — itens com adicionais selecionados
-- `coupons` — cupons (valor/percentual, validade, valor mínimo, limite de uso, link automático)
-- `printers` — impressoras configuradas (caixa/cozinha)
+**Botões "Testar grátis" do site** (`Header.tsx`, `Hero.tsx`, `Planos.tsx`): em vez de apontar para `/auth`, rolam até a seção `#cadastro` do CTA (formulário de lead).
 
-**Auth:** Email/senha + Google sign-in pra donos de restaurante. Cliente final NÃO faz login (só na finalização).
-
-**Storage:** fotos de produtos, logos, banners.
-
-**Real-time:** pedidos novos chegam ao admin instantaneamente, cliente vê status atualizando.
-
-**RLS:** cada restaurante só acessa seus próprios dados.
+**Link "Entrar"** discreto no Header → vai para `/auth`.
 
 ---
 
-## Etapa C — Painel Administrativo (`/admin`)
+## 3. Formulário de teste grátis (CTA)
 
-Layout: sidebar azul-noite à esquerda + header com toggle "Loja aberta/fechada" e nome do restaurante.
+`src/components/jotaja/CTA.tsx`:
+- Mantém os 4 campos (nome, restaurante, e-mail, WhatsApp).
+- Submit → INSERT em `signup_leads` (status `new`).
+- Dispara e-mail interno para você notificando o novo lead.
+- Mensagem de sucesso: "Recebemos seu cadastro! Em até 24h entraremos em contato pra liberar seu teste de 14 dias."
+- Botão muda para **"Quero meu teste grátis"** (não mais "Criar minha conta").
 
-**Páginas:**
-- **Dashboard** — pedidos do dia, faturamento, ticket médio, gráficos (vendas por dia/hora), mapa de calor de pedidos por bairro, clientes recorrentes
-- **Pedidos** (real-time) — kanban com colunas (Novo → Em preparo → Saiu pra entrega → Entregue), notificação sonora + visual em pedido novo, botão imprimir, botão atualizar status no WhatsApp do cliente
-- **Cardápio** — CRUD de categorias e produtos, upload de foto, configurar adicionais/variações/combos, disponibilidade por dia/horário, marcar "em falta", preço dinâmico, drag-and-drop pra reordenar
-- **Cupons** — criar/listar cupons (valor/%, validade, valor mínimo, link com cupom auto-aplicado)
-- **Agendamentos** — pedidos agendados pra data/hora futura
-- **Clientes (CRM)** — base completa, filtros, histórico por cliente, exportar CSV
-- **Entregadores** — cadastrar motoboys, atribuir pedidos, relatórios por entregador
-- **Áreas de entrega** — desenhar bairros, definir taxas (fixa ou %), pedido mínimo por área
-- **Pagamentos** — configurar formas aceitas (cartão, PIX, vale-refeição, dinheiro, online)
-- **Impressoras** — configurar impressão automática no caixa/cozinha
-- **Relatórios** — vendas totais, por produto, por entregador, exportar Excel/CSV
-- **Configurações da loja** — dados, logo, banner, cores do portal do cliente, URL personalizada (slug), horários, redes sociais, integrações
-- **Usuários** — convidar admin/operador/entregador
-- **Plano e cobrança** — plano atual, faturamento, sem comissão (mensalidade fixa)
+### E-mail de notificação
+
+Usa **Lovable Emails** (built-in). Fluxo:
+1. Configurar domínio de envio (diálogo de setup) — pré-requisito.
+2. Scaffold de e-mail transacional → server route `send-transactional-email` enfileira o e-mail.
+3. Server function `submitLead` (chamada pelo formulário) faz o INSERT e dispara o e-mail para o endereço de admin.
+
+Endereço de destino: pergunto na hora da implementação ("para qual e-mail enviar as notificações?").
 
 ---
 
-## Etapa D — Portal do Cliente (`/loja/[slug]`)
+## 4. Painel Super-Admin — `/admin/super`
 
-URL pública mobile-first (ex: `comanda.app/loja/pizzaria-do-ze`).
+A página já lista todas as lojas. Adicionar **abas**:
 
-- **Cardápio** — banner do restaurante, status (aberto/fechado), busca, categorias com scroll horizontal sticky, cards de produtos
-- **Detalhe do produto** (drawer) — foto grande, escolher adicionais/variações/combos, quantidade, observação
-- **Carrinho** (sheet lateral) — itens, subtotal, aplicar cupom, taxa de entrega calculada por endereço
-- **Checkout** — nome, telefone (com lookup no CRM pra auto-preencher), endereço (CEP via ViaCEP), forma de pagamento, troco, observações, opção "agendar pedido"
-- **Confirmação** — número do pedido, ETA, botão "Acompanhar via WhatsApp" abre conversa do restaurante com pedido formatado
-- **Acompanhar** (`/pedido/[id]`) — status em tempo real (Novo → Em preparo → Saiu → Entregue) com timeline visual
+### Aba "Lojas" (atual, mantida)
+Tudo que já existe: lista de restaurantes, ações por loja, login-as, etc.
+
+### Aba "Leads" (nova)
+- Tabela com leads de `signup_leads` ordenados por data desc.
+- Filtros por status (novos / contatados / aprovados / recusados).
+- Ações por linha:
+  - **Marcar como contatado** (muda status).
+  - **Aprovar e criar loja** → abre modal de "Criar loja" pré-preenchido com os dados do lead (ver abaixo). Ao concluir, marca lead como `approved` e linka `restaurant_id`.
+  - **Recusar** (muda status).
+  - **Adicionar nota** interna.
+- Badge no menu lateral mostrando contagem de leads `new`.
+
+### Aba "Criar loja" / botão global "Nova loja" (novo)
+Modal com formulário:
+- Dados da loja: nome, slug (auto a partir do nome), telefone, plano (`trial`/`essential`/`professional`), validade do trial (default 14 dias).
+- Dados do dono: nome completo, e-mail, telefone, **senha temporária** (gerada automaticamente, mostrada uma única vez para você copiar e enviar manualmente — opcionalmente pode disparar um e-mail de boas-vindas, fica como checkbox).
+
+Server function `createTenant` (admin):
+1. `supabaseAdmin.auth.admin.createUser` com a senha gerada e `email_confirm: true`.
+2. INSERT em `restaurants` com `owner_id` = id do user criado.
+3. INSERT em `user_roles` (`owner` para o restaurante).
+4. Retorna a senha gerada uma única vez.
+
+### Aba "Métricas" (nova)
+Dashboard consolidado de todas as lojas:
+- Cards: total de lojas, lojas ativas, lojas em trial, MRR estimado (soma por plano), pedidos hoje/semana/mês, faturamento bruto agregado.
+- Gráfico de pedidos por dia (últimos 30 dias) somando todas as lojas.
+- Top 5 lojas por faturamento no mês.
+- Lista de trials expirando nos próximos 7 dias.
+
+Tudo via `createServerFn` com `supabaseAdmin` (precisa agregar entre tenants, ignorando RLS).
 
 ---
 
-## Detalhes técnicos
+## Arquivos afetados
 
-**Stack:** TanStack Start + React + TypeScript + Tailwind v4 + shadcn/ui + Lovable Cloud (Supabase gerenciado).
+**Novos**
+- `src/routes/_authenticated/admin.super.leads.tsx` (ou aba dentro do super.tsx atual)
+- `src/lib/super-admin.functions.ts` — `submitLead`, `listLeads`, `updateLead`, `createTenant`, `getGlobalMetrics`
+- Migração SQL: `signup_leads` + RLS
 
-**Roteamento:**
-- Públicas: `/`, `/funcionalidades`, `/precos`, `/contato`, `/loja/$slug`, `/pedido/$id`
-- Auth: `/login`, `/cadastro`, `/recuperar-senha`
-- Protegidas (`_authenticated/admin/*`): todas as páginas do painel
+**Editados**
+- `src/routes/auth.tsx` — remove signup tab e aba do Google
+- `src/components/jotaja/CTA.tsx` — submit → server fn
+- `src/components/jotaja/Header.tsx` — "Testar grátis" vai para `#cadastro`; novo link "Entrar" → `/auth`
+- `src/components/jotaja/Hero.tsx` — idem
+- `src/components/jotaja/Planos.tsx` — idem (já aponta para `#cadastro`, manter)
+- `src/routes/_authenticated/admin.super.tsx` — adicionar tabs e ações novas
 
-**Pagamento online:** Stripe integrado (Lovable built-in payments) pra cobrar a mensalidade dos restaurantes E pra processar pagamentos online dos clientes finais.
-
-**WhatsApp:** integração via `wa.me` (sem API paga). Pra envio automático de status pelo Comanda, opção futura via WhatsApp Business API.
-
-**CEP:** ViaCEP (gratuito) pra auto-completar endereços.
-
-**Mapas:** Leaflet (gratuito) pra desenhar áreas de entrega e mostrar localização.
+**Infra de e-mail**
+- Domínio de envio (se ainda não configurado — diálogo aparece na implementação)
+- Scaffold de e-mail transacional + template "Novo lead recebido"
 
 ---
 
-## Por onde começar
+## O que vou perguntar durante a implementação
 
-Sugiro esta ordem de execução:
-
-1. **Etapa A — Refatorar landing pra Comanda** (azul + amarelo, novo nome, novas seções persuasivas) — entrega rápida e visível
-2. **Etapa B — Backend** (ativar Cloud + criar tabelas + login)
-3. **Etapa C — Painel admin** (começando por dashboard + pedidos + cardápio, que é o coração)
-4. **Etapa D — Portal do cliente** (cardápio + carrinho + checkout)
-
-Cada etapa entrega valor sozinha. Se você aprovar, começo agora pela Etapa A pra você ver a nova marca rodando ainda hoje.
-
-**Confirma o nome "Comanda"** ou prefere **Pratto** / **Sirva**?
+1. Para qual e-mail enviar a notificação de novo lead?
+2. Confirmar se quer **enviar e-mail de boas-vindas com a senha** ao criar loja manualmente, ou só mostrar a senha pra você copiar.
+3. Se ainda não tem domínio de e-mail configurado, abrir o diálogo de setup (passo único, depois tudo automático).
