@@ -78,8 +78,16 @@ function PedidosPage() {
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [restaurant, setRestaurant] = useState<{ name: string; phone: string | null } | null>(null);
   const [notifEnabled, setNotifEnabled] = useState(false);
+  const [autoPrint, setAutoPrint] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("autoPrintOrders") === "1";
+  });
   const knownIdsRef = useRef<Set<string>>(new Set());
   const initializedRef = useRef(false);
+  const autoPrintRef = useRef(autoPrint);
+  const restaurantRef = useRef(restaurant);
+  useEffect(() => { autoPrintRef.current = autoPrint; }, [autoPrint]);
+  useEffect(() => { restaurantRef.current = restaurant; }, [restaurant]);
 
   const load = async () => {
     if (!restaurantId) return;
