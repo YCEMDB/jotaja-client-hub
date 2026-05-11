@@ -30,7 +30,7 @@ export const Route = createFileRoute("/")({
       { property: "og:image", content: OG_IMAGE },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
-      { property: "og:image:alt", content: "Painel da ComandaHub mostrando faturamento, pedidos e clientes" },
+      { property: "og:image:alt", content: "ComandaHub — Plataforma de delivery próprio para restaurantes" },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
       { name: "twitter:image", content: OG_IMAGE },
