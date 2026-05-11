@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
-import logo from "@/assets/comandahub-logo.png";
+import logo from "@/assets/comandahub-wordmark.png";
 
 export const Route = createFileRoute("/auth")({
   component: AuthPage,
@@ -40,7 +40,7 @@ function AuthPage() {
     <div className="min-h-screen grid lg:grid-cols-2 bg-background">
       <div className="hidden lg:flex flex-col justify-between p-12 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground">
         <Link to="/" className="flex items-center">
-          <img src={logo} alt="ComandaHub" className="h-10 w-auto bg-white rounded-lg p-1.5" />
+          <img src={logo} alt="ComandaHub" className="h-16 w-auto rounded-lg bg-white p-2" />
         </Link>
         <div>
           <h2 className="text-4xl font-bold leading-tight mb-4">
@@ -56,7 +56,7 @@ function AuthPage() {
       <div className="flex items-center justify-center p-6 lg:p-12">
         <Card className="w-full max-w-md p-8">
           <div className="lg:hidden flex items-center mb-8">
-            <img src={logo} alt="ComandaHub" className="h-10 w-auto" />
+            <img src={logo} alt="ComandaHub" className="h-16 w-auto" />
           </div>
 
           <h1 className="text-2xl font-bold mb-1">Entrar</h1>
