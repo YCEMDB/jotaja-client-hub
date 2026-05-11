@@ -44,7 +44,7 @@
 }
 
 :root {
-  --radius: 0.875rem;
+  --radius: 1rem;
 
   /* Premium SaaS — White + Blue (Stripe / Linear / Notion) */
   --background: oklch(1 0 0);
@@ -65,11 +65,11 @@
   --accent-foreground: oklch(1 0 0);
   --accent-soft: oklch(0.97 0.02 264);
 
-  --secondary: oklch(0.97 0.005 260);
+  --secondary: oklch(0.977 0.005 256); /* slate-50 #F8FAFC */
   --secondary-foreground: oklch(0.22 0.03 260);
 
-  --muted: oklch(0.97 0.005 260);
-  --muted-foreground: oklch(0.5 0.015 260); /* slate-500 */
+  --muted: oklch(0.977 0.005 256); /* slate-50 */
+  --muted-foreground: oklch(0.52 0.012 260); /* slate-500 */
 
   --warning: oklch(0.78 0.16 75);
 
