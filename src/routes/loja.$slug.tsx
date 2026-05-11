@@ -51,6 +51,7 @@ function LojaPage() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [trackOpen, setTrackOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
