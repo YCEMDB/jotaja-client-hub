@@ -17,12 +17,12 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/60">
       <div className="container mx-auto px-6">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-24 md:h-28">
           <Link to="/" className="flex items-center">
             <img
               src={logo}
               alt="ComandaHub"
-              className="h-10 md:h-12 w-auto"
+              className="h-16 md:h-20 w-auto"
               width={1488}
               height={336}
             />
