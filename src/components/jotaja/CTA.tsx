@@ -36,7 +36,7 @@ export function CTA() {
                 className="rounded-lg font-semibold px-6 h-11 bg-transparent border-background/20 text-background hover:bg-background/10 hover:text-background"
                 asChild
               >
-                <a href="https://wa.me/552120422913" target="_blank" rel="noreferrer">
+                <a href="https://wa.me/5527992877008" target="_blank" rel="noreferrer">
                   Agendar demonstração
                 </a>
               </Button>
