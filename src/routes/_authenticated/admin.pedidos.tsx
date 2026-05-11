@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Clock, MapPin, Phone, CreditCard, ChevronRight, MessageCircle, Truck, Printer, Bell, BellOff } from "lucide-react";
+import { Clock, MapPin, Phone, CreditCard, ChevronRight, MessageCircle, Truck, Printer, Bell, BellOff, PrinterCheck } from "lucide-react";
 import { toast } from "sonner";
 import { printReceipt } from "@/lib/print-receipt";
 import { ensureNotificationPermission, playOrderBeep, showOrderNotification } from "@/lib/order-notifications";
@@ -78,8 +78,16 @@ function PedidosPage() {
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [restaurant, setRestaurant] = useState<{ name: string; phone: string | null } | null>(null);
   const [notifEnabled, setNotifEnabled] = useState(false);
+  const [autoPrint, setAutoPrint] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("autoPrintOrders") === "1";
+  });
   const knownIdsRef = useRef<Set<string>>(new Set());
   const initializedRef = useRef(false);
+  const autoPrintRef = useRef(autoPrint);
+  const restaurantRef = useRef(restaurant);
+  useEffect(() => { autoPrintRef.current = autoPrint; }, [autoPrint]);
+  useEffect(() => { restaurantRef.current = restaurant; }, [restaurant]);
 
   const load = async () => {
     if (!restaurantId) return;
@@ -94,10 +102,19 @@ function PedidosPage() {
     const list = (data ?? []) as Order[];
     if (initializedRef.current) {
       const newOnes = list.filter((o) => !knownIdsRef.current.has(o.id) && o.status === "pending");
-      newOnes.forEach((o) => {
+      newOnes.forEach(async (o) => {
         playOrderBeep();
         showOrderNotification(o.order_number, o.customer_name, o.total);
         toast.success(`🔔 Novo pedido #${o.order_number} — ${o.customer_name}`);
+        if (autoPrintRef.current) {
+          const { data: its } = await supabase.from("order_items").select("*").eq("order_id", o.id);
+          printReceipt({
+            restaurantName: restaurantRef.current?.name ?? "Comanda",
+            restaurantPhone: restaurantRef.current?.phone ?? null,
+            order: o as any,
+            items: (its ?? []) as any,
+          });
+        }
       });
     }
     knownIdsRef.current = new Set(list.map((o) => o.id));
@@ -220,9 +237,27 @@ function PedidosPage() {
           <h1 className="text-3xl font-bold">Pedidos</h1>
           <p className="text-muted-foreground">Acompanhe os pedidos em tempo real (últimas 24h)</p>
         </div>
-        <Button variant={notifEnabled ? "secondary" : "default"} size="sm" onClick={enableNotifications}>
-          {notifEnabled ? <><Bell className="h-4 w-4 mr-2" />Notificações ativas</> : <><BellOff className="h-4 w-4 mr-2" />Ativar alertas de novos pedidos</>}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant={autoPrint ? "secondary" : "outline"}
+            size="sm"
+            onClick={() => {
+              const next = !autoPrint;
+              setAutoPrint(next);
+              localStorage.setItem("autoPrintOrders", next ? "1" : "0");
+              if (next) {
+                toast.success("Impressão automática ativada — permita pop-ups neste site");
+              } else {
+                toast.message("Impressão automática desativada");
+              }
+            }}
+          >
+            {autoPrint ? <><PrinterCheck className="h-4 w-4 mr-2" />Impressão auto: ON</> : <><Printer className="h-4 w-4 mr-2" />Impressão auto: OFF</>}
+          </Button>
+          <Button variant={notifEnabled ? "secondary" : "default"} size="sm" onClick={enableNotifications}>
+            {notifEnabled ? <><Bell className="h-4 w-4 mr-2" />Notificações ativas</> : <><BellOff className="h-4 w-4 mr-2" />Ativar alertas de novos pedidos</>}
+          </Button>
+        </div>
       </div>
 
       <div className="flex-1 overflow-x-auto">
