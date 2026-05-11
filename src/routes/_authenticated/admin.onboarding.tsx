@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
+import { isReservedSlug } from "@/lib/reserved-slugs";
 
 export const Route = createFileRoute("/_authenticated/admin/onboarding")({
   component: Onboarding,
