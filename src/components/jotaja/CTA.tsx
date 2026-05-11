@@ -4,6 +4,7 @@ import { ArrowRight, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
+import { supabase } from "@/integrations/supabase/client";
 
 const schema = z.object({
   nome: z.string().trim().min(2, "Nome muito curto").max(100),
@@ -16,7 +17,7 @@ export function CTA() {
   const [form, setForm] = useState({ nome: "", email: "", telefone: "", restaurante: "" });
   const [loading, setLoading] = useState(false);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = schema.safeParse(form);
     if (!result.success) {
@@ -24,11 +25,19 @@ export function CTA() {
       return;
     }
     setLoading(true);
-    setTimeout(() => {
-      toast.success("Recebemos seu cadastro! Em breve entraremos em contato 🎉");
-      setForm({ nome: "", email: "", telefone: "", restaurante: "" });
-      setLoading(false);
-    }, 800);
+    const { error } = await supabase.from("signup_leads").insert({
+      name: result.data.nome,
+      restaurant_name: result.data.restaurante,
+      email: result.data.email,
+      phone: result.data.telefone,
+    });
+    setLoading(false);
+    if (error) {
+      toast.error("Não foi possível enviar agora. Tente novamente em instantes.");
+      return;
+    }
+    toast.success("Recebemos seu cadastro! Em até 24h entraremos em contato pra liberar seu teste 🎉");
+    setForm({ nome: "", email: "", telefone: "", restaurante: "" });
   };
 
   return (
