@@ -8,11 +8,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
-import logo from "@/assets/comanda-logo.png";
+import logo from "@/assets/comandahub-logo.png";
 
 export const Route = createFileRoute("/auth")({
   component: AuthPage,
-  head: () => ({ meta: [{ title: "Entrar — Comanda" }] }),
+  head: () => ({ meta: [{ title: "Entrar — ComandaHub" }] }),
 });
 
 const loginSchema = z.object({
@@ -31,9 +31,8 @@ function AuthPage() {
   return (
     <div className="min-h-screen grid lg:grid-cols-2 bg-background">
       <div className="hidden lg:flex flex-col justify-between p-12 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground">
-        <Link to="/" className="flex items-center gap-2">
-          <img src={logo} alt="Comanda" className="h-10 w-10 rounded-lg bg-white p-1" />
-          <span className="text-2xl font-bold">Comanda</span>
+        <Link to="/" className="flex items-center">
+          <img src={logo} alt="ComandaHub" className="h-10 w-auto bg-white rounded-lg p-1.5" />
         </Link>
         <div>
           <h2 className="text-4xl font-bold leading-tight mb-4">
@@ -43,14 +42,13 @@ function AuthPage() {
             Acesse o painel da sua loja para gerenciar pedidos, cardápio e entregadores.
           </p>
         </div>
-        <p className="text-sm text-primary-foreground/60">© 2026 Comanda</p>
+        <p className="text-sm text-primary-foreground/60">© 2026 ComandaHub</p>
       </div>
 
       <div className="flex items-center justify-center p-6 lg:p-12">
         <Card className="w-full max-w-md p-8">
-          <div className="lg:hidden flex items-center gap-2 mb-8">
-            <img src={logo} alt="Comanda" className="h-10 w-10" />
-            <span className="text-2xl font-bold">Comanda</span>
+          <div className="lg:hidden flex items-center mb-8">
+            <img src={logo} alt="ComandaHub" className="h-10 w-auto" />
           </div>
 
           <h1 className="text-2xl font-bold mb-1">Entrar</h1>

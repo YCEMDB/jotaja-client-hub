@@ -11,7 +11,7 @@ export function Footer() {
                 C
               </div>
               <span className="font-display font-bold text-lg tracking-tight">
-                Comanda
+                ComandaHub
               </span>
             </Link>
             <p className="mt-4 text-sm text-muted-foreground max-w-xs leading-relaxed">
@@ -67,7 +67,7 @@ export function Footer() {
 
         <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} Comanda. Todos os direitos reservados.
+            © {new Date().getFullYear()} ComandaHub. Todos os direitos reservados.
           </p>
           <p className="text-xs text-muted-foreground">
             Feito com cuidado para restaurantes brasileiros.

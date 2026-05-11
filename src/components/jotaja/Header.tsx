@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import logo from "@/assets/comandahub-logo.png";
 
 const navItems = [
   { label: "Funcionalidades", href: "#funcionalidades" },
@@ -17,13 +18,14 @@ export function Header() {
     <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/60">
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-primary grid place-items-center text-white font-bold text-sm shadow-blue">
-              C
-            </div>
-            <span className="font-display font-bold text-lg tracking-tight">
-              Comanda
-            </span>
+          <Link to="/" className="flex items-center">
+            <img
+              src={logo}
+              alt="ComandaHub"
+              className="h-9 w-auto"
+              width={1024}
+              height={1024}
+            />
           </Link>
 
           <nav className="hidden md:flex items-center gap-1">

@@ -19,7 +19,7 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/admin/cardapio")({
   component: CardapioPage,
-  head: () => ({ meta: [{ title: "Cardápio — Comanda" }] }),
+  head: () => ({ meta: [{ title: "Cardápio — ComandaHub" }] }),
 });
 
 type Category = { id: string; name: string; description: string | null; position: number | null; is_active: boolean | null };

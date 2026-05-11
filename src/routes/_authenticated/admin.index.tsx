@@ -9,7 +9,7 @@ import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianG
 
 export const Route = createFileRoute("/_authenticated/admin/")({
   component: Dashboard,
-  head: () => ({ meta: [{ title: "Painel — Comanda" }] }),
+  head: () => ({ meta: [{ title: "Painel — ComandaHub" }] }),
 });
 
 interface OrderRow {

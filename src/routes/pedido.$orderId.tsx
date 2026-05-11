@@ -11,7 +11,7 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/pedido/$orderId")({
   component: OrderTrackPage,
-  head: () => ({ meta: [{ title: "Acompanhar pedido — Comanda" }] }),
+  head: () => ({ meta: [{ title: "Acompanhar pedido — ComandaHub" }] }),
 });
 
 type Order = {

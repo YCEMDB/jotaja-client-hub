@@ -21,7 +21,7 @@ const faqs = [
   },
   {
     q: "Os pedidos chegam por onde?",
-    a: "Pelo painel da Comanda em tempo real, com aviso sonoro. Também é possível imprimir automaticamente em impressoras térmicas.",
+    a: "Pelo painel da ComandaHub em tempo real, com aviso sonoro. Também é possível imprimir automaticamente em impressoras térmicas.",
   },
   {
     q: "Como funciona o pagamento online?",

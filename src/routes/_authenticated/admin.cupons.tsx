@@ -19,7 +19,7 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/admin/cupons")({
   component: CuponsPage,
-  head: () => ({ meta: [{ title: "Cupons — Comanda" }] }),
+  head: () => ({ meta: [{ title: "Cupons — ComandaHub" }] }),
 });
 
 type CouponType = "percentage" | "fixed" | "free_shipping";

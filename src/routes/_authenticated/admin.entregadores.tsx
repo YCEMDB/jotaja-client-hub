@@ -13,7 +13,7 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/admin/entregadores")({
   component: Entregadores,
-  head: () => ({ meta: [{ title: "Entregadores — Comanda" }] }),
+  head: () => ({ meta: [{ title: "Entregadores — ComandaHub" }] }),
 });
 
 interface Driver {

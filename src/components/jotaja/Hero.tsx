@@ -175,7 +175,7 @@ export function Hero() {
         {/* Logos / social proof */}
         <div className="mt-16 max-w-4xl mx-auto">
           <p className="text-center text-xs uppercase tracking-widest text-muted-foreground font-semibold">
-            +1.200 restaurantes confiam na Comanda
+            +1.200 restaurantes confiam na ComandaHub
           </p>
           <div className="mt-6 grid grid-cols-2 md:grid-cols-5 gap-x-8 gap-y-4 items-center justify-items-center opacity-60">
             {["Sabor & Cia", "Bella Pizza", "Burger House", "Açaí Tropical", "Sushi Tokyo"].map((name) => (
