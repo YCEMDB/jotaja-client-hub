@@ -1,65 +1,66 @@
-import { Star, Quote } from "lucide-react";
+import { Star } from "lucide-react";
 
-const depoimentos = [
+const testimonials = [
   {
-    nome: "Marcelo Silva",
-    cargo: "Dono da Pizzaria Forno di Roma",
-    texto: "Saí do iFood depois de 3 anos perdendo 25% por pedido. Em 2 meses no Comanda recuperei o investimento. Meu lucro dobrou e meus clientes finalmente são MEUS.",
-    avatar: "🧑‍🍳",
-    estrelas: 5,
+    quote:
+      "Saímos do iFood e em 3 meses dobramos o faturamento. O painel é simples e o suporte é rápido. Foi a melhor decisão que tomamos.",
+    name: "Marcelo Andrade",
+    role: "Sócio · Burger House",
+    initials: "MA",
   },
   {
-    nome: "Ana Paula Costa",
-    cargo: "Padaria Aurora — RJ",
-    texto: "O suporte é o que mais me impressiona. Toda dúvida é resolvida no WhatsApp em minutos. Configurei tudo sozinha em uma tarde.",
-    avatar: "👩‍🍳",
-    estrelas: 5,
+    quote:
+      "Consigo ver tudo em tempo real: pedidos, entregadores, faturamento. Antes eu vivia no improviso, agora tenho controle de verdade.",
+    name: "Camila Rocha",
+    role: "Proprietária · Bella Pizza",
+    initials: "CR",
   },
   {
-    nome: "Roberto Tanaka",
-    cargo: "Sushi Zen — SP",
-    texto: "Os pedidos chegam organizados direto na cozinha. Equipe ganhou tempo, eu ganhei controle. E a economia mensal é absurda.",
-    avatar: "👨‍🍳",
-    estrelas: 5,
+    quote:
+      "O cardápio ficou lindo e os clientes adoraram. Sem comissão é diferente: cada pedido pesa no caixa do jeito certo.",
+    name: "Rafael Mendes",
+    role: "Gerente · Sabor & Cia",
+    initials: "RM",
   },
 ];
 
 export function Depoimentos() {
   return (
-    <section className="py-20 md:py-28">
+    <section id="depoimentos" className="py-24 md:py-32 bg-background">
       <div className="container mx-auto px-6">
-        <div className="text-center mb-12 max-w-2xl mx-auto">
-          <span className="inline-block bg-accent-soft text-accent-foreground font-bold text-sm px-4 py-1.5 rounded-full mb-4">
-            Quem usa, recomenda
+        <div className="max-w-2xl mx-auto text-center">
+          <span className="text-xs font-semibold uppercase tracking-widest text-primary">
+            Depoimentos
           </span>
-          <h2 className="font-display text-3xl md:text-5xl font-extrabold leading-tight">
-            Donos de restaurante <span className="text-gradient-primary">apaixonados</span>
+          <h2 className="mt-3 text-3xl md:text-4xl font-bold tracking-tight">
+            Restaurantes que já fizeram a virada.
           </h2>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
-          {depoimentos.map((d, i) => (
-            <div
-              key={i}
-              className="bg-card rounded-3xl p-8 border border-border shadow-card hover:shadow-elegant transition-smooth relative"
+        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-5">
+          {testimonials.map((t) => (
+            <figure
+              key={t.name}
+              className="rounded-2xl border border-border bg-card p-7 shadow-xs hover:shadow-card-md transition-smooth flex flex-col"
             >
-              <Quote className="absolute top-6 right-6 w-10 h-10 text-accent/30" />
-              <div className="flex gap-0.5 mb-4">
-                {Array.from({ length: d.estrelas }).map((_, j) => (
-                  <Star key={j} className="w-4 h-4 fill-accent text-accent" />
+              <div className="flex gap-0.5 text-primary">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className="w-4 h-4 fill-current" />
                 ))}
               </div>
-              <p className="text-foreground leading-relaxed mb-6 relative">"{d.texto}"</p>
-              <div className="flex items-center gap-3 pt-5 border-t border-border">
-                <div className="w-12 h-12 rounded-full bg-gradient-accent flex items-center justify-center text-2xl">
-                  {d.avatar}
+              <blockquote className="mt-4 text-sm leading-relaxed text-foreground flex-1">
+                "{t.quote}"
+              </blockquote>
+              <figcaption className="mt-6 flex items-center gap-3 pt-5 border-t border-border">
+                <div className="w-9 h-9 rounded-full bg-gradient-primary text-white grid place-items-center text-xs font-bold">
+                  {t.initials}
                 </div>
                 <div>
-                  <div className="font-display font-bold text-sm">{d.nome}</div>
-                  <div className="text-xs text-muted-foreground">{d.cargo}</div>
+                  <div className="text-sm font-semibold">{t.name}</div>
+                  <div className="text-xs text-muted-foreground">{t.role}</div>
                 </div>
-              </div>
-            </div>
+              </figcaption>
+            </figure>
           ))}
         </div>
       </div>

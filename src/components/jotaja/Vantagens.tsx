@@ -1,46 +1,68 @@
-import { Smartphone, MessageSquare, ShieldCheck, Heart, Users, DollarSign } from "lucide-react";
+import { Zap, ShieldCheck, TrendingUp, HeartHandshake, Sparkles, Clock } from "lucide-react";
 
-const vantagens = [
-  { icon: DollarSign, title: "Zero comissão por pedido", desc: "Pague apenas a mensalidade fixa. 100% do lucro fica com você.", highlight: true },
-  { icon: MessageSquare, title: "Pedidos direto no WhatsApp", desc: "Recurso exclusivo: pedido cai resumido no WhatsApp do restaurante." },
-  { icon: Smartphone, title: "Cliente não baixa app", desc: "Pedido por link no navegador, sem fricção. Conversão muito maior." },
-  { icon: Heart, title: "Sua marca, seu controle", desc: "URL própria, cores, logo e banner do seu jeito. Você dono dos clientes." },
-  { icon: Users, title: "Não ocupa atendente", desc: "Pedido entra automatizado e organizado. Equipe focada na cozinha." },
-  { icon: ShieldCheck, title: "Sem fidelidade nem letra miúda", desc: "Cancele quando quiser. Suporte humanizado todos os dias 8h-22h." },
+const benefits = [
+  {
+    icon: Zap,
+    title: "Configure em minutos",
+    desc: "Suba seu cardápio, ajuste cores e logos, e comece a receber pedidos no mesmo dia.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Sem comissão por venda",
+    desc: "Você paga uma mensalidade fixa. Cada real do pedido vai direto para o seu caixa.",
+  },
+  {
+    icon: TrendingUp,
+    title: "Cresça com seus dados",
+    desc: "Relatórios de vendas, produtos campeões e horários de pico em tempo real.",
+  },
+  {
+    icon: HeartHandshake,
+    title: "Sua marca, seus clientes",
+    desc: "Domínio próprio, identidade visual sua e base de clientes 100% sob seu controle.",
+  },
+  {
+    icon: Sparkles,
+    title: "Experiência premium",
+    desc: "Cardápio rápido, bonito e responsivo que converte navegação em pedido.",
+  },
+  {
+    icon: Clock,
+    title: "Suporte humano de verdade",
+    desc: "Time de especialistas no WhatsApp para resolver junto com você quando precisar.",
+  },
 ];
 
 export function Vantagens() {
   return (
-    <section id="vantagens" className="py-20 md:py-28 bg-muted/40">
+    <section className="py-24 md:py-32 bg-background">
       <div className="container mx-auto px-6">
-        <div className="text-center mb-16 max-w-2xl mx-auto">
-          <span className="inline-block bg-accent-soft text-accent-foreground font-bold text-sm px-4 py-1.5 rounded-full mb-4">
+        <div className="max-w-2xl mx-auto text-center">
+          <span className="text-xs font-semibold uppercase tracking-widest text-primary">
             Por que Comanda
           </span>
-          <h2 className="font-display text-3xl md:text-5xl font-extrabold leading-tight">
-            Tudo que iFood te cobra <span className="marker-highlight">sem cobrar</span> nada por pedido
+          <h2 className="mt-3 text-3xl md:text-4xl font-bold tracking-tight">
+            Tudo que você precisa para
+            <br />
+            <span className="text-muted-foreground">vender mais e melhor.</span>
           </h2>
+          <p className="mt-4 text-muted-foreground">
+            Uma plataforma desenhada para restaurantes que querem crescer com autonomia,
+            sem depender de marketplaces.
+          </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {vantagens.map((v, i) => (
+        <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-border rounded-2xl overflow-hidden border border-border">
+          {benefits.map(({ icon: Icon, title, desc }) => (
             <div
-              key={i}
-              className={`group rounded-3xl p-7 border transition-smooth hover:-translate-y-1 ${
-                v.highlight
-                  ? "bg-gradient-primary text-primary-foreground border-transparent shadow-elegant"
-                  : "bg-card border-border shadow-card hover:shadow-elegant"
-              }`}
+              key={title}
+              className="bg-card p-8 hover:bg-accent-soft transition-smooth group"
             >
-              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-5 transition-bounce group-hover:scale-110 ${
-                v.highlight ? "bg-accent text-accent-foreground" : "bg-accent-soft text-accent-foreground"
-              }`}>
-                <v.icon className="w-7 h-7" />
+              <div className="w-10 h-10 rounded-lg bg-primary/10 text-primary grid place-items-center group-hover:bg-primary group-hover:text-primary-foreground transition-smooth">
+                <Icon className="w-5 h-5" />
               </div>
-              <h3 className="font-display font-extrabold text-xl mb-2 leading-snug">{v.title}</h3>
-              <p className={`text-sm leading-relaxed ${v.highlight ? "text-primary-foreground/80" : "text-muted-foreground"}`}>
-                {v.desc}
-              </p>
+              <h3 className="mt-5 text-lg font-semibold tracking-tight">{title}</h3>
+              <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{desc}</p>
             </div>
           ))}
         </div>

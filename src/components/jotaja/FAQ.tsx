@@ -1,52 +1,71 @@
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const faqs = [
-  { q: "Quanto custa para usar o Comanda?", a: "Apenas a mensalidade fixa do plano escolhido (a partir de R$ 99/mês). Zero comissão por pedido — você fica com 100% do que vende." },
-  { q: "Como chegam os pedidos pra mim?", a: "Direto no painel do Comanda E no WhatsApp do restaurante, organizados, com itens, adicionais, endereço e forma de pagamento." },
-  { q: "Meu cliente precisa baixar algum app?", a: "Não. Ele faz o pedido por um link no navegador (celular ou desktop). Sem fricção, conversão muito maior." },
-  { q: "Preciso ter WhatsApp no restaurante?", a: "Não é obrigatório, mas é altamente recomendado. A integração com WhatsApp é um dos diferenciais que mais ajuda." },
-  { q: "Quais segmentos podem usar?", a: "Restaurantes, hamburguerias, pizzarias, padarias, hortifrutis, açaiterias, bebidas, sushi, marmitarias e qualquer outro delivery." },
-  { q: "Comanda traz novos clientes?", a: "Não — Comanda é a ferramenta que organiza o atendimento e fideliza quem você já tem. Em breve teremos módulo de marketing nativo." },
-  { q: "Comanda faz a entrega?", a: "Não. Você usa sua equipe própria de entregadores (que cadastra e gerencia no painel) ou parceiros como Loggi (integração disponível)." },
-  { q: "Tem suporte humano?", a: "Sim! Atendimento por WhatsApp, telefone, e-mail e TeamViewer. Todos os dias, inclusive feriados, das 8h às 22h." },
-  { q: "Consigo ter mais de uma loja (rede/franquia)?", a: "Sim! O plano Rede/Franquia gerencia múltiplas unidades com direcionamento por geolocalização e estatísticas separadas." },
-  { q: "Preciso ser CNPJ?", a: "Não. Pessoa Física também pode usar." },
-  { q: "Tem fidelidade ou multa?", a: "Nenhuma. Cancele quando quiser, sem letra miúda." },
-  { q: "Posso testar antes de pagar?", a: "Sim! 14 dias grátis em qualquer plano, sem cartão de crédito." },
+  {
+    q: "Preciso pagar comissão por pedido?",
+    a: "Não. Diferente de marketplaces, você paga uma mensalidade fixa. 100% do valor de cada pedido vai direto para o seu caixa.",
+  },
+  {
+    q: "Quanto tempo leva para começar a receber pedidos?",
+    a: "Em média 30 minutos. Você cadastra os produtos, define a área de entrega e já compartilha o link do seu cardápio.",
+  },
+  {
+    q: "Posso testar antes de pagar?",
+    a: "Sim. Você tem 14 dias grátis com acesso completo a todos os recursos do plano Pro, sem precisar cadastrar cartão.",
+  },
+  {
+    q: "Os pedidos chegam por onde?",
+    a: "Pelo painel da Comanda em tempo real, com aviso sonoro. Também é possível imprimir automaticamente em impressoras térmicas.",
+  },
+  {
+    q: "Como funciona o pagamento online?",
+    a: "Você integra sua conta Mercado Pago em poucos cliques. O cliente paga por Pix ou cartão e o valor cai direto na sua conta.",
+  },
+  {
+    q: "Posso cancelar quando quiser?",
+    a: "Sim. Não há fidelidade. Você cancela pelo painel a qualquer momento, sem multa.",
+  },
 ];
 
 export function FAQ() {
   return (
-    <section id="faq" className="py-20 md:py-28">
-      <div className="container mx-auto px-6 max-w-3xl">
-        <div className="text-center mb-12">
-          <span className="inline-block bg-accent-soft text-accent-foreground font-bold text-sm px-4 py-1.5 rounded-full mb-4">
-            Tira-dúvidas
+    <section id="faq" className="py-24 md:py-32 bg-background">
+      <div className="container mx-auto px-6">
+        <div className="max-w-2xl mx-auto text-center">
+          <span className="text-xs font-semibold uppercase tracking-widest text-primary">
+            FAQ
           </span>
-          <h2 className="font-display text-3xl md:text-5xl font-extrabold leading-tight">
-            Perguntas <span className="text-gradient-primary">frequentes</span>
+          <h2 className="mt-3 text-3xl md:text-4xl font-bold tracking-tight">
+            Perguntas frequentes
           </h2>
-          <p className="text-muted-foreground mt-4">
-            Não encontrou sua dúvida? Fala com a gente no WhatsApp.
+          <p className="mt-4 text-muted-foreground">
+            Tudo que você precisa saber antes de começar.
           </p>
         </div>
 
-        <Accordion type="single" collapsible className="space-y-3">
-          {faqs.map((f, i) => (
-            <AccordionItem
-              key={i}
-              value={`item-${i}`}
-              className="bg-card border border-border rounded-2xl px-6 shadow-soft hover:shadow-card transition-smooth data-[state=open]:border-accent data-[state=open]:shadow-accent-lg"
-            >
-              <AccordionTrigger className="text-left font-display font-bold hover:no-underline py-5">
-                {f.q}
-              </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground leading-relaxed pb-5">
-                {f.a}
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+        <div className="mt-12 max-w-2xl mx-auto">
+          <Accordion type="single" collapsible className="w-full">
+            {faqs.map((faq, i) => (
+              <AccordionItem
+                key={i}
+                value={`item-${i}`}
+                className="border-b border-border last:border-0"
+              >
+                <AccordionTrigger className="text-left text-sm font-semibold py-5 hover:no-underline hover:text-primary">
+                  {faq.q}
+                </AccordionTrigger>
+                <AccordionContent className="text-sm text-muted-foreground leading-relaxed pb-5">
+                  {faq.a}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
       </div>
     </section>
   );
