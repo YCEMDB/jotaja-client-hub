@@ -22,7 +22,7 @@ export function Header() {
             <img
               src={logo}
               alt="ComandaHub"
-              className="h-14 md:h-16 w-auto"
+              className="h-16 md:h-[4.75rem] w-auto"
               width={1500}
               height={360}
             />
