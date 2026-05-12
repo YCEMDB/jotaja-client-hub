@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { LayoutDashboard, ShoppingBag, UtensilsCrossed, Users, Settings, LogOut, Tags, Truck, BarChart3, ShieldCheck } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import logoIcon from "@/assets/comandahub-icon.png";
+import logoIcon from "@/assets/comandahub-mark.svg";
 import { BlockedStoreScreen } from "@/components/BlockedStoreScreen";
 
 export const Route = createFileRoute("/_authenticated")({
@@ -61,7 +61,7 @@ function AuthLayout() {
     <div className="min-h-screen flex bg-muted/30">
       <aside className="w-64 bg-primary text-primary-foreground flex flex-col">
         <Link to="/admin" className="p-5 flex items-center gap-2.5 border-b border-primary-foreground/10 hover:bg-primary-foreground/5 transition-colors">
-          <img src={logoIcon} alt="" className="h-8 w-8 rounded-md bg-white p-1" />
+          <img src={logoIcon} alt="" className="h-9 w-9 rounded-md bg-white p-1" />
           <span className="text-base font-bold tracking-tight">ComandaHub</span>
         </Link>
 
