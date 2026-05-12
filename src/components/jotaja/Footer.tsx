@@ -11,7 +11,7 @@ export function Footer() {
               <img
                 src={logo}
                 alt="ComandaHub"
-                className="h-12 md:h-14 w-auto"
+                className="h-16 md:h-[4.5rem] w-auto"
                 width={1500}
                 height={360}
               />
