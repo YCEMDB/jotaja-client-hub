@@ -1,0 +1,29 @@
+<svg width="1500" height="360" viewBox="0 0 1500 360" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">ComandaHub</title>
+  <desc id="desc">Logo profissional ComandaHub com símbolo de pedido conectado e wordmark.</desc>
+  <defs>
+    <linearGradient id="markGradient" x1="54" y1="44" x2="282" y2="308" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#38BDF8"/>
+      <stop offset="0.52" stop-color="#2563EB"/>
+      <stop offset="1" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <filter id="softShadow" x="20" y="28" width="292" height="312" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#0F172A" flood-opacity="0.16"/>
+    </filter>
+  </defs>
+  <g filter="url(#softShadow)">
+    <rect x="44" y="42" width="260" height="260" rx="68" fill="url(#markGradient)"/>
+    <path d="M114 134C128 112 150 100 177 100H222C238 100 251 113 251 129C251 145 238 158 222 158H175C165 158 156 162 150 170L114 218C104 231 85 224 85 208V177C85 160 99 146 114 134Z" fill="white" fill-opacity="0.98"/>
+    <path d="M115 222H218C237 222 252 207 252 188C252 181 258 175 265 175C272 175 278 181 278 188C278 222 251 249 217 249H115C108 249 102 243 102 236C102 228 108 222 115 222Z" fill="white" fill-opacity="0.98"/>
+    <circle cx="226" cy="129" r="16" fill="#0F172A" fill-opacity="0.16"/>
+    <circle cx="226" cy="129" r="8" fill="white"/>
+    <circle cx="117" cy="236" r="8" fill="#0F172A" fill-opacity="0.14"/>
+    <circle cx="267" cy="188" r="8" fill="white"/>
+  </g>
+  <g aria-label="ComandaHub">
+    <text x="352" y="221" font-family="Aptos, Avenir Next, Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="132" font-weight="780" letter-spacing="0" fill="#111827">Comanda</text>
+    <text x="1001" y="221" font-family="Aptos, Avenir Next, Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="132" font-weight="860" letter-spacing="0" fill="#2563EB">Hub</text>
+  </g>
+  <path d="M362 263H1210" stroke="#2563EB" stroke-width="10" stroke-linecap="round" opacity="0.18"/>
+  <path d="M362 263H686" stroke="#38BDF8" stroke-width="10" stroke-linecap="round" opacity="0.72"/>
+</svg>
