@@ -1,0 +1,19 @@
+<svg width="1260" height="260" viewBox="0 0 1260 260" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">ComandaHub</title>
+  <desc id="desc">Logo profissional ComandaHub com símbolo monograma e wordmark.</desc>
+  <defs>
+    <linearGradient id="g" x1="28" y1="24" x2="214" y2="230" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#38BDF8"/>
+      <stop offset="0.48" stop-color="#2563EB"/>
+      <stop offset="1" stop-color="#1D4ED8"/>
+    </linearGradient>
+  </defs>
+  <rect x="22" y="22" width="216" height="216" rx="56" fill="url(#g)"/>
+  <path d="M162 70H123C89 70 62 97 62 130C62 163 89 190 123 190H162" stroke="white" stroke-width="22" stroke-linecap="round"/>
+  <path d="M92 124H160" stroke="white" stroke-width="18" stroke-linecap="round"/>
+  <path d="M92 156H186" stroke="white" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="192" cy="140" r="22" fill="white"/>
+  <circle cx="68" cy="140" r="13" fill="white" fill-opacity="0.9"/>
+  <text x="286" y="172" font-family="Sora, Avenir Next, Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="136" font-weight="800" letter-spacing="0" fill="#101828">Comanda</text>
+  <text x="934" y="172" font-family="Sora, Avenir Next, Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="136" font-weight="850" letter-spacing="0" fill="#2563EB">Hub</text>
+</svg>
