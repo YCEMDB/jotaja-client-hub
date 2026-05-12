@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import logo from "@/assets/comandahub-wordmark.png";
+import logo from "@/assets/comandahub-logo.svg";
 
 export function Footer() {
   return (
@@ -11,9 +11,9 @@ export function Footer() {
               <img
                 src={logo}
                 alt="ComandaHub"
-                className="h-14 md:h-16 w-auto"
-                width={1488}
-                height={336}
+                className="h-12 md:h-14 w-auto"
+                width={1500}
+                height={360}
               />
             </Link>
             <p className="mt-4 text-sm text-muted-foreground max-w-xs leading-relaxed">
