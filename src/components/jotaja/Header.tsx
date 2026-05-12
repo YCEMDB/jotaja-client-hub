@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/comandahub-wordmark.png";
+import logo from "@/assets/comandahub-logo.svg";
 
 const navItems = [
   { label: "Funcionalidades", href: "#funcionalidades" },
@@ -22,9 +22,9 @@ export function Header() {
             <img
               src={logo}
               alt="ComandaHub"
-              className="h-16 md:h-20 w-auto"
-              width={1488}
-              height={336}
+              className="h-14 md:h-16 w-auto"
+              width={1500}
+              height={360}
             />
           </Link>
 
