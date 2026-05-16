@@ -39,8 +39,8 @@ function AuthPage() {
   return (
     <div className="min-h-screen grid lg:grid-cols-2 bg-background">
       <div className="hidden lg:flex flex-col justify-between p-12 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground">
-        <Link to="/" className="flex items-center">
-          <img src={logo} alt="ComandaHub" className="h-20 w-auto rounded-lg bg-white p-3" />
+        <Link to="/" className="flex items-center group bg-white rounded-xl px-4 py-3 w-fit">
+          <Logo size="md" />
         </Link>
         <div>
           <h2 className="text-4xl font-bold leading-tight mb-4">
