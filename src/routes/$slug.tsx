@@ -143,32 +143,43 @@ function LojaPage() {
   } as React.CSSProperties;
 
   return (
-    <div className="min-h-screen bg-muted/20" style={themeStyle}>
-      {/* Header */}
-      <div className="text-white" style={{ background: "var(--brand)" }}>
+    <div className="min-h-screen bg-background" style={themeStyle}>
+      {/* Header — brutalist hero */}
+      <div className="relative bg-ink text-background border-b-4 border-brand-orange overflow-hidden">
+        <div className="absolute inset-0 bg-noise opacity-50 pointer-events-none" />
+        <div className="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-brand-orange/30 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-32 -left-20 h-72 w-72 rounded-full bg-brand-magenta/25 blur-3xl pointer-events-none" />
         {restaurant.cover_url && (
-          <div className="h-40 md:h-56 bg-center bg-cover" style={{ backgroundImage: `url(${restaurant.cover_url})` }} />
+          <div
+            className="h-44 md:h-60 bg-center bg-cover border-b-2 border-background/20"
+            style={{ backgroundImage: `linear-gradient(180deg, transparent 0%, oklch(0.12 0.025 25 / 0.5) 100%), url(${restaurant.cover_url})` }}
+          />
         )}
-        <div className="container mx-auto px-4 py-6 flex items-center gap-4">
-          <div className="h-16 w-16 md:h-20 md:w-20 rounded-xl bg-white/10 grid place-items-center overflow-hidden shrink-0">
+        <div className="relative container mx-auto px-4 py-6 flex items-center gap-4 flex-wrap">
+          <div className="h-20 w-20 md:h-24 md:w-24 rounded-2xl bg-brand-orange border-2 border-background grid place-items-center overflow-hidden shrink-0 shadow-[5px_5px_0_0_oklch(0.62_0.24_0)]">
             {restaurant.logo_url ? (
               <img src={restaurant.logo_url} alt={restaurant.name} className="h-full w-full object-cover" />
             ) : (
-              <span className="text-2xl font-bold">{restaurant.name[0]}</span>
+              <span className="font-display text-3xl text-ink">{restaurant.name[0]}</span>
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <h1 className="text-2xl md:text-3xl font-bold truncate">{restaurant.name}</h1>
+            <h1 className="font-display text-3xl md:text-5xl tracking-tight leading-[0.92] truncate text-background">
+              {restaurant.name}
+              <span className="inline-block w-3 h-3 ml-1 -mb-0.5 bg-brand-orange align-baseline" />
+            </h1>
             {restaurant.description && (
-              <p className="text-sm opacity-80 line-clamp-2">{restaurant.description}</p>
+              <p className="text-sm md:text-base text-background/70 line-clamp-2 mt-1.5">{restaurant.description}</p>
             )}
-            <div className="flex items-center gap-3 mt-2 text-xs">
-              <Badge variant={restaurant.is_open ? "default" : "secondary"} style={restaurant.is_open ? { background: "var(--brand-accent)", color: "#000" } : undefined}>
+            <div className="flex items-center gap-2 mt-3 text-xs flex-wrap">
+              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md font-display text-[11px] uppercase tracking-wider border-2 border-background ${restaurant.is_open ? "bg-brand-orange text-ink" : "bg-background/10 text-background/60"}`}>
+                <span className={`h-1.5 w-1.5 rounded-full ${restaurant.is_open ? "bg-ink animate-pulse" : "bg-background/40"}`} />
                 {restaurant.is_open ? "Aberto agora" : "Fechado"}
-              </Badge>
+              </span>
               {Number(restaurant.min_order_value) > 0 && (
-                <span className="opacity-80">Pedido mín. R$ {Number(restaurant.min_order_value).toFixed(2)}</span>
+                <span className="text-background/60 font-bold">Mín. R$ {Number(restaurant.min_order_value).toFixed(2)}</span>
               )}
+            </div>
           </div>
           <Button
             variant="secondary"
@@ -182,15 +193,18 @@ function LojaPage() {
           </Button>
         </div>
       </div>
-      </div>
 
       {/* Category nav */}
       {categories.length > 0 && (
-        <div className="sticky top-0 z-10 bg-background border-b">
+        <div className="sticky top-0 z-10 bg-background border-b-2 border-ink">
           <div className="container mx-auto px-4 overflow-x-auto">
-            <div className="flex gap-1 py-2">
+            <div className="flex gap-2 py-3">
               {categories.map((c) => (
-                <a key={c.id} href={`#cat-${c.id}`} className="px-3 py-1.5 text-sm rounded-full hover:bg-muted whitespace-nowrap">
+                <a
+                  key={c.id}
+                  href={`#cat-${c.id}`}
+                  className="px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider rounded-lg border-2 border-ink/80 bg-background hover:bg-ink hover:text-background whitespace-nowrap transition-colors"
+                >
                   {c.name}
                 </a>
               ))}
@@ -200,40 +214,47 @@ function LojaPage() {
       )}
 
       {/* Menu */}
-      <div className="container mx-auto px-4 py-6 pb-32 space-y-8">
+      <div className="container mx-auto px-4 py-8 pb-32 space-y-10">
         {categories.length === 0 ? (
           <Card className="p-12 text-center">
-            <p className="text-muted-foreground">Cardápio em construção. Volte em breve!</p>
+            <p className="text-ink/60 font-bold">Cardápio em construção. Volte em breve!</p>
           </Card>
         ) : (
           categories.map((cat) => {
             const items = products.filter((p) => p.category_id === cat.id);
             if (items.length === 0) return null;
             return (
-              <section key={cat.id} id={`cat-${cat.id}`}>
-                <h2 className="text-xl font-bold mb-3">{cat.name}</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <section key={cat.id} id={`cat-${cat.id}`} className="scroll-mt-20">
+                <h2 className="font-display text-2xl md:text-3xl text-ink mb-4 tracking-tight">
+                  {cat.name}
+                  <span className="inline-block w-2 h-2 ml-1 -mb-0.5 bg-brand-magenta align-baseline" />
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {items.map((p) => (
-                    <Card key={p.id} className="p-3 flex gap-3 cursor-pointer hover:shadow-md transition" onClick={() => setSelectedProduct(p)}>
+                    <Card
+                      key={p.id}
+                      className="p-3 flex gap-3 cursor-pointer hover:shadow-[6px_6px_0_0_oklch(0.69_0.22_38)] hover:-translate-x-0.5 hover:-translate-y-0.5"
+                      onClick={() => setSelectedProduct(p)}
+                    >
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold">{p.name}</h3>
-                        {p.description && <p className="text-sm text-muted-foreground line-clamp-2">{p.description}</p>}
-                        <div className="mt-2">
+                        <h3 className="font-display text-base text-ink leading-tight">{p.name}</h3>
+                        {p.description && <p className="text-sm text-ink/60 line-clamp-2 mt-1">{p.description}</p>}
+                        <div className="mt-2 flex items-baseline gap-2">
                           {p.promo_price != null ? (
                             <>
-                              <span className="text-muted-foreground line-through text-xs mr-1">R$ {Number(p.price).toFixed(2)}</span>
-                              <span className="font-bold" style={{ color: "var(--brand)" }}>R$ {Number(p.promo_price).toFixed(2)}</span>
+                              <span className="text-ink/40 line-through text-xs">R$ {Number(p.price).toFixed(2)}</span>
+                              <span className="font-display text-lg text-brand-magenta">R$ {Number(p.promo_price).toFixed(2)}</span>
                             </>
                           ) : (
-                            <span className="font-bold" style={{ color: "var(--brand)" }}>R$ {Number(p.price).toFixed(2)}</span>
+                            <span className="font-display text-lg text-ink">R$ {Number(p.price).toFixed(2)}</span>
                           )}
                         </div>
                       </div>
-                      <div className="h-24 w-24 rounded-lg bg-muted shrink-0 overflow-hidden grid place-items-center">
+                      <div className="h-24 w-24 rounded-xl bg-muted border-2 border-ink/80 shrink-0 overflow-hidden grid place-items-center">
                         {p.image_url ? (
                           <img src={p.image_url} alt={p.name} className="h-full w-full object-cover" />
                         ) : (
-                          <ImageIcon className="h-6 w-6 text-muted-foreground" />
+                          <ImageIcon className="h-6 w-6 text-ink/40" />
                         )}
                       </div>
                     </Card>
