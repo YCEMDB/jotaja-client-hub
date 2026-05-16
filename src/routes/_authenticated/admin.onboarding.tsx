@@ -79,16 +79,12 @@ function Onboarding() {
         <form onSubmit={onSubmit} className="space-y-5">
           <div>
             <Label htmlFor="name">Nome do restaurante *</Label>
-            <Input id="name" value={name} onChange={(e) => onNameChange(e.target.value)} placeholder="Ex: Burger do Zé" required />
+            <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex: Burger do Zé" required />
+            <p className="text-xs text-muted-foreground mt-1.5">
+              O link da sua loja será gerado automaticamente a partir do nome.
+            </p>
           </div>
 
-          <div>
-            <Label htmlFor="slug">Link da sua loja *</Label>
-            <div className="flex items-center mt-1">
-              <span className="px-3 py-2 bg-muted text-sm text-muted-foreground border border-r-0 rounded-l-md">seudominio.com/</span>
-              <Input id="slug" value={slug} onChange={(e) => setSlug(e.target.value.toLowerCase())} className="rounded-l-none" required />
-            </div>
-          </div>
 
           <div>
             <Label htmlFor="whatsapp">WhatsApp para receber pedidos *</Label>
