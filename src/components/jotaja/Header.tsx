@@ -109,14 +109,16 @@ export function Header() {
             >
               Entrar
             </a>
-            <Button
-              asChild
-              className="mt-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 font-semibold"
-            >
-              <a href="#cadastro" onClick={() => setOpen(false)}>
-                Começar grátis
-              </a>
-            </Button>
+            <LeadFormDialog
+              trigger={
+                <Button
+                  className="mt-2 rounded-lg bg-ink text-background hover:bg-ink/90 font-bold border-2 border-ink shadow-brutal uppercase tracking-wider"
+                  onClick={() => setOpen(false)}
+                >
+                  Começar grátis
+                </Button>
+              }
+            />
           </div>
         )}
       </div>
