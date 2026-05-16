@@ -13,6 +13,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as CardapioDigitalRouteImport } from './routes/cardapio-digital'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AlternativaIfoodRouteImport } from './routes/alternativa-ifood'
+import { Route as SuperRouteImport } from './routes/_super'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as SlugRouteImport } from './routes/$slug'
 import { Route as IndexRouteImport } from './routes/index'
@@ -30,8 +31,14 @@ import { Route as BlogComoMontarCardapioDigitalCanvaVsPlataformaRouteImport } fr
 import { Route as BlogComoFazerCardapioDigitalWhatsappRouteImport } from './routes/blog.como-fazer-cardapio-digital-whatsapp'
 import { Route as BlogComoFazerCardapioDigitalGratisRouteImport } from './routes/blog.como-fazer-cardapio-digital-gratis'
 import { Route as BlogComoCriarCardapioDigitalQrCodeRouteImport } from './routes/blog.como-criar-cardapio-digital-qr-code'
+import { Route as SuperSuperIndexRouteImport } from './routes/_super/super.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as ApiPublicMercadopagoWebhookRouteImport } from './routes/api/public/mercadopago-webhook'
+import { Route as SuperSuperPlanosRouteImport } from './routes/_super/super.planos'
+import { Route as SuperSuperLojasRouteImport } from './routes/_super/super.lojas'
+import { Route as SuperSuperLeadsRouteImport } from './routes/_super/super.leads'
+import { Route as SuperSuperConfiguracoesRouteImport } from './routes/_super/super.configuracoes'
+import { Route as SuperSuperAvisosRouteImport } from './routes/_super/super.avisos'
 import { Route as AuthenticatedAdminSuperRouteImport } from './routes/_authenticated/admin.super'
 import { Route as AuthenticatedAdminRelatoriosRouteImport } from './routes/_authenticated/admin.relatorios'
 import { Route as AuthenticatedAdminPedidosRouteImport } from './routes/_authenticated/admin.pedidos'
@@ -60,6 +67,10 @@ const AuthRoute = AuthRouteImport.update({
 const AlternativaIfoodRoute = AlternativaIfoodRouteImport.update({
   id: '/alternativa-ifood',
   path: '/alternativa-ifood',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SuperRoute = SuperRouteImport.update({
+  id: '/_super',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
@@ -154,6 +165,11 @@ const BlogComoCriarCardapioDigitalQrCodeRoute =
     path: '/blog/como-criar-cardapio-digital-qr-code',
     getParentRoute: () => rootRouteImport,
   } as any)
+const SuperSuperIndexRoute = SuperSuperIndexRouteImport.update({
+  id: '/super/',
+  path: '/super/',
+  getParentRoute: () => SuperRoute,
+} as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
@@ -165,6 +181,31 @@ const ApiPublicMercadopagoWebhookRoute =
     path: '/api/public/mercadopago-webhook',
     getParentRoute: () => rootRouteImport,
   } as any)
+const SuperSuperPlanosRoute = SuperSuperPlanosRouteImport.update({
+  id: '/super/planos',
+  path: '/super/planos',
+  getParentRoute: () => SuperRoute,
+} as any)
+const SuperSuperLojasRoute = SuperSuperLojasRouteImport.update({
+  id: '/super/lojas',
+  path: '/super/lojas',
+  getParentRoute: () => SuperRoute,
+} as any)
+const SuperSuperLeadsRoute = SuperSuperLeadsRouteImport.update({
+  id: '/super/leads',
+  path: '/super/leads',
+  getParentRoute: () => SuperRoute,
+} as any)
+const SuperSuperConfiguracoesRoute = SuperSuperConfiguracoesRouteImport.update({
+  id: '/super/configuracoes',
+  path: '/super/configuracoes',
+  getParentRoute: () => SuperRoute,
+} as any)
+const SuperSuperAvisosRoute = SuperSuperAvisosRouteImport.update({
+  id: '/super/avisos',
+  path: '/super/avisos',
+  getParentRoute: () => SuperRoute,
+} as any)
 const AuthenticatedAdminSuperRoute = AuthenticatedAdminSuperRouteImport.update({
   id: '/admin/super',
   path: '/admin/super',
@@ -249,8 +290,14 @@ export interface FileRoutesByFullPath {
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/relatorios': typeof AuthenticatedAdminRelatoriosRoute
   '/admin/super': typeof AuthenticatedAdminSuperRoute
+  '/super/avisos': typeof SuperSuperAvisosRoute
+  '/super/configuracoes': typeof SuperSuperConfiguracoesRoute
+  '/super/leads': typeof SuperSuperLeadsRoute
+  '/super/lojas': typeof SuperSuperLojasRoute
+  '/super/planos': typeof SuperSuperPlanosRoute
   '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/super/': typeof SuperSuperIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -282,14 +329,21 @@ export interface FileRoutesByTo {
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/relatorios': typeof AuthenticatedAdminRelatoriosRoute
   '/admin/super': typeof AuthenticatedAdminSuperRoute
+  '/super/avisos': typeof SuperSuperAvisosRoute
+  '/super/configuracoes': typeof SuperSuperConfiguracoesRoute
+  '/super/leads': typeof SuperSuperLeadsRoute
+  '/super/lojas': typeof SuperSuperLojasRoute
+  '/super/planos': typeof SuperSuperPlanosRoute
   '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/super': typeof SuperSuperIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/_super': typeof SuperRouteWithChildren
   '/alternativa-ifood': typeof AlternativaIfoodRoute
   '/auth': typeof AuthRoute
   '/cardapio-digital': typeof CardapioDigitalRoute
@@ -317,8 +371,14 @@ export interface FileRoutesById {
   '/_authenticated/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/_authenticated/admin/relatorios': typeof AuthenticatedAdminRelatoriosRoute
   '/_authenticated/admin/super': typeof AuthenticatedAdminSuperRoute
+  '/_super/super/avisos': typeof SuperSuperAvisosRoute
+  '/_super/super/configuracoes': typeof SuperSuperConfiguracoesRoute
+  '/_super/super/leads': typeof SuperSuperLeadsRoute
+  '/_super/super/lojas': typeof SuperSuperLojasRoute
+  '/_super/super/planos': typeof SuperSuperPlanosRoute
   '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_super/super/': typeof SuperSuperIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -352,8 +412,14 @@ export interface FileRouteTypes {
     | '/admin/pedidos'
     | '/admin/relatorios'
     | '/admin/super'
+    | '/super/avisos'
+    | '/super/configuracoes'
+    | '/super/leads'
+    | '/super/lojas'
+    | '/super/planos'
     | '/api/public/mercadopago-webhook'
     | '/admin/'
+    | '/super/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -385,13 +451,20 @@ export interface FileRouteTypes {
     | '/admin/pedidos'
     | '/admin/relatorios'
     | '/admin/super'
+    | '/super/avisos'
+    | '/super/configuracoes'
+    | '/super/leads'
+    | '/super/lojas'
+    | '/super/planos'
     | '/api/public/mercadopago-webhook'
     | '/admin'
+    | '/super'
   id:
     | '__root__'
     | '/'
     | '/$slug'
     | '/_authenticated'
+    | '/_super'
     | '/alternativa-ifood'
     | '/auth'
     | '/cardapio-digital'
@@ -419,14 +492,21 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/pedidos'
     | '/_authenticated/admin/relatorios'
     | '/_authenticated/admin/super'
+    | '/_super/super/avisos'
+    | '/_super/super/configuracoes'
+    | '/_super/super/leads'
+    | '/_super/super/lojas'
+    | '/_super/super/planos'
     | '/api/public/mercadopago-webhook'
     | '/_authenticated/admin/'
+    | '/_super/super/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SlugRoute: typeof SlugRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  SuperRoute: typeof SuperRouteWithChildren
   AlternativaIfoodRoute: typeof AlternativaIfoodRoute
   AuthRoute: typeof AuthRoute
   CardapioDigitalRoute: typeof CardapioDigitalRoute
@@ -476,6 +556,13 @@ declare module '@tanstack/react-router' {
       path: '/alternativa-ifood'
       fullPath: '/alternativa-ifood'
       preLoaderRoute: typeof AlternativaIfoodRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_super': {
+      id: '/_super'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof SuperRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -597,6 +684,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogComoCriarCardapioDigitalQrCodeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_super/super/': {
+      id: '/_super/super/'
+      path: '/super'
+      fullPath: '/super/'
+      preLoaderRoute: typeof SuperSuperIndexRouteImport
+      parentRoute: typeof SuperRoute
+    }
     '/_authenticated/admin/': {
       id: '/_authenticated/admin/'
       path: '/admin'
@@ -610,6 +704,41 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/public/mercadopago-webhook'
       preLoaderRoute: typeof ApiPublicMercadopagoWebhookRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_super/super/planos': {
+      id: '/_super/super/planos'
+      path: '/super/planos'
+      fullPath: '/super/planos'
+      preLoaderRoute: typeof SuperSuperPlanosRouteImport
+      parentRoute: typeof SuperRoute
+    }
+    '/_super/super/lojas': {
+      id: '/_super/super/lojas'
+      path: '/super/lojas'
+      fullPath: '/super/lojas'
+      preLoaderRoute: typeof SuperSuperLojasRouteImport
+      parentRoute: typeof SuperRoute
+    }
+    '/_super/super/leads': {
+      id: '/_super/super/leads'
+      path: '/super/leads'
+      fullPath: '/super/leads'
+      preLoaderRoute: typeof SuperSuperLeadsRouteImport
+      parentRoute: typeof SuperRoute
+    }
+    '/_super/super/configuracoes': {
+      id: '/_super/super/configuracoes'
+      path: '/super/configuracoes'
+      fullPath: '/super/configuracoes'
+      preLoaderRoute: typeof SuperSuperConfiguracoesRouteImport
+      parentRoute: typeof SuperRoute
+    }
+    '/_super/super/avisos': {
+      id: '/_super/super/avisos'
+      path: '/super/avisos'
+      fullPath: '/super/avisos'
+      preLoaderRoute: typeof SuperSuperAvisosRouteImport
+      parentRoute: typeof SuperRoute
     }
     '/_authenticated/admin/super': {
       id: '/_authenticated/admin/super'
@@ -707,10 +836,31 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
   AuthenticatedRouteChildren,
 )
 
+interface SuperRouteChildren {
+  SuperSuperAvisosRoute: typeof SuperSuperAvisosRoute
+  SuperSuperConfiguracoesRoute: typeof SuperSuperConfiguracoesRoute
+  SuperSuperLeadsRoute: typeof SuperSuperLeadsRoute
+  SuperSuperLojasRoute: typeof SuperSuperLojasRoute
+  SuperSuperPlanosRoute: typeof SuperSuperPlanosRoute
+  SuperSuperIndexRoute: typeof SuperSuperIndexRoute
+}
+
+const SuperRouteChildren: SuperRouteChildren = {
+  SuperSuperAvisosRoute: SuperSuperAvisosRoute,
+  SuperSuperConfiguracoesRoute: SuperSuperConfiguracoesRoute,
+  SuperSuperLeadsRoute: SuperSuperLeadsRoute,
+  SuperSuperLojasRoute: SuperSuperLojasRoute,
+  SuperSuperPlanosRoute: SuperSuperPlanosRoute,
+  SuperSuperIndexRoute: SuperSuperIndexRoute,
+}
+
+const SuperRouteWithChildren = SuperRoute._addFileChildren(SuperRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SlugRoute: SlugRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  SuperRoute: SuperRouteWithChildren,
   AlternativaIfoodRoute: AlternativaIfoodRoute,
   AuthRoute: AuthRoute,
   CardapioDigitalRoute: CardapioDigitalRoute,
