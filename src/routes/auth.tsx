@@ -56,7 +56,7 @@ function AuthPage() {
       <div className="flex items-center justify-center p-6 lg:p-12">
         <Card className="w-full max-w-md p-8">
           <div className="lg:hidden flex items-center mb-8">
-            <img src={logo} alt="ComandaHub" className="h-14 w-auto" />
+            <Logo size="md" />
           </div>
 
           <h1 className="text-2xl font-bold mb-1">Entrar</h1>
