@@ -14,6 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_plans: {
+        Row: {
+          features: Json
+          id: string
+          is_active: boolean
+          name: string
+          position: number
+          price_monthly: number
+          updated_at: string
+        }
+        Insert: {
+          features?: Json
+          id: string
+          is_active?: boolean
+          name: string
+          position?: number
+          price_monthly?: number
+          updated_at?: string
+        }
+        Update: {
+          features?: Json
+          id?: string
+          is_active?: boolean
+          name?: string
+          position?: number
+          price_monthly?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      app_settings: {
+        Row: {
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           created_at: string
@@ -233,6 +281,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      global_announcements: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          message: string
+          variant: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          message: string
+          variant?: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          message?: string
+          variant?: string
+        }
+        Relationships: []
       }
       order_items: {
         Row: {
