@@ -244,11 +244,15 @@ function PedidosPage() {
   };
 
   const advance = async (o: Order) => {
-    const next = NEXT_STATUS[o.status];
+    let next = NEXT_STATUS[o.status];
     if (!next) return;
+    // Pickup / dine_in pula "saiu p/ entrega" e vai direto pra "delivered"
+    if (o.status === "ready" && (o.type === "pickup" || o.type === "dine_in")) {
+      next = "delivered";
+    }
     const { error } = await supabase.from("orders").update({ status: next }).eq("id", o.id);
     if (error) return toast.error(error.message);
-    toast.success(`Pedido #${o.order_number} → ${COLUMNS.find(c => c.key === next)?.label}`);
+    toast.success(`Pedido #${o.order_number} avançado`);
     if (selected?.id === o.id) setSelected({ ...o, status: next });
   };
 
