@@ -1,0 +1,1 @@
+DELETE FROM public.restaurants WHERE id = 'dae8f27e-06f2-4928-8e46-133551cf4c85' AND slug = 'euro-pizza-2';
