@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermosRouteImport } from './routes/termos'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as EmpresaRouteImport } from './routes/empresa'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as CardapioDigitalRouteImport } from './routes/cardapio-digital'
@@ -66,6 +67,11 @@ const SobreRoute = SobreRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacidadeRoute = PrivacidadeRouteImport.update({
+  id: '/privacidade',
+  path: '/privacidade',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EmpresaRoute = EmpresaRouteImport.update({
@@ -292,6 +298,7 @@ export interface FileRoutesByFullPath {
   '/cardapio-digital': typeof CardapioDigitalRoute
   '/contato': typeof ContatoRoute
   '/empresa': typeof EmpresaRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
@@ -335,6 +342,7 @@ export interface FileRoutesByTo {
   '/cardapio-digital': typeof CardapioDigitalRoute
   '/contato': typeof ContatoRoute
   '/empresa': typeof EmpresaRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
@@ -381,6 +389,7 @@ export interface FileRoutesById {
   '/cardapio-digital': typeof CardapioDigitalRoute
   '/contato': typeof ContatoRoute
   '/empresa': typeof EmpresaRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
@@ -426,6 +435,7 @@ export interface FileRouteTypes {
     | '/cardapio-digital'
     | '/contato'
     | '/empresa'
+    | '/privacidade'
     | '/sitemap.xml'
     | '/sobre'
     | '/termos'
@@ -469,6 +479,7 @@ export interface FileRouteTypes {
     | '/cardapio-digital'
     | '/contato'
     | '/empresa'
+    | '/privacidade'
     | '/sitemap.xml'
     | '/sobre'
     | '/termos'
@@ -514,6 +525,7 @@ export interface FileRouteTypes {
     | '/cardapio-digital'
     | '/contato'
     | '/empresa'
+    | '/privacidade'
     | '/sitemap.xml'
     | '/sobre'
     | '/termos'
@@ -560,6 +572,7 @@ export interface RootRouteChildren {
   CardapioDigitalRoute: typeof CardapioDigitalRoute
   ContatoRoute: typeof ContatoRoute
   EmpresaRoute: typeof EmpresaRoute
+  PrivacidadeRoute: typeof PrivacidadeRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SobreRoute: typeof SobreRoute
   TermosRoute: typeof TermosRoute
@@ -601,6 +614,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacidade': {
+      id: '/privacidade'
+      path: '/privacidade'
+      fullPath: '/privacidade'
+      preLoaderRoute: typeof PrivacidadeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/empresa': {
@@ -946,6 +966,7 @@ const rootRouteChildren: RootRouteChildren = {
   CardapioDigitalRoute: CardapioDigitalRoute,
   ContatoRoute: ContatoRoute,
   EmpresaRoute: EmpresaRoute,
+  PrivacidadeRoute: PrivacidadeRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SobreRoute: SobreRoute,
   TermosRoute: TermosRoute,

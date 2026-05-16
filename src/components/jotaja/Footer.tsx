@@ -34,16 +34,17 @@ export function Footer() {
             {
               title: "Empresa",
               links: [
-                { label: "Sobre", href: "#" },
-                { label: "Contato", href: "#" },
-                { label: "Blog", href: "#" },
+                { label: "Sobre", href: "/sobre" },
+                { label: "Empresa", href: "/empresa" },
+                { label: "Contato", href: "/contato" },
+                { label: "Blog", href: "/blog" },
               ],
             },
             {
               title: "Legal",
               links: [
-                { label: "Termos", href: "#" },
-                { label: "Privacidade", href: "#" },
+                { label: "Termos", href: "/termos" },
+                { label: "Privacidade", href: "/privacidade" },
               ],
             },
           ].map((col) => (
