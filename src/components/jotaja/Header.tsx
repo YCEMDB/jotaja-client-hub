@@ -4,11 +4,14 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/comandahub-logo.svg";
 
-const navItems = [
-  { label: "Funcionalidades", href: "#funcionalidades" },
-  { label: "Depoimentos", href: "#depoimentos" },
-  { label: "Planos", href: "#planos" },
-  { label: "FAQ", href: "#faq" },
+type NavItem = { label: string; href: string; route?: boolean };
+
+const navItems: NavItem[] = [
+  { label: "Cardápio Digital", href: "/cardapio-digital", route: true },
+  { label: "Alternativa ao iFood", href: "/alternativa-ifood", route: true },
+  { label: "Blog", href: "/blog", route: true },
+  { label: "Planos", href: "/#planos" },
+  { label: "FAQ", href: "/#faq" },
 ];
 
 export function Header() {
@@ -29,15 +32,25 @@ export function Header() {
           </Link>
 
           <nav className="hidden md:flex items-center gap-1">
-            {navItems.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-smooth"
-              >
-                {item.label}
-              </a>
-            ))}
+            {navItems.map((item) =>
+              item.route ? (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-smooth"
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-smooth"
+                >
+                  {item.label}
+                </a>
+              ),
+            )}
           </nav>
 
           <div className="hidden md:flex items-center gap-2">
@@ -67,16 +80,27 @@ export function Header() {
 
         {open && (
           <div className="md:hidden pb-4 flex flex-col gap-1 border-t border-border/60 pt-3">
-            {navItems.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className="px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-muted"
-              >
-                {item.label}
-              </a>
-            ))}
+            {navItems.map((item) =>
+              item.route ? (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  onClick={() => setOpen(false)}
+                  className="px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-muted"
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className="px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-muted"
+                >
+                  {item.label}
+                </a>
+              ),
+            )}
             <a
               href="/auth"
               onClick={() => setOpen(false)}
