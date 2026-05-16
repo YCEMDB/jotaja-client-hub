@@ -10,7 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermosRouteImport } from './routes/termos'
+import { Route as SuporteRouteImport } from './routes/suporte'
 import { Route as SobreRouteImport } from './routes/sobre'
+import { Route as SlaRouteImport } from './routes/sla'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
@@ -64,9 +66,19 @@ const TermosRoute = TermosRouteImport.update({
   path: '/termos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SuporteRoute = SuporteRouteImport.update({
+  id: '/suporte',
+  path: '/suporte',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SobreRoute = SobreRouteImport.update({
   id: '/sobre',
   path: '/sobre',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SlaRoute = SlaRouteImport.update({
+  id: '/sla',
+  path: '/sla',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -332,7 +344,9 @@ export interface FileRoutesByFullPath {
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/sla': typeof SlaRoute
   '/sobre': typeof SobreRoute
+  '/suporte': typeof SuporteRoute
   '/termos': typeof TermosRoute
   '/blog/como-criar-cardapio-digital-qr-code': typeof BlogComoCriarCardapioDigitalQrCodeRoute
   '/blog/como-fazer-cardapio-digital-gratis': typeof BlogComoFazerCardapioDigitalGratisRoute
@@ -381,7 +395,9 @@ export interface FileRoutesByTo {
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/sla': typeof SlaRoute
   '/sobre': typeof SobreRoute
+  '/suporte': typeof SuporteRoute
   '/termos': typeof TermosRoute
   '/blog/como-criar-cardapio-digital-qr-code': typeof BlogComoCriarCardapioDigitalQrCodeRoute
   '/blog/como-fazer-cardapio-digital-gratis': typeof BlogComoFazerCardapioDigitalGratisRoute
@@ -433,7 +449,9 @@ export interface FileRoutesById {
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/sla': typeof SlaRoute
   '/sobre': typeof SobreRoute
+  '/suporte': typeof SuporteRoute
   '/termos': typeof TermosRoute
   '/blog/como-criar-cardapio-digital-qr-code': typeof BlogComoCriarCardapioDigitalQrCodeRoute
   '/blog/como-fazer-cardapio-digital-gratis': typeof BlogComoFazerCardapioDigitalGratisRoute
@@ -484,7 +502,9 @@ export interface FileRouteTypes {
     | '/privacidade'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/sla'
     | '/sobre'
+    | '/suporte'
     | '/termos'
     | '/blog/como-criar-cardapio-digital-qr-code'
     | '/blog/como-fazer-cardapio-digital-gratis'
@@ -533,7 +553,9 @@ export interface FileRouteTypes {
     | '/privacidade'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/sla'
     | '/sobre'
+    | '/suporte'
     | '/termos'
     | '/blog/como-criar-cardapio-digital-qr-code'
     | '/blog/como-fazer-cardapio-digital-gratis'
@@ -584,7 +606,9 @@ export interface FileRouteTypes {
     | '/privacidade'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/sla'
     | '/sobre'
+    | '/suporte'
     | '/termos'
     | '/blog/como-criar-cardapio-digital-qr-code'
     | '/blog/como-fazer-cardapio-digital-gratis'
@@ -636,7 +660,9 @@ export interface RootRouteChildren {
   PrivacidadeRoute: typeof PrivacidadeRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  SlaRoute: typeof SlaRoute
   SobreRoute: typeof SobreRoute
+  SuporteRoute: typeof SuporteRoute
   TermosRoute: typeof TermosRoute
   BlogComoCriarCardapioDigitalQrCodeRoute: typeof BlogComoCriarCardapioDigitalQrCodeRoute
   BlogComoFazerCardapioDigitalGratisRoute: typeof BlogComoFazerCardapioDigitalGratisRoute
@@ -668,11 +694,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/suporte': {
+      id: '/suporte'
+      path: '/suporte'
+      fullPath: '/suporte'
+      preLoaderRoute: typeof SuporteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sobre': {
       id: '/sobre'
       path: '/sobre'
       fullPath: '/sobre'
       preLoaderRoute: typeof SobreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sla': {
+      id: '/sla'
+      path: '/sla'
+      fullPath: '/sla'
+      preLoaderRoute: typeof SlaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -1070,7 +1110,9 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacidadeRoute: PrivacidadeRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  SlaRoute: SlaRoute,
   SobreRoute: SobreRoute,
+  SuporteRoute: SuporteRoute,
   TermosRoute: TermosRoute,
   BlogComoCriarCardapioDigitalQrCodeRoute:
     BlogComoCriarCardapioDigitalQrCodeRoute,
