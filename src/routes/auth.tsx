@@ -83,6 +83,9 @@ function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [forgotOpen, setForgotOpen] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotSubmitting, setForgotSubmitting] = useState(false);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -102,6 +105,27 @@ function LoginForm() {
     nav({ to: "/admin" });
   };
 
+  const onForgot = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const parsed = z.string().trim().email("Email inválido").safeParse(forgotEmail);
+    if (!parsed.success) {
+      toast.error("Digite um email válido");
+      return;
+    }
+    setForgotSubmitting(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(parsed.data, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setForgotSubmitting(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success("Enviamos um link para seu email!");
+    setForgotOpen(false);
+    setForgotEmail("");
+  };
+
   return (
     <form onSubmit={onSubmit} className="space-y-4">
       <div>
@@ -109,12 +133,46 @@ function LoginForm() {
         <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
       </div>
       <div>
-        <Label htmlFor="password">Senha</Label>
+        <div className="flex items-center justify-between">
+          <Label htmlFor="password">Senha</Label>
+          <button
+            type="button"
+            onClick={() => { setForgotEmail(email); setForgotOpen(true); }}
+            className="text-xs text-primary hover:underline font-semibold"
+          >
+            Esqueci minha senha
+          </button>
+        </div>
         <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
       </div>
       <Button type="submit" className="w-full" disabled={submitting}>
         {submitting ? "Entrando..." : "Entrar"}
       </Button>
+
+      {forgotOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={() => setForgotOpen(false)}>
+          <Card className="w-full max-w-md p-6" onClick={(e) => e.stopPropagation()}>
+            <h2 className="text-xl font-bold mb-1">Recuperar senha</h2>
+            <p className="text-sm text-muted-foreground mb-4">
+              Digite seu email e enviaremos um link para você criar uma nova senha.
+            </p>
+            <div className="space-y-3">
+              <div>
+                <Label htmlFor="forgot-email">Email</Label>
+                <Input id="forgot-email" type="email" value={forgotEmail} onChange={(e) => setForgotEmail(e.target.value)} autoFocus />
+              </div>
+              <div className="flex gap-2">
+                <Button type="button" variant="outline" className="flex-1" onClick={() => setForgotOpen(false)}>
+                  Cancelar
+                </Button>
+                <Button type="button" className="flex-1" disabled={forgotSubmitting} onClick={onForgot}>
+                  {forgotSubmitting ? "Enviando..." : "Enviar link"}
+                </Button>
+              </div>
+            </div>
+          </Card>
+        </div>
+      )}
     </form>
   );
 }
