@@ -387,17 +387,8 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
   );
 }
 
-function StoreLinkCard({
-  slug,
-  customDomain,
-  customDomainVerified,
-}: {
-  slug: string | null;
-  customDomain?: string | null;
-  customDomainVerified?: boolean | null;
-}) {
+function StoreLinkCard({ slug }: { slug: string | null }) {
   const [copied, setCopied] = useState(false);
-  const [qrOpen, setQrOpen] = useState(false);
 
   if (!slug) {
     return (
@@ -409,11 +400,7 @@ function StoreLinkCard({
     );
   }
 
-  const usingCustom = !!(customDomain && customDomainVerified);
-  const url = usingCustom
-    ? `https://${customDomain}`
-    : `https://comandahub.online/${slug}`;
-  const fallbackUrl = `https://comandahub.online/${slug}`;
+  const url = `https://comandahub.online/${slug}`;
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=10&data=${encodeURIComponent(url)}`;
 
   const copy = async () => {
@@ -428,209 +415,190 @@ function StoreLinkCard({
   };
 
   return (
-    <>
-      <Card className="p-6 mb-6 bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
-        <div className="flex items-start gap-4 flex-wrap">
-          <div className="flex-1 min-w-[260px]">
-            <h3 className="font-semibold text-lg mb-1 flex items-center gap-2">
-              🔗 Link da sua loja
-            </h3>
-            <p className="text-sm text-muted-foreground mb-3">
-              Compartilhe este link com seus clientes (WhatsApp, Instagram, QR code na mesa).
-            </p>
-            <div className="flex items-center gap-2 bg-background border rounded-md px-3 py-2 font-mono text-sm break-all">
-              {url}
-            </div>
-            {usingCustom && (
-              <p className="text-xs text-muted-foreground mt-2">
-                Link de fallback: <span className="font-mono">{fallbackUrl}</span>
-              </p>
-            )}
-          </div>
-          <div className="flex flex-col gap-2 min-w-[160px]">
-            <Button onClick={copy} variant={copied ? "secondary" : "default"}>
-              {copied ? <><Check className="h-4 w-4 mr-2" />Copiado</> : <><Copy className="h-4 w-4 mr-2" />Copiar link</>}
-            </Button>
-            <Button variant="outline" onClick={() => setQrOpen(true)}>
-              <QrCode className="h-4 w-4 mr-2" /> QR Code
-            </Button>
-            <Button variant="ghost" size="sm" asChild>
-              <a href={url} target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="h-4 w-4 mr-2" /> Abrir loja
-              </a>
-            </Button>
+    <Card className="p-6 mb-6 bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
+      <div className="flex items-start gap-4 flex-wrap">
+        <div className="flex-1 min-w-[260px]">
+          <h3 className="font-semibold text-lg mb-1">🔗 Link da sua loja</h3>
+          <p className="text-sm text-muted-foreground mb-3">
+            Compartilhe este link com seus clientes (WhatsApp, Instagram, QR code na mesa).
+          </p>
+          <div className="flex items-center gap-2 bg-background border rounded-md px-3 py-2 font-mono text-sm break-all">
+            {url}
           </div>
         </div>
-      </Card>
-
-      <Dialog open={qrOpen} onOpenChange={setQrOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>QR Code da sua loja</DialogTitle>
-          </DialogHeader>
-          <div className="flex flex-col items-center gap-4">
-            <img src={qrUrl} alt="QR Code da loja" className="w-full max-w-[320px] aspect-square border rounded-md" />
-            <p className="text-xs text-center text-muted-foreground">
-              Imprima e cole nas mesas, balcão ou cardápio físico. Os clientes escaneiam e acessam o cardápio digital.
-            </p>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1" asChild>
-                <a href={qrUrl} download={`qrcode-${slug}.png`} target="_blank" rel="noopener noreferrer">
-                  Baixar PNG
-                </a>
-              </Button>
-              <Button className="flex-1" onClick={() => window.print()}>Imprimir</Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-    </>
+        <div className="flex flex-col gap-2 min-w-[160px]">
+          <Button onClick={copy} variant={copied ? "secondary" : "default"}>
+            {copied ? <><Check className="h-4 w-4 mr-2" />Copiado</> : <><Copy className="h-4 w-4 mr-2" />Copiar link</>}
+          </Button>
+          <Button variant="outline" asChild>
+            <a href={qrUrl} download={`qrcode-${slug}.png`} target="_blank" rel="noopener noreferrer">
+              Baixar QR Code
+            </a>
+          </Button>
+        </div>
+      </div>
+    </Card>
   );
 }
 
-function DominioTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
-  const [domain, setDomain] = useState<string>(r.custom_domain ?? "");
+function RetiradaTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
+  const [enabled, setEnabled] = useState(!!r.accepts_pickup);
+  const [minutes, setMinutes] = useState(String(r.pickup_time_minutes ?? 20));
+  const [instructions, setInstructions] = useState(r.pickup_instructions ?? "");
   const [saving, setSaving] = useState(false);
-  const [verifying, setVerifying] = useState(false);
-  const saveFn = useServerFn(saveCustomDomain);
-  const verifyFn = useServerFn(verifyCustomDomain);
 
   const save = async () => {
     setSaving(true);
-    try {
-      await saveFn({ data: { restaurantId: r.id, domain } });
-      toast.success(domain ? "Domínio salvo. Configure o DNS e clique em Verificar." : "Domínio removido.");
-      onSaved();
-    } catch (e: any) {
-      toast.error(e?.message ?? "Erro ao salvar");
-    } finally {
-      setSaving(false);
-    }
+    const { error } = await supabase.from("restaurants").update({
+      accepts_pickup: enabled,
+      pickup_time_minutes: Number(minutes) || 20,
+      pickup_instructions: instructions.trim() || null,
+    }).eq("id", r.id);
+    setSaving(false);
+    if (error) return toast.error(error.message);
+    toast.success("Configuração de retirada salva");
+    onSaved();
   };
 
-  const verify = async () => {
-    setVerifying(true);
-    try {
-      const res = await verifyFn({ data: { restaurantId: r.id } });
-      if (res.verified) toast.success("Domínio verificado com sucesso!");
-      else toast.error(`Ainda não respondeu corretamente. ${res.reason ?? ""}`);
-      onSaved();
-    } catch (e: any) {
-      toast.error(e?.message ?? "Erro ao verificar");
-    } finally {
-      setVerifying(false);
-    }
-  };
+  const addr = [r.address_street, r.address_number, r.address_neighborhood, r.address_city]
+    .filter(Boolean).join(", ");
 
-  const isApex = domain && !domain.includes(".") ? false : domain.split(".").length <= 2;
-  const sub = domain.includes(".") ? domain.split(".")[0] : "@";
+  return (
+    <Card className="p-6 space-y-5">
+      <div className="flex items-start gap-3">
+        <MapPin className="h-6 w-6 text-primary shrink-0 mt-1" />
+        <div>
+          <h3 className="font-semibold text-lg">Retirada no balcão</h3>
+          <p className="text-sm text-muted-foreground">
+            Permita que o cliente escolha retirar o pedido na loja em vez de receber em casa.
+          </p>
+        </div>
+      </div>
+
+      <Toggle label="Aceitar pedidos para retirada" value={enabled} onChange={setEnabled} />
+
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <Label>Tempo médio de preparo (min)</Label>
+          <Input type="number" value={minutes} onChange={(e) => setMinutes(e.target.value)} />
+          <p className="text-xs text-muted-foreground mt-1">Mostrado ao cliente no checkout.</p>
+        </div>
+      </div>
+
+      <div>
+        <Label>Instruções para o cliente (opcional)</Label>
+        <Textarea
+          value={instructions}
+          onChange={(e) => setInstructions(e.target.value)}
+          rows={3}
+          placeholder="Ex.: Entre pela porta ao lado da garagem. Procure pela Ana no balcão."
+        />
+      </div>
+
+      {addr && (
+        <div className="text-xs bg-muted/50 p-3 rounded-lg">
+          <strong>Endereço da loja (mostrado ao cliente):</strong>
+          <p className="mt-1 text-muted-foreground">{addr}</p>
+          <p className="mt-1 text-muted-foreground">
+            Para alterar, vá em <strong>Geral</strong> → preencha endereço completo.
+          </p>
+        </div>
+      )}
+
+      <Button onClick={save} disabled={saving}>{saving ? "Salvando…" : "Salvar"}</Button>
+    </Card>
+  );
+}
+
+function ImpressaoTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
+  const [enabled, setEnabled] = useState(!!r.auto_print_enabled);
+  const [copies, setCopies] = useState(String(r.auto_print_copies ?? 1));
+  const [saving, setSaving] = useState(false);
+
+  const save = async () => {
+    setSaving(true);
+    const { error } = await supabase.from("restaurants").update({
+      auto_print_enabled: enabled,
+      auto_print_copies: Math.min(3, Math.max(1, Number(copies) || 1)),
+    }).eq("id", r.id);
+    setSaving(false);
+    if (error) return toast.error(error.message);
+    // Espelha no localStorage para a tela de pedidos pegar imediatamente
+    if (typeof window !== "undefined") {
+      localStorage.setItem("autoPrintOrders", enabled ? "1" : "0");
+    }
+    toast.success("Configuração de impressão salva");
+    onSaved();
+  };
 
   return (
     <div className="space-y-4">
-      <Card className="p-6 space-y-4">
+      <Card className="p-6 space-y-5">
         <div className="flex items-start gap-3">
-          <Globe className="h-6 w-6 text-primary shrink-0 mt-1" />
+          <Printer className="h-6 w-6 text-primary shrink-0 mt-1" />
           <div>
-            <h3 className="font-semibold text-lg">Use seu próprio domínio</h3>
+            <h3 className="font-semibold text-lg">Impressão automática de pedidos</h3>
             <p className="text-sm text-muted-foreground">
-              Mostre <strong>seu domínio</strong> para os clientes em vez de <code>comandahub.online/{r.slug}</code>.
+              Toda vez que um pedido novo chegar, a tela de impressão abre sozinha com o cupom no formato 80mm.
             </p>
           </div>
         </div>
 
+        <Toggle label="Imprimir pedidos novos automaticamente" value={enabled} onChange={setEnabled} />
+
         <div>
-          <Label>Seu domínio</Label>
-          <Input
-            value={domain}
-            onChange={(e) => setDomain(e.target.value)}
-            placeholder="pedido.minhaloja.com.br"
-            className="font-mono"
-          />
-          <p className="text-xs text-muted-foreground mt-1">
-            Pode ser um subdomínio (ex: <code>pedido.minhaloja.com.br</code>) ou domínio raiz (<code>minhaloja.com.br</code>).
-          </p>
+          <Label>Vias por pedido (1 a 3)</Label>
+          <Input type="number" min={1} max={3} value={copies} onChange={(e) => setCopies(e.target.value)} className="w-24" />
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          <Button onClick={save} disabled={saving}>{saving ? "Salvando…" : "Salvar domínio"}</Button>
-          {r.custom_domain && (
-            <Button variant="outline" onClick={verify} disabled={verifying}>
-              <RefreshCw className={`h-4 w-4 mr-2 ${verifying ? "animate-spin" : ""}`} />
-              {verifying ? "Verificando…" : "Verificar DNS"}
-            </Button>
-          )}
-          {r.custom_domain_verified ? (
-            <span className="inline-flex items-center gap-1 text-sm text-green-700 bg-green-50 border border-green-200 rounded-md px-3 py-1">
-              <Check className="h-4 w-4" /> Verificado e ativo
-            </span>
-          ) : r.custom_domain ? (
-            <span className="inline-flex items-center gap-1 text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-md px-3 py-1">
-              Aguardando DNS
-            </span>
-          ) : null}
-        </div>
+        <Button onClick={save} disabled={saving}>{saving ? "Salvando…" : "Salvar"}</Button>
       </Card>
 
-      {r.custom_domain && (
-        <Card className="p-6 space-y-4">
-          <h3 className="font-semibold">Como configurar o DNS</h3>
-          <p className="text-sm text-muted-foreground">
-            Acesse o painel do seu provedor de domínio (Registro.br, Hostinger, GoDaddy, Cloudflare etc.) e adicione o registro abaixo:
-          </p>
-
-          {isApex ? (
-            <DnsRow type="A" name="@" value="185.158.133.1" />
-          ) : (
-            <DnsRow type="CNAME" name={sub} value="comandahub.online" />
-          )}
-
-          <div className="text-xs bg-amber-50 border border-amber-200 text-amber-900 p-3 rounded-lg space-y-1">
-            <p><strong>Importante sobre HTTPS:</strong></p>
-            <ul className="list-disc list-inside space-y-0.5">
-              <li>O DNS pode levar de alguns minutos até <strong>72h</strong> para propagar.</li>
-              <li>
-                Para HTTPS funcionar imediatamente, recomendamos colocar seu domínio atrás do{" "}
-                <a href="https://www.cloudflare.com" target="_blank" rel="noreferrer" className="underline">
-                  Cloudflare
-                </a>{" "}
-                (grátis) com SSL <em>Flexible</em>.
-              </li>
-              <li>Sem Cloudflare? Fale com o suporte da ComandaHub para liberarmos o certificado para o seu domínio.</li>
-            </ul>
-          </div>
-
-          <p className="text-xs text-muted-foreground">
-            Após configurar, clique em <strong>Verificar DNS</strong> acima. Quando ficar verde, seu link público passa a ser{" "}
-            <code className="font-mono">https://{r.custom_domain}</code>.
-          </p>
-        </Card>
-      )}
-    </div>
-  );
-}
-
-function DnsRow({ type, name, value }: { type: string; name: string; value: string }) {
-  const copy = (v: string) => {
-    navigator.clipboard.writeText(v).then(() => toast.success("Copiado!"));
-  };
-  return (
-    <div className="grid grid-cols-3 gap-2 text-sm">
-      {[
-        { label: "Tipo", v: type },
-        { label: "Nome / Host", v: name },
-        { label: "Valor / Aponta para", v: value },
-      ].map((c) => (
-        <div key={c.label}>
-          <p className="text-xs text-muted-foreground mb-1">{c.label}</p>
-          <button
-            onClick={() => copy(c.v)}
-            className="w-full text-left font-mono bg-muted hover:bg-muted/70 border rounded-md px-3 py-2 break-all transition"
-            title="Clique para copiar"
-          >
-            {c.v}
-          </button>
+      <Card className="p-6 space-y-3 text-sm">
+        <h4 className="font-semibold">Como configurar o Chrome para imprimir sem confirmar (modo balcão)</h4>
+        <ol className="list-decimal list-inside space-y-2 text-muted-foreground">
+          <li>Conecte a impressora térmica (80mm) ao computador e defina como <strong>impressora padrão</strong> do Windows/Mac.</li>
+          <li>Crie um atalho do Chrome na área de trabalho.</li>
+          <li>Clique com o botão direito → <strong>Propriedades</strong> → no campo <strong>Destino</strong>, adicione no final:</li>
+        </ol>
+        <KioskCommandBox />
+        <ol className="list-decimal list-inside space-y-2 text-muted-foreground" start={4}>
+          <li>Abra o ComandaHub por esse atalho. Pronto — os cupons saem direto sem janela de confirmação.</li>
+          <li>Quando chegar pedido novo, o navegador imprime automaticamente na impressora padrão.</li>
+        </ol>
+        <div className="bg-amber-50 border border-amber-200 text-amber-900 p-3 rounded-lg text-xs">
+          <strong>Importante:</strong> mantenha a aba <strong>Pedidos</strong> aberta durante o expediente. Se fechar, a impressão automática para.
         </div>
-      ))}
+        <Button variant="outline" size="sm" onClick={() => {
+          const w = window.open("", "_blank", "width=300,height=400");
+          if (w) {
+            w.document.write("<html><head><title>Teste de Impressão ComandaHub</title></head><body style='font-family:monospace;padding:20px;text-align:center'><h2>TESTE OK</h2><p>Se você está vendo esta janela, sua impressora está pronta.</p></body></html>");
+            w.document.close();
+            w.focus();
+            w.print();
+          }
+        }}>
+          <Printer className="h-4 w-4 mr-2" /> Testar impressão agora
+        </Button>
+      </Card>
     </div>
   );
 }
+
+function KioskCommandBox() {
+  const cmd = "--kiosk-printing";
+  const [copied, setCopied] = useState(false);
+  return (
+    <div className="flex items-center gap-2 bg-ink text-background font-mono text-sm p-3 rounded-md">
+      <code className="flex-1">{cmd}</code>
+      <Button size="sm" variant="secondary" onClick={() => {
+        navigator.clipboard.writeText(cmd);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      }}>
+        {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+      </Button>
+    </div>
+  );
+}
+
