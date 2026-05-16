@@ -555,3 +555,15 @@ function timeAgo(iso: string) {
   const h = Math.floor(m / 60);
   return `${h}h`;
 }
+
+function minutesBetween(startIso: string, endIso: string) {
+  const diff = new Date(endIso).getTime() - new Date(startIso).getTime();
+  return Math.max(1, Math.round(diff / 60000));
+}
+
+function typeLabel(t: string) {
+  if (t === "delivery") return "Entrega";
+  if (t === "pickup") return "Retirada";
+  if (t === "dine_in") return "Mesa";
+  return t;
+}
