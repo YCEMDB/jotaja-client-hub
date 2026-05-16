@@ -35,6 +35,7 @@ import { Route as SuperSuperIndexRouteImport } from './routes/_super/super.index
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as ApiPublicMercadopagoWebhookRouteImport } from './routes/api/public/mercadopago-webhook'
 import { Route as SuperSuperLojasRouteImport } from './routes/_super/super.lojas'
+import { Route as SuperSuperLeadsRouteImport } from './routes/_super/super.leads'
 import { Route as AuthenticatedAdminSuperRouteImport } from './routes/_authenticated/admin.super'
 import { Route as AuthenticatedAdminRelatoriosRouteImport } from './routes/_authenticated/admin.relatorios'
 import { Route as AuthenticatedAdminPedidosRouteImport } from './routes/_authenticated/admin.pedidos'
@@ -182,6 +183,11 @@ const SuperSuperLojasRoute = SuperSuperLojasRouteImport.update({
   path: '/super/lojas',
   getParentRoute: () => SuperRoute,
 } as any)
+const SuperSuperLeadsRoute = SuperSuperLeadsRouteImport.update({
+  id: '/super/leads',
+  path: '/super/leads',
+  getParentRoute: () => SuperRoute,
+} as any)
 const AuthenticatedAdminSuperRoute = AuthenticatedAdminSuperRouteImport.update({
   id: '/admin/super',
   path: '/admin/super',
@@ -266,6 +272,7 @@ export interface FileRoutesByFullPath {
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/relatorios': typeof AuthenticatedAdminRelatoriosRoute
   '/admin/super': typeof AuthenticatedAdminSuperRoute
+  '/super/leads': typeof SuperSuperLeadsRoute
   '/super/lojas': typeof SuperSuperLojasRoute
   '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
@@ -301,6 +308,7 @@ export interface FileRoutesByTo {
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/relatorios': typeof AuthenticatedAdminRelatoriosRoute
   '/admin/super': typeof AuthenticatedAdminSuperRoute
+  '/super/leads': typeof SuperSuperLeadsRoute
   '/super/lojas': typeof SuperSuperLojasRoute
   '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
@@ -339,6 +347,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/_authenticated/admin/relatorios': typeof AuthenticatedAdminRelatoriosRoute
   '/_authenticated/admin/super': typeof AuthenticatedAdminSuperRoute
+  '/_super/super/leads': typeof SuperSuperLeadsRoute
   '/_super/super/lojas': typeof SuperSuperLojasRoute
   '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
@@ -376,6 +385,7 @@ export interface FileRouteTypes {
     | '/admin/pedidos'
     | '/admin/relatorios'
     | '/admin/super'
+    | '/super/leads'
     | '/super/lojas'
     | '/api/public/mercadopago-webhook'
     | '/admin/'
@@ -411,6 +421,7 @@ export interface FileRouteTypes {
     | '/admin/pedidos'
     | '/admin/relatorios'
     | '/admin/super'
+    | '/super/leads'
     | '/super/lojas'
     | '/api/public/mercadopago-webhook'
     | '/admin'
@@ -448,6 +459,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/pedidos'
     | '/_authenticated/admin/relatorios'
     | '/_authenticated/admin/super'
+    | '/_super/super/leads'
     | '/_super/super/lojas'
     | '/api/public/mercadopago-webhook'
     | '/_authenticated/admin/'
@@ -664,6 +676,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SuperSuperLojasRouteImport
       parentRoute: typeof SuperRoute
     }
+    '/_super/super/leads': {
+      id: '/_super/super/leads'
+      path: '/super/leads'
+      fullPath: '/super/leads'
+      preLoaderRoute: typeof SuperSuperLeadsRouteImport
+      parentRoute: typeof SuperRoute
+    }
     '/_authenticated/admin/super': {
       id: '/_authenticated/admin/super'
       path: '/admin/super'
@@ -761,11 +780,13 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 )
 
 interface SuperRouteChildren {
+  SuperSuperLeadsRoute: typeof SuperSuperLeadsRoute
   SuperSuperLojasRoute: typeof SuperSuperLojasRoute
   SuperSuperIndexRoute: typeof SuperSuperIndexRoute
 }
 
 const SuperRouteChildren: SuperRouteChildren = {
+  SuperSuperLeadsRoute: SuperSuperLeadsRoute,
   SuperSuperLojasRoute: SuperSuperLojasRoute,
   SuperSuperIndexRoute: SuperSuperIndexRoute,
 }
