@@ -450,8 +450,6 @@ function PedidosPage() {
           })}
         </div>
       </div>
-        </div>
-      </div>
 
       <Dialog open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
         <DialogContent className="max-w-lg">
