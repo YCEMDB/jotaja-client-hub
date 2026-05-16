@@ -2,7 +2,7 @@ import { createFileRoute, Outlet, Link, useNavigate, useLocation } from "@tansta
 import { useEffect, useMemo } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, ShoppingBag, UtensilsCrossed, Users, Settings, LogOut, Tags, Truck, BarChart3, ShieldCheck } from "lucide-react";
+import { LayoutDashboard, ShoppingBag, UtensilsCrossed, Users, Settings, LogOut, Tags, Truck, BarChart3, ShieldCheck, ShoppingCart } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import { BlockedStoreScreen } from "@/components/BlockedStoreScreen";
@@ -14,6 +14,7 @@ export const Route = createFileRoute("/_authenticated")({
 const NAV = [
   { to: "/admin", label: "Painel", icon: LayoutDashboard },
   { to: "/admin/pedidos", label: "Pedidos", icon: ShoppingBag },
+  { to: "/admin/pdv", label: "PDV Manual", icon: ShoppingCart },
   { to: "/admin/cardapio", label: "Cardápio", icon: UtensilsCrossed },
   { to: "/admin/cupons", label: "Cupons", icon: Tags },
   { to: "/admin/entregadores", label: "Entregadores", icon: Truck },
