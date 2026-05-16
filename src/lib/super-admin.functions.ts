@@ -56,13 +56,8 @@ export const createTenant = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     await assertSuperAdmin(context.supabase, context.userId);
 
-    // 1. Check slug uniqueness
-    const { data: existing } = await supabaseAdmin
-      .from("restaurants")
-      .select("id")
-      .eq("slug", data.slug)
-      .maybeSingle();
-    if (existing) throw new Response("Esse slug já está em uso", { status: 400 });
+    // 1. Auto-generate unique slug from restaurant name
+    const slug = await generateUniqueSlug(data.restaurant_name);
 
     // 2. Find or create user
     const password = genPassword();
@@ -92,7 +87,7 @@ export const createTenant = createServerFn({ method: "POST" })
       .from("restaurants")
       .insert({
         name: data.restaurant_name,
-        slug: data.slug,
+        slug,
         owner_id: ownerId!,
         plan: data.plan,
         phone: data.phone ?? null,
