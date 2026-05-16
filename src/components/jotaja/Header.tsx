@@ -4,11 +4,14 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/comandahub-logo.svg";
 
-const navItems = [
-  { label: "Funcionalidades", href: "#funcionalidades" },
-  { label: "Depoimentos", href: "#depoimentos" },
-  { label: "Planos", href: "#planos" },
-  { label: "FAQ", href: "#faq" },
+type NavItem = { label: string; href: string; route?: boolean };
+
+const navItems: NavItem[] = [
+  { label: "Cardápio Digital", href: "/cardapio-digital", route: true },
+  { label: "Alternativa ao iFood", href: "/alternativa-ifood", route: true },
+  { label: "Blog", href: "/blog", route: true },
+  { label: "Planos", href: "/#planos" },
+  { label: "FAQ", href: "/#faq" },
 ];
 
 export function Header() {
