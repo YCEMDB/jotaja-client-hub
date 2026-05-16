@@ -441,6 +441,11 @@ function StoreLinkCard({
             <div className="flex items-center gap-2 bg-background border rounded-md px-3 py-2 font-mono text-sm break-all">
               {url}
             </div>
+            {usingCustom && (
+              <p className="text-xs text-muted-foreground mt-2">
+                Link de fallback: <span className="font-mono">{fallbackUrl}</span>
+              </p>
+            )}
           </div>
           <div className="flex flex-col gap-2 min-w-[160px]">
             <Button onClick={copy} variant={copied ? "secondary" : "default"}>
