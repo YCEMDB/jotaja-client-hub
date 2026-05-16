@@ -80,16 +80,27 @@ export function Header() {
 
         {open && (
           <div className="md:hidden pb-4 flex flex-col gap-1 border-t border-border/60 pt-3">
-            {navItems.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className="px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-muted"
-              >
-                {item.label}
-              </a>
-            ))}
+            {navItems.map((item) =>
+              item.route ? (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  onClick={() => setOpen(false)}
+                  className="px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-muted"
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className="px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-muted"
+                >
+                  {item.label}
+                </a>
+              ),
+            )}
             <a
               href="/auth"
               onClick={() => setOpen(false)}
