@@ -1,5 +1,6 @@
-import { ArrowRight, Check, Star, Sparkles, Zap } from "lucide-react";
+import { ArrowRight, Check, Star, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LeadFormDialog } from "./LeadFormDialog";
 import heroMobile from "@/assets/hero-app-mobile.png";
 import heroKanban from "@/assets/hero-admin-kanban.png";
 import sunsetTexture from "@/assets/sunset-texture.jpg";
@@ -77,16 +78,17 @@ export function Hero() {
             </p>
 
             <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-              <Button
-                size="lg"
-                className="rounded-2xl bg-ink text-background hover:bg-ink/90 font-bold px-8 h-16 text-base shadow-brutal-lg hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all uppercase tracking-wider"
-                asChild
-              >
-                <a href="#cadastro">
-                  Começar grátis
-                  <ArrowRight className="w-5 h-5 ml-2" strokeWidth={3} />
-                </a>
-              </Button>
+              <LeadFormDialog
+                trigger={
+                  <Button
+                    size="lg"
+                    className="rounded-2xl bg-ink text-background hover:bg-ink/90 font-bold px-8 h-16 text-base shadow-brutal-lg hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all uppercase tracking-wider"
+                  >
+                    Começar grátis
+                    <ArrowRight className="w-5 h-5 ml-2" strokeWidth={3} />
+                  </Button>
+                }
+              />
               <div className="flex flex-col">
                 <Button
                   size="lg"
