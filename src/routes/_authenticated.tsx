@@ -4,7 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { LayoutDashboard, ShoppingBag, UtensilsCrossed, Users, Settings, LogOut, Tags, Truck, BarChart3, ShieldCheck } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import logoIcon from "@/assets/comandahub-mark.svg";
+
 import { BlockedStoreScreen } from "@/components/BlockedStoreScreen";
 
 export const Route = createFileRoute("/_authenticated")({
