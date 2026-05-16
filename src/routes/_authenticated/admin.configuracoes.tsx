@@ -61,7 +61,7 @@ function ConfigPage() {
 
   return (
     <div className="p-8 max-w-4xl">
-      <h1 className="text-3xl font-bold mb-2">Configurações</h1>
+      <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight leading-[0.95] mb-2">Configurações</h1>
       <p className="text-muted-foreground mb-6">Personalize sua loja e regras de entrega</p>
 
       <StoreLinkCard slug={r.slug} />

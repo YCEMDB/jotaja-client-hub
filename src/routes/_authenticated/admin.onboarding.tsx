@@ -70,7 +70,7 @@ function Onboarding() {
   return (
     <div className="max-w-2xl mx-auto p-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">Vamos configurar seu restaurante</h1>
+        <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight leading-[0.95]">Vamos configurar seu restaurante</h1>
         <p className="text-muted-foreground mt-2">Leva menos de 1 minuto. Você pode ajustar tudo depois.</p>
       </div>
 
