@@ -387,7 +387,15 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
   );
 }
 
-function StoreLinkCard({ slug }: { slug: string | null }) {
+function StoreLinkCard({
+  slug,
+  customDomain,
+  customDomainVerified,
+}: {
+  slug: string | null;
+  customDomain?: string | null;
+  customDomainVerified?: boolean | null;
+}) {
   const [copied, setCopied] = useState(false);
   const [qrOpen, setQrOpen] = useState(false);
 
@@ -401,9 +409,11 @@ function StoreLinkCard({ slug }: { slug: string | null }) {
     );
   }
 
-  // Always use the custom domain for the public store link, regardless of where the admin is browsing.
-  const PUBLIC_ORIGIN = "https://comandahub.online";
-  const url = `${PUBLIC_ORIGIN}/${slug}`;
+  const usingCustom = !!(customDomain && customDomainVerified);
+  const url = usingCustom
+    ? `https://${customDomain}`
+    : `https://comandahub.online/${slug}`;
+  const fallbackUrl = `https://comandahub.online/${slug}`;
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=10&data=${encodeURIComponent(url)}`;
 
   const copy = async () => {
