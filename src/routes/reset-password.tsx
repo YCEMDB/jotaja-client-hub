@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
-import logo from "@/assets/comandahub-logo.svg";
+import { Logo } from "@/components/jotaja/Logo";
 
 export const Route = createFileRoute("/reset-password")({
   component: ResetPasswordPage,
