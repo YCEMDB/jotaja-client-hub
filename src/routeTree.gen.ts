@@ -9,7 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as EmpresaRouteImport } from './routes/empresa'
 import { Route as CardapioDigitalRouteImport } from './routes/cardapio-digital'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AlternativaIfoodRouteImport } from './routes/alternativa-ifood'
@@ -49,9 +51,19 @@ import { Route as AuthenticatedAdminConfiguracoesRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminClientesRouteImport } from './routes/_authenticated/admin.clientes'
 import { Route as AuthenticatedAdminCardapioRouteImport } from './routes/_authenticated/admin.cardapio'
 
+const SobreRoute = SobreRouteImport.update({
+  id: '/sobre',
+  path: '/sobre',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EmpresaRoute = EmpresaRouteImport.update({
+  id: '/empresa',
+  path: '/empresa',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CardapioDigitalRoute = CardapioDigitalRouteImport.update({
@@ -266,7 +278,9 @@ export interface FileRoutesByFullPath {
   '/alternativa-ifood': typeof AlternativaIfoodRoute
   '/auth': typeof AuthRoute
   '/cardapio-digital': typeof CardapioDigitalRoute
+  '/empresa': typeof EmpresaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/sobre': typeof SobreRoute
   '/blog/como-criar-cardapio-digital-qr-code': typeof BlogComoCriarCardapioDigitalQrCodeRoute
   '/blog/como-fazer-cardapio-digital-gratis': typeof BlogComoFazerCardapioDigitalGratisRoute
   '/blog/como-fazer-cardapio-digital-whatsapp': typeof BlogComoFazerCardapioDigitalWhatsappRoute
@@ -305,7 +319,9 @@ export interface FileRoutesByTo {
   '/alternativa-ifood': typeof AlternativaIfoodRoute
   '/auth': typeof AuthRoute
   '/cardapio-digital': typeof CardapioDigitalRoute
+  '/empresa': typeof EmpresaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/sobre': typeof SobreRoute
   '/blog/como-criar-cardapio-digital-qr-code': typeof BlogComoCriarCardapioDigitalQrCodeRoute
   '/blog/como-fazer-cardapio-digital-gratis': typeof BlogComoFazerCardapioDigitalGratisRoute
   '/blog/como-fazer-cardapio-digital-whatsapp': typeof BlogComoFazerCardapioDigitalWhatsappRoute
@@ -347,7 +363,9 @@ export interface FileRoutesById {
   '/alternativa-ifood': typeof AlternativaIfoodRoute
   '/auth': typeof AuthRoute
   '/cardapio-digital': typeof CardapioDigitalRoute
+  '/empresa': typeof EmpresaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/sobre': typeof SobreRoute
   '/blog/como-criar-cardapio-digital-qr-code': typeof BlogComoCriarCardapioDigitalQrCodeRoute
   '/blog/como-fazer-cardapio-digital-gratis': typeof BlogComoFazerCardapioDigitalGratisRoute
   '/blog/como-fazer-cardapio-digital-whatsapp': typeof BlogComoFazerCardapioDigitalWhatsappRoute
@@ -388,7 +406,9 @@ export interface FileRouteTypes {
     | '/alternativa-ifood'
     | '/auth'
     | '/cardapio-digital'
+    | '/empresa'
     | '/sitemap.xml'
+    | '/sobre'
     | '/blog/como-criar-cardapio-digital-qr-code'
     | '/blog/como-fazer-cardapio-digital-gratis'
     | '/blog/como-fazer-cardapio-digital-whatsapp'
@@ -427,7 +447,9 @@ export interface FileRouteTypes {
     | '/alternativa-ifood'
     | '/auth'
     | '/cardapio-digital'
+    | '/empresa'
     | '/sitemap.xml'
+    | '/sobre'
     | '/blog/como-criar-cardapio-digital-qr-code'
     | '/blog/como-fazer-cardapio-digital-gratis'
     | '/blog/como-fazer-cardapio-digital-whatsapp'
@@ -468,7 +490,9 @@ export interface FileRouteTypes {
     | '/alternativa-ifood'
     | '/auth'
     | '/cardapio-digital'
+    | '/empresa'
     | '/sitemap.xml'
+    | '/sobre'
     | '/blog/como-criar-cardapio-digital-qr-code'
     | '/blog/como-fazer-cardapio-digital-gratis'
     | '/blog/como-fazer-cardapio-digital-whatsapp'
@@ -510,7 +534,9 @@ export interface RootRouteChildren {
   AlternativaIfoodRoute: typeof AlternativaIfoodRoute
   AuthRoute: typeof AuthRoute
   CardapioDigitalRoute: typeof CardapioDigitalRoute
+  EmpresaRoute: typeof EmpresaRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  SobreRoute: typeof SobreRoute
   BlogComoCriarCardapioDigitalQrCodeRoute: typeof BlogComoCriarCardapioDigitalQrCodeRoute
   BlogComoFazerCardapioDigitalGratisRoute: typeof BlogComoFazerCardapioDigitalGratisRoute
   BlogComoFazerCardapioDigitalWhatsappRoute: typeof BlogComoFazerCardapioDigitalWhatsappRoute
@@ -530,11 +556,25 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sobre': {
+      id: '/sobre'
+      path: '/sobre'
+      fullPath: '/sobre'
+      preLoaderRoute: typeof SobreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/empresa': {
+      id: '/empresa'
+      path: '/empresa'
+      fullPath: '/empresa'
+      preLoaderRoute: typeof EmpresaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cardapio-digital': {
@@ -864,7 +904,9 @@ const rootRouteChildren: RootRouteChildren = {
   AlternativaIfoodRoute: AlternativaIfoodRoute,
   AuthRoute: AuthRoute,
   CardapioDigitalRoute: CardapioDigitalRoute,
+  EmpresaRoute: EmpresaRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  SobreRoute: SobreRoute,
   BlogComoCriarCardapioDigitalQrCodeRoute:
     BlogComoCriarCardapioDigitalQrCodeRoute,
   BlogComoFazerCardapioDigitalGratisRoute:
@@ -889,3 +931,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
