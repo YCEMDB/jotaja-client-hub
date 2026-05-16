@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { ShoppingBag, DollarSign, Users, TrendingUp } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, BarChart, Bar, PieChart, Pie, Cell, Legend } from "recharts";
+import { PlanUsageBanner } from "@/components/PlanUsageBanner";
 
 export const Route = createFileRoute("/_authenticated/admin/")({
   component: Dashboard,
@@ -106,6 +107,10 @@ function Dashboard() {
             <TabsTrigger value="30d" className="data-[state=active]:bg-brand-orange data-[state=active]:text-ink data-[state=active]:shadow-none rounded-lg font-bold uppercase tracking-wide text-background text-xs px-3">30 dias</TabsTrigger>
           </TabsList>
         </Tabs>
+      </div>
+
+      <div className="mb-6">
+        <PlanUsageBanner restaurantId={restaurantId} />
       </div>
 
       {/* Bento KPI grid */}

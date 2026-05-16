@@ -522,6 +522,9 @@ function CheckoutDialog({
 
     if (oErr || !order) {
       setSubmitting(false);
+      if (oErr?.message?.includes("plan_limit_reached")) {
+        return toast.error("Esta loja atingiu o limite de pedidos do mês. Tente novamente em breve.");
+      }
       return toast.error(oErr?.message ?? "Erro ao criar pedido");
     }
 
