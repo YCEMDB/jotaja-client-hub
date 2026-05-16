@@ -9,13 +9,27 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as CardapioDigitalRouteImport } from './routes/cardapio-digital'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AlternativaIfoodRouteImport } from './routes/alternativa-ifood'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as SlugRouteImport } from './routes/$slug'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as SegmentosPizzariaRouteImport } from './routes/segmentos.pizzaria'
+import { Route as SegmentosHamburgueriaRouteImport } from './routes/segmentos.hamburgueria'
 import { Route as PedidoOrderIdRouteImport } from './routes/pedido.$orderId'
 import { Route as PedidoIdRouteImport } from './routes/pedido.$id'
 import { Route as LojaSlugRouteImport } from './routes/loja.$slug'
+import { Route as ComparativoComandahubVsSaiposRouteImport } from './routes/comparativo.comandahub-vs-saipos'
+import { Route as ComparativoComandahubVsGoomerRouteImport } from './routes/comparativo.comandahub-vs-goomer'
+import { Route as ComparativoComandahubVsAnotaAiRouteImport } from './routes/comparativo.comandahub-vs-anota-ai'
+import { Route as BlogSistemaDePedidosParaRestauranteRouteImport } from './routes/blog.sistema-de-pedidos-para-restaurante'
+import { Route as BlogComoMontarCardapioDigitalCanvaVsPlataformaRouteImport } from './routes/blog.como-montar-cardapio-digital-canva-vs-plataforma'
+import { Route as BlogComoFazerCardapioDigitalWhatsappRouteImport } from './routes/blog.como-fazer-cardapio-digital-whatsapp'
+import { Route as BlogComoFazerCardapioDigitalGratisRouteImport } from './routes/blog.como-fazer-cardapio-digital-gratis'
+import { Route as BlogComoCriarCardapioDigitalQrCodeRouteImport } from './routes/blog.como-criar-cardapio-digital-qr-code'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as ApiPublicMercadopagoWebhookRouteImport } from './routes/api/public/mercadopago-webhook'
 import { Route as AuthenticatedAdminSuperRouteImport } from './routes/_authenticated/admin.super'
@@ -28,9 +42,24 @@ import { Route as AuthenticatedAdminConfiguracoesRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminClientesRouteImport } from './routes/_authenticated/admin.clientes'
 import { Route as AuthenticatedAdminCardapioRouteImport } from './routes/_authenticated/admin.cardapio'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CardapioDigitalRoute = CardapioDigitalRouteImport.update({
+  id: '/cardapio-digital',
+  path: '/cardapio-digital',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AlternativaIfoodRoute = AlternativaIfoodRouteImport.update({
+  id: '/alternativa-ifood',
+  path: '/alternativa-ifood',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
@@ -45,6 +74,21 @@ const SlugRoute = SlugRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SegmentosPizzariaRoute = SegmentosPizzariaRouteImport.update({
+  id: '/segmentos/pizzaria',
+  path: '/segmentos/pizzaria',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SegmentosHamburgueriaRoute = SegmentosHamburgueriaRouteImport.update({
+  id: '/segmentos/hamburgueria',
+  path: '/segmentos/hamburgueria',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PedidoOrderIdRoute = PedidoOrderIdRouteImport.update({
@@ -62,6 +106,54 @@ const LojaSlugRoute = LojaSlugRouteImport.update({
   path: '/loja/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ComparativoComandahubVsSaiposRoute =
+  ComparativoComandahubVsSaiposRouteImport.update({
+    id: '/comparativo/comandahub-vs-saipos',
+    path: '/comparativo/comandahub-vs-saipos',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ComparativoComandahubVsGoomerRoute =
+  ComparativoComandahubVsGoomerRouteImport.update({
+    id: '/comparativo/comandahub-vs-goomer',
+    path: '/comparativo/comandahub-vs-goomer',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ComparativoComandahubVsAnotaAiRoute =
+  ComparativoComandahubVsAnotaAiRouteImport.update({
+    id: '/comparativo/comandahub-vs-anota-ai',
+    path: '/comparativo/comandahub-vs-anota-ai',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const BlogSistemaDePedidosParaRestauranteRoute =
+  BlogSistemaDePedidosParaRestauranteRouteImport.update({
+    id: '/blog/sistema-de-pedidos-para-restaurante',
+    path: '/blog/sistema-de-pedidos-para-restaurante',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const BlogComoMontarCardapioDigitalCanvaVsPlataformaRoute =
+  BlogComoMontarCardapioDigitalCanvaVsPlataformaRouteImport.update({
+    id: '/blog/como-montar-cardapio-digital-canva-vs-plataforma',
+    path: '/blog/como-montar-cardapio-digital-canva-vs-plataforma',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const BlogComoFazerCardapioDigitalWhatsappRoute =
+  BlogComoFazerCardapioDigitalWhatsappRouteImport.update({
+    id: '/blog/como-fazer-cardapio-digital-whatsapp',
+    path: '/blog/como-fazer-cardapio-digital-whatsapp',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const BlogComoFazerCardapioDigitalGratisRoute =
+  BlogComoFazerCardapioDigitalGratisRouteImport.update({
+    id: '/blog/como-fazer-cardapio-digital-gratis',
+    path: '/blog/como-fazer-cardapio-digital-gratis',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const BlogComoCriarCardapioDigitalQrCodeRoute =
+  BlogComoCriarCardapioDigitalQrCodeRouteImport.update({
+    id: '/blog/como-criar-cardapio-digital-qr-code',
+    path: '/blog/como-criar-cardapio-digital-qr-code',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
@@ -130,10 +222,24 @@ const AuthenticatedAdminCardapioRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
+  '/alternativa-ifood': typeof AlternativaIfoodRoute
   '/auth': typeof AuthRoute
+  '/cardapio-digital': typeof CardapioDigitalRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/blog/como-criar-cardapio-digital-qr-code': typeof BlogComoCriarCardapioDigitalQrCodeRoute
+  '/blog/como-fazer-cardapio-digital-gratis': typeof BlogComoFazerCardapioDigitalGratisRoute
+  '/blog/como-fazer-cardapio-digital-whatsapp': typeof BlogComoFazerCardapioDigitalWhatsappRoute
+  '/blog/como-montar-cardapio-digital-canva-vs-plataforma': typeof BlogComoMontarCardapioDigitalCanvaVsPlataformaRoute
+  '/blog/sistema-de-pedidos-para-restaurante': typeof BlogSistemaDePedidosParaRestauranteRoute
+  '/comparativo/comandahub-vs-anota-ai': typeof ComparativoComandahubVsAnotaAiRoute
+  '/comparativo/comandahub-vs-goomer': typeof ComparativoComandahubVsGoomerRoute
+  '/comparativo/comandahub-vs-saipos': typeof ComparativoComandahubVsSaiposRoute
   '/loja/$slug': typeof LojaSlugRoute
   '/pedido/$id': typeof PedidoIdRoute
   '/pedido/$orderId': typeof PedidoOrderIdRoute
+  '/segmentos/hamburgueria': typeof SegmentosHamburgueriaRoute
+  '/segmentos/pizzaria': typeof SegmentosPizzariaRoute
+  '/blog/': typeof BlogIndexRoute
   '/admin/cardapio': typeof AuthenticatedAdminCardapioRoute
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
@@ -149,10 +255,24 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
+  '/alternativa-ifood': typeof AlternativaIfoodRoute
   '/auth': typeof AuthRoute
+  '/cardapio-digital': typeof CardapioDigitalRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/blog/como-criar-cardapio-digital-qr-code': typeof BlogComoCriarCardapioDigitalQrCodeRoute
+  '/blog/como-fazer-cardapio-digital-gratis': typeof BlogComoFazerCardapioDigitalGratisRoute
+  '/blog/como-fazer-cardapio-digital-whatsapp': typeof BlogComoFazerCardapioDigitalWhatsappRoute
+  '/blog/como-montar-cardapio-digital-canva-vs-plataforma': typeof BlogComoMontarCardapioDigitalCanvaVsPlataformaRoute
+  '/blog/sistema-de-pedidos-para-restaurante': typeof BlogSistemaDePedidosParaRestauranteRoute
+  '/comparativo/comandahub-vs-anota-ai': typeof ComparativoComandahubVsAnotaAiRoute
+  '/comparativo/comandahub-vs-goomer': typeof ComparativoComandahubVsGoomerRoute
+  '/comparativo/comandahub-vs-saipos': typeof ComparativoComandahubVsSaiposRoute
   '/loja/$slug': typeof LojaSlugRoute
   '/pedido/$id': typeof PedidoIdRoute
   '/pedido/$orderId': typeof PedidoOrderIdRoute
+  '/segmentos/hamburgueria': typeof SegmentosHamburgueriaRoute
+  '/segmentos/pizzaria': typeof SegmentosPizzariaRoute
+  '/blog': typeof BlogIndexRoute
   '/admin/cardapio': typeof AuthenticatedAdminCardapioRoute
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
@@ -170,10 +290,24 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/alternativa-ifood': typeof AlternativaIfoodRoute
   '/auth': typeof AuthRoute
+  '/cardapio-digital': typeof CardapioDigitalRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/blog/como-criar-cardapio-digital-qr-code': typeof BlogComoCriarCardapioDigitalQrCodeRoute
+  '/blog/como-fazer-cardapio-digital-gratis': typeof BlogComoFazerCardapioDigitalGratisRoute
+  '/blog/como-fazer-cardapio-digital-whatsapp': typeof BlogComoFazerCardapioDigitalWhatsappRoute
+  '/blog/como-montar-cardapio-digital-canva-vs-plataforma': typeof BlogComoMontarCardapioDigitalCanvaVsPlataformaRoute
+  '/blog/sistema-de-pedidos-para-restaurante': typeof BlogSistemaDePedidosParaRestauranteRoute
+  '/comparativo/comandahub-vs-anota-ai': typeof ComparativoComandahubVsAnotaAiRoute
+  '/comparativo/comandahub-vs-goomer': typeof ComparativoComandahubVsGoomerRoute
+  '/comparativo/comandahub-vs-saipos': typeof ComparativoComandahubVsSaiposRoute
   '/loja/$slug': typeof LojaSlugRoute
   '/pedido/$id': typeof PedidoIdRoute
   '/pedido/$orderId': typeof PedidoOrderIdRoute
+  '/segmentos/hamburgueria': typeof SegmentosHamburgueriaRoute
+  '/segmentos/pizzaria': typeof SegmentosPizzariaRoute
+  '/blog/': typeof BlogIndexRoute
   '/_authenticated/admin/cardapio': typeof AuthenticatedAdminCardapioRoute
   '/_authenticated/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/_authenticated/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
@@ -191,10 +325,24 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$slug'
+    | '/alternativa-ifood'
     | '/auth'
+    | '/cardapio-digital'
+    | '/sitemap.xml'
+    | '/blog/como-criar-cardapio-digital-qr-code'
+    | '/blog/como-fazer-cardapio-digital-gratis'
+    | '/blog/como-fazer-cardapio-digital-whatsapp'
+    | '/blog/como-montar-cardapio-digital-canva-vs-plataforma'
+    | '/blog/sistema-de-pedidos-para-restaurante'
+    | '/comparativo/comandahub-vs-anota-ai'
+    | '/comparativo/comandahub-vs-goomer'
+    | '/comparativo/comandahub-vs-saipos'
     | '/loja/$slug'
     | '/pedido/$id'
     | '/pedido/$orderId'
+    | '/segmentos/hamburgueria'
+    | '/segmentos/pizzaria'
+    | '/blog/'
     | '/admin/cardapio'
     | '/admin/clientes'
     | '/admin/configuracoes'
@@ -210,10 +358,24 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/$slug'
+    | '/alternativa-ifood'
     | '/auth'
+    | '/cardapio-digital'
+    | '/sitemap.xml'
+    | '/blog/como-criar-cardapio-digital-qr-code'
+    | '/blog/como-fazer-cardapio-digital-gratis'
+    | '/blog/como-fazer-cardapio-digital-whatsapp'
+    | '/blog/como-montar-cardapio-digital-canva-vs-plataforma'
+    | '/blog/sistema-de-pedidos-para-restaurante'
+    | '/comparativo/comandahub-vs-anota-ai'
+    | '/comparativo/comandahub-vs-goomer'
+    | '/comparativo/comandahub-vs-saipos'
     | '/loja/$slug'
     | '/pedido/$id'
     | '/pedido/$orderId'
+    | '/segmentos/hamburgueria'
+    | '/segmentos/pizzaria'
+    | '/blog'
     | '/admin/cardapio'
     | '/admin/clientes'
     | '/admin/configuracoes'
@@ -230,10 +392,24 @@ export interface FileRouteTypes {
     | '/'
     | '/$slug'
     | '/_authenticated'
+    | '/alternativa-ifood'
     | '/auth'
+    | '/cardapio-digital'
+    | '/sitemap.xml'
+    | '/blog/como-criar-cardapio-digital-qr-code'
+    | '/blog/como-fazer-cardapio-digital-gratis'
+    | '/blog/como-fazer-cardapio-digital-whatsapp'
+    | '/blog/como-montar-cardapio-digital-canva-vs-plataforma'
+    | '/blog/sistema-de-pedidos-para-restaurante'
+    | '/comparativo/comandahub-vs-anota-ai'
+    | '/comparativo/comandahub-vs-goomer'
+    | '/comparativo/comandahub-vs-saipos'
     | '/loja/$slug'
     | '/pedido/$id'
     | '/pedido/$orderId'
+    | '/segmentos/hamburgueria'
+    | '/segmentos/pizzaria'
+    | '/blog/'
     | '/_authenticated/admin/cardapio'
     | '/_authenticated/admin/clientes'
     | '/_authenticated/admin/configuracoes'
@@ -251,20 +427,55 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SlugRoute: typeof SlugRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  AlternativaIfoodRoute: typeof AlternativaIfoodRoute
   AuthRoute: typeof AuthRoute
+  CardapioDigitalRoute: typeof CardapioDigitalRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  BlogComoCriarCardapioDigitalQrCodeRoute: typeof BlogComoCriarCardapioDigitalQrCodeRoute
+  BlogComoFazerCardapioDigitalGratisRoute: typeof BlogComoFazerCardapioDigitalGratisRoute
+  BlogComoFazerCardapioDigitalWhatsappRoute: typeof BlogComoFazerCardapioDigitalWhatsappRoute
+  BlogComoMontarCardapioDigitalCanvaVsPlataformaRoute: typeof BlogComoMontarCardapioDigitalCanvaVsPlataformaRoute
+  BlogSistemaDePedidosParaRestauranteRoute: typeof BlogSistemaDePedidosParaRestauranteRoute
+  ComparativoComandahubVsAnotaAiRoute: typeof ComparativoComandahubVsAnotaAiRoute
+  ComparativoComandahubVsGoomerRoute: typeof ComparativoComandahubVsGoomerRoute
+  ComparativoComandahubVsSaiposRoute: typeof ComparativoComandahubVsSaiposRoute
   LojaSlugRoute: typeof LojaSlugRoute
   PedidoIdRoute: typeof PedidoIdRoute
   PedidoOrderIdRoute: typeof PedidoOrderIdRoute
+  SegmentosHamburgueriaRoute: typeof SegmentosHamburgueriaRoute
+  SegmentosPizzariaRoute: typeof SegmentosPizzariaRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   ApiPublicMercadopagoWebhookRoute: typeof ApiPublicMercadopagoWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cardapio-digital': {
+      id: '/cardapio-digital'
+      path: '/cardapio-digital'
+      fullPath: '/cardapio-digital'
+      preLoaderRoute: typeof CardapioDigitalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/alternativa-ifood': {
+      id: '/alternativa-ifood'
+      path: '/alternativa-ifood'
+      fullPath: '/alternativa-ifood'
+      preLoaderRoute: typeof AlternativaIfoodRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -288,6 +499,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/segmentos/pizzaria': {
+      id: '/segmentos/pizzaria'
+      path: '/segmentos/pizzaria'
+      fullPath: '/segmentos/pizzaria'
+      preLoaderRoute: typeof SegmentosPizzariaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/segmentos/hamburgueria': {
+      id: '/segmentos/hamburgueria'
+      path: '/segmentos/hamburgueria'
+      fullPath: '/segmentos/hamburgueria'
+      preLoaderRoute: typeof SegmentosHamburgueriaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pedido/$orderId': {
       id: '/pedido/$orderId'
       path: '/pedido/$orderId'
@@ -307,6 +539,62 @@ declare module '@tanstack/react-router' {
       path: '/loja/$slug'
       fullPath: '/loja/$slug'
       preLoaderRoute: typeof LojaSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/comparativo/comandahub-vs-saipos': {
+      id: '/comparativo/comandahub-vs-saipos'
+      path: '/comparativo/comandahub-vs-saipos'
+      fullPath: '/comparativo/comandahub-vs-saipos'
+      preLoaderRoute: typeof ComparativoComandahubVsSaiposRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/comparativo/comandahub-vs-goomer': {
+      id: '/comparativo/comandahub-vs-goomer'
+      path: '/comparativo/comandahub-vs-goomer'
+      fullPath: '/comparativo/comandahub-vs-goomer'
+      preLoaderRoute: typeof ComparativoComandahubVsGoomerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/comparativo/comandahub-vs-anota-ai': {
+      id: '/comparativo/comandahub-vs-anota-ai'
+      path: '/comparativo/comandahub-vs-anota-ai'
+      fullPath: '/comparativo/comandahub-vs-anota-ai'
+      preLoaderRoute: typeof ComparativoComandahubVsAnotaAiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/sistema-de-pedidos-para-restaurante': {
+      id: '/blog/sistema-de-pedidos-para-restaurante'
+      path: '/blog/sistema-de-pedidos-para-restaurante'
+      fullPath: '/blog/sistema-de-pedidos-para-restaurante'
+      preLoaderRoute: typeof BlogSistemaDePedidosParaRestauranteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/como-montar-cardapio-digital-canva-vs-plataforma': {
+      id: '/blog/como-montar-cardapio-digital-canva-vs-plataforma'
+      path: '/blog/como-montar-cardapio-digital-canva-vs-plataforma'
+      fullPath: '/blog/como-montar-cardapio-digital-canva-vs-plataforma'
+      preLoaderRoute: typeof BlogComoMontarCardapioDigitalCanvaVsPlataformaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/como-fazer-cardapio-digital-whatsapp': {
+      id: '/blog/como-fazer-cardapio-digital-whatsapp'
+      path: '/blog/como-fazer-cardapio-digital-whatsapp'
+      fullPath: '/blog/como-fazer-cardapio-digital-whatsapp'
+      preLoaderRoute: typeof BlogComoFazerCardapioDigitalWhatsappRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/como-fazer-cardapio-digital-gratis': {
+      id: '/blog/como-fazer-cardapio-digital-gratis'
+      path: '/blog/como-fazer-cardapio-digital-gratis'
+      fullPath: '/blog/como-fazer-cardapio-digital-gratis'
+      preLoaderRoute: typeof BlogComoFazerCardapioDigitalGratisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/como-criar-cardapio-digital-qr-code': {
+      id: '/blog/como-criar-cardapio-digital-qr-code'
+      path: '/blog/como-criar-cardapio-digital-qr-code'
+      fullPath: '/blog/como-criar-cardapio-digital-qr-code'
+      preLoaderRoute: typeof BlogComoCriarCardapioDigitalQrCodeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin/': {
@@ -423,10 +711,29 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SlugRoute: SlugRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  AlternativaIfoodRoute: AlternativaIfoodRoute,
   AuthRoute: AuthRoute,
+  CardapioDigitalRoute: CardapioDigitalRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
+  BlogComoCriarCardapioDigitalQrCodeRoute:
+    BlogComoCriarCardapioDigitalQrCodeRoute,
+  BlogComoFazerCardapioDigitalGratisRoute:
+    BlogComoFazerCardapioDigitalGratisRoute,
+  BlogComoFazerCardapioDigitalWhatsappRoute:
+    BlogComoFazerCardapioDigitalWhatsappRoute,
+  BlogComoMontarCardapioDigitalCanvaVsPlataformaRoute:
+    BlogComoMontarCardapioDigitalCanvaVsPlataformaRoute,
+  BlogSistemaDePedidosParaRestauranteRoute:
+    BlogSistemaDePedidosParaRestauranteRoute,
+  ComparativoComandahubVsAnotaAiRoute: ComparativoComandahubVsAnotaAiRoute,
+  ComparativoComandahubVsGoomerRoute: ComparativoComandahubVsGoomerRoute,
+  ComparativoComandahubVsSaiposRoute: ComparativoComandahubVsSaiposRoute,
   LojaSlugRoute: LojaSlugRoute,
   PedidoIdRoute: PedidoIdRoute,
   PedidoOrderIdRoute: PedidoOrderIdRoute,
+  SegmentosHamburgueriaRoute: SegmentosHamburgueriaRoute,
+  SegmentosPizzariaRoute: SegmentosPizzariaRoute,
+  BlogIndexRoute: BlogIndexRoute,
   ApiPublicMercadopagoWebhookRoute: ApiPublicMercadopagoWebhookRoute,
 }
 export const routeTree = rootRouteImport

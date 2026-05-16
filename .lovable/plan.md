@@ -1,62 +1,75 @@
-# URL limpa por restaurante (path-based, multi-tenant)
+## Plano de Conteúdo SEO — 30 dias (ComandaHub)
 
-Trocar `meudominio.com/loja/luca-pizza` por `meudominio.com/lucapizza`. Funciona automaticamente para todos os clientes que você vender — cada novo restaurante cadastrado já ganha sua URL própria, sem nenhuma configuração manual.
+Baseado em dados do Semrush (BR). Foco em ranquear rápido com termos de KDI baixo e capturar tráfego de comparação ("alternativa ao iFood", "vs Goomer/Anota.ai").
 
-## Como vai funcionar para você vender
+### Diagnóstico rápido
 
-```
-meudominio.com/                  → sua landing de vendas
-meudominio.com/lucapizza         → loja da amiga (Luca Pizza)
-meudominio.com/burgerking        → loja do próximo cliente
-meudominio.com/sushiplace        → loja do próximo cliente
-meudominio.com/admin             → área de gestão (cada dono vê só o dele)
-meudominio.com/admin/super       → seu painel master
-```
+- Domínio ainda novo, sem dados Semrush — janela ideal para criar autoridade tópica antes que o conteúdo escale.
+- Pilar competitivo: "cardapio digital" (4.400/mês, KDI 46) — viável, mas exige cluster.
+- Mina de ouro de KDI 0–10: "cardapio whatsapp", "sistema de pedidos para restaurante", "alternativa ifood", além de dezenas de "como fazer X" com 20–70/mês cada (somados, tráfego relevante).
+- Concorrentes a atacar diretamente em páginas comparativas: Goomer, Anota.ai, Saipos, Abrahão, Olaclick, Sischef, Simpliza.
 
-**Cada cliente que você vender:**
-1. Cria conta → escolhe slug (ex: `lucapizza`) no onboarding.
-2. Você (super-admin) ativa a assinatura → `is_active = true`.
-3. Loja vai ao ar imediatamente em `meudominio.com/{slug}`.
-4. RLS garante isolamento total: dono de uma loja nunca vê dados de outra.
+### Estratégia em 3 frentes
 
-## Implementação
+1. **Hub & spoke**: 1 página pilar ("cardápio digital") + 8 artigos satélites linkando para ela.
+2. **Long-tail "como fazer X"**: cada artigo cobre 3–5 variações próximas (volume baixo individual, alto somado, KDI ~0).
+3. **Páginas de comparação/alternativa**: capturam intenção de troca, que converte muito.
 
-1. **Nova rota dinâmica raiz** `src/routes/$slug.tsx`
-   - Captura qualquer `/{algumacoisa}` e renderiza a tela da loja.
-   - Reaproveita 100% do código atual de `loja.$slug.tsx` (busca por slug, cardápio, carrinho, checkout).
+### Calendário (4 semanas, 3 conteúdos/semana = 12 peças)
 
-2. **Lista de slugs reservados**
-   - Caminhos do sistema que NÃO podem virar nome de restaurante: `admin`, `auth`, `api`, `pedido`, `loja`, `login`, `signup`, `dashboard`, `_authenticated`, `assets`, `favicon.ico`.
-   - Se o slug bater com um reservado → mostra "loja não encontrada".
-   - Validar no onboarding (`admin.onboarding.tsx`) ao escolher o slug, com mensagem clara: "esse nome é reservado, escolha outro".
-   - Validar também na edição em `admin.configuracoes.tsx`.
+#### Semana 1 — Fundação e quick wins
 
-3. **Redirect dos links antigos**
-   - Manter `src/routes/loja.$slug.tsx` apenas como redirect: `/loja/lucapizza` → `/lucapizza`.
-   - Garante que nenhum link/QR Code já impresso por clientes pare de funcionar.
+- **Seg** — Pilar: `/cardapio-digital` — "Cardápio Digital: o guia completo para restaurantes em 2026" (alvo: cardapio digital, cardápio digital, cardapio para restaurante).
+- **Qua** — Blog: `/blog/como-fazer-cardapio-digital-whatsapp` (cobre 6 variações de "cardapio whatsapp", KDI 0).
+- **Sex** — Landing: `/alternativa-ifood` — "Alternativa ao iFood sem comissão" (KDI 0, alta intenção).
 
-4. **Atualizar geradores de URL**
-   - `admin.configuracoes.tsx` (linha 401): `${origin}/${slug}` em vez de `${origin}/loja/${slug}`.
-   - `admin.onboarding.tsx` (linha 82): label visual `seudominio.com/` em vez de `comanda.app/loja/`.
-   - `pedido.$id.tsx` (linha 154): `<Link to="/$slug">` em vez de `<Link to="/loja/$slug">`.
-   - QR Code de compartilhamento: aponta pra URL nova.
+#### Semana 2 — Comparativos (alta conversão)
 
-## O que NÃO muda (já está pronto pra multi-tenant)
+- **Seg** — `/comparativo/comandahub-vs-goomer`
+- **Qua** — `/comparativo/comandahub-vs-anota-ai`
+- **Sex** — `/comparativo/comandahub-vs-saipos`
 
-- ✅ Banco já tem `restaurants` com `slug` único e `owner_id`.
-- ✅ RLS já isola 100% dos dados entre restaurantes.
-- ✅ Tela de bloqueio (`BlockedStoreScreen`) já some a loja se `is_active = false` ou trial vencido.
-- ✅ Super-admin já tem painel pra ativar/desativar clientes.
-- ✅ Sistema de planos (`trial`, `starter`, `pro`, `business`) já existe na tabela.
+Estrutura comum: tabela de preços, taxas, funcionalidades, prós/contras, CTA.
 
-## Próximos passos sugeridos (depois deste plano, em outra conversa)
+#### Semana 3 — Long-tail "como fazer"
 
-1. **Conectar domínio próprio** (ex: `comanda.com.br`) em Project Settings → Domains.
-2. **Ativar pagamentos de assinatura** (Stripe nativo da Lovable) — quando o cliente paga o plano, libera `is_active = true` automaticamente sem você mexer.
-3. **Email transacional** (boas-vindas, confirmação de pedido para clientes finais).
+- **Seg** — `/blog/como-criar-cardapio-digital-qr-code` (cobre 5 variações de QR Code).
+- **Qua** — `/blog/como-fazer-cardapio-digital-gratis` (cobre 4 variações "gratis/gratuito").
+- **Sex** — `/blog/como-montar-cardapio-digital-canva-vs-plataforma` (intercepta quem busca Canva).
 
-## Riscos / observações
+#### Semana 4 — Nicho vertical + conversão
 
-- Slugs já cadastrados no banco que colidam com reservados precisarão ser renomeados (vou checar antes de aplicar e te avisar se houver algum).
-- Se um dia quiser criar páginas institucionais novas (`/sobre`, `/precos`), precisa adicionar à lista de reservados ANTES de criar a rota.
-- Migração futura para subdomínio (`lucapizza.comanda.com.br`) continua possível sem refazer essa parte.
+- **Seg** — `/segmentos/pizzaria/sistema-de-pedidos`
+- **Qua** — `/segmentos/hamburgueria/cardapio-digital`
+- **Sex** — `/blog/sistema-de-pedidos-para-restaurante` (KDI 0, alta CPC $3,05 = intenção comercial).
+
+### Padrão técnico por página (head meta TanStack)
+
+Toda página nova precisa, no `head()` do route file:
+
+- `title` dentro de `meta` (≤60 chars, com keyword principal)
+- `description` (≤160 chars)
+- `og:title`, `og:description`, `og:url`
+- `link rel="canonical"` apontando para `https://comandahub.online/<rota>`
+- JSON-LD: `Article` nos blogs, `Product` nas landings de comparativo, `FAQPage` quando houver FAQ
+- H1 único com a keyword exata, H2s com variações
+- Link interno: todos os satélites apontam para o pilar `/cardapio-digital`
+
+### Checklist de publicação
+
+1. Criar route file em `src/routes/` (ex: `blog.como-fazer-cardapio-digital-whatsapp.tsx`).
+2. Preencher `head()` conforme padrão acima.
+3. Adicionar entrada em `sitemap.xml`.
+4. Linkar do menu/footer quando aplicável.
+5. Solicitar indexação no Search Console.
+
+### Resultados esperados em 30 dias
+
+- 12 páginas indexadas cobrindo ~40 variações de keyword.
+- Primeiros rankings em termos KDI 0 (cardapio whatsapp, alternativa ifood) já em 2–4 semanas.
+- Pilar "cardapio digital" leva 60–90 dias para escalar — começar agora é crítico.
+- Páginas comparativas tendem a converter 3–5× mais que blog (intenção de troca).
+
+### Próximo passo sugerido
+
+Quer que eu já comece criando o **route file da página pilar `/cardapio-digital`** com toda a estrutura SEO (head meta, JSON-LD, H1/H2s, links internos para os satélites)?
