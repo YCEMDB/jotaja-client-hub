@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermosRouteImport } from './routes/termos'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as EmpresaRouteImport } from './routes/empresa'
@@ -52,6 +53,11 @@ import { Route as AuthenticatedAdminConfiguracoesRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminClientesRouteImport } from './routes/_authenticated/admin.clientes'
 import { Route as AuthenticatedAdminCardapioRouteImport } from './routes/_authenticated/admin.cardapio'
 
+const TermosRoute = TermosRouteImport.update({
+  id: '/termos',
+  path: '/termos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SobreRoute = SobreRouteImport.update({
   id: '/sobre',
   path: '/sobre',
@@ -288,6 +294,7 @@ export interface FileRoutesByFullPath {
   '/empresa': typeof EmpresaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
+  '/termos': typeof TermosRoute
   '/blog/como-criar-cardapio-digital-qr-code': typeof BlogComoCriarCardapioDigitalQrCodeRoute
   '/blog/como-fazer-cardapio-digital-gratis': typeof BlogComoFazerCardapioDigitalGratisRoute
   '/blog/como-fazer-cardapio-digital-whatsapp': typeof BlogComoFazerCardapioDigitalWhatsappRoute
@@ -330,6 +337,7 @@ export interface FileRoutesByTo {
   '/empresa': typeof EmpresaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
+  '/termos': typeof TermosRoute
   '/blog/como-criar-cardapio-digital-qr-code': typeof BlogComoCriarCardapioDigitalQrCodeRoute
   '/blog/como-fazer-cardapio-digital-gratis': typeof BlogComoFazerCardapioDigitalGratisRoute
   '/blog/como-fazer-cardapio-digital-whatsapp': typeof BlogComoFazerCardapioDigitalWhatsappRoute
@@ -375,6 +383,7 @@ export interface FileRoutesById {
   '/empresa': typeof EmpresaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
+  '/termos': typeof TermosRoute
   '/blog/como-criar-cardapio-digital-qr-code': typeof BlogComoCriarCardapioDigitalQrCodeRoute
   '/blog/como-fazer-cardapio-digital-gratis': typeof BlogComoFazerCardapioDigitalGratisRoute
   '/blog/como-fazer-cardapio-digital-whatsapp': typeof BlogComoFazerCardapioDigitalWhatsappRoute
@@ -419,6 +428,7 @@ export interface FileRouteTypes {
     | '/empresa'
     | '/sitemap.xml'
     | '/sobre'
+    | '/termos'
     | '/blog/como-criar-cardapio-digital-qr-code'
     | '/blog/como-fazer-cardapio-digital-gratis'
     | '/blog/como-fazer-cardapio-digital-whatsapp'
@@ -461,6 +471,7 @@ export interface FileRouteTypes {
     | '/empresa'
     | '/sitemap.xml'
     | '/sobre'
+    | '/termos'
     | '/blog/como-criar-cardapio-digital-qr-code'
     | '/blog/como-fazer-cardapio-digital-gratis'
     | '/blog/como-fazer-cardapio-digital-whatsapp'
@@ -505,6 +516,7 @@ export interface FileRouteTypes {
     | '/empresa'
     | '/sitemap.xml'
     | '/sobre'
+    | '/termos'
     | '/blog/como-criar-cardapio-digital-qr-code'
     | '/blog/como-fazer-cardapio-digital-gratis'
     | '/blog/como-fazer-cardapio-digital-whatsapp'
@@ -550,6 +562,7 @@ export interface RootRouteChildren {
   EmpresaRoute: typeof EmpresaRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SobreRoute: typeof SobreRoute
+  TermosRoute: typeof TermosRoute
   BlogComoCriarCardapioDigitalQrCodeRoute: typeof BlogComoCriarCardapioDigitalQrCodeRoute
   BlogComoFazerCardapioDigitalGratisRoute: typeof BlogComoFazerCardapioDigitalGratisRoute
   BlogComoFazerCardapioDigitalWhatsappRoute: typeof BlogComoFazerCardapioDigitalWhatsappRoute
@@ -569,6 +582,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/termos': {
+      id: '/termos'
+      path: '/termos'
+      fullPath: '/termos'
+      preLoaderRoute: typeof TermosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sobre': {
       id: '/sobre'
       path: '/sobre'
@@ -928,6 +948,7 @@ const rootRouteChildren: RootRouteChildren = {
   EmpresaRoute: EmpresaRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SobreRoute: SobreRoute,
+  TermosRoute: TermosRoute,
   BlogComoCriarCardapioDigitalQrCodeRoute:
     BlogComoCriarCardapioDigitalQrCodeRoute,
   BlogComoFazerCardapioDigitalGratisRoute:
