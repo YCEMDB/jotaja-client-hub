@@ -1,75 +1,101 @@
-## Plano de Conteúdo SEO — 30 dias (ComandaHub)
+## O que está mudando
 
-Baseado em dados do Semrush (BR). Foco em ranquear rápido com termos de KDI baixo e capturar tráfego de comparação ("alternativa ao iFood", "vs Goomer/Anota.ai").
+### 1. Slug auto-gerado (sem input manual)
+**Onboarding (`admin.onboarding.tsx`)** e **CreateTenantDialog (super-admin)**:
+- Remover o campo "Link da sua loja / slug" do formulário.
+- Gerar slug no submit: `slugify(name)` + verificação de unicidade. Se já existir, sufixar com `-2`, `-3`… até passar.
+- Validar contra `isReservedSlug` (se reservado, sufixar também).
+- No `createTenant` server fn: gera slug a partir de `restaurant_name` e tenta variações até achar livre — não recebe mais slug do client.
 
-### Diagnóstico rápido
+### 2. Aba Métricas — **manter, consertar**
+Hoje ela chama `getGlobalMetrics` (serverFn com `requireSupabaseAuth`) e provavelmente está estourando silenciosamente (toast some, fica em loading ou em "Sem dados.").
 
-- Domínio ainda novo, sem dados Semrush — janela ideal para criar autoridade tópica antes que o conteúdo escale.
-- Pilar competitivo: "cardapio digital" (4.400/mês, KDI 46) — viável, mas exige cluster.
-- Mina de ouro de KDI 0–10: "cardapio whatsapp", "sistema de pedidos para restaurante", "alternativa ifood", além de dezenas de "como fazer X" com 20–70/mês cada (somados, tráfego relevante).
-- Concorrentes a atacar diretamente em páginas comparativas: Goomer, Anota.ai, Saipos, Abrahão, Olaclick, Sischef, Simpliza.
+Passos:
+- Rodar `invoke-server-function` + `server-function-logs` em `/admin/super` para identificar o erro real (suspeitos: bearer token não chega, `assertSuperAdmin` joga 403, ou query em `orders` falha por volume).
+- Adicionar `try/catch` que mostra o erro na UI (não só toast) para não ficar mudo.
+- Ajustar `getGlobalMetrics` se precisar (ex.: paginar `orders` se passar de 1000 linhas — limite default do Supabase).
+- Garantir que `attachSupabaseAuth` está em `src/start.ts` (pré-req do `requireSupabaseAuth`).
 
-### Estratégia em 3 frentes
+### 3. Formulário "Começar grátis" na home → grava lead + envia WhatsApp
+- Novo componente **`src/components/jotaja/LeadFormDialog.tsx`** (Dialog brutalista Sunset Blaze):
+  - Campos: nome, nome do restaurante, e-mail, WhatsApp, cidade (opcional), mensagem (opcional).
+  - Validação Zod (lengths que casam com a policy `signup_leads_public_insert`).
+  - Submit: `INSERT` em `signup_leads` → depois `window.open` para `https://wa.me/5527992877008?text=...` com os dados pré-preenchidos.
+  - Toast de sucesso e reset.
+- Trocar CTAs "Começar grátis" / "Criar conta grátis" no **Hero** e no **CTA** para abrir esse dialog.
+- `/auth` continua para quem já tem conta (link "Entrar" no header).
 
-1. **Hub & spoke**: 1 página pilar ("cardápio digital") + 8 artigos satélites linkando para ela.
-2. **Long-tail "como fazer X"**: cada artigo cobre 3–5 variações próximas (volume baixo individual, alto somado, KDI ~0).
-3. **Páginas de comparação/alternativa**: capturam intenção de troca, que converte muito.
+### 4. Repensar a home — tirar a cara de "slide"
+Hoje a página é pilha vertical com seções de altura/espaço uniformes → parece carrossel. Reescrita editorial:
 
-### Calendário (4 semanas, 3 conteúdos/semana = 12 peças)
+1. **Hero** (mantém).
+2. **Stats em barra full-bleed** sobre `bg-ink` — uma faixa fina, não uma seção solta.
+3. **Bento "Tudo que você precisa"** — substitui `Vantagens` + `Funcionalidades` por um único bento grid asymmetric com cards de tamanhos diferentes, mockups reais do sistema, ícones grandes, `shadow-brutal`. Densidade alta.
+4. **"Como funciona em 3 passos"** — zig-zag (texto + screenshot alternando lados), número gigante (font-display 10rem) à margem.
+5. **Comparativo iFood vs ComandaHub** — tabela brutalista lado a lado, fundo `brand-magenta/10`, bordas grossas.
+6. **Depoimentos em masonry** — cards de alturas diferentes, não slider.
+7. **Planos** — 3 cards, o do meio elevado com `shadow-brutal-lg` + badge "Recomendado".
+8. **FAQ** — accordion denso em 2 colunas no desktop.
+9. **CTA final** — full-bleed `bg-ink` com o LeadFormDialog inline (formulário direto na página) + telefone WhatsApp grande.
 
-#### Semana 1 — Fundação e quick wins
+Cada seção ganha um **kicker** ("01 — VANTAGENS") em vez de título solto → ritmo editorial.
 
-- **Seg** — Pilar: `/cardapio-digital` — "Cardápio Digital: o guia completo para restaurantes em 2026" (alvo: cardapio digital, cardápio digital, cardapio para restaurante).
-- **Qua** — Blog: `/blog/como-fazer-cardapio-digital-whatsapp` (cobre 6 variações de "cardapio whatsapp", KDI 0).
-- **Sex** — Landing: `/alternativa-ifood` — "Alternativa ao iFood sem comissão" (KDI 0, alta intenção).
+### 5. Super-Admin como página única e completa
+`admin.super.tsx` continua numa rota só, com abas:
+- **Lojas** (mantém).
+- **Leads** (mantém).
+- **Métricas** (consertar — ver item 2).
+- **Planos & Preços** (nova): editar nome, preço mensal e features de cada plano.
+- **Avisos globais** (nova): banner que aparece no topo de todos os painéis (texto + cor + on/off + expiração).
+- **Configurações gerais** (nova): WhatsApp de suporte, e-mail de contato, URL pública.
 
-#### Semana 2 — Comparativos (alta conversão)
+## Schema novo
 
-- **Seg** — `/comparativo/comandahub-vs-goomer`
-- **Qua** — `/comparativo/comandahub-vs-anota-ai`
-- **Sex** — `/comparativo/comandahub-vs-saipos`
+```sql
+CREATE TABLE public.app_plans (
+  id text PRIMARY KEY,                -- 'trial' | 'essential' | 'professional'
+  name text NOT NULL,
+  price_monthly numeric NOT NULL DEFAULT 0,
+  features jsonb NOT NULL DEFAULT '[]',
+  position int NOT NULL DEFAULT 0,
+  is_active boolean NOT NULL DEFAULT true,
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+-- RLS: SELECT público. INSERT/UPDATE/DELETE só super-admin.
 
-Estrutura comum: tabela de preços, taxas, funcionalidades, prós/contras, CTA.
+CREATE TABLE public.global_announcements (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  message text NOT NULL,
+  variant text NOT NULL DEFAULT 'info',
+  is_active boolean NOT NULL DEFAULT true,
+  expires_at timestamptz,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+-- RLS: SELECT autenticado. INSERT/UPDATE/DELETE só super-admin.
 
-#### Semana 3 — Long-tail "como fazer"
+CREATE TABLE public.app_settings (
+  key text PRIMARY KEY,
+  value jsonb NOT NULL,
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+-- RLS: SELECT público. INSERT/UPDATE só super-admin.
+```
 
-- **Seg** — `/blog/como-criar-cardapio-digital-qr-code` (cobre 5 variações de QR Code).
-- **Qua** — `/blog/como-fazer-cardapio-digital-gratis` (cobre 4 variações "gratis/gratuito").
-- **Sex** — `/blog/como-montar-cardapio-digital-canva-vs-plataforma` (intercepta quem busca Canva).
+Seed: 3 linhas em `app_plans` (trial, essential, professional) com os preços atuais.
 
-#### Semana 4 — Nicho vertical + conversão
+## Arquivos tocados
+- `src/routes/_authenticated/admin.onboarding.tsx` — remove campo slug.
+- `src/routes/_authenticated/admin.super.tsx` — debug Métricas; adiciona Planos / Avisos / Config; CreateTenantDialog sem campo slug.
+- `src/lib/super-admin.functions.ts` — `createTenant` gera slug único; `getGlobalMetrics` com paginação se necessário.
+- `src/components/jotaja/LeadFormDialog.tsx` — novo.
+- `src/components/jotaja/Hero.tsx`, `CTA.tsx` — botões abrem o dialog.
+- `src/routes/index.tsx` — nova composição (bento + zig-zag + comparativo + masonry + planos + FAQ + CTA inline).
+- Componentes novos/refeitos: `Bento.tsx`, `ComoFunciona.tsx` re-layout, `Depoimentos.tsx` masonry, `Stats.tsx` faixa.
+- `useGlobalAnnouncement` hook + render em `_authenticated.tsx`.
 
-- **Seg** — `/segmentos/pizzaria/sistema-de-pedidos`
-- **Qua** — `/segmentos/hamburgueria/cardapio-digital`
-- **Sex** — `/blog/sistema-de-pedidos-para-restaurante` (KDI 0, alta CPC $3,05 = intenção comercial).
-
-### Padrão técnico por página (head meta TanStack)
-
-Toda página nova precisa, no `head()` do route file:
-
-- `title` dentro de `meta` (≤60 chars, com keyword principal)
-- `description` (≤160 chars)
-- `og:title`, `og:description`, `og:url`
-- `link rel="canonical"` apontando para `https://comandahub.online/<rota>`
-- JSON-LD: `Article` nos blogs, `Product` nas landings de comparativo, `FAQPage` quando houver FAQ
-- H1 único com a keyword exata, H2s com variações
-- Link interno: todos os satélites apontam para o pilar `/cardapio-digital`
-
-### Checklist de publicação
-
-1. Criar route file em `src/routes/` (ex: `blog.como-fazer-cardapio-digital-whatsapp.tsx`).
-2. Preencher `head()` conforme padrão acima.
-3. Adicionar entrada em `sitemap.xml`.
-4. Linkar do menu/footer quando aplicável.
-5. Solicitar indexação no Search Console.
-
-### Resultados esperados em 30 dias
-
-- 12 páginas indexadas cobrindo ~40 variações de keyword.
-- Primeiros rankings em termos KDI 0 (cardapio whatsapp, alternativa ifood) já em 2–4 semanas.
-- Pilar "cardapio digital" leva 60–90 dias para escalar — começar agora é crítico.
-- Páginas comparativas tendem a converter 3–5× mais que blog (intenção de troca).
-
-### Próximo passo sugerido
-
-Quer que eu já comece criando o **route file da página pilar `/cardapio-digital`** com toda a estrutura SEO (head meta, JSON-LD, H1/H2s, links internos para os satélites)?
+## Verificação
+- Onboarding: nome "Burger do Zé" → slug `burger-do-ze`; segundo igual → `burger-do-ze-2`.
+- Super-Admin → "Nova loja" sem campo slug.
+- Aba Métricas carrega números e gráfico (ou mostra mensagem de erro clara, não fica mudo).
+- "Começar grátis" no Hero abre modal, salva em `signup_leads`, abre WhatsApp pré-preenchido.
+- Home: densidades visivelmente diferentes entre seções (faixa fina, bento denso, zig-zag amplo, masonry irregular).
