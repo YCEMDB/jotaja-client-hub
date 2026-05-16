@@ -72,7 +72,12 @@ function AuthLayout() {
           className="relative p-5 flex items-center gap-3 border-b-2 border-background/10 hover:bg-background/5 transition-colors"
         >
           <div className="h-11 w-11 rounded-xl bg-brand-orange border-2 border-background grid place-items-center shadow-[3px_3px_0_0_oklch(0.62_0.24_0)]">
-            <img src={logoIcon} alt="" className="h-7 w-7" />
+            <svg viewBox="0 0 48 48" className="h-7 w-7" aria-hidden="true">
+              <rect x="12" y="13" width="20" height="4.5" rx="2.25" fill="#fff" />
+              <rect x="12" y="21.75" width="14" height="4.5" rx="2.25" fill="#fff" />
+              <rect x="12" y="30.5" width="20" height="4.5" rx="2.25" fill="#fff" />
+              <circle cx="36" cy="24" r="3.25" fill="#0a0a0a" />
+            </svg>
           </div>
           <div className="leading-none">
             <div className="font-display text-lg tracking-tight">ComandaHub</div>
