@@ -3,7 +3,7 @@ import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { LeadFormDialog } from "./LeadFormDialog";
-import logo from "@/assets/comandahub-logo.svg";
+import { Logo } from "./Logo";
 
 type NavItem = { label: string; href: string; route?: boolean };
 
