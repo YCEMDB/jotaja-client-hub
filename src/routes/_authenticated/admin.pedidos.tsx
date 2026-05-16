@@ -35,6 +35,7 @@ type Order = {
   total: number;
   notes: string | null;
   created_at: string;
+  updated_at?: string;
   driver_id: string | null;
   payment_status: string;
 };
@@ -51,21 +52,86 @@ type OrderItem = {
   options: any;
 };
 
-const COLUMNS: { key: OrderStatus; label: string; color: string; ring: string }[] = [
-  { key: "pending", label: "Novos", color: "bg-brand-amber", ring: "shadow-[4px_4px_0_0_oklch(0.78_0.17_65)]" },
-  { key: "confirmed", label: "Confirmados", color: "bg-brand-violet", ring: "shadow-[4px_4px_0_0_oklch(0.5_0.22_290)]" },
-  { key: "preparing", label: "Em preparo", color: "bg-brand-orange", ring: "shadow-[4px_4px_0_0_oklch(0.69_0.22_38)]" },
-  { key: "ready", label: "Prontos", color: "bg-brand-magenta", ring: "shadow-[4px_4px_0_0_oklch(0.62_0.24_0)]" },
-  { key: "out_for_delivery", label: "Saiu p/ entrega", color: "bg-ink", ring: "shadow-[4px_4px_0_0_oklch(0.15_0.02_30)]" },
-  { key: "delivered", label: "Entregues", color: "bg-success", ring: "shadow-[4px_4px_0_0_oklch(0.7_0.16_150)]" },
+type ColKey = "new" | "preparing" | "ready_delivery" | "ready_pickup" | "out" | "delivered" | "cancelled";
+
+type ColumnDef = {
+  key: ColKey;
+  label: string;
+  color: string;
+  ring: string;
+  match: (o: Order) => boolean;
+  // se "dynamic" e count === 0, a coluna some
+  dynamic?: boolean;
+};
+
+const COLUMNS: ColumnDef[] = [
+  {
+    key: "new",
+    label: "Novos",
+    color: "bg-brand-amber",
+    ring: "shadow-[4px_4px_0_0_oklch(0.78_0.17_65)]",
+    match: (o) => o.status === "pending" || o.status === "confirmed",
+  },
+  {
+    key: "preparing",
+    label: "Em preparo",
+    color: "bg-brand-orange",
+    ring: "shadow-[4px_4px_0_0_oklch(0.69_0.22_38)]",
+    match: (o) => o.status === "preparing",
+  },
+  {
+    key: "ready_delivery",
+    label: "Prontos · Entrega",
+    color: "bg-brand-magenta",
+    ring: "shadow-[4px_4px_0_0_oklch(0.62_0.24_0)]",
+    match: (o) => o.status === "ready" && o.type === "delivery",
+  },
+  {
+    key: "ready_pickup",
+    label: "Aguardando retirada",
+    color: "bg-brand-violet",
+    ring: "shadow-[4px_4px_0_0_oklch(0.5_0.22_290)]",
+    match: (o) => o.status === "ready" && (o.type === "pickup" || o.type === "dine_in"),
+    dynamic: true,
+  },
+  {
+    key: "out",
+    label: "Saiu p/ entrega",
+    color: "bg-ink",
+    ring: "shadow-[4px_4px_0_0_oklch(0.15_0.02_30)]",
+    match: (o) => o.status === "out_for_delivery",
+  },
+  {
+    key: "delivered",
+    label: "Concluídos",
+    color: "bg-success",
+    ring: "shadow-[4px_4px_0_0_oklch(0.7_0.16_150)]",
+    match: (o) => o.status === "delivered",
+  },
+  {
+    key: "cancelled",
+    label: "Cancelados",
+    color: "bg-destructive",
+    ring: "shadow-[4px_4px_0_0_oklch(0.55_0.22_25)]",
+    match: (o) => o.status === "cancelled",
+    dynamic: true,
+  },
 ];
 
 const NEXT_STATUS: Partial<Record<OrderStatus, OrderStatus>> = {
-  pending: "confirmed",
+  pending: "preparing",
   confirmed: "preparing",
   preparing: "ready",
-  ready: "out_for_delivery",
+  ready: "out_for_delivery", // será trocado em runtime para "delivered" se for pickup/dine_in
   out_for_delivery: "delivered",
+};
+
+const NEXT_LABEL: Partial<Record<OrderStatus, string>> = {
+  pending: "Iniciar preparo",
+  confirmed: "Iniciar preparo",
+  preparing: "Marcar pronto",
+  ready: "Despachar",
+  out_for_delivery: "Marcar entregue",
 };
 
 function PedidosPage() {
