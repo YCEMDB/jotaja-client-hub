@@ -99,12 +99,11 @@ function AuthLayout() {
         <nav className="relative flex-1 p-3 space-y-1.5 overflow-y-auto">
           {isSuperAdmin && (
             <Link
-              to="/admin/super"
-              activeProps={{ className: "!bg-brand-magenta !text-background shadow-[3px_3px_0_0_oklch(0.78_0.17_65)]" }}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold uppercase tracking-wide hover:bg-background/10 transition-all mb-3 border-2 border-brand-magenta/60 text-brand-magenta"
+              to="/super"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold uppercase tracking-wide hover:bg-background/10 transition-all mb-3 border-2 border-brand-violet/60 text-brand-violet"
             >
               <ShieldCheck className="h-4 w-4" />
-              Super-Admin
+              Ir para Super-Admin
             </Link>
           )}
           {NAV.map((item) => (
