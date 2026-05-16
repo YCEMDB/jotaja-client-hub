@@ -3,7 +3,7 @@ import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { LeadFormDialog } from "./LeadFormDialog";
-import logo from "@/assets/comandahub-logo.svg";
+import { Logo } from "./Logo";
 
 type NavItem = { label: string; href: string; route?: boolean };
 
@@ -22,14 +22,8 @@ export function Header() {
     <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/60">
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-24 md:h-28">
-          <Link to="/" className="flex items-center group">
-            <img
-              src={logo}
-              alt="ComandaHub"
-              className="h-16 md:h-[4.75rem] w-auto animate-logo-in transition-transform duration-500 ease-out group-hover:scale-105 group-hover:-rotate-1 motion-reduce:animate-none motion-reduce:transition-none"
-              width={1500}
-              height={360}
-            />
+          <Link to="/" className="flex items-center group animate-logo-in motion-reduce:animate-none">
+            <Logo />
           </Link>
 
           <nav className="hidden md:flex items-center gap-1">
