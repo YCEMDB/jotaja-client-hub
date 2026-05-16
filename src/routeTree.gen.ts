@@ -34,6 +34,7 @@ import { Route as BlogComoCriarCardapioDigitalQrCodeRouteImport } from './routes
 import { Route as SuperSuperIndexRouteImport } from './routes/_super/super.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as ApiPublicMercadopagoWebhookRouteImport } from './routes/api/public/mercadopago-webhook'
+import { Route as SuperSuperPlanosRouteImport } from './routes/_super/super.planos'
 import { Route as SuperSuperLojasRouteImport } from './routes/_super/super.lojas'
 import { Route as SuperSuperLeadsRouteImport } from './routes/_super/super.leads'
 import { Route as AuthenticatedAdminSuperRouteImport } from './routes/_authenticated/admin.super'
@@ -178,6 +179,11 @@ const ApiPublicMercadopagoWebhookRoute =
     path: '/api/public/mercadopago-webhook',
     getParentRoute: () => rootRouteImport,
   } as any)
+const SuperSuperPlanosRoute = SuperSuperPlanosRouteImport.update({
+  id: '/super/planos',
+  path: '/super/planos',
+  getParentRoute: () => SuperRoute,
+} as any)
 const SuperSuperLojasRoute = SuperSuperLojasRouteImport.update({
   id: '/super/lojas',
   path: '/super/lojas',
@@ -274,6 +280,7 @@ export interface FileRoutesByFullPath {
   '/admin/super': typeof AuthenticatedAdminSuperRoute
   '/super/leads': typeof SuperSuperLeadsRoute
   '/super/lojas': typeof SuperSuperLojasRoute
+  '/super/planos': typeof SuperSuperPlanosRoute
   '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/super/': typeof SuperSuperIndexRoute
@@ -310,6 +317,7 @@ export interface FileRoutesByTo {
   '/admin/super': typeof AuthenticatedAdminSuperRoute
   '/super/leads': typeof SuperSuperLeadsRoute
   '/super/lojas': typeof SuperSuperLojasRoute
+  '/super/planos': typeof SuperSuperPlanosRoute
   '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/super': typeof SuperSuperIndexRoute
@@ -349,6 +357,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/super': typeof AuthenticatedAdminSuperRoute
   '/_super/super/leads': typeof SuperSuperLeadsRoute
   '/_super/super/lojas': typeof SuperSuperLojasRoute
+  '/_super/super/planos': typeof SuperSuperPlanosRoute
   '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_super/super/': typeof SuperSuperIndexRoute
@@ -387,6 +396,7 @@ export interface FileRouteTypes {
     | '/admin/super'
     | '/super/leads'
     | '/super/lojas'
+    | '/super/planos'
     | '/api/public/mercadopago-webhook'
     | '/admin/'
     | '/super/'
@@ -423,6 +433,7 @@ export interface FileRouteTypes {
     | '/admin/super'
     | '/super/leads'
     | '/super/lojas'
+    | '/super/planos'
     | '/api/public/mercadopago-webhook'
     | '/admin'
     | '/super'
@@ -461,6 +472,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/super'
     | '/_super/super/leads'
     | '/_super/super/lojas'
+    | '/_super/super/planos'
     | '/api/public/mercadopago-webhook'
     | '/_authenticated/admin/'
     | '/_super/super/'
@@ -669,6 +681,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicMercadopagoWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_super/super/planos': {
+      id: '/_super/super/planos'
+      path: '/super/planos'
+      fullPath: '/super/planos'
+      preLoaderRoute: typeof SuperSuperPlanosRouteImport
+      parentRoute: typeof SuperRoute
+    }
     '/_super/super/lojas': {
       id: '/_super/super/lojas'
       path: '/super/lojas'
@@ -782,12 +801,14 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 interface SuperRouteChildren {
   SuperSuperLeadsRoute: typeof SuperSuperLeadsRoute
   SuperSuperLojasRoute: typeof SuperSuperLojasRoute
+  SuperSuperPlanosRoute: typeof SuperSuperPlanosRoute
   SuperSuperIndexRoute: typeof SuperSuperIndexRoute
 }
 
 const SuperRouteChildren: SuperRouteChildren = {
   SuperSuperLeadsRoute: SuperSuperLeadsRoute,
   SuperSuperLojasRoute: SuperSuperLojasRoute,
+  SuperSuperPlanosRoute: SuperSuperPlanosRoute,
   SuperSuperIndexRoute: SuperSuperIndexRoute,
 }
 
