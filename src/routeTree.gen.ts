@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as EmpresaRouteImport } from './routes/empresa'
+import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as CardapioDigitalRouteImport } from './routes/cardapio-digital'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AlternativaIfoodRouteImport } from './routes/alternativa-ifood'
@@ -64,6 +65,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const EmpresaRoute = EmpresaRouteImport.update({
   id: '/empresa',
   path: '/empresa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContatoRoute = ContatoRouteImport.update({
+  id: '/contato',
+  path: '/contato',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CardapioDigitalRoute = CardapioDigitalRouteImport.update({
@@ -278,6 +284,7 @@ export interface FileRoutesByFullPath {
   '/alternativa-ifood': typeof AlternativaIfoodRoute
   '/auth': typeof AuthRoute
   '/cardapio-digital': typeof CardapioDigitalRoute
+  '/contato': typeof ContatoRoute
   '/empresa': typeof EmpresaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
@@ -319,6 +326,7 @@ export interface FileRoutesByTo {
   '/alternativa-ifood': typeof AlternativaIfoodRoute
   '/auth': typeof AuthRoute
   '/cardapio-digital': typeof CardapioDigitalRoute
+  '/contato': typeof ContatoRoute
   '/empresa': typeof EmpresaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
@@ -363,6 +371,7 @@ export interface FileRoutesById {
   '/alternativa-ifood': typeof AlternativaIfoodRoute
   '/auth': typeof AuthRoute
   '/cardapio-digital': typeof CardapioDigitalRoute
+  '/contato': typeof ContatoRoute
   '/empresa': typeof EmpresaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
@@ -406,6 +415,7 @@ export interface FileRouteTypes {
     | '/alternativa-ifood'
     | '/auth'
     | '/cardapio-digital'
+    | '/contato'
     | '/empresa'
     | '/sitemap.xml'
     | '/sobre'
@@ -447,6 +457,7 @@ export interface FileRouteTypes {
     | '/alternativa-ifood'
     | '/auth'
     | '/cardapio-digital'
+    | '/contato'
     | '/empresa'
     | '/sitemap.xml'
     | '/sobre'
@@ -490,6 +501,7 @@ export interface FileRouteTypes {
     | '/alternativa-ifood'
     | '/auth'
     | '/cardapio-digital'
+    | '/contato'
     | '/empresa'
     | '/sitemap.xml'
     | '/sobre'
@@ -534,6 +546,7 @@ export interface RootRouteChildren {
   AlternativaIfoodRoute: typeof AlternativaIfoodRoute
   AuthRoute: typeof AuthRoute
   CardapioDigitalRoute: typeof CardapioDigitalRoute
+  ContatoRoute: typeof ContatoRoute
   EmpresaRoute: typeof EmpresaRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SobreRoute: typeof SobreRoute
@@ -575,6 +588,13 @@ declare module '@tanstack/react-router' {
       path: '/empresa'
       fullPath: '/empresa'
       preLoaderRoute: typeof EmpresaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contato': {
+      id: '/contato'
+      path: '/contato'
+      fullPath: '/contato'
+      preLoaderRoute: typeof ContatoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cardapio-digital': {
@@ -904,6 +924,7 @@ const rootRouteChildren: RootRouteChildren = {
   AlternativaIfoodRoute: AlternativaIfoodRoute,
   AuthRoute: AuthRoute,
   CardapioDigitalRoute: CardapioDigitalRoute,
+  ContatoRoute: ContatoRoute,
   EmpresaRoute: EmpresaRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SobreRoute: SobreRoute,
