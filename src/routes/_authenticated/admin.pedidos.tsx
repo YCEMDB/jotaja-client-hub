@@ -335,69 +335,121 @@ function PedidosPage() {
       </div>
 
       <div className="flex-1 overflow-x-auto pb-2">
-        <div className="grid grid-cols-6 gap-4 min-w-[1320px] h-full">
+        <div className="flex gap-4 h-full min-w-min">
           {COLUMNS.map((col) => {
-            const colOrders = orders.filter((o) => o.status === col.key);
+            const colOrders = orders.filter(col.match);
+            // colunas dinâmicas (Aguardando retirada, Cancelados) só aparecem se tiverem cards
+            if (col.dynamic && colOrders.length === 0) return null;
             return (
-              <div key={col.key} className={`flex flex-col bg-background border-2 border-ink rounded-2xl overflow-hidden ${col.ring}`}>
+              <div key={col.key} className={`flex flex-col bg-background border-2 border-ink rounded-2xl overflow-hidden ${col.ring} w-[280px] shrink-0`}>
                 <div className={`${col.color} text-background px-3 py-2.5 flex items-center justify-between border-b-2 border-ink`}>
                   <span className="font-display text-sm uppercase tracking-wider">{col.label}</span>
                   <span className="font-display text-base bg-ink text-background px-2 py-0.5 rounded-md min-w-[28px] text-center">
                     {colOrders.length}
                   </span>
                 </div>
-                <div className="flex-1 overflow-y-auto p-2.5 space-y-2.5 bg-muted/30">
-                  {colOrders.map((o) => (
-                    <div
-                      key={o.id}
-                      className="bg-card border-2 border-ink rounded-xl p-3 cursor-pointer shadow-[3px_3px_0_0_oklch(0.15_0.02_30)] hover:shadow-[5px_5px_0_0_oklch(0.69_0.22_38)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all"
-                      onClick={() => openOrder(o)}
-                    >
-                      <div className="flex items-center justify-between mb-1.5">
-                        <span className="font-display text-lg text-ink leading-none">#{o.order_number}</span>
-                        <span className="text-[10px] text-ink/50 font-bold flex items-center gap-1 uppercase tracking-wide">
-                          <Clock className="h-3 w-3" />{timeAgo(o.created_at)}
-                        </span>
-                      </div>
-                      <p className="text-sm font-bold text-ink truncate">{o.customer_name}</p>
-                      <p className="text-[10px] text-ink/60 truncate uppercase tracking-wide font-bold mt-0.5">{o.type} · {o.payment}</p>
-                      <div className="flex items-center justify-between mt-2.5 pt-2 border-t-2 border-dashed border-ink/15">
-                        <div className="flex items-center gap-1.5">
-                          <span className="font-display text-base text-ink leading-none">R$ {Number(o.total).toFixed(2)}</span>
-                          {o.payment === "pix" && (
-                            <span className={`text-[9px] px-1.5 py-0.5 rounded font-display border border-ink/80 ${o.payment_status === "paid" ? "bg-success text-ink" : "bg-brand-amber text-ink"}`}>
-                              {o.payment_status === "paid" ? "PAGO" : "AGUARD."}
-                            </span>
-                          )}
+                <div className="flex-1 overflow-y-auto p-2.5 space-y-2.5 bg-muted/30 min-h-[200px]">
+                  {colOrders.map((o) => {
+                    const driver = o.driver_id ? drivers.find((d) => d.id === o.driver_id) : null;
+                    const isDelivered = o.status === "delivered";
+                    const isOut = o.status === "out_for_delivery";
+                    const isCancelled = o.status === "cancelled";
+                    const duration = isDelivered && o.updated_at ? minutesBetween(o.created_at, o.updated_at) : null;
+                    return (
+                      <div
+                        key={o.id}
+                        className={`bg-card border-2 border-ink rounded-xl p-3 cursor-pointer shadow-[3px_3px_0_0_oklch(0.15_0.02_30)] hover:shadow-[5px_5px_0_0_oklch(0.69_0.22_38)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all ${isCancelled ? "opacity-70" : ""}`}
+                        onClick={() => openOrder(o)}
+                      >
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="font-display text-lg text-ink leading-none">#{o.order_number}</span>
+                          <span className="text-[10px] text-ink/50 font-bold flex items-center gap-1 uppercase tracking-wide">
+                            <Clock className="h-3 w-3" />{timeAgo(o.created_at)}
+                          </span>
                         </div>
-                        <div className="flex items-center gap-0.5">
-                          <button
-                            className="h-7 w-7 grid place-items-center rounded-md hover:bg-ink hover:text-background transition-colors text-ink/70"
-                            title="Imprimir"
-                            onClick={(e) => { e.stopPropagation(); printOrder(o); }}
-                          >
-                            <Printer className="h-3.5 w-3.5" />
-                          </button>
-                          {NEXT_STATUS[o.status] && (
+                        <p className="text-sm font-bold text-ink truncate">{o.customer_name}</p>
+                        <p className="text-[10px] text-ink/60 truncate uppercase tracking-wide font-bold mt-0.5">
+                          {typeLabel(o.type)} · {o.payment}
+                        </p>
+
+                        {/* Bloco entregador: aparece em "Saiu" e "Entregue" */}
+                        {(isOut || isDelivered) && o.type === "delivery" && (
+                          <div className="mt-2 flex items-center gap-1.5 bg-ink/5 border-2 border-dashed border-ink/20 rounded-md px-2 py-1">
+                            {driver ? (
+                              <>
+                                <Truck className="h-3 w-3 text-brand-violet" />
+                                <span className="text-[10px] font-bold uppercase tracking-wide text-ink truncate">{driver.name}</span>
+                                {isDelivered && duration !== null && (
+                                  <span className="ml-auto text-[10px] font-display bg-success text-ink px-1.5 rounded">{duration}min</span>
+                                )}
+                              </>
+                            ) : (
+                              <>
+                                <User className="h-3 w-3 text-ink/40" />
+                                <span className="text-[10px] font-bold uppercase tracking-wide text-ink/50">Sem entregador</span>
+                              </>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Pickup/dine_in concluído mostra apenas duração */}
+                        {isDelivered && o.type !== "delivery" && duration !== null && (
+                          <div className="mt-2 flex items-center gap-1.5 bg-success/20 border-2 border-dashed border-success rounded-md px-2 py-1">
+                            <CheckCircle2 className="h-3 w-3 text-ink" />
+                            <span className="text-[10px] font-bold uppercase tracking-wide text-ink">Concluído em {duration}min</span>
+                          </div>
+                        )}
+
+                        {isCancelled && (
+                          <div className="mt-2 flex items-center gap-1.5 bg-destructive/15 border-2 border-dashed border-destructive rounded-md px-2 py-1">
+                            <XCircle className="h-3 w-3 text-destructive" />
+                            <span className="text-[10px] font-bold uppercase tracking-wide text-destructive">Cancelado</span>
+                          </div>
+                        )}
+
+                        <div className="flex items-center justify-between mt-2.5 pt-2 border-t-2 border-dashed border-ink/15">
+                          <div className="flex items-center gap-1.5">
+                            <span className="font-display text-base text-brand-magenta leading-none">R$ {Number(o.total).toFixed(2)}</span>
+                            {o.payment === "pix" && (
+                              <span className={`text-[9px] px-1.5 py-0.5 rounded font-display border border-ink/80 ${o.payment_status === "paid" ? "bg-success text-ink" : "bg-brand-amber text-ink"}`}>
+                                {o.payment_status === "paid" ? "PAGO" : "AGUARD."}
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-0.5">
                             <button
-                              className="h-7 w-7 grid place-items-center rounded-md bg-brand-orange text-background hover:bg-ink transition-colors"
-                              onClick={(e) => { e.stopPropagation(); advance(o); }}
-                              title="Avançar"
+                              className="h-7 w-7 grid place-items-center rounded-md hover:bg-ink hover:text-background transition-colors text-ink/70"
+                              title="Imprimir"
+                              onClick={(e) => { e.stopPropagation(); printOrder(o); }}
                             >
-                              <ChevronRight className="h-4 w-4" />
+                              <Printer className="h-3.5 w-3.5" />
                             </button>
-                          )}
+                            {NEXT_STATUS[o.status] && !isCancelled && (
+                              <button
+                                className="h-7 px-2 grid place-items-center rounded-md bg-brand-orange text-background hover:bg-ink transition-colors font-display text-[10px] uppercase tracking-wide gap-1 flex"
+                                onClick={(e) => { e.stopPropagation(); advance(o); }}
+                                title={NEXT_LABEL[o.status]}
+                              >
+                                {NEXT_LABEL[o.status]} <ChevronRight className="h-3 w-3" />
+                              </button>
+                            )}
+                          </div>
                         </div>
                       </div>
+                    );
+                  })}
+                  {colOrders.length === 0 && !col.dynamic && (
+                    <div className="flex flex-col items-center justify-center py-10 text-ink/30">
+                      <Package className="h-8 w-8 mb-2" />
+                      <p className="text-[11px] uppercase tracking-wider font-bold">vazio</p>
                     </div>
-                  ))}
-                  {colOrders.length === 0 && (
-                    <p className="text-[11px] text-center text-ink/40 py-6 uppercase tracking-wider font-bold">— vazio —</p>
                   )}
                 </div>
               </div>
             );
           })}
+        </div>
+      </div>
         </div>
       </div>
 
