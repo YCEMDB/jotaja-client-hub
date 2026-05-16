@@ -9,8 +9,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Trash2, Upload, Copy, ExternalLink, QrCode, Check } from "lucide-react";
+import { Plus, Trash2, Upload, Copy, ExternalLink, QrCode, Check, Globe, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
+import { useServerFn } from "@tanstack/react-start";
+import { saveCustomDomain, verifyCustomDomain } from "@/lib/custom-domain.functions";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
