@@ -18,7 +18,6 @@ export const Route = createFileRoute("/_authenticated/admin/onboarding")({
 
 const schema = z.object({
   name: z.string().trim().min(2, "Nome muito curto").max(80),
-  slug: z.string().trim().min(3).max(40).regex(/^[a-z0-9-]+$/, "Apenas letras minúsculas, números e hífen"),
   whatsapp: z.string().trim().min(10, "Whatsapp obrigatório").max(20),
   description: z.string().trim().max(280).optional(),
 });
@@ -27,37 +26,39 @@ function Onboarding() {
   const { user, refreshProfile } = useAuth();
   const nav = useNavigate();
   const [name, setName] = useState("");
-  const [slug, setSlug] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
   const [description, setDescription] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const onNameChange = (v: string) => {
-    setName(v);
-    if (!slug || slug === slugify(name)) setSlug(slugify(v));
-  };
+  async function generateUniqueSlug(base: string): Promise<string> {
+    let candidate = slugify(base) || "loja";
+    if (isReservedSlug(candidate)) candidate = `${candidate}-loja`;
+    for (let i = 0; i < 20; i++) {
+      const try_ = i === 0 ? candidate : `${candidate}-${i + 1}`;
+      const { data } = await supabase.from("restaurants").select("id").eq("slug", try_).maybeSingle();
+      if (!data) return try_;
+    }
+    return `${candidate}-${Date.now().toString(36)}`;
+  }
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
-    const parsed = schema.safeParse({ name, slug, whatsapp, description });
+    const parsed = schema.safeParse({ name, whatsapp, description });
     if (!parsed.success) {
       toast.error(parsed.error.issues[0].message);
       return;
     }
-    if (isReservedSlug(parsed.data.slug)) {
-      toast.error("Esse link é reservado pelo sistema. Escolha outro.");
-      return;
-    }
     setSubmitting(true);
+    const slug = await generateUniqueSlug(parsed.data.name);
     const { data, error } = await supabase
       .from("restaurants")
-      .insert({ owner_id: user.id, ...parsed.data })
+      .insert({ owner_id: user.id, slug, ...parsed.data })
       .select("id")
       .single();
     if (error) {
       setSubmitting(false);
-      toast.error(error.code === "23505" ? "Esse link já está em uso, escolha outro" : error.message);
+      toast.error(error.message);
       return;
     }
     await supabase.from("user_roles").insert({ user_id: user.id, role: "owner", restaurant_id: data.id });
