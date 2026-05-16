@@ -37,6 +37,7 @@ import { Route as ApiPublicMercadopagoWebhookRouteImport } from './routes/api/pu
 import { Route as SuperSuperPlanosRouteImport } from './routes/_super/super.planos'
 import { Route as SuperSuperLojasRouteImport } from './routes/_super/super.lojas'
 import { Route as SuperSuperLeadsRouteImport } from './routes/_super/super.leads'
+import { Route as SuperSuperAvisosRouteImport } from './routes/_super/super.avisos'
 import { Route as AuthenticatedAdminSuperRouteImport } from './routes/_authenticated/admin.super'
 import { Route as AuthenticatedAdminRelatoriosRouteImport } from './routes/_authenticated/admin.relatorios'
 import { Route as AuthenticatedAdminPedidosRouteImport } from './routes/_authenticated/admin.pedidos'
@@ -194,6 +195,11 @@ const SuperSuperLeadsRoute = SuperSuperLeadsRouteImport.update({
   path: '/super/leads',
   getParentRoute: () => SuperRoute,
 } as any)
+const SuperSuperAvisosRoute = SuperSuperAvisosRouteImport.update({
+  id: '/super/avisos',
+  path: '/super/avisos',
+  getParentRoute: () => SuperRoute,
+} as any)
 const AuthenticatedAdminSuperRoute = AuthenticatedAdminSuperRouteImport.update({
   id: '/admin/super',
   path: '/admin/super',
@@ -278,6 +284,7 @@ export interface FileRoutesByFullPath {
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/relatorios': typeof AuthenticatedAdminRelatoriosRoute
   '/admin/super': typeof AuthenticatedAdminSuperRoute
+  '/super/avisos': typeof SuperSuperAvisosRoute
   '/super/leads': typeof SuperSuperLeadsRoute
   '/super/lojas': typeof SuperSuperLojasRoute
   '/super/planos': typeof SuperSuperPlanosRoute
@@ -315,6 +322,7 @@ export interface FileRoutesByTo {
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/relatorios': typeof AuthenticatedAdminRelatoriosRoute
   '/admin/super': typeof AuthenticatedAdminSuperRoute
+  '/super/avisos': typeof SuperSuperAvisosRoute
   '/super/leads': typeof SuperSuperLeadsRoute
   '/super/lojas': typeof SuperSuperLojasRoute
   '/super/planos': typeof SuperSuperPlanosRoute
@@ -355,6 +363,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/_authenticated/admin/relatorios': typeof AuthenticatedAdminRelatoriosRoute
   '/_authenticated/admin/super': typeof AuthenticatedAdminSuperRoute
+  '/_super/super/avisos': typeof SuperSuperAvisosRoute
   '/_super/super/leads': typeof SuperSuperLeadsRoute
   '/_super/super/lojas': typeof SuperSuperLojasRoute
   '/_super/super/planos': typeof SuperSuperPlanosRoute
@@ -394,6 +403,7 @@ export interface FileRouteTypes {
     | '/admin/pedidos'
     | '/admin/relatorios'
     | '/admin/super'
+    | '/super/avisos'
     | '/super/leads'
     | '/super/lojas'
     | '/super/planos'
@@ -431,6 +441,7 @@ export interface FileRouteTypes {
     | '/admin/pedidos'
     | '/admin/relatorios'
     | '/admin/super'
+    | '/super/avisos'
     | '/super/leads'
     | '/super/lojas'
     | '/super/planos'
@@ -470,6 +481,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/pedidos'
     | '/_authenticated/admin/relatorios'
     | '/_authenticated/admin/super'
+    | '/_super/super/avisos'
     | '/_super/super/leads'
     | '/_super/super/lojas'
     | '/_super/super/planos'
@@ -702,6 +714,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SuperSuperLeadsRouteImport
       parentRoute: typeof SuperRoute
     }
+    '/_super/super/avisos': {
+      id: '/_super/super/avisos'
+      path: '/super/avisos'
+      fullPath: '/super/avisos'
+      preLoaderRoute: typeof SuperSuperAvisosRouteImport
+      parentRoute: typeof SuperRoute
+    }
     '/_authenticated/admin/super': {
       id: '/_authenticated/admin/super'
       path: '/admin/super'
@@ -799,6 +818,7 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 )
 
 interface SuperRouteChildren {
+  SuperSuperAvisosRoute: typeof SuperSuperAvisosRoute
   SuperSuperLeadsRoute: typeof SuperSuperLeadsRoute
   SuperSuperLojasRoute: typeof SuperSuperLojasRoute
   SuperSuperPlanosRoute: typeof SuperSuperPlanosRoute
@@ -806,6 +826,7 @@ interface SuperRouteChildren {
 }
 
 const SuperRouteChildren: SuperRouteChildren = {
+  SuperSuperAvisosRoute: SuperSuperAvisosRoute,
   SuperSuperLeadsRoute: SuperSuperLeadsRoute,
   SuperSuperLojasRoute: SuperSuperLojasRoute,
   SuperSuperPlanosRoute: SuperSuperPlanosRoute,
