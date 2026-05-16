@@ -51,6 +51,7 @@ import { Route as SuperSuperAvisosRouteImport } from './routes/_super/super.avis
 import { Route as AuthenticatedAdminSuperRouteImport } from './routes/_authenticated/admin.super'
 import { Route as AuthenticatedAdminRelatoriosRouteImport } from './routes/_authenticated/admin.relatorios'
 import { Route as AuthenticatedAdminPedidosRouteImport } from './routes/_authenticated/admin.pedidos'
+import { Route as AuthenticatedAdminPdvRouteImport } from './routes/_authenticated/admin.pdv'
 import { Route as AuthenticatedAdminOnboardingRouteImport } from './routes/_authenticated/admin.onboarding'
 import { Route as AuthenticatedAdminEntregadoresRouteImport } from './routes/_authenticated/admin.entregadores'
 import { Route as AuthenticatedAdminCuponsRouteImport } from './routes/_authenticated/admin.cupons'
@@ -280,6 +281,11 @@ const AuthenticatedAdminPedidosRoute =
     path: '/admin/pedidos',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedAdminPdvRoute = AuthenticatedAdminPdvRouteImport.update({
+  id: '/admin/pdv',
+  path: '/admin/pdv',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedAdminOnboardingRoute =
   AuthenticatedAdminOnboardingRouteImport.update({
     id: '/admin/onboarding',
@@ -368,6 +374,7 @@ export interface FileRoutesByFullPath {
   '/admin/cupons': typeof AuthenticatedAdminCuponsRoute
   '/admin/entregadores': typeof AuthenticatedAdminEntregadoresRoute
   '/admin/onboarding': typeof AuthenticatedAdminOnboardingRoute
+  '/admin/pdv': typeof AuthenticatedAdminPdvRoute
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/relatorios': typeof AuthenticatedAdminRelatoriosRoute
   '/admin/super': typeof AuthenticatedAdminSuperRoute
@@ -419,6 +426,7 @@ export interface FileRoutesByTo {
   '/admin/cupons': typeof AuthenticatedAdminCuponsRoute
   '/admin/entregadores': typeof AuthenticatedAdminEntregadoresRoute
   '/admin/onboarding': typeof AuthenticatedAdminOnboardingRoute
+  '/admin/pdv': typeof AuthenticatedAdminPdvRoute
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/relatorios': typeof AuthenticatedAdminRelatoriosRoute
   '/admin/super': typeof AuthenticatedAdminSuperRoute
@@ -473,6 +481,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/cupons': typeof AuthenticatedAdminCuponsRoute
   '/_authenticated/admin/entregadores': typeof AuthenticatedAdminEntregadoresRoute
   '/_authenticated/admin/onboarding': typeof AuthenticatedAdminOnboardingRoute
+  '/_authenticated/admin/pdv': typeof AuthenticatedAdminPdvRoute
   '/_authenticated/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/_authenticated/admin/relatorios': typeof AuthenticatedAdminRelatoriosRoute
   '/_authenticated/admin/super': typeof AuthenticatedAdminSuperRoute
@@ -526,6 +535,7 @@ export interface FileRouteTypes {
     | '/admin/cupons'
     | '/admin/entregadores'
     | '/admin/onboarding'
+    | '/admin/pdv'
     | '/admin/pedidos'
     | '/admin/relatorios'
     | '/admin/super'
@@ -577,6 +587,7 @@ export interface FileRouteTypes {
     | '/admin/cupons'
     | '/admin/entregadores'
     | '/admin/onboarding'
+    | '/admin/pdv'
     | '/admin/pedidos'
     | '/admin/relatorios'
     | '/admin/super'
@@ -630,6 +641,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/cupons'
     | '/_authenticated/admin/entregadores'
     | '/_authenticated/admin/onboarding'
+    | '/_authenticated/admin/pdv'
     | '/_authenticated/admin/pedidos'
     | '/_authenticated/admin/relatorios'
     | '/_authenticated/admin/super'
@@ -981,6 +993,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminPedidosRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/admin/pdv': {
+      id: '/_authenticated/admin/pdv'
+      path: '/admin/pdv'
+      fullPath: '/admin/pdv'
+      preLoaderRoute: typeof AuthenticatedAdminPdvRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/admin/onboarding': {
       id: '/_authenticated/admin/onboarding'
       path: '/admin/onboarding'
@@ -1054,6 +1073,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedAdminCuponsRoute: typeof AuthenticatedAdminCuponsRoute
   AuthenticatedAdminEntregadoresRoute: typeof AuthenticatedAdminEntregadoresRoute
   AuthenticatedAdminOnboardingRoute: typeof AuthenticatedAdminOnboardingRoute
+  AuthenticatedAdminPdvRoute: typeof AuthenticatedAdminPdvRoute
   AuthenticatedAdminPedidosRoute: typeof AuthenticatedAdminPedidosRoute
   AuthenticatedAdminRelatoriosRoute: typeof AuthenticatedAdminRelatoriosRoute
   AuthenticatedAdminSuperRoute: typeof AuthenticatedAdminSuperRoute
@@ -1067,6 +1087,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAdminCuponsRoute: AuthenticatedAdminCuponsRoute,
   AuthenticatedAdminEntregadoresRoute: AuthenticatedAdminEntregadoresRoute,
   AuthenticatedAdminOnboardingRoute: AuthenticatedAdminOnboardingRoute,
+  AuthenticatedAdminPdvRoute: AuthenticatedAdminPdvRoute,
   AuthenticatedAdminPedidosRoute: AuthenticatedAdminPedidosRoute,
   AuthenticatedAdminRelatoriosRoute: AuthenticatedAdminRelatoriosRoute,
   AuthenticatedAdminSuperRoute: AuthenticatedAdminSuperRoute,
@@ -1142,3 +1163,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
