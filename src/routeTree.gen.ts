@@ -9,7 +9,12 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermosRouteImport } from './routes/termos'
+import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as PrivacidadeRouteImport } from './routes/privacidade'
+import { Route as EmpresaRouteImport } from './routes/empresa'
+import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as CardapioDigitalRouteImport } from './routes/cardapio-digital'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AlternativaIfoodRouteImport } from './routes/alternativa-ifood'
@@ -49,9 +54,34 @@ import { Route as AuthenticatedAdminConfiguracoesRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminClientesRouteImport } from './routes/_authenticated/admin.clientes'
 import { Route as AuthenticatedAdminCardapioRouteImport } from './routes/_authenticated/admin.cardapio'
 
+const TermosRoute = TermosRouteImport.update({
+  id: '/termos',
+  path: '/termos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SobreRoute = SobreRouteImport.update({
+  id: '/sobre',
+  path: '/sobre',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacidadeRoute = PrivacidadeRouteImport.update({
+  id: '/privacidade',
+  path: '/privacidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EmpresaRoute = EmpresaRouteImport.update({
+  id: '/empresa',
+  path: '/empresa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContatoRoute = ContatoRouteImport.update({
+  id: '/contato',
+  path: '/contato',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CardapioDigitalRoute = CardapioDigitalRouteImport.update({
@@ -266,7 +296,12 @@ export interface FileRoutesByFullPath {
   '/alternativa-ifood': typeof AlternativaIfoodRoute
   '/auth': typeof AuthRoute
   '/cardapio-digital': typeof CardapioDigitalRoute
+  '/contato': typeof ContatoRoute
+  '/empresa': typeof EmpresaRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/sobre': typeof SobreRoute
+  '/termos': typeof TermosRoute
   '/blog/como-criar-cardapio-digital-qr-code': typeof BlogComoCriarCardapioDigitalQrCodeRoute
   '/blog/como-fazer-cardapio-digital-gratis': typeof BlogComoFazerCardapioDigitalGratisRoute
   '/blog/como-fazer-cardapio-digital-whatsapp': typeof BlogComoFazerCardapioDigitalWhatsappRoute
@@ -305,7 +340,12 @@ export interface FileRoutesByTo {
   '/alternativa-ifood': typeof AlternativaIfoodRoute
   '/auth': typeof AuthRoute
   '/cardapio-digital': typeof CardapioDigitalRoute
+  '/contato': typeof ContatoRoute
+  '/empresa': typeof EmpresaRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/sobre': typeof SobreRoute
+  '/termos': typeof TermosRoute
   '/blog/como-criar-cardapio-digital-qr-code': typeof BlogComoCriarCardapioDigitalQrCodeRoute
   '/blog/como-fazer-cardapio-digital-gratis': typeof BlogComoFazerCardapioDigitalGratisRoute
   '/blog/como-fazer-cardapio-digital-whatsapp': typeof BlogComoFazerCardapioDigitalWhatsappRoute
@@ -347,7 +387,12 @@ export interface FileRoutesById {
   '/alternativa-ifood': typeof AlternativaIfoodRoute
   '/auth': typeof AuthRoute
   '/cardapio-digital': typeof CardapioDigitalRoute
+  '/contato': typeof ContatoRoute
+  '/empresa': typeof EmpresaRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/sobre': typeof SobreRoute
+  '/termos': typeof TermosRoute
   '/blog/como-criar-cardapio-digital-qr-code': typeof BlogComoCriarCardapioDigitalQrCodeRoute
   '/blog/como-fazer-cardapio-digital-gratis': typeof BlogComoFazerCardapioDigitalGratisRoute
   '/blog/como-fazer-cardapio-digital-whatsapp': typeof BlogComoFazerCardapioDigitalWhatsappRoute
@@ -388,7 +433,12 @@ export interface FileRouteTypes {
     | '/alternativa-ifood'
     | '/auth'
     | '/cardapio-digital'
+    | '/contato'
+    | '/empresa'
+    | '/privacidade'
     | '/sitemap.xml'
+    | '/sobre'
+    | '/termos'
     | '/blog/como-criar-cardapio-digital-qr-code'
     | '/blog/como-fazer-cardapio-digital-gratis'
     | '/blog/como-fazer-cardapio-digital-whatsapp'
@@ -427,7 +477,12 @@ export interface FileRouteTypes {
     | '/alternativa-ifood'
     | '/auth'
     | '/cardapio-digital'
+    | '/contato'
+    | '/empresa'
+    | '/privacidade'
     | '/sitemap.xml'
+    | '/sobre'
+    | '/termos'
     | '/blog/como-criar-cardapio-digital-qr-code'
     | '/blog/como-fazer-cardapio-digital-gratis'
     | '/blog/como-fazer-cardapio-digital-whatsapp'
@@ -468,7 +523,12 @@ export interface FileRouteTypes {
     | '/alternativa-ifood'
     | '/auth'
     | '/cardapio-digital'
+    | '/contato'
+    | '/empresa'
+    | '/privacidade'
     | '/sitemap.xml'
+    | '/sobre'
+    | '/termos'
     | '/blog/como-criar-cardapio-digital-qr-code'
     | '/blog/como-fazer-cardapio-digital-gratis'
     | '/blog/como-fazer-cardapio-digital-whatsapp'
@@ -510,7 +570,12 @@ export interface RootRouteChildren {
   AlternativaIfoodRoute: typeof AlternativaIfoodRoute
   AuthRoute: typeof AuthRoute
   CardapioDigitalRoute: typeof CardapioDigitalRoute
+  ContatoRoute: typeof ContatoRoute
+  EmpresaRoute: typeof EmpresaRoute
+  PrivacidadeRoute: typeof PrivacidadeRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  SobreRoute: typeof SobreRoute
+  TermosRoute: typeof TermosRoute
   BlogComoCriarCardapioDigitalQrCodeRoute: typeof BlogComoCriarCardapioDigitalQrCodeRoute
   BlogComoFazerCardapioDigitalGratisRoute: typeof BlogComoFazerCardapioDigitalGratisRoute
   BlogComoFazerCardapioDigitalWhatsappRoute: typeof BlogComoFazerCardapioDigitalWhatsappRoute
@@ -530,11 +595,46 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/termos': {
+      id: '/termos'
+      path: '/termos'
+      fullPath: '/termos'
+      preLoaderRoute: typeof TermosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sobre': {
+      id: '/sobre'
+      path: '/sobre'
+      fullPath: '/sobre'
+      preLoaderRoute: typeof SobreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacidade': {
+      id: '/privacidade'
+      path: '/privacidade'
+      fullPath: '/privacidade'
+      preLoaderRoute: typeof PrivacidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/empresa': {
+      id: '/empresa'
+      path: '/empresa'
+      fullPath: '/empresa'
+      preLoaderRoute: typeof EmpresaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contato': {
+      id: '/contato'
+      path: '/contato'
+      fullPath: '/contato'
+      preLoaderRoute: typeof ContatoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cardapio-digital': {
@@ -864,7 +964,12 @@ const rootRouteChildren: RootRouteChildren = {
   AlternativaIfoodRoute: AlternativaIfoodRoute,
   AuthRoute: AuthRoute,
   CardapioDigitalRoute: CardapioDigitalRoute,
+  ContatoRoute: ContatoRoute,
+  EmpresaRoute: EmpresaRoute,
+  PrivacidadeRoute: PrivacidadeRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  SobreRoute: SobreRoute,
+  TermosRoute: TermosRoute,
   BlogComoCriarCardapioDigitalQrCodeRoute:
     BlogComoCriarCardapioDigitalQrCodeRoute,
   BlogComoFazerCardapioDigitalGratisRoute:
