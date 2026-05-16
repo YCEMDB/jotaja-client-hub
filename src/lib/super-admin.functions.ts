@@ -87,7 +87,7 @@ export const createTenant = createServerFn({ method: "POST" })
       .from("restaurants")
       .insert({
         name: data.restaurant_name,
-        slug: data.slug,
+        slug,
         owner_id: ownerId!,
         plan: data.plan,
         phone: data.phone ?? null,
