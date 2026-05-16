@@ -266,6 +266,24 @@ function AreasTab({ areas, restaurantId, onSaved }: { areas: DeliveryArea[]; res
   const [minOrder, setMinOrder] = useState("");
   const [minutes, setMinutes] = useState("");
   const [saving, setSaving] = useState(false);
+  const [catalog, setCatalog] = useState<Array<{ id: string; city: string; name: string }>>([]);
+  const [importOpen, setImportOpen] = useState(false);
+  const [importCity, setImportCity] = useState<"Vitória" | "Vila Velha">("Vitória");
+  const [picked, setPicked] = useState<Set<string>>(new Set());
+  const [defaultFee, setDefaultFee] = useState("8");
+  const [defaultEta, setDefaultEta] = useState("40");
+
+  const loadCatalog = async () => {
+    const { data } = await supabase
+      .from("delivery_neighborhoods")
+      .select("id,city,name")
+      .eq("state", "ES")
+      .order("city")
+      .order("name");
+    setCatalog((data ?? []) as any);
+  };
+
+  useEffect(() => { loadCatalog(); }, []);
 
   const add = async () => {
     if (!neighborhood.trim()) return toast.error("Bairro obrigatório");
@@ -294,10 +312,49 @@ function AreasTab({ areas, restaurantId, onSaved }: { areas: DeliveryArea[]; res
     onSaved();
   };
 
+  const togglePick = (name: string) => {
+    setPicked((s) => {
+      const next = new Set(s);
+      if (next.has(name)) next.delete(name);
+      else next.add(name);
+      return next;
+    });
+  };
+
+  const importPicked = async () => {
+    if (picked.size === 0) return toast.error("Selecione pelo menos um bairro");
+    const rows = Array.from(picked).map((name) => ({
+      restaurant_id: restaurantId,
+      neighborhood: name,
+      city: importCity,
+      fee: Number(defaultFee) || 0,
+      estimated_minutes: Number(defaultEta) || 30,
+      min_order: 0,
+      is_active: true,
+    }));
+    const { error } = await supabase.from("delivery_areas").insert(rows);
+    if (error) return toast.error(error.message);
+    toast.success(`${picked.size} bairro(s) importado(s)! Ajuste a taxa de cada um se precisar.`);
+    setPicked(new Set());
+    setImportOpen(false);
+    onSaved();
+  };
+
+  const catalogByCity = catalog.filter((c) => c.city === importCity);
+  const existingNames = new Set(areas.map((a) => a.neighborhood.toLowerCase()));
+
   return (
     <div className="space-y-4">
       <Card className="p-6">
-        <h3 className="font-semibold mb-3">Adicionar bairro</h3>
+        <div className="flex items-start justify-between gap-3 flex-wrap mb-3">
+          <div>
+            <h3 className="font-semibold">Adicionar bairro</h3>
+            <p className="text-xs text-muted-foreground mt-0.5">Cadastre um por vez ou importe a lista pronta de Vitória/Vila Velha.</p>
+          </div>
+          <Button variant="outline" onClick={() => setImportOpen(true)}>
+            <MapPin className="h-4 w-4 mr-1" /> Importar bairros prontos (ES)
+          </Button>
+        </div>
         <div className="grid grid-cols-12 gap-2 items-end">
           <div className="col-span-4"><Label>Bairro</Label><Input value={neighborhood} onChange={(e) => setNeighborhood(e.target.value)} /></div>
           <div className="col-span-2"><Label>Frete (R$)</Label><Input type="number" step="0.01" value={fee} onChange={(e) => setFee(e.target.value)} /></div>
@@ -316,7 +373,7 @@ function AreasTab({ areas, restaurantId, onSaved }: { areas: DeliveryArea[]; res
             {areas.map((a) => (
               <div key={a.id} className="flex items-center gap-3 p-3 border rounded-lg">
                 <div className="flex-1">
-                  <p className="font-medium">{a.neighborhood}</p>
+                  <p className="font-medium">{a.neighborhood}{a.city ? <span className="text-xs text-muted-foreground"> · {a.city}</span> : null}</p>
                   <p className="text-xs text-muted-foreground">
                     R$ {Number(a.fee).toFixed(2)} · mín R$ {Number(a.min_order).toFixed(2)} · {a.estimated_minutes ?? 30}min
                   </p>
@@ -328,6 +385,71 @@ function AreasTab({ areas, restaurantId, onSaved }: { areas: DeliveryArea[]; res
           </div>
         )}
       </Card>
+
+      <Dialog open={importOpen} onOpenChange={setImportOpen}>
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-hidden flex flex-col">
+          <DialogHeader>
+            <DialogTitle>Importar bairros prontos (Espírito Santo)</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="flex gap-2 flex-wrap items-end">
+              <div>
+                <Label>Cidade</Label>
+                <div className="flex gap-1 mt-1">
+                  {(["Vitória","Vila Velha"] as const).map((c) => (
+                    <Button key={c} size="sm" variant={importCity === c ? "default" : "outline"} onClick={() => { setImportCity(c); setPicked(new Set()); }}>
+                      {c}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <Label>Frete padrão (R$)</Label>
+                <Input type="number" step="0.01" value={defaultFee} onChange={(e) => setDefaultFee(e.target.value)} className="w-28" />
+              </div>
+              <div>
+                <Label>Tempo (min)</Label>
+                <Input type="number" value={defaultEta} onChange={(e) => setDefaultEta(e.target.value)} className="w-24" />
+              </div>
+              <Button size="sm" variant="ghost" onClick={() => setPicked(new Set(catalogByCity.filter(c => !existingNames.has(c.name.toLowerCase())).map(c => c.name)))}>
+                Marcar todos
+              </Button>
+              <Button size="sm" variant="ghost" onClick={() => setPicked(new Set())}>Limpar</Button>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Bairros já cadastrados aparecem desabilitados. A taxa padrão acima é aplicada a todos — depois você ajusta individualmente.
+            </p>
+          </div>
+          <div className="flex-1 overflow-y-auto border rounded-md p-3 grid grid-cols-2 sm:grid-cols-3 gap-1.5 mt-2">
+            {catalogByCity.map((b) => {
+              const already = existingNames.has(b.name.toLowerCase());
+              const checked = picked.has(b.name);
+              return (
+                <label
+                  key={b.id}
+                  className={`flex items-center gap-2 text-xs p-1.5 rounded border cursor-pointer ${already ? "opacity-50 cursor-not-allowed bg-muted" : checked ? "bg-primary/10 border-primary" : "hover:bg-muted/50"}`}
+                >
+                  <input
+                    type="checkbox"
+                    disabled={already}
+                    checked={checked}
+                    onChange={() => togglePick(b.name)}
+                  />
+                  <span className="truncate">{b.name}</span>
+                  {already && <span className="ml-auto text-[9px] uppercase tracking-wide">já</span>}
+                </label>
+              );
+            })}
+          </div>
+          <div className="flex justify-between items-center pt-3 border-t">
+            <span className="text-sm text-muted-foreground">{picked.size} selecionado(s)</span>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setImportOpen(false)}>Cancelar</Button>
+              <Button onClick={importPicked} disabled={picked.size === 0}>Importar {picked.size > 0 ? `(${picked.size})` : ""}</Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
