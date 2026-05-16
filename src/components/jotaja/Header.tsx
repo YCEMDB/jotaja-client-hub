@@ -32,15 +32,25 @@ export function Header() {
           </Link>
 
           <nav className="hidden md:flex items-center gap-1">
-            {navItems.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-smooth"
-              >
-                {item.label}
-              </a>
-            ))}
+            {navItems.map((item) =>
+              item.route ? (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-smooth"
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-smooth"
+                >
+                  {item.label}
+                </a>
+              ),
+            )}
           </nav>
 
           <div className="hidden md:flex items-center gap-2">
