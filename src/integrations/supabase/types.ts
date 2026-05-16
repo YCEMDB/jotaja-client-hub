@@ -282,6 +282,30 @@ export type Database = {
           },
         ]
       }
+      delivery_neighborhoods: {
+        Row: {
+          city: string
+          created_at: string
+          id: string
+          name: string
+          state: string
+        }
+        Insert: {
+          city: string
+          created_at?: string
+          id?: string
+          name: string
+          state?: string
+        }
+        Update: {
+          city?: string
+          created_at?: string
+          id?: string
+          name?: string
+          state?: string
+        }
+        Relationships: []
+      }
       email_send_log: {
         Row: {
           created_at: string
@@ -472,6 +496,7 @@ export type Database = {
           pix_qr_code_base64: string | null
           pix_txid: string | null
           restaurant_id: string
+          source: string
           status: Database["public"]["Enums"]["order_status"]
           subtotal: number
           total: number
@@ -502,6 +527,7 @@ export type Database = {
           pix_qr_code_base64?: string | null
           pix_txid?: string | null
           restaurant_id: string
+          source?: string
           status?: Database["public"]["Enums"]["order_status"]
           subtotal?: number
           total?: number
@@ -532,6 +558,7 @@ export type Database = {
           pix_qr_code_base64?: string | null
           pix_txid?: string | null
           restaurant_id?: string
+          source?: string
           status?: Database["public"]["Enums"]["order_status"]
           subtotal?: number
           total?: number
@@ -798,6 +825,8 @@ export type Database = {
           address_street: string | null
           address_zip: string | null
           admin_notes: string | null
+          auto_print_copies: number
+          auto_print_enabled: boolean
           cnpj: string | null
           cover_url: string | null
           created_at: string
@@ -810,13 +839,18 @@ export type Database = {
           is_open: boolean | null
           logo_url: string | null
           min_order_value: number | null
+          month_reset_at: string
+          monthly_order_count: number
           mp_access_token: string | null
           mp_public_key: string | null
           name: string
           opening_hours: Json | null
           owner_id: string
           phone: string | null
+          pickup_instructions: string | null
+          pickup_time_minutes: number | null
           plan: Database["public"]["Enums"]["restaurant_plan"] | null
+          plan_id: string | null
           primary_color: string | null
           slug: string
           subscription_ends_at: string | null
@@ -837,6 +871,8 @@ export type Database = {
           address_street?: string | null
           address_zip?: string | null
           admin_notes?: string | null
+          auto_print_copies?: number
+          auto_print_enabled?: boolean
           cnpj?: string | null
           cover_url?: string | null
           created_at?: string
@@ -849,13 +885,18 @@ export type Database = {
           is_open?: boolean | null
           logo_url?: string | null
           min_order_value?: number | null
+          month_reset_at?: string
+          monthly_order_count?: number
           mp_access_token?: string | null
           mp_public_key?: string | null
           name: string
           opening_hours?: Json | null
           owner_id: string
           phone?: string | null
+          pickup_instructions?: string | null
+          pickup_time_minutes?: number | null
           plan?: Database["public"]["Enums"]["restaurant_plan"] | null
+          plan_id?: string | null
           primary_color?: string | null
           slug: string
           subscription_ends_at?: string | null
@@ -876,6 +917,8 @@ export type Database = {
           address_street?: string | null
           address_zip?: string | null
           admin_notes?: string | null
+          auto_print_copies?: number
+          auto_print_enabled?: boolean
           cnpj?: string | null
           cover_url?: string | null
           created_at?: string
@@ -888,13 +931,18 @@ export type Database = {
           is_open?: boolean | null
           logo_url?: string | null
           min_order_value?: number | null
+          month_reset_at?: string
+          monthly_order_count?: number
           mp_access_token?: string | null
           mp_public_key?: string | null
           name?: string
           opening_hours?: Json | null
           owner_id?: string
           phone?: string | null
+          pickup_instructions?: string | null
+          pickup_time_minutes?: number | null
           plan?: Database["public"]["Enums"]["restaurant_plan"] | null
+          plan_id?: string | null
           primary_color?: string | null
           slug?: string
           subscription_ends_at?: string | null
@@ -902,7 +950,15 @@ export type Database = {
           updated_at?: string
           whatsapp?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "restaurants_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "app_plans"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       signup_leads: {
         Row: {
