@@ -55,6 +55,7 @@ import { Route as AuthenticatedAdminCuponsRouteImport } from './routes/_authenti
 import { Route as AuthenticatedAdminConfiguracoesRouteImport } from './routes/_authenticated/admin.configuracoes'
 import { Route as AuthenticatedAdminClientesRouteImport } from './routes/_authenticated/admin.clientes'
 import { Route as AuthenticatedAdminCardapioRouteImport } from './routes/_authenticated/admin.cardapio'
+import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 
 const TermosRoute = TermosRouteImport.update({
   id: '/termos',
@@ -301,6 +302,12 @@ const AuthenticatedAdminCardapioRoute =
     path: '/admin/cardapio',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const LovableEmailQueueProcessRoute =
+  LovableEmailQueueProcessRouteImport.update({
+    id: '/lovable/email/queue/process',
+    path: '/lovable/email/queue/process',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -347,6 +354,7 @@ export interface FileRoutesByFullPath {
   '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/super/': typeof SuperSuperIndexRoute
+  '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -393,6 +401,7 @@ export interface FileRoutesByTo {
   '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/super': typeof SuperSuperIndexRoute
+  '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -442,6 +451,7 @@ export interface FileRoutesById {
   '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_super/super/': typeof SuperSuperIndexRoute
+  '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -490,6 +500,7 @@ export interface FileRouteTypes {
     | '/api/public/mercadopago-webhook'
     | '/admin/'
     | '/super/'
+    | '/lovable/email/queue/process'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -536,6 +547,7 @@ export interface FileRouteTypes {
     | '/api/public/mercadopago-webhook'
     | '/admin'
     | '/super'
+    | '/lovable/email/queue/process'
   id:
     | '__root__'
     | '/'
@@ -584,6 +596,7 @@ export interface FileRouteTypes {
     | '/api/public/mercadopago-webhook'
     | '/_authenticated/admin/'
     | '/_super/super/'
+    | '/lovable/email/queue/process'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -617,6 +630,7 @@ export interface RootRouteChildren {
   BlogIndexRoute: typeof BlogIndexRoute
   ApiPublic_domainCheckRoute: typeof ApiPublic_domainCheckRoute
   ApiPublicMercadopagoWebhookRoute: typeof ApiPublicMercadopagoWebhookRoute
+  LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -943,6 +957,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminCardapioRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/lovable/email/queue/process': {
+      id: '/lovable/email/queue/process'
+      path: '/lovable/email/queue/process'
+      fullPath: '/lovable/email/queue/process'
+      preLoaderRoute: typeof LovableEmailQueueProcessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -1032,6 +1053,7 @@ const rootRouteChildren: RootRouteChildren = {
   BlogIndexRoute: BlogIndexRoute,
   ApiPublic_domainCheckRoute: ApiPublic_domainCheckRoute,
   ApiPublicMercadopagoWebhookRoute: ApiPublicMercadopagoWebhookRoute,
+  LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
