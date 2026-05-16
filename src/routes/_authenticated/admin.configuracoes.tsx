@@ -9,10 +9,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Trash2, Upload, Copy, ExternalLink, QrCode, Check, Globe, RefreshCw } from "lucide-react";
+import { Plus, Trash2, Upload, Copy, Check, Printer, MapPin } from "lucide-react";
 import { toast } from "sonner";
-import { useServerFn } from "@tanstack/react-start";
-import { saveCustomDomain, verifyCustomDomain } from "@/lib/custom-domain.functions";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
@@ -66,7 +64,7 @@ function ConfigPage() {
       <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight leading-[0.95] mb-2">Configurações</h1>
       <p className="text-muted-foreground mb-6">Personalize sua loja e regras de entrega</p>
 
-      <StoreLinkCard slug={r.slug} customDomain={r.custom_domain} customDomainVerified={r.custom_domain_verified} />
+      <StoreLinkCard slug={r.slug} />
 
       <Tabs defaultValue="geral">
 
@@ -75,16 +73,18 @@ function ConfigPage() {
           <TabsTrigger value="aparencia">Aparência</TabsTrigger>
           <TabsTrigger value="horarios">Horários</TabsTrigger>
           <TabsTrigger value="entrega">Áreas de entrega</TabsTrigger>
+          <TabsTrigger value="retirada">Retirada</TabsTrigger>
+          <TabsTrigger value="impressao">Impressão</TabsTrigger>
           <TabsTrigger value="pagamentos">Pagamentos</TabsTrigger>
-          <TabsTrigger value="dominio">Domínio próprio</TabsTrigger>
         </TabsList>
 
         <TabsContent value="geral"><GeralTab r={r} onSaved={load} /></TabsContent>
         <TabsContent value="aparencia"><AparenciaTab r={r} restaurantId={restaurantId} onSaved={load} /></TabsContent>
         <TabsContent value="horarios"><HorariosTab r={r} onSaved={load} /></TabsContent>
         <TabsContent value="entrega"><AreasTab areas={areas} restaurantId={restaurantId} onSaved={load} /></TabsContent>
+        <TabsContent value="retirada"><RetiradaTab r={r} onSaved={load} /></TabsContent>
+        <TabsContent value="impressao"><ImpressaoTab r={r} onSaved={load} /></TabsContent>
         <TabsContent value="pagamentos"><PagamentosTab r={r} onSaved={load} /></TabsContent>
-        <TabsContent value="dominio"><DominioTab r={r} onSaved={load} /></TabsContent>
       </Tabs>
     </div>
   );

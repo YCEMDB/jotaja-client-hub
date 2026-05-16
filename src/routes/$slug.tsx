@@ -317,9 +317,8 @@ function LojaPage() {
                   </p>
                 )}
                 <Button
-                  className="w-full"
+                  className="w-full h-14 font-display text-base uppercase tracking-wider rounded-xl bg-ink text-background hover:bg-ink/90 border-2 border-ink shadow-[4px_4px_0_0_oklch(0.69_0.22_38)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all disabled:opacity-60"
                   size="lg"
-                  style={{ background: "var(--brand)", color: "#fff" }}
                   disabled={!restaurant.is_open || subtotal < Number(restaurant.min_order_value ?? 0)}
                   onClick={() => setCheckoutOpen(true)}
                 >
