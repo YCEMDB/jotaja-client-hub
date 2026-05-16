@@ -9,8 +9,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Trash2, Upload, Copy, ExternalLink, QrCode, Check } from "lucide-react";
+import { Plus, Trash2, Upload, Copy, ExternalLink, QrCode, Check, Globe, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
+import { useServerFn } from "@tanstack/react-start";
+import { saveCustomDomain, verifyCustomDomain } from "@/lib/custom-domain.functions";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
@@ -64,16 +66,17 @@ function ConfigPage() {
       <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight leading-[0.95] mb-2">Configurações</h1>
       <p className="text-muted-foreground mb-6">Personalize sua loja e regras de entrega</p>
 
-      <StoreLinkCard slug={r.slug} />
+      <StoreLinkCard slug={r.slug} customDomain={r.custom_domain} customDomainVerified={r.custom_domain_verified} />
 
       <Tabs defaultValue="geral">
 
-        <TabsList className="mb-4">
+        <TabsList className="mb-4 flex-wrap h-auto">
           <TabsTrigger value="geral">Geral</TabsTrigger>
           <TabsTrigger value="aparencia">Aparência</TabsTrigger>
           <TabsTrigger value="horarios">Horários</TabsTrigger>
           <TabsTrigger value="entrega">Áreas de entrega</TabsTrigger>
           <TabsTrigger value="pagamentos">Pagamentos</TabsTrigger>
+          <TabsTrigger value="dominio">Domínio próprio</TabsTrigger>
         </TabsList>
 
         <TabsContent value="geral"><GeralTab r={r} onSaved={load} /></TabsContent>
@@ -81,6 +84,7 @@ function ConfigPage() {
         <TabsContent value="horarios"><HorariosTab r={r} onSaved={load} /></TabsContent>
         <TabsContent value="entrega"><AreasTab areas={areas} restaurantId={restaurantId} onSaved={load} /></TabsContent>
         <TabsContent value="pagamentos"><PagamentosTab r={r} onSaved={load} /></TabsContent>
+        <TabsContent value="dominio"><DominioTab r={r} onSaved={load} /></TabsContent>
       </Tabs>
     </div>
   );
@@ -383,7 +387,15 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
   );
 }
 
-function StoreLinkCard({ slug }: { slug: string | null }) {
+function StoreLinkCard({
+  slug,
+  customDomain,
+  customDomainVerified,
+}: {
+  slug: string | null;
+  customDomain?: string | null;
+  customDomainVerified?: boolean | null;
+}) {
   const [copied, setCopied] = useState(false);
   const [qrOpen, setQrOpen] = useState(false);
 
@@ -397,9 +409,11 @@ function StoreLinkCard({ slug }: { slug: string | null }) {
     );
   }
 
-  // Always use the custom domain for the public store link, regardless of where the admin is browsing.
-  const PUBLIC_ORIGIN = "https://comandahub.online";
-  const url = `${PUBLIC_ORIGIN}/${slug}`;
+  const usingCustom = !!(customDomain && customDomainVerified);
+  const url = usingCustom
+    ? `https://${customDomain}`
+    : `https://comandahub.online/${slug}`;
+  const fallbackUrl = `https://comandahub.online/${slug}`;
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=10&data=${encodeURIComponent(url)}`;
 
   const copy = async () => {
@@ -427,6 +441,11 @@ function StoreLinkCard({ slug }: { slug: string | null }) {
             <div className="flex items-center gap-2 bg-background border rounded-md px-3 py-2 font-mono text-sm break-all">
               {url}
             </div>
+            {usingCustom && (
+              <p className="text-xs text-muted-foreground mt-2">
+                Link de fallback: <span className="font-mono">{fallbackUrl}</span>
+              </p>
+            )}
           </div>
           <div className="flex flex-col gap-2 min-w-[160px]">
             <Button onClick={copy} variant={copied ? "secondary" : "default"}>
@@ -466,5 +485,152 @@ function StoreLinkCard({ slug }: { slug: string | null }) {
         </DialogContent>
       </Dialog>
     </>
+  );
+}
+
+function DominioTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
+  const [domain, setDomain] = useState<string>(r.custom_domain ?? "");
+  const [saving, setSaving] = useState(false);
+  const [verifying, setVerifying] = useState(false);
+  const saveFn = useServerFn(saveCustomDomain);
+  const verifyFn = useServerFn(verifyCustomDomain);
+
+  const save = async () => {
+    setSaving(true);
+    try {
+      await saveFn({ data: { restaurantId: r.id, domain } });
+      toast.success(domain ? "Domínio salvo. Configure o DNS e clique em Verificar." : "Domínio removido.");
+      onSaved();
+    } catch (e: any) {
+      toast.error(e?.message ?? "Erro ao salvar");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const verify = async () => {
+    setVerifying(true);
+    try {
+      const res = await verifyFn({ data: { restaurantId: r.id } });
+      if (res.verified) toast.success("Domínio verificado com sucesso!");
+      else toast.error(`Ainda não respondeu corretamente. ${res.reason ?? ""}`);
+      onSaved();
+    } catch (e: any) {
+      toast.error(e?.message ?? "Erro ao verificar");
+    } finally {
+      setVerifying(false);
+    }
+  };
+
+  const isApex = domain && !domain.includes(".") ? false : domain.split(".").length <= 2;
+  const sub = domain.includes(".") ? domain.split(".")[0] : "@";
+
+  return (
+    <div className="space-y-4">
+      <Card className="p-6 space-y-4">
+        <div className="flex items-start gap-3">
+          <Globe className="h-6 w-6 text-primary shrink-0 mt-1" />
+          <div>
+            <h3 className="font-semibold text-lg">Use seu próprio domínio</h3>
+            <p className="text-sm text-muted-foreground">
+              Mostre <strong>seu domínio</strong> para os clientes em vez de <code>comandahub.online/{r.slug}</code>.
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <Label>Seu domínio</Label>
+          <Input
+            value={domain}
+            onChange={(e) => setDomain(e.target.value)}
+            placeholder="pedido.minhaloja.com.br"
+            className="font-mono"
+          />
+          <p className="text-xs text-muted-foreground mt-1">
+            Pode ser um subdomínio (ex: <code>pedido.minhaloja.com.br</code>) ou domínio raiz (<code>minhaloja.com.br</code>).
+          </p>
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          <Button onClick={save} disabled={saving}>{saving ? "Salvando…" : "Salvar domínio"}</Button>
+          {r.custom_domain && (
+            <Button variant="outline" onClick={verify} disabled={verifying}>
+              <RefreshCw className={`h-4 w-4 mr-2 ${verifying ? "animate-spin" : ""}`} />
+              {verifying ? "Verificando…" : "Verificar DNS"}
+            </Button>
+          )}
+          {r.custom_domain_verified ? (
+            <span className="inline-flex items-center gap-1 text-sm text-green-700 bg-green-50 border border-green-200 rounded-md px-3 py-1">
+              <Check className="h-4 w-4" /> Verificado e ativo
+            </span>
+          ) : r.custom_domain ? (
+            <span className="inline-flex items-center gap-1 text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-md px-3 py-1">
+              Aguardando DNS
+            </span>
+          ) : null}
+        </div>
+      </Card>
+
+      {r.custom_domain && (
+        <Card className="p-6 space-y-4">
+          <h3 className="font-semibold">Como configurar o DNS</h3>
+          <p className="text-sm text-muted-foreground">
+            Acesse o painel do seu provedor de domínio (Registro.br, Hostinger, GoDaddy, Cloudflare etc.) e adicione o registro abaixo:
+          </p>
+
+          {isApex ? (
+            <DnsRow type="A" name="@" value="185.158.133.1" />
+          ) : (
+            <DnsRow type="CNAME" name={sub} value="comandahub.online" />
+          )}
+
+          <div className="text-xs bg-amber-50 border border-amber-200 text-amber-900 p-3 rounded-lg space-y-1">
+            <p><strong>Importante sobre HTTPS:</strong></p>
+            <ul className="list-disc list-inside space-y-0.5">
+              <li>O DNS pode levar de alguns minutos até <strong>72h</strong> para propagar.</li>
+              <li>
+                Para HTTPS funcionar imediatamente, recomendamos colocar seu domínio atrás do{" "}
+                <a href="https://www.cloudflare.com" target="_blank" rel="noreferrer" className="underline">
+                  Cloudflare
+                </a>{" "}
+                (grátis) com SSL <em>Flexible</em>.
+              </li>
+              <li>Sem Cloudflare? Fale com o suporte da ComandaHub para liberarmos o certificado para o seu domínio.</li>
+            </ul>
+          </div>
+
+          <p className="text-xs text-muted-foreground">
+            Após configurar, clique em <strong>Verificar DNS</strong> acima. Quando ficar verde, seu link público passa a ser{" "}
+            <code className="font-mono">https://{r.custom_domain}</code>.
+          </p>
+        </Card>
+      )}
+    </div>
+  );
+}
+
+function DnsRow({ type, name, value }: { type: string; name: string; value: string }) {
+  const copy = (v: string) => {
+    navigator.clipboard.writeText(v).then(() => toast.success("Copiado!"));
+  };
+  return (
+    <div className="grid grid-cols-3 gap-2 text-sm">
+      {[
+        { label: "Tipo", v: type },
+        { label: "Nome / Host", v: name },
+        { label: "Valor / Aponta para", v: value },
+      ].map((c) => (
+        <div key={c.label}>
+          <p className="text-xs text-muted-foreground mb-1">{c.label}</p>
+          <button
+            onClick={() => copy(c.v)}
+            className="w-full text-left font-mono bg-muted hover:bg-muted/70 border rounded-md px-3 py-2 break-all transition"
+            title="Clique para copiar"
+          >
+            {c.v}
+          </button>
+        </div>
+      ))}
+    </div>
   );
 }

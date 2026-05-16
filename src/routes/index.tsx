@@ -1,4 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { resolveHostToSlug } from "@/lib/custom-domain.functions";
 import { Header } from "@/components/jotaja/Header";
 import { Hero } from "@/components/jotaja/Hero";
 import { Stats } from "@/components/jotaja/Stats";
@@ -19,6 +20,17 @@ const DESCRIPTION =
   "Aumente vendas, automatize a operação e reduza custos. Cardápio digital, pedidos online, gestão e relatórios em tempo real. Teste grátis 14 dias, sem cartão.";
 
 export const Route = createFileRoute("/")({
+  beforeLoad: async () => {
+    try {
+      const { slug } = await resolveHostToSlug();
+      if (slug) {
+        throw redirect({ to: "/$slug", params: { slug } });
+      }
+    } catch (e: any) {
+      // Re-throw router redirects; swallow lookup errors so landing still renders.
+      if (e && typeof e === "object" && "isRedirect" in e) throw e;
+    }
+  },
   head: () => ({
     meta: [
       { title: TITLE },

@@ -714,6 +714,8 @@ export type Database = {
           cnpj: string | null
           cover_url: string | null
           created_at: string
+          custom_domain: string | null
+          custom_domain_verified: boolean
           description: string | null
           email: string | null
           id: string
@@ -751,6 +753,8 @@ export type Database = {
           cnpj?: string | null
           cover_url?: string | null
           created_at?: string
+          custom_domain?: string | null
+          custom_domain_verified?: boolean
           description?: string | null
           email?: string | null
           id?: string
@@ -788,6 +792,8 @@ export type Database = {
           cnpj?: string | null
           cover_url?: string | null
           created_at?: string
+          custom_domain?: string | null
+          custom_domain_verified?: boolean
           description?: string | null
           email?: string | null
           id?: string

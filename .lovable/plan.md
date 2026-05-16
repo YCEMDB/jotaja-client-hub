@@ -1,65 +1,65 @@
 ## Objetivo
+Permitir que cada restaurante conecte seu **próprio domínio** (ex: `pedido.europizza.com.br`) e que, ao acessar esse domínio, o cliente caia direto no cardápio da loja correspondente — sem precisar digitar o slug.
 
-Hoje `/admin/super` vive dentro do mesmo layout dos restaurantes (sidebar com Pedidos, Cardápio, Cupons, etc.) — coisas que não fazem sentido para o super-admin. Vou dar ao super-admin uma área dedicada em `/super`, com sidebar, header e visual próprios, totalmente desacoplada do painel de restaurante.
+## Como vai funcionar (visão do usuário)
 
-## Arquitetura de rotas
+1. Dono da loja vai em **Configurações → Domínio próprio**.
+2. Digita o domínio (ex: `pedido.europizza.com.br`) e salva.
+3. Sistema mostra instruções de DNS:
+   - Tipo: **CNAME** · Nome: `pedido` · Valor: `comandahub.online`
+   - (ou A record `185.158.133.1` se for domínio raiz)
+4. Cliente final acessa `https://pedido.europizza.com.br` e cai direto no cardápio da Euro Pizza.
+5. Link público mostrado em Configurações passa a ser o domínio próprio (com fallback pra `comandahub.online/slug`).
 
-```text
-src/routes/
-  _authenticated.tsx              ← layout do RESTAURANTE (sem link super-admin)
-  _authenticated/
-    admin.*.tsx                   ← painel do restaurante (inalterado)
-  _super.tsx                      ← NOVO layout exclusivo do super-admin
-  _super/
-    super.index.tsx               ← /super (visão geral + KPIs)
-    super.lojas.tsx               ← /super/lojas
-    super.leads.tsx               ← /super/leads
-    super.pagamentos.tsx          ← /super/pagamentos
-    super.planos.tsx              ← /super/planos
-    super.avisos.tsx              ← /super/avisos
-    super.configuracoes.tsx       ← /super/configuracoes
+## Mudanças técnicas
+
+### 1. Banco
+Migration adicionando à tabela `restaurants`:
+- `custom_domain text unique` — domínio normalizado (lowercase, sem `https://`, sem barra)
+- `custom_domain_verified boolean default false` — só serve o domínio quando verificado
+- índice único parcial em `lower(custom_domain)`
+
+### 2. Resolução do domínio (root route)
+Em `src/routes/index.tsx`, no `loader` (ou `beforeLoad`):
+- Ler o `Host` header via `getRequestHost()` do `@tanstack/react-start/server` dentro de um `createServerFn`.
+- Se o host **não for** `comandahub.online`, `*.lovable.app`, `localhost`, nem o preview:
+  - Buscar `restaurants` por `custom_domain = host AND custom_domain_verified = true AND is_active = true`.
+  - Se achar → redirect interno para `/$slug` (mantendo `host` original na barra de endereços via rewrite client-side com `useNavigate({ replace: true })` ou simplesmente renderizar a página da loja diretamente).
+- Implementação preferida: server fn `resolveHostToSlug(host)` chamada no loader; se retornar slug, o componente renderiza o mesmo conteúdo de `/$slug` passando o slug resolvido (sem mudar URL).
+
+### 3. UI em Configurações
+Nova aba/seção "Domínio próprio" em `src/routes/_authenticated/admin.configuracoes.tsx`:
+- Input do domínio + botão Salvar (normaliza e grava `custom_domain`, reseta `custom_domain_verified=false`).
+- Botão "Verificar DNS" → server fn que faz `fetch(https://<dominio>/__lovable_health)` ou compara via DNS lookup (no Worker: tenta `fetch` HEAD e checa se responde com um header próprio). Se ok, marca `custom_domain_verified=true`.
+- Bloco de instruções de DNS com os valores prontos pra copiar.
+- Status visual: "Aguardando DNS" / "Verificado ✓".
+
+### 4. Link público
+Em `StoreLinkCard`, se `r.custom_domain && r.custom_domain_verified`, usar `https://<custom_domain>` como URL principal; manter `comandahub.online/<slug>` como fallback secundário.
+
+### 5. RLS
+- `custom_domain` legível publicamente (já cai na policy `restaurants_public_select` filtrada por `is_active`).
+- Update só pelo dono (já coberto por `restaurants_update_own`).
+
+## Limitações importantes (avisar o usuário no UI)
+
+- **SSL automático**: o domínio só vai funcionar via HTTPS se o domínio raiz `comandahub.online` na Lovable estiver com **wildcard SSL** OU se cada cliente apontar via Cloudflare proxy (que faz SSL). Lovable Hosting hoje **não emite SSL automático para domínios de terceiros apontando via CNAME** — o cliente precisa:
+  - **Opção A** (mais simples): usar Cloudflare grátis no domínio dele, com SSL Flexible, e apontar CNAME pra cá.
+  - **Opção B**: o dono Lovable do projeto (você) adiciona o domínio dele em **Project Settings → Domains** da Lovable manualmente (suporta múltiplos).
+- Vou deixar isso claro no painel: "Após configurar o DNS, avise o suporte para ativar o SSL — ou use Cloudflare proxy no seu domínio."
+
+## Arquivos a criar/editar
+
+```
+supabase/migrations/<ts>_restaurant_custom_domain.sql   (novo)
+src/lib/custom-domain.functions.ts                      (novo — resolveHost, verifyDomain)
+src/routes/index.tsx                                    (loader resolve host)
+src/routes/_authenticated/admin.configuracoes.tsx       (nova aba Domínio)
 ```
 
-`_super.tsx` faz `beforeLoad` checando `isSuperAdmin` — se não for, redireciona para `/admin`.
+## Fora do escopo (não vou fazer agora)
+- Emissão automática de certificado SSL (depende de infra Lovable).
+- Painel pra super_admin aprovar/revogar domínios.
+- Suporte a múltiplos domínios por loja.
 
-## Layout dedicado (`_super.tsx`)
-
-Estética distinta do painel do restaurante para ficar óbvio que é outro contexto:
-
-- Sidebar **violeta/ink** (`bg-brand-violet` no header da sidebar) em vez de laranja, com badge "SUPER-ADMIN" no topo.
-- Itens de menu próprios: Visão geral, Lojas, Leads, Pagamentos, Planos & Preços, Avisos globais, Configurações.
-- Header superior com troca rápida "Voltar ao painel da loja" (link para `/admin`) — útil quando o super-admin também é dono de uma loja.
-- Sem o seletor de restaurante do layout normal (super-admin enxerga tudo via tabelas, não por contexto de loja).
-
-## Quebra do `admin.super.tsx` atual
-
-O arquivo grande (Tabs com Lojas / Leads / Pagamentos / Métricas / Notas) vira componentes em `src/components/super/` e cada um ganha sua rota:
-
-- `LojasPanel.tsx` → `super.lojas.tsx`
-- `LeadsPanel.tsx` → `super.leads.tsx`
-- `PagamentosPanel.tsx` → `super.pagamentos.tsx`
-- `MetricsPanel.tsx` → `super.index.tsx` (KPIs viram a home do super)
-- Novos: `PlanosPanel.tsx`, `AvisosPanel.tsx`, `ConfiguracoesPanel.tsx` (já existem as tabelas `app_plans`, `global_announcements`, `app_settings`).
-
-## Limpeza do painel do restaurante
-
-- Remover o bloco "Super-Admin" do `_authenticated.tsx` (linhas 100–109).
-- Redirect: quem acessar `/admin/super` é redirecionado para `/super` (mantém compat com links antigos).
-
-## Detalhes técnicos
-
-- `_super.tsx` usa `useAuth()` e em `beforeLoad`/efeito redireciona não-super para `/admin`.
-- Cada painel chama as server functions existentes em `super-admin.functions.ts` (sem mudança de backend).
-- Adicionar à `useAuth` nada — `isSuperAdmin` já existe.
-- Sem migrações de banco.
-
-## Arquivos a tocar
-
-Novos: `src/routes/_super.tsx`, `src/routes/_super/super.index.tsx`, `super.lojas.tsx`, `super.leads.tsx`, `super.pagamentos.tsx`, `super.planos.tsx`, `super.avisos.tsx`, `super.configuracoes.tsx`, componentes em `src/components/super/`.
-
-Editados: `src/routes/_authenticated.tsx` (remover link super), `src/routes/_authenticated/admin.super.tsx` (vira redirect para `/super`).
-
-## Confirmação rápida
-
-- (1) Mantenho `/admin/super` como redirect, ou removo de vez?
-- (2) Quer que o super-admin que também é dono de loja ainda veja o seletor de restaurante no header do `/super` (atalho rápido) ou só o botão "Voltar ao painel da loja"?
+Confirma que posso seguir?
