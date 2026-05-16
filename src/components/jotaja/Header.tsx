@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { LeadFormDialog } from "./LeadFormDialog";
 import logo from "@/assets/comandahub-logo.svg";
 
 type NavItem = { label: string; href: string; route?: boolean };
