@@ -397,7 +397,10 @@ function StoreLinkCard({ slug }: { slug: string | null }) {
     );
   }
 
-  const origin = typeof window !== "undefined" ? window.location.origin : "";
+  const currentOrigin = typeof window !== "undefined" ? window.location.origin : "";
+  // Always use the custom domain for the public store link, regardless of where the admin is browsing.
+  const PUBLIC_ORIGIN = "https://comandahub.online";
+  const origin = currentOrigin.includes("lovable.app") || currentOrigin.includes("localhost") ? PUBLIC_ORIGIN : currentOrigin || PUBLIC_ORIGIN;
   const url = `${origin}/${slug}`;
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=10&data=${encodeURIComponent(url)}`;
 
