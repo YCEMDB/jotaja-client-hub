@@ -53,7 +53,7 @@ function Clientes() {
   return (
     <div className="p-8">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold">Clientes</h1>
+        <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight leading-[0.95]">Clientes</h1>
         <p className="text-muted-foreground">Sua base de clientes</p>
       </div>
 

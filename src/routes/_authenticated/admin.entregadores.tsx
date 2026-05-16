@@ -74,7 +74,7 @@ function Entregadores() {
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold">Entregadores</h1>
+          <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight leading-[0.95]">Entregadores</h1>
           <p className="text-muted-foreground">Gerencie sua equipe de entregas</p>
         </div>
         <Button onClick={openNew}><Plus className="h-4 w-4 mr-2" />Novo entregador</Button>

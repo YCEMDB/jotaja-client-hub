@@ -81,7 +81,7 @@ function CardapioPage() {
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold">Cardápio</h1>
+          <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight leading-[0.95]">Cardápio</h1>
           <p className="text-muted-foreground">Gerencie categorias e produtos</p>
         </div>
         <div className="flex gap-2">

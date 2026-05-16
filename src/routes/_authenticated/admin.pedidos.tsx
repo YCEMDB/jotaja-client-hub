@@ -2,9 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
@@ -53,13 +51,13 @@ type OrderItem = {
   options: any;
 };
 
-const COLUMNS: { key: OrderStatus; label: string; color: string }[] = [
-  { key: "pending", label: "Novos", color: "bg-amber-500" },
-  { key: "confirmed", label: "Confirmados", color: "bg-blue-500" },
-  { key: "preparing", label: "Em preparo", color: "bg-orange-500" },
-  { key: "ready", label: "Prontos", color: "bg-purple-500" },
-  { key: "out_for_delivery", label: "Saiu p/ entrega", color: "bg-cyan-500" },
-  { key: "delivered", label: "Entregues", color: "bg-green-500" },
+const COLUMNS: { key: OrderStatus; label: string; color: string; ring: string }[] = [
+  { key: "pending", label: "Novos", color: "bg-brand-amber", ring: "shadow-[4px_4px_0_0_oklch(0.78_0.17_65)]" },
+  { key: "confirmed", label: "Confirmados", color: "bg-brand-violet", ring: "shadow-[4px_4px_0_0_oklch(0.5_0.22_290)]" },
+  { key: "preparing", label: "Em preparo", color: "bg-brand-orange", ring: "shadow-[4px_4px_0_0_oklch(0.69_0.22_38)]" },
+  { key: "ready", label: "Prontos", color: "bg-brand-magenta", ring: "shadow-[4px_4px_0_0_oklch(0.62_0.24_0)]" },
+  { key: "out_for_delivery", label: "Saiu p/ entrega", color: "bg-ink", ring: "shadow-[4px_4px_0_0_oklch(0.15_0.02_30)]" },
+  { key: "delivered", label: "Entregues", color: "bg-success", ring: "shadow-[4px_4px_0_0_oklch(0.7_0.16_150)]" },
 ];
 
 const NEXT_STATUS: Partial<Record<OrderStatus, OrderStatus>> = {
@@ -231,11 +229,17 @@ function PedidosPage() {
   if (!restaurantId) return <div className="p-8">Configure seu restaurante primeiro.</div>;
 
   return (
-    <div className="p-6 h-screen flex flex-col">
-      <div className="mb-4 shrink-0 flex items-start justify-between gap-4">
+    <div className="p-8 h-screen flex flex-col">
+      <div className="mb-6 shrink-0 flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-3xl font-bold">Pedidos</h1>
-          <p className="text-muted-foreground">Acompanhe os pedidos em tempo real (últimas 24h)</p>
+          <div className="inline-flex items-center gap-2 mb-3">
+            <span className="h-2 w-2 rounded-full bg-brand-orange animate-pulse" />
+            <span className="text-[11px] uppercase tracking-[0.18em] font-bold text-ink/70">Ao vivo · Últimas 24h</span>
+          </div>
+          <h1 className="font-display text-5xl text-ink leading-[0.92] tracking-tight">
+            Pedidos<span className="inline-block w-3 h-3 ml-1 -mb-0.5 bg-brand-orange align-baseline" />
+          </h1>
+          <p className="mt-2 text-sm text-ink/60">{orders.length} pedidos · atualização em tempo real</p>
         </div>
         <div className="flex items-center gap-2">
           <Button
@@ -252,59 +256,73 @@ function PedidosPage() {
               }
             }}
           >
-            {autoPrint ? <><PrinterCheck className="h-4 w-4 mr-2" />Impressão auto: ON</> : <><Printer className="h-4 w-4 mr-2" />Impressão auto: OFF</>}
+            {autoPrint ? <><PrinterCheck className="h-4 w-4 mr-1" />Auto-print ON</> : <><Printer className="h-4 w-4 mr-1" />Auto-print OFF</>}
           </Button>
           <Button variant={notifEnabled ? "secondary" : "default"} size="sm" onClick={enableNotifications}>
-            {notifEnabled ? <><Bell className="h-4 w-4 mr-2" />Notificações ativas</> : <><BellOff className="h-4 w-4 mr-2" />Ativar alertas de novos pedidos</>}
+            {notifEnabled ? <><Bell className="h-4 w-4 mr-1" />Alertas ON</> : <><BellOff className="h-4 w-4 mr-1" />Ativar alertas</>}
           </Button>
         </div>
       </div>
 
-      <div className="flex-1 overflow-x-auto">
-        <div className="grid grid-cols-6 gap-3 min-w-[1200px] h-full">
+      <div className="flex-1 overflow-x-auto pb-2">
+        <div className="grid grid-cols-6 gap-4 min-w-[1320px] h-full">
           {COLUMNS.map((col) => {
             const colOrders = orders.filter((o) => o.status === col.key);
             return (
-              <div key={col.key} className="flex flex-col bg-muted/40 rounded-lg overflow-hidden">
-                <div className={`${col.color} text-white px-3 py-2 flex items-center justify-between`}>
-                  <span className="font-semibold text-sm">{col.label}</span>
-                  <Badge variant="secondary" className="text-xs">{colOrders.length}</Badge>
+              <div key={col.key} className={`flex flex-col bg-background border-2 border-ink rounded-2xl overflow-hidden ${col.ring}`}>
+                <div className={`${col.color} text-background px-3 py-2.5 flex items-center justify-between border-b-2 border-ink`}>
+                  <span className="font-display text-sm uppercase tracking-wider">{col.label}</span>
+                  <span className="font-display text-base bg-ink text-background px-2 py-0.5 rounded-md min-w-[28px] text-center">
+                    {colOrders.length}
+                  </span>
                 </div>
-                <div className="flex-1 overflow-y-auto p-2 space-y-2">
+                <div className="flex-1 overflow-y-auto p-2.5 space-y-2.5 bg-muted/30">
                   {colOrders.map((o) => (
-                    <Card key={o.id} className="p-3 cursor-pointer hover:shadow-md transition" onClick={() => openOrder(o)}>
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="font-bold">#{o.order_number}</span>
-                        <span className="text-xs text-muted-foreground flex items-center gap-1">
+                    <div
+                      key={o.id}
+                      className="bg-card border-2 border-ink rounded-xl p-3 cursor-pointer shadow-[3px_3px_0_0_oklch(0.15_0.02_30)] hover:shadow-[5px_5px_0_0_oklch(0.69_0.22_38)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all"
+                      onClick={() => openOrder(o)}
+                    >
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="font-display text-lg text-ink leading-none">#{o.order_number}</span>
+                        <span className="text-[10px] text-ink/50 font-bold flex items-center gap-1 uppercase tracking-wide">
                           <Clock className="h-3 w-3" />{timeAgo(o.created_at)}
                         </span>
                       </div>
-                      <p className="text-sm font-medium truncate">{o.customer_name}</p>
-                      <p className="text-xs text-muted-foreground truncate">{o.type} · {o.payment}</p>
-                      <div className="flex items-center justify-between mt-2">
+                      <p className="text-sm font-bold text-ink truncate">{o.customer_name}</p>
+                      <p className="text-[10px] text-ink/60 truncate uppercase tracking-wide font-bold mt-0.5">{o.type} · {o.payment}</p>
+                      <div className="flex items-center justify-between mt-2.5 pt-2 border-t-2 border-dashed border-ink/15">
                         <div className="flex items-center gap-1.5">
-                          <span className="font-semibold">R$ {Number(o.total).toFixed(2)}</span>
+                          <span className="font-display text-base text-ink leading-none">R$ {Number(o.total).toFixed(2)}</span>
                           {o.payment === "pix" && (
-                            <span className={`text-[10px] px-1.5 py-0.5 rounded font-semibold ${o.payment_status === "paid" ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700"}`}>
-                              {o.payment_status === "paid" ? "PAGO" : "AGUARDANDO"}
+                            <span className={`text-[9px] px-1.5 py-0.5 rounded font-display border border-ink/80 ${o.payment_status === "paid" ? "bg-success text-ink" : "bg-brand-amber text-ink"}`}>
+                              {o.payment_status === "paid" ? "PAGO" : "AGUARD."}
                             </span>
                           )}
                         </div>
-                        <div className="flex items-center gap-1">
-                          <Button size="sm" variant="ghost" className="h-7 w-7 p-0" title="Imprimir" onClick={(e) => { e.stopPropagation(); printOrder(o); }}>
+                        <div className="flex items-center gap-0.5">
+                          <button
+                            className="h-7 w-7 grid place-items-center rounded-md hover:bg-ink hover:text-background transition-colors text-ink/70"
+                            title="Imprimir"
+                            onClick={(e) => { e.stopPropagation(); printOrder(o); }}
+                          >
                             <Printer className="h-3.5 w-3.5" />
-                          </Button>
+                          </button>
                           {NEXT_STATUS[o.status] && (
-                            <Button size="sm" variant="ghost" className="h-7 w-7 p-0" onClick={(e) => { e.stopPropagation(); advance(o); }}>
+                            <button
+                              className="h-7 w-7 grid place-items-center rounded-md bg-brand-orange text-background hover:bg-ink transition-colors"
+                              onClick={(e) => { e.stopPropagation(); advance(o); }}
+                              title="Avançar"
+                            >
                               <ChevronRight className="h-4 w-4" />
-                            </Button>
+                            </button>
                           )}
                         </div>
                       </div>
-                    </Card>
+                    </div>
                   ))}
                   {colOrders.length === 0 && (
-                    <p className="text-xs text-center text-muted-foreground py-4">Vazio</p>
+                    <p className="text-[11px] text-center text-ink/40 py-6 uppercase tracking-wider font-bold">— vazio —</p>
                   )}
                 </div>
               </div>

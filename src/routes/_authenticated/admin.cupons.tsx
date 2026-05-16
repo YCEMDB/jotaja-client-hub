@@ -60,7 +60,7 @@ function CuponsPage() {
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold">Cupons</h1>
+          <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight leading-[0.95]">Cupons</h1>
           <p className="text-muted-foreground">Crie descontos para seus clientes</p>
         </div>
         <Button onClick={() => { setEditing(null); setOpen(true); }}>
