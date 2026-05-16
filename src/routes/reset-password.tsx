@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
-import logo from "@/assets/comandahub-logo.svg";
+import { Logo } from "@/components/jotaja/Logo";
 
 export const Route = createFileRoute("/reset-password")({
   component: ResetPasswordPage,
@@ -54,7 +54,7 @@ function ResetPasswordPage() {
     <div className="min-h-screen flex items-center justify-center p-6 bg-background">
       <Card className="w-full max-w-md p-8">
         <div className="flex justify-center mb-6">
-          <Link to="/"><img src={logo} alt="ComandaHub" className="h-14 w-auto" /></Link>
+          <Link to="/" className="inline-flex group"><Logo size="md" /></Link>
         </div>
         <h1 className="text-2xl font-bold mb-1">Nova senha</h1>
         <p className="text-sm text-muted-foreground mb-6">
