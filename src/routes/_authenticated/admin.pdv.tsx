@@ -123,7 +123,12 @@ function PdvPage() {
       toast.success(`Pedido #${order.order_number} criado!`);
       setCart([]); setCustomer({ name: "", phone: "" }); setDeliveryFee(0); setDiscount(0); setNotes("");
     } catch (e: any) {
-      toast.error(e.message || "Erro ao salvar pedido");
+      const msg = e?.message || "";
+      if (msg.includes("plan_limit_reached")) {
+        toast.error("Você atingiu o limite mensal de pedidos do seu plano. Faça upgrade em Configurações.");
+      } else {
+        toast.error(msg || "Erro ao salvar pedido");
+      }
     } finally {
       setSaving(false);
     }
