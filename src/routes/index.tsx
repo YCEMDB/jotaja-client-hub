@@ -1,11 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Header } from "@/components/jotaja/Header";
 import { Hero } from "@/components/jotaja/Hero";
-import { Vantagens } from "@/components/jotaja/Vantagens";
-import { Funcionalidades } from "@/components/jotaja/Funcionalidades";
+import { Stats } from "@/components/jotaja/Stats";
+import { Bento } from "@/components/jotaja/Bento";
+import { ComoFunciona } from "@/components/jotaja/ComoFunciona";
+import { ComparativoIfood } from "@/components/jotaja/ComparativoIfood";
 import { Depoimentos } from "@/components/jotaja/Depoimentos";
 import { Planos } from "@/components/jotaja/Planos";
-import { ComparativoPlanos } from "@/components/jotaja/ComparativoPlanos";
 import { FAQ } from "@/components/jotaja/FAQ";
 import { CTA } from "@/components/jotaja/CTA";
 import { Footer } from "@/components/jotaja/Footer";
@@ -71,11 +72,12 @@ function Index() {
       <Header />
       <main>
         <Hero />
-        <Vantagens />
-        <Funcionalidades />
+        <Stats />
+        <Bento />
+        <ComoFunciona />
+        <ComparativoIfood />
         <Depoimentos />
         <Planos />
-        <ComparativoPlanos />
         <FAQ />
         <CTA />
       </main>

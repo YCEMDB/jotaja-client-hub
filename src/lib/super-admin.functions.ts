@@ -17,7 +17,6 @@ async function assertSuperAdmin(supabase: any, userId: string) {
 
 const createTenantSchema = z.object({
   restaurant_name: z.string().trim().min(2).max(120),
-  slug: z.string().trim().min(2).max(60).regex(/^[a-z0-9-]+$/, "Slug deve conter apenas letras minúsculas, números e hífen"),
   phone: z.string().trim().max(40).optional().nullable(),
   plan: z.enum(["trial", "essential", "professional"]).default("trial"),
   trial_days: z.number().int().min(0).max(365).default(14),
@@ -26,6 +25,21 @@ const createTenantSchema = z.object({
   owner_phone: z.string().trim().max(40).optional().nullable(),
   lead_id: z.string().uuid().optional().nullable(),
 });
+
+function slugify(s: string) {
+  return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60);
+}
+
+async function generateUniqueSlug(base: string): Promise<string> {
+  const root = slugify(base) || "loja";
+  for (let i = 0; i < 50; i++) {
+    const candidate = i === 0 ? root : `${root}-${i + 1}`;
+    const { data } = await supabaseAdmin.from("restaurants").select("id").eq("slug", candidate).maybeSingle();
+    if (!data) return candidate;
+  }
+  return `${root}-${Date.now().toString(36)}`;
+}
 
 function genPassword() {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
