@@ -271,12 +271,11 @@ function LojaPage() {
         <Sheet>
           <SheetTrigger asChild>
             <button
-              className="fixed bottom-4 left-1/2 -translate-x-1/2 px-5 py-3 rounded-full shadow-2xl flex items-center gap-3 font-semibold z-20"
-              style={{ background: "var(--brand)", color: "white" }}
+              className="fixed bottom-5 left-1/2 -translate-x-1/2 px-5 py-3.5 rounded-xl bg-brand-orange text-ink border-2 border-ink shadow-[5px_5px_0_0_oklch(0.15_0.02_30)] hover:shadow-[7px_7px_0_0_oklch(0.62_0.24_0)] hover:-translate-x-[calc(50%+2px)] hover:-translate-y-0.5 transition-all flex items-center gap-3 font-display z-20 text-sm uppercase tracking-wider"
             >
               <ShoppingBag className="h-5 w-5" />
               <span>{itemCount} {itemCount === 1 ? "item" : "itens"}</span>
-              <span className="opacity-70">·</span>
+              <span className="h-4 w-px bg-ink/30" />
               <span>R$ {subtotal.toFixed(2)}</span>
             </button>
           </SheetTrigger>
