@@ -96,26 +96,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       const stored = typeof window !== "undefined" ? localStorage.getItem(SELECTED_KEY) : null;
       const valid = stored && list.some((x) => x.id === stored) ? stored : null;
-      setRestaurantId(valid ?? list[0]?.id ?? null);
+      const finalRid = valid ?? list[0]?.id ?? null;
+      setRestaurantId(finalRid);
+      writeCachedMeta({ uid, roles: r, restaurants: list, restaurantId: finalRid });
     } finally {
-      setMetaLoading(false);
+      if (!silent) setMetaLoading(false);
     }
   };
 
   useEffect(() => {
-    let currentUid: string | null = null;
+    let currentUid: string | null = cached?.uid ?? null;
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
       setSession(s);
       setUser(s?.user ?? null);
       const newUid = s?.user?.id ?? null;
       if (newUid && newUid !== currentUid) {
         currentUid = newUid;
-        setTimeout(() => loadMeta(newUid), 0);
+        const cachedNow = readCachedMeta();
+        const silent = !!cachedNow && cachedNow.uid === newUid;
+        setTimeout(() => loadMeta(newUid, { silent }), 0);
       } else if (!newUid) {
         currentUid = null;
         setRoles([]);
         setRestaurants([]);
         setRestaurantId(null);
+        writeCachedMeta(null);
       }
       // TOKEN_REFRESHED / mesma sessão: não recarrega meta (evita splash ao trocar de aba)
     });
@@ -124,8 +129,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(s);
       setUser(s?.user ?? null);
       if (s?.user) {
+        const sameAsCache = cached?.uid === s.user.id;
         currentUid = s.user.id;
-        loadMeta(s.user.id);
+        // Com cache válido para o mesmo usuário, revalida em background sem splash
+        loadMeta(s.user.id, { silent: sameAsCache });
+      } else {
+        writeCachedMeta(null);
       }
       setLoading(false);
     });
@@ -135,6 +144,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = async () => {
     localStorage.removeItem(SELECTED_KEY);
+    writeCachedMeta(null);
     await supabase.auth.signOut();
   };
 
