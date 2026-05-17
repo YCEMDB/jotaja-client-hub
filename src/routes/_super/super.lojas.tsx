@@ -49,6 +49,11 @@ function LojasPage() {
   const [editing, setEditing] = useState<Row | null>(null);
   const [busy, setBusy] = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState<Row | null>(null);
+  const [deleteConfirmName, setDeleteConfirmName] = useState("");
+  const resetTenantFn = useServerFn(resetTenant);
+  const deleteTenantFn = useServerFn(deleteTenant);
+  const resetPwdFn = useServerFn(resetOwnerPassword);
 
   useEffect(() => { load(); }, []);
 
