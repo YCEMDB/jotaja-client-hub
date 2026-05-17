@@ -244,10 +244,81 @@ function LojasPage() {
                     setEditing((prev) => prev ? { ...prev, subscription_ends_at: newEnd, is_active: true } : prev);
                   }}
                 />
+
+                <div className="border-2 border-destructive/40 rounded-lg p-4 space-y-3 bg-destructive/5">
+                  <div>
+                    <p className="font-bold text-destructive flex items-center gap-2"><AlertTriangle className="h-4 w-4" />Zona de perigo</p>
+                    <p className="text-xs text-muted-foreground">Ações irreversíveis nesta loja</p>
+                  </div>
+                  <div className="grid sm:grid-cols-3 gap-2">
+                    <Button variant="outline" size="sm" disabled={busy} onClick={async () => {
+                      try {
+                        const r = await resetPwdFn({ data: { restaurant_id: editing.id } });
+                        toast.success(`Nova senha do dono: ${r.temporary_password}`, { duration: 15000 });
+                      } catch (e: any) { toast.error(e?.message ?? "Erro"); }
+                    }}>
+                      <KeyRound className="h-4 w-4 mr-1" /> Resetar senha
+                    </Button>
+                    <Button variant="outline" size="sm" disabled={busy} onClick={async () => {
+                      if (!confirm(`Apagar TODOS os pedidos e clientes de "${editing.name}"? Catálogo será mantido.`)) return;
+                      setBusy(true);
+                      try {
+                        const r = await resetTenantFn({ data: { restaurant_id: editing.id } });
+                        toast.success(`Reset OK — ${r.deleted_orders} pedidos apagados`);
+                        load();
+                      } catch (e: any) { toast.error(e?.message ?? "Erro"); }
+                      finally { setBusy(false); }
+                    }}>
+                      <RotateCcw className="h-4 w-4 mr-1" /> Resetar dados
+                    </Button>
+                    <Button variant="destructive" size="sm" disabled={busy} onClick={() => { setConfirmDelete(editing); setDeleteConfirmName(""); }}>
+                      <Trash2 className="h-4 w-4 mr-1" /> Excluir loja
+                    </Button>
+                  </div>
+                </div>
               </div>
               <DialogFooter>
                 <Button variant="outline" onClick={() => setEditing(null)}>Cancelar</Button>
                 <Button onClick={save} disabled={busy}>{busy ? "Salvando..." : "Salvar"}</Button>
+              </DialogFooter>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!confirmDelete} onOpenChange={(o) => { if (!o) { setConfirmDelete(null); setDeleteConfirmName(""); } }}>
+        <DialogContent className="max-w-md">
+          {confirmDelete && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="text-destructive flex items-center gap-2"><AlertTriangle className="h-5 w-5" />Excluir restaurante</DialogTitle>
+                <DialogDescription>
+                  Esta ação é permanente. Todos os pedidos, produtos, categorias, cupons, clientes e configurações de <strong>{confirmDelete.name}</strong> serão apagados. O usuário dono <strong>não</strong> será removido.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-2">
+                <Label className="text-xs">Digite o nome exato para confirmar: <strong>{confirmDelete.name}</strong></Label>
+                <Input value={deleteConfirmName} onChange={(e) => setDeleteConfirmName(e.target.value)} placeholder={confirmDelete.name} />
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setConfirmDelete(null)}>Cancelar</Button>
+                <Button
+                  variant="destructive"
+                  disabled={busy || deleteConfirmName.trim() !== confirmDelete.name.trim()}
+                  onClick={async () => {
+                    setBusy(true);
+                    try {
+                      await deleteTenantFn({ data: { restaurant_id: confirmDelete.id, confirm_name: deleteConfirmName } });
+                      toast.success("Restaurante excluído");
+                      setConfirmDelete(null);
+                      setEditing(null);
+                      load();
+                    } catch (e: any) { toast.error(e?.message ?? "Erro ao excluir"); }
+                    finally { setBusy(false); }
+                  }}
+                >
+                  Excluir definitivamente
+                </Button>
               </DialogFooter>
             </>
           )}
