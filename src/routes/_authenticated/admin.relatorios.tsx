@@ -181,8 +181,8 @@ function RelatoriosPage() {
                   <td className="p-3 text-muted-foreground">{new Date(o.created_at).toLocaleString("pt-BR")}</td>
                   <td className="p-3">{o.customer_name}</td>
                   <td className="p-3">{STATUS_LABEL[o.status] ?? o.status}</td>
-                  <td className="p-3">{o.type}</td>
-                  <td className="p-3">{o.payment}</td>
+                  <td className="p-3">{TYPE_LABEL[o.type] ?? o.type}</td>
+                  <td className="p-3">{PAYMENT_LABEL[o.payment] ?? o.payment}</td>
                   <td className="p-3 text-right font-medium">{fmtMoney(Number(o.total))}</td>
                 </tr>
               ))}
