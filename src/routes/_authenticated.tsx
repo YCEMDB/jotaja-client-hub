@@ -239,14 +239,13 @@ function AuthLayout() {
       <main className="flex-1 min-w-0 overflow-x-hidden relative flex flex-col">
         {/* Mobile top bar */}
         <header className="md:hidden sticky top-0 z-30 flex items-center gap-3 px-4 h-14 bg-ink text-background border-b-2 border-ink">
-          <SheetTrigger asChild onClick={() => setMobileOpen(true)}>
-            <button
-              aria-label="Abrir menu"
-              className="h-9 w-9 grid place-items-center rounded-lg border-2 border-background/20 hover:bg-background/10"
-            >
-              <Menu className="h-5 w-5" />
-            </button>
-          </SheetTrigger>
+          <button
+            onClick={() => setMobileOpen(true)}
+            aria-label="Abrir menu"
+            className="h-9 w-9 grid place-items-center rounded-lg border-2 border-background/20 hover:bg-background/10"
+          >
+            <Menu className="h-5 w-5" />
+          </button>
           <Link to="/admin" className="flex items-center gap-2 min-w-0">
             <div className="h-8 w-8 rounded-lg bg-brand-orange border-2 border-background grid place-items-center shrink-0">
               <svg viewBox="0 0 48 48" className="h-5 w-5" aria-hidden="true">
