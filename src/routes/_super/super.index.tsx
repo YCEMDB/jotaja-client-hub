@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { getGlobalMetrics } from "@/lib/super-admin.functions";
 import { Card } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AlertTriangle, BarChart3 } from "lucide-react";
 import {
   LineChart, Line, ResponsiveContainer, XAxis, YAxis, Tooltip as ReTooltip, CartesianGrid,
@@ -21,13 +22,14 @@ function SuperOverview() {
   const fetchMetrics = useServerFn(getGlobalMetrics);
   const [data, setData] = useState<Awaited<ReturnType<typeof getGlobalMetrics>> | null>(null);
   const [loading, setLoading] = useState(true);
+  const [storeFilter, setStoreFilter] = useState<string>("all");
 
   useEffect(() => {
-    fetchMetrics().then((r) => { setData(r); setLoading(false); }).catch((e) => {
-      toast.error(e?.message ?? "Erro ao carregar métricas");
-      setLoading(false);
-    });
-  }, []);
+    setLoading(true);
+    fetchMetrics({ data: { restaurant_id: storeFilter === "all" ? null : storeFilter } })
+      .then((r) => { setData(r); setLoading(false); })
+      .catch((e) => { toast.error(e?.message ?? "Erro ao carregar métricas"); setLoading(false); });
+  }, [storeFilter]);
 
   return (
     <div className="p-6 space-y-6">
