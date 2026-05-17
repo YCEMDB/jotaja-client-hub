@@ -332,8 +332,9 @@ const metricsSchema = z.object({ restaurant_id: z.string().uuid().optional().nul
 export const getGlobalMetrics = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((i: unknown) => metricsSchema.parse(i) ?? {})
-  .handler(async ({ context }) => {
+  .handler(async ({ data, context }) => {
     await assertSuperAdmin(context.supabase, context.userId);
+    const filterId = (data as any)?.restaurant_id ?? null;
 
     const now = new Date();
     const start30 = new Date(now); start30.setDate(now.getDate() - 30);
@@ -342,9 +343,11 @@ export const getGlobalMetrics = createServerFn({ method: "POST" })
     const startToday = new Date(now); startToday.setHours(0, 0, 0, 0);
     const trialSoon = new Date(now); trialSoon.setDate(now.getDate() + 7);
 
+    let ordersQ = supabaseAdmin.from("orders").select("restaurant_id,total,status,created_at").gte("created_at", start30.toISOString());
+    if (filterId) ordersQ = ordersQ.eq("restaurant_id", filterId);
     const [{ data: rests }, { data: orders30 }] = await Promise.all([
-      supabaseAdmin.from("restaurants").select("id,name,plan,is_active,trial_ends_at"),
-      supabaseAdmin.from("orders").select("restaurant_id,total,status,created_at").gte("created_at", start30.toISOString()),
+      supabaseAdmin.from("restaurants").select("id,name,plan,is_active,trial_ends_at").order("name"),
+      ordersQ,
     ]);
 
     const restaurants = rests ?? [];
