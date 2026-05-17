@@ -63,6 +63,25 @@ export function CreateTenantDialog({
       toast.success("Loja criada com sucesso!");
       setResult({ password: r.temporary_password, createdNew: r.created_new_user });
       onCreated();
+      // Dispara e-mail de boas-vindas com as credenciais
+      try {
+        await sendTransactionalEmail({
+          templateName: "restaurant-welcome",
+          recipientEmail: form.owner_email,
+          idempotencyKey: `welcome-${r.restaurant_id}`,
+          templateData: {
+            restaurantName: form.restaurant_name,
+            ownerName: form.owner_full_name,
+            loginUrl: "https://comandahub.online/auth",
+            email: form.owner_email,
+            temporaryPassword: r.temporary_password,
+            isReset: false,
+          },
+        });
+        toast.success("E-mail com credenciais enviado ao dono", { icon: "📧" });
+      } catch (e: any) {
+        toast.warning(`Loja criada, mas e-mail falhou: ${e?.message ?? "erro"}`);
+      }
     } catch (e: any) {
       toast.error(e?.message ?? "Erro ao criar loja");
     } finally {
