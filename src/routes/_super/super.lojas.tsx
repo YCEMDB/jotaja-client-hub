@@ -157,9 +157,9 @@ function LojasPage() {
         <Input className="pl-9" placeholder="Buscar por nome, slug ou e-mail do dono..." value={search} onChange={(e) => setSearch(e.target.value)} />
       </div>
 
-      <Card className="overflow-hidden">
+      <Card className="overflow-x-auto">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[640px]">
             <thead className="bg-muted">
               <tr className="text-left">
                 <th className="p-3">Restaurante</th>

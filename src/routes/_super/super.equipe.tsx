@@ -81,8 +81,8 @@ function EquipePage() {
         </Button>
       </div>
 
-      <Card className="overflow-hidden">
-        <table className="w-full text-sm">
+      <Card className="overflow-x-auto">
+        <table className="w-full text-sm min-w-[640px]">
           <thead className="bg-muted">
             <tr className="text-left">
               <th className="p-3">Nome</th>

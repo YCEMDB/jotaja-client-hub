@@ -160,9 +160,9 @@ function RelatoriosPage() {
         <Card className="p-4"><p className="text-xs text-muted-foreground">Cancelados</p><p className="text-2xl font-bold">{stats.cancelled}</p></Card>
       </div>
 
-      <Card className="overflow-hidden">
+      <Card className="overflow-x-auto">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[640px]">
             <thead className="bg-muted">
               <tr className="text-left">
                 <th className="p-3">#</th>
