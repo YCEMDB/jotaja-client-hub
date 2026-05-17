@@ -6,6 +6,7 @@ import { LayoutDashboard, ShoppingBag, UtensilsCrossed, Users, Settings, LogOut,
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import { BlockedStoreScreen } from "@/components/BlockedStoreScreen";
+import { GlobalAnnouncementsBanner } from "@/components/GlobalAnnouncementsBanner";
 
 export const Route = createFileRoute("/_authenticated")({
   component: AuthLayout,
@@ -174,6 +175,7 @@ function AuthLayout() {
       <main className="flex-1 overflow-auto relative">
         <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-radial opacity-60 pointer-events-none" />
         <div className="relative">
+          <GlobalAnnouncementsBanner />
           <Outlet />
         </div>
       </main>
