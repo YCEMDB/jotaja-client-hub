@@ -33,18 +33,45 @@ interface AuthCtx {
 
 const Ctx = createContext<AuthCtx | undefined>(undefined);
 const SELECTED_KEY = "comanda.selectedRestaurantId";
+const META_CACHE_KEY = "comanda.authMeta.v1";
+
+type CachedMeta = {
+  uid: string;
+  roles: AppRole[];
+  restaurants: RestaurantBrief[];
+  restaurantId: string | null;
+};
+
+function readCachedMeta(): CachedMeta | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(META_CACHE_KEY);
+    return raw ? (JSON.parse(raw) as CachedMeta) : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeCachedMeta(m: CachedMeta | null) {
+  if (typeof window === "undefined") return;
+  try {
+    if (m) localStorage.setItem(META_CACHE_KEY, JSON.stringify(m));
+    else localStorage.removeItem(META_CACHE_KEY);
+  } catch {}
+}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const cached = typeof window !== "undefined" ? readCachedMeta() : null;
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const [roles, setRoles] = useState<AppRole[]>([]);
-  const [restaurants, setRestaurants] = useState<RestaurantBrief[]>([]);
-  const [restaurantId, setRestaurantId] = useState<string | null>(null);
+  const [roles, setRoles] = useState<AppRole[]>(cached?.roles ?? []);
+  const [restaurants, setRestaurants] = useState<RestaurantBrief[]>(cached?.restaurants ?? []);
+  const [restaurantId, setRestaurantId] = useState<string | null>(cached?.restaurantId ?? null);
   const [metaLoading, setMetaLoading] = useState(false);
 
-  const loadMeta = async (uid: string) => {
-    setMetaLoading(true);
+  const loadMeta = async (uid: string, { silent = false }: { silent?: boolean } = {}) => {
+    if (!silent) setMetaLoading(true);
     try {
       const rolesRes = await supabase.from("user_roles").select("role").eq("user_id", uid);
       const r = (rolesRes.data?.map((x) => x.role) as AppRole[]) ?? [];
