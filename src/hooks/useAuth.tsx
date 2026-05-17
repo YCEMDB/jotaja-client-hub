@@ -76,16 +76,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
+    let currentUid: string | null = null;
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
       setSession(s);
       setUser(s?.user ?? null);
-      if (s?.user) {
-        setTimeout(() => loadMeta(s.user.id), 0);
-      } else {
+      const newUid = s?.user?.id ?? null;
+      if (newUid && newUid !== currentUid) {
+        currentUid = newUid;
+        setTimeout(() => loadMeta(newUid), 0);
+      } else if (!newUid) {
+        currentUid = null;
         setRoles([]);
         setRestaurants([]);
         setRestaurantId(null);
       }
+      // TOKEN_REFRESHED / mesma sessão: não recarrega meta (evita splash ao trocar de aba)
     });
 
     supabase.auth.getSession().then(({ data: { session: s } }) => {
