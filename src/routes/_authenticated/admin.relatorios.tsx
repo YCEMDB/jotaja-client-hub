@@ -106,8 +106,8 @@ function RelatoriosPage() {
         <td>${new Date(o.created_at).toLocaleString("pt-BR")}</td>
         <td>${o.customer_name}</td>
         <td>${STATUS_LABEL[o.status] ?? o.status}</td>
-        <td>${o.type}</td>
-        <td>${o.payment}</td>
+        <td>${TYPE_LABEL[o.type] ?? o.type}</td>
+        <td>${PAYMENT_LABEL[o.payment] ?? o.payment}</td>
         <td class="right">${fmtMoney(o.total)}</td>
       </tr>`).join("");
     const html = `
