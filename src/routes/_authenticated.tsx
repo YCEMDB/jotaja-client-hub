@@ -6,6 +6,7 @@ import { LayoutDashboard, ShoppingBag, UtensilsCrossed, Users, Settings, LogOut,
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import { BlockedStoreScreen } from "@/components/BlockedStoreScreen";
+import { GlobalAnnouncementsBanner } from "@/components/GlobalAnnouncementsBanner";
 
 export const Route = createFileRoute("/_authenticated")({
   component: AuthLayout,
