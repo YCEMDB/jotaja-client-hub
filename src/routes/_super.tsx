@@ -39,35 +39,59 @@ function SuperLayout() {
   }
   if (!user || !isSuperAdmin) return null;
 
+  const [collapsed, setCollapsed] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("super_sidebar_collapsed") === "1";
+  });
+  const toggleCollapsed = () => {
+    setCollapsed((c) => {
+      const next = !c;
+      try { localStorage.setItem("super_sidebar_collapsed", next ? "1" : "0"); } catch {}
+      return next;
+    });
+  };
+
   return (
     <div className="min-h-screen flex bg-background">
       {/* Sidebar — violet/ink, distinct from restaurant admin */}
-      <aside className="w-64 bg-ink text-background flex flex-col border-r-2 border-ink relative">
+      <aside className={`${collapsed ? "w-16" : "w-64"} transition-[width] duration-200 bg-ink text-background flex flex-col border-r-2 border-ink relative`}>
         <div className="absolute inset-0 bg-noise opacity-40 pointer-events-none" />
 
-        <div className="relative p-5 flex items-center gap-3 border-b-2 border-background/10">
-          <div className="h-11 w-11 rounded-xl bg-brand-violet border-2 border-background grid place-items-center shadow-[3px_3px_0_0_oklch(0.65_0.22_300)]">
+        <div className={`relative p-5 flex items-center gap-3 border-b-2 border-background/10 ${collapsed ? "justify-center px-2" : ""}`} title="Super-Admin">
+          <div className="h-11 w-11 rounded-xl bg-brand-violet border-2 border-background grid place-items-center shadow-[3px_3px_0_0_oklch(0.65_0.22_300)] shrink-0">
             <ShieldCheck className="h-6 w-6 text-background" />
           </div>
-          <div className="leading-none">
-            <div className="font-display text-lg tracking-tight">ComandaHub</div>
-            <div className="text-[10px] uppercase tracking-[0.2em] text-brand-violet mt-1 font-bold">super-admin</div>
-          </div>
+          {!collapsed && (
+            <div className="leading-none">
+              <div className="font-display text-lg tracking-tight">ComandaHub</div>
+              <div className="text-[10px] uppercase tracking-[0.2em] text-brand-violet mt-1 font-bold">super-admin</div>
+            </div>
+          )}
         </div>
+
+        <button
+          onClick={toggleCollapsed}
+          className="relative mx-3 mt-3 mb-1 flex items-center justify-center gap-2 px-2 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wide text-background/70 hover:bg-background/10 border-2 border-background/15 transition-all"
+          title={collapsed ? "Expandir menu" : "Recolher menu"}
+          aria-label={collapsed ? "Expandir menu" : "Recolher menu"}
+        >
+          {collapsed ? <PanelLeftOpen className="h-4 w-4" /> : <><PanelLeftClose className="h-4 w-4" /> Recolher</>}
+        </button>
 
         <nav className="relative flex-1 p-3 space-y-1.5 overflow-y-auto">
           {NAV.map((item) => (
             <Link
               key={item.to}
               to={item.to}
+              title={item.label}
               activeOptions={{ exact: !!(item as any).exact }}
               activeProps={{
                 className: "!bg-brand-violet !text-background !border-background shadow-[3px_3px_0_0_oklch(0.65_0.22_300)] translate-x-0.5",
               }}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold uppercase tracking-wide border-2 border-transparent hover:bg-background/10 transition-all"
+              className={`flex items-center ${collapsed ? "justify-center" : "gap-3"} px-3 py-2.5 rounded-lg text-sm font-bold uppercase tracking-wide border-2 border-transparent hover:bg-background/10 transition-all`}
             >
-              <item.icon className="h-4 w-4" />
-              {item.label}
+              <item.icon className="h-4 w-4 shrink-0" />
+              {!collapsed && item.label}
             </Link>
           ))}
         </nav>
@@ -75,16 +99,20 @@ function SuperLayout() {
         <div className="relative p-3 border-t-2 border-background/10 space-y-1">
           <Link
             to="/admin"
-            className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wide text-background/80 hover:bg-background/10 border-2 border-transparent hover:border-background/30 transition-all"
+            title="Painel da loja"
+            className={`flex items-center ${collapsed ? "justify-center" : "gap-2"} px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wide text-background/80 hover:bg-background/10 border-2 border-transparent hover:border-background/30 transition-all`}
           >
-            <ArrowLeftRight className="h-4 w-4" /> Painel da loja
+            <ArrowLeftRight className="h-4 w-4 shrink-0" /> {!collapsed && "Painel da loja"}
           </Link>
-          <div className="px-2 py-1.5 text-[11px] text-background/60 truncate font-medium">{user?.email}</div>
+          {!collapsed && (
+            <div className="px-2 py-1.5 text-[11px] text-background/60 truncate font-medium">{user?.email}</div>
+          )}
           <button
             onClick={async () => { await signOut(); nav({ to: "/auth" }); }}
-            className="w-full mt-1 flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-bold uppercase tracking-wide text-background/80 hover:bg-destructive hover:text-background border-2 border-transparent hover:border-background transition-all"
+            title="Sair"
+            className={`w-full mt-1 flex items-center ${collapsed ? "justify-center" : "gap-2"} px-3 py-2 rounded-lg text-sm font-bold uppercase tracking-wide text-background/80 hover:bg-destructive hover:text-background border-2 border-transparent hover:border-background transition-all`}
           >
-            <LogOut className="h-4 w-4" /> Sair
+            <LogOut className="h-4 w-4 shrink-0" /> {!collapsed && "Sair"}
           </button>
         </div>
       </aside>
