@@ -413,5 +413,7 @@ export const getGlobalMetrics = createServerFn({ method: "POST" })
       daily,
       topStores,
       expiringTrials,
+      restaurants: restaurants.map((r: any) => ({ id: r.id, name: r.name })),
+      filtered_restaurant_id: filterId,
     };
   });
