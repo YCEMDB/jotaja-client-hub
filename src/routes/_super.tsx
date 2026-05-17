@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import {
   ShieldCheck, LayoutDashboard, Building2, Inbox, Layers, Megaphone,
-  Settings2, LogOut, ArrowLeftRight,
+  Settings2, LogOut, ArrowLeftRight, Users,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_super")({
@@ -14,6 +14,7 @@ const NAV = [
   { to: "/super", label: "Visão geral", icon: LayoutDashboard, exact: true },
   { to: "/super/lojas", label: "Lojas", icon: Building2 },
   { to: "/super/leads", label: "Leads", icon: Inbox },
+  { to: "/super/equipe", label: "Equipe", icon: Users },
   { to: "/super/planos", label: "Planos & Preços", icon: Layers },
   { to: "/super/avisos", label: "Avisos globais", icon: Megaphone },
   { to: "/super/configuracoes", label: "Configurações", icon: Settings2 },
