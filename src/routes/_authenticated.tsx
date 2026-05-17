@@ -49,6 +49,18 @@ function AuthLayout() {
     return null;
   }, [activeRestaurant, isSuperAdmin]);
 
+  const [collapsed, setCollapsed] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("admin_sidebar_collapsed") === "1";
+  });
+  const toggleCollapsed = () => {
+    setCollapsed((c) => {
+      const next = !c;
+      try { localStorage.setItem("admin_sidebar_collapsed", next ? "1" : "0"); } catch {}
+      return next;
+    });
+  };
+
   if (loading || (user && metaLoading)) {
     return (
       <div className="min-h-screen grid place-items-center bg-background bg-gradient-mesh">
@@ -61,17 +73,6 @@ function AuthLayout() {
     return <BlockedStoreScreen restaurantName={activeRestaurant.name} reason={blocked.reason} />;
   }
 
-  const [collapsed, setCollapsed] = useState<boolean>(() => {
-    if (typeof window === "undefined") return false;
-    return localStorage.getItem("admin_sidebar_collapsed") === "1";
-  });
-  const toggleCollapsed = () => {
-    setCollapsed((c) => {
-      const next = !c;
-      try { localStorage.setItem("admin_sidebar_collapsed", next ? "1" : "0"); } catch {}
-      return next;
-    });
-  };
 
   return (
     <div className="min-h-screen flex bg-background">
