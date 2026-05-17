@@ -7,7 +7,7 @@ import {
   PanelLeftClose, PanelLeftOpen, Menu,
 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 
 import { BlockedStoreScreen } from "@/components/BlockedStoreScreen";
 import { GlobalAnnouncementsBanner } from "@/components/GlobalAnnouncementsBanner";
