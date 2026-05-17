@@ -31,6 +31,7 @@ import { Route as SegmentosHamburgueriaRouteImport } from './routes/segmentos.ha
 import { Route as PedidoOrderIdRouteImport } from './routes/pedido.$orderId'
 import { Route as PedidoIdRouteImport } from './routes/pedido.$id'
 import { Route as LojaSlugRouteImport } from './routes/loja.$slug'
+import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
 import { Route as ComparativoComandahubVsSaiposRouteImport } from './routes/comparativo.comandahub-vs-saipos'
 import { Route as ComparativoComandahubVsGoomerRouteImport } from './routes/comparativo.comandahub-vs-goomer'
 import { Route as ComparativoComandahubVsAnotaAiRouteImport } from './routes/comparativo.comandahub-vs-anota-ai'
@@ -41,6 +42,7 @@ import { Route as BlogComoFazerCardapioDigitalGratisRouteImport } from './routes
 import { Route as BlogComoCriarCardapioDigitalQrCodeRouteImport } from './routes/blog.como-criar-cardapio-digital-qr-code'
 import { Route as SuperSuperIndexRouteImport } from './routes/_super/super.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
 import { Route as ApiPublicMercadopagoWebhookRouteImport } from './routes/api/public/mercadopago-webhook'
 import { Route as ApiPublic_domainCheckRouteImport } from './routes/api/public/__domain-check'
 import { Route as SuperSuperPlanosRouteImport } from './routes/_super/super.planos'
@@ -58,6 +60,8 @@ import { Route as AuthenticatedAdminCuponsRouteImport } from './routes/_authenti
 import { Route as AuthenticatedAdminConfiguracoesRouteImport } from './routes/_authenticated/admin.configuracoes'
 import { Route as AuthenticatedAdminClientesRouteImport } from './routes/_authenticated/admin.clientes'
 import { Route as AuthenticatedAdminCardapioRouteImport } from './routes/_authenticated/admin.cardapio'
+import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
+import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
@@ -170,6 +174,11 @@ const LojaSlugRoute = LojaSlugRouteImport.update({
   path: '/loja/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EmailUnsubscribeRoute = EmailUnsubscribeRouteImport.update({
+  id: '/email/unsubscribe',
+  path: '/email/unsubscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ComparativoComandahubVsSaiposRoute =
   ComparativoComandahubVsSaiposRouteImport.update({
     id: '/comparativo/comandahub-vs-saipos',
@@ -227,6 +236,11 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
   getParentRoute: () => AuthenticatedRoute,
+} as any)
+const LovableEmailSuppressionRoute = LovableEmailSuppressionRouteImport.update({
+  id: '/lovable/email/suppression',
+  path: '/lovable/email/suppression',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicMercadopagoWebhookRoute =
   ApiPublicMercadopagoWebhookRouteImport.update({
@@ -322,6 +336,18 @@ const AuthenticatedAdminCardapioRoute =
     path: '/admin/cardapio',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const LovableEmailTransactionalSendRoute =
+  LovableEmailTransactionalSendRouteImport.update({
+    id: '/lovable/email/transactional/send',
+    path: '/lovable/email/transactional/send',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const LovableEmailTransactionalPreviewRoute =
+  LovableEmailTransactionalPreviewRouteImport.update({
+    id: '/lovable/email/transactional/preview',
+    path: '/lovable/email/transactional/preview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const LovableEmailQueueProcessRoute =
   LovableEmailQueueProcessRouteImport.update({
     id: '/lovable/email/queue/process',
@@ -362,6 +388,7 @@ export interface FileRoutesByFullPath {
   '/comparativo/comandahub-vs-anota-ai': typeof ComparativoComandahubVsAnotaAiRoute
   '/comparativo/comandahub-vs-goomer': typeof ComparativoComandahubVsGoomerRoute
   '/comparativo/comandahub-vs-saipos': typeof ComparativoComandahubVsSaiposRoute
+  '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/loja/$slug': typeof LojaSlugRoute
   '/pedido/$id': typeof PedidoIdRoute
   '/pedido/$orderId': typeof PedidoOrderIdRoute
@@ -385,11 +412,14 @@ export interface FileRoutesByFullPath {
   '/super/planos': typeof SuperSuperPlanosRoute
   '/api/public': typeof ApiPublic_domainCheckRoute
   '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
+  '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/super/': typeof SuperSuperIndexRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
+  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
+  '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -414,6 +444,7 @@ export interface FileRoutesByTo {
   '/comparativo/comandahub-vs-anota-ai': typeof ComparativoComandahubVsAnotaAiRoute
   '/comparativo/comandahub-vs-goomer': typeof ComparativoComandahubVsGoomerRoute
   '/comparativo/comandahub-vs-saipos': typeof ComparativoComandahubVsSaiposRoute
+  '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/loja/$slug': typeof LojaSlugRoute
   '/pedido/$id': typeof PedidoIdRoute
   '/pedido/$orderId': typeof PedidoOrderIdRoute
@@ -437,11 +468,14 @@ export interface FileRoutesByTo {
   '/super/planos': typeof SuperSuperPlanosRoute
   '/api/public': typeof ApiPublic_domainCheckRoute
   '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
+  '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/super': typeof SuperSuperIndexRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
+  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
+  '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -469,6 +503,7 @@ export interface FileRoutesById {
   '/comparativo/comandahub-vs-anota-ai': typeof ComparativoComandahubVsAnotaAiRoute
   '/comparativo/comandahub-vs-goomer': typeof ComparativoComandahubVsGoomerRoute
   '/comparativo/comandahub-vs-saipos': typeof ComparativoComandahubVsSaiposRoute
+  '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/loja/$slug': typeof LojaSlugRoute
   '/pedido/$id': typeof PedidoIdRoute
   '/pedido/$orderId': typeof PedidoOrderIdRoute
@@ -492,11 +527,14 @@ export interface FileRoutesById {
   '/_super/super/planos': typeof SuperSuperPlanosRoute
   '/api/public/__domain-check': typeof ApiPublic_domainCheckRoute
   '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
+  '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_super/super/': typeof SuperSuperIndexRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
+  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
+  '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -523,6 +561,7 @@ export interface FileRouteTypes {
     | '/comparativo/comandahub-vs-anota-ai'
     | '/comparativo/comandahub-vs-goomer'
     | '/comparativo/comandahub-vs-saipos'
+    | '/email/unsubscribe'
     | '/loja/$slug'
     | '/pedido/$id'
     | '/pedido/$orderId'
@@ -546,11 +585,14 @@ export interface FileRouteTypes {
     | '/super/planos'
     | '/api/public'
     | '/api/public/mercadopago-webhook'
+    | '/lovable/email/suppression'
     | '/admin/'
     | '/super/'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
+    | '/lovable/email/transactional/preview'
+    | '/lovable/email/transactional/send'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -575,6 +617,7 @@ export interface FileRouteTypes {
     | '/comparativo/comandahub-vs-anota-ai'
     | '/comparativo/comandahub-vs-goomer'
     | '/comparativo/comandahub-vs-saipos'
+    | '/email/unsubscribe'
     | '/loja/$slug'
     | '/pedido/$id'
     | '/pedido/$orderId'
@@ -598,11 +641,14 @@ export interface FileRouteTypes {
     | '/super/planos'
     | '/api/public'
     | '/api/public/mercadopago-webhook'
+    | '/lovable/email/suppression'
     | '/admin'
     | '/super'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
+    | '/lovable/email/transactional/preview'
+    | '/lovable/email/transactional/send'
   id:
     | '__root__'
     | '/'
@@ -629,6 +675,7 @@ export interface FileRouteTypes {
     | '/comparativo/comandahub-vs-anota-ai'
     | '/comparativo/comandahub-vs-goomer'
     | '/comparativo/comandahub-vs-saipos'
+    | '/email/unsubscribe'
     | '/loja/$slug'
     | '/pedido/$id'
     | '/pedido/$orderId'
@@ -652,11 +699,14 @@ export interface FileRouteTypes {
     | '/_super/super/planos'
     | '/api/public/__domain-check'
     | '/api/public/mercadopago-webhook'
+    | '/lovable/email/suppression'
     | '/_authenticated/admin/'
     | '/_super/super/'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
+    | '/lovable/email/transactional/preview'
+    | '/lovable/email/transactional/send'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -684,6 +734,7 @@ export interface RootRouteChildren {
   ComparativoComandahubVsAnotaAiRoute: typeof ComparativoComandahubVsAnotaAiRoute
   ComparativoComandahubVsGoomerRoute: typeof ComparativoComandahubVsGoomerRoute
   ComparativoComandahubVsSaiposRoute: typeof ComparativoComandahubVsSaiposRoute
+  EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
   LojaSlugRoute: typeof LojaSlugRoute
   PedidoIdRoute: typeof PedidoIdRoute
   PedidoOrderIdRoute: typeof PedidoOrderIdRoute
@@ -692,9 +743,12 @@ export interface RootRouteChildren {
   BlogIndexRoute: typeof BlogIndexRoute
   ApiPublic_domainCheckRoute: typeof ApiPublic_domainCheckRoute
   ApiPublicMercadopagoWebhookRoute: typeof ApiPublicMercadopagoWebhookRoute
+  LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
   LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
   LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
+  LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
+  LovableEmailTransactionalSendRoute: typeof LovableEmailTransactionalSendRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -853,6 +907,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LojaSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/email/unsubscribe': {
+      id: '/email/unsubscribe'
+      path: '/email/unsubscribe'
+      fullPath: '/email/unsubscribe'
+      preLoaderRoute: typeof EmailUnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/comparativo/comandahub-vs-saipos': {
       id: '/comparativo/comandahub-vs-saipos'
       path: '/comparativo/comandahub-vs-saipos'
@@ -922,6 +983,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
+    }
+    '/lovable/email/suppression': {
+      id: '/lovable/email/suppression'
+      path: '/lovable/email/suppression'
+      fullPath: '/lovable/email/suppression'
+      preLoaderRoute: typeof LovableEmailSuppressionRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/public/mercadopago-webhook': {
       id: '/api/public/mercadopago-webhook'
@@ -1042,6 +1110,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminCardapioRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/lovable/email/transactional/send': {
+      id: '/lovable/email/transactional/send'
+      path: '/lovable/email/transactional/send'
+      fullPath: '/lovable/email/transactional/send'
+      preLoaderRoute: typeof LovableEmailTransactionalSendRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lovable/email/transactional/preview': {
+      id: '/lovable/email/transactional/preview'
+      path: '/lovable/email/transactional/preview'
+      fullPath: '/lovable/email/transactional/preview'
+      preLoaderRoute: typeof LovableEmailTransactionalPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lovable/email/queue/process': {
       id: '/lovable/email/queue/process'
       path: '/lovable/email/queue/process'
@@ -1148,6 +1230,7 @@ const rootRouteChildren: RootRouteChildren = {
   ComparativoComandahubVsAnotaAiRoute: ComparativoComandahubVsAnotaAiRoute,
   ComparativoComandahubVsGoomerRoute: ComparativoComandahubVsGoomerRoute,
   ComparativoComandahubVsSaiposRoute: ComparativoComandahubVsSaiposRoute,
+  EmailUnsubscribeRoute: EmailUnsubscribeRoute,
   LojaSlugRoute: LojaSlugRoute,
   PedidoIdRoute: PedidoIdRoute,
   PedidoOrderIdRoute: PedidoOrderIdRoute,
@@ -1156,9 +1239,12 @@ const rootRouteChildren: RootRouteChildren = {
   BlogIndexRoute: BlogIndexRoute,
   ApiPublic_domainCheckRoute: ApiPublic_domainCheckRoute,
   ApiPublicMercadopagoWebhookRoute: ApiPublicMercadopagoWebhookRoute,
+  LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
   LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
   LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
+  LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
+  LovableEmailTransactionalSendRoute: LovableEmailTransactionalSendRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
