@@ -217,7 +217,10 @@ function PdvPage() {
           </div>
           <div>
             <Label>Telefone / WhatsApp</Label>
-            <Input value={customer.phone} onChange={e => setCustomer(c => ({ ...c, phone: e.target.value }))} placeholder="(27) 9..." className="border-2 border-ink" />
+            <div className="flex gap-2">
+              <Input value={customer.phone} onChange={e => setCustomer(c => ({ ...c, phone: e.target.value }))} placeholder="(27) 9..." className="border-2 border-ink" onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); lookupCustomer(); } }} />
+              <Button type="button" variant="outline" size="icon" className="shrink-0 border-2 border-ink" onClick={lookupCustomer} title="Buscar cliente"><Search className="h-4 w-4" /></Button>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-2">
