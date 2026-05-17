@@ -104,7 +104,7 @@ export function CreateTenantDialog({
 
         {result ? (
           <div className="space-y-3">
-            <p className="text-sm">Loja criada com sucesso. {result.createdNew ? "Envie estas credenciais ao dono:" : "O dono já tinha conta — ele entra com a senha atual."}</p>
+            <p className="text-sm flex items-center gap-2"><Mail className="h-4 w-4 text-brand-orange" /> Loja criada. As credenciais foram enviadas por e-mail ao dono e estão abaixo como fallback.</p>
             {result.password && (
               <Card className="p-4 bg-muted/40">
                 <p className="text-xs text-muted-foreground mb-1">E-mail</p>
