@@ -71,7 +71,7 @@ function Entregadores() {
   };
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight leading-[0.95]">Entregadores</h1>

@@ -56,11 +56,11 @@ function ConfigPage() {
 
   useEffect(() => { load(); }, [restaurantId]);
 
-  if (!restaurantId) return <div className="p-8">Configure seu restaurante primeiro.</div>;
-  if (loading || !r) return <div className="p-8 text-muted-foreground">Carregando…</div>;
+  if (!restaurantId) return <div className="p-4 md:p-8">Configure seu restaurante primeiro.</div>;
+  if (loading || !r) return <div className="p-4 md:p-8 text-muted-foreground">Carregando…</div>;
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="p-4 md:p-8 max-w-4xl">
       <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight leading-[0.95] mb-2">Configurações</h1>
       <p className="text-muted-foreground mb-6">Personalize sua loja e regras de entrega</p>
 
@@ -177,7 +177,7 @@ function AparenciaTab({ r, restaurantId, onSaved }: { r: Restaurant; restaurantI
   };
 
   return (
-    <Card className="p-6 space-y-6">
+    <Card className="p-4 md:p-6 space-y-6">
       <div>
         <Label>Logo</Label>
         <div className="flex items-center gap-4 mt-2">

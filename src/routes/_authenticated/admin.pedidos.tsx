@@ -296,10 +296,10 @@ function PedidosPage() {
     window.open(`https://wa.me/${fullPhone}?text=${encodeURIComponent(text)}`, "_blank");
   };
 
-  if (!restaurantId) return <div className="p-8">Configure seu restaurante primeiro.</div>;
+  if (!restaurantId) return <div className="p-4 md:p-8">Configure seu restaurante primeiro.</div>;
 
   return (
-    <div className="p-8 h-screen flex flex-col">
+    <div className="p-4 md:p-8 h-screen flex flex-col">
       <div className="mb-6 shrink-0 flex items-start justify-between gap-4 flex-wrap">
         <div>
           <div className="inline-flex items-center gap-2 mb-3">

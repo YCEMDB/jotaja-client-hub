@@ -32,7 +32,7 @@ function SuperOverview() {
   }, [storeFilter]);
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-6">
       <div className="flex items-center gap-3 justify-between flex-wrap">
         <div className="flex items-center gap-3">
           <BarChart3 className="h-8 w-8 text-brand-violet" />
@@ -55,9 +55,9 @@ function SuperOverview() {
       </div>
 
       {loading ? (
-        <div className="p-8 text-center text-muted-foreground">Carregando métricas…</div>
+        <div className="p-4 md:p-8 text-center text-muted-foreground">Carregando métricas…</div>
       ) : !data ? (
-        <div className="p-8 text-center text-muted-foreground">Sem dados.</div>
+        <div className="p-4 md:p-8 text-center text-muted-foreground">Sem dados.</div>
       ) : (
         <>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

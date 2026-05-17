@@ -120,10 +120,10 @@ function RelatoriosPage() {
     printReportHTML(`Relatório de Pedidos — ${from} a ${to}`, html);
   };
 
-  if (!restaurantId) return <div className="p-8">Configure seu restaurante primeiro.</div>;
+  if (!restaurantId) return <div className="p-4 md:p-8">Configure seu restaurante primeiro.</div>;
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-6">
       <div className="flex items-end justify-between flex-wrap gap-4">
         <div>
           <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight leading-[0.95]">Relatórios</h1>
@@ -187,7 +187,7 @@ function RelatoriosPage() {
                 </tr>
               ))}
               {!orders.length && !loading && (
-                <tr><td colSpan={7} className="p-8 text-center text-muted-foreground">Nenhum pedido no período</td></tr>
+                <tr><td colSpan={7} className="p-4 md:p-8 text-center text-muted-foreground">Nenhum pedido no período</td></tr>
               )}
             </tbody>
           </table>

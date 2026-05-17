@@ -88,7 +88,7 @@ function Dashboard() {
   const typeData = Array.from(byType.entries()).map(([name, value]) => ({ name, value }));
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <div className="flex items-end justify-between mb-8 flex-wrap gap-4">
         <div>
           <div className="inline-flex items-center gap-2 mb-3">
