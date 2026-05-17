@@ -175,6 +175,7 @@ function AuthLayout() {
       <main className="flex-1 overflow-auto relative">
         <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-radial opacity-60 pointer-events-none" />
         <div className="relative">
+          <GlobalAnnouncementsBanner />
           <Outlet />
         </div>
       </main>
