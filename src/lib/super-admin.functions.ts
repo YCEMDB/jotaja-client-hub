@@ -265,10 +265,76 @@ export const listSuperAdmins = createServerFn({ method: "GET" })
     return { admins };
   });
 
-export const getGlobalMetrics = createServerFn({ method: "GET" })
+// ---- Reset (limpa pedidos/clientes da loja, zera contadores) ----
+const resetTenantSchema = z.object({ restaurant_id: z.string().uuid() });
+export const resetTenant = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
+  .inputValidator((i: unknown) => resetTenantSchema.parse(i))
+  .handler(async ({ data, context }) => {
     await assertSuperAdmin(context.supabase, context.userId);
+    const rid = data.restaurant_id;
+    // pega ids de orders pra apagar items
+    const { data: ords } = await supabaseAdmin.from("orders").select("id").eq("restaurant_id", rid);
+    const orderIds = (ords ?? []).map((o: any) => o.id);
+    if (orderIds.length) {
+      await supabaseAdmin.from("order_items").delete().in("order_id", orderIds);
+    }
+    await supabaseAdmin.from("orders").delete().eq("restaurant_id", rid);
+    await supabaseAdmin.from("customers").delete().eq("restaurant_id", rid);
+    await supabaseAdmin.from("restaurants").update({
+      order_number_seq: 0,
+      monthly_order_count: 0,
+    }).eq("id", rid);
+    return { ok: true, deleted_orders: orderIds.length };
+  });
+
+// ---- Delete completo do restaurante ----
+const deleteTenantSchema = z.object({ restaurant_id: z.string().uuid(), confirm_name: z.string() });
+export const deleteTenant = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => deleteTenantSchema.parse(i))
+  .handler(async ({ data, context }) => {
+    await assertSuperAdmin(context.supabase, context.userId);
+    const { data: rest } = await supabaseAdmin
+      .from("restaurants").select("id,name").eq("id", data.restaurant_id).single();
+    if (!rest) throw new Response("Restaurante não encontrado", { status: 404 });
+    if (rest.name.trim() !== data.confirm_name.trim()) {
+      throw new Response("Nome de confirmação não confere", { status: 400 });
+    }
+    const rid = data.restaurant_id;
+    // children
+    const { data: ords } = await supabaseAdmin.from("orders").select("id").eq("restaurant_id", rid);
+    const orderIds = (ords ?? []).map((o: any) => o.id);
+    if (orderIds.length) await supabaseAdmin.from("order_items").delete().in("order_id", orderIds);
+    await supabaseAdmin.from("orders").delete().eq("restaurant_id", rid);
+    const { data: prods } = await supabaseAdmin.from("products").select("id").eq("restaurant_id", rid);
+    const prodIds = (prods ?? []).map((p: any) => p.id);
+    if (prodIds.length) {
+      const { data: groups } = await supabaseAdmin.from("product_option_groups").select("id").in("product_id", prodIds);
+      const gIds = (groups ?? []).map((g: any) => g.id);
+      if (gIds.length) await supabaseAdmin.from("product_option_items").delete().in("group_id", gIds);
+      await supabaseAdmin.from("product_option_groups").delete().in("product_id", prodIds);
+    }
+    await supabaseAdmin.from("products").delete().eq("restaurant_id", rid);
+    await supabaseAdmin.from("categories").delete().eq("restaurant_id", rid);
+    await supabaseAdmin.from("delivery_areas").delete().eq("restaurant_id", rid);
+    await supabaseAdmin.from("delivery_drivers").delete().eq("restaurant_id", rid);
+    await supabaseAdmin.from("coupons").delete().eq("restaurant_id", rid);
+    await supabaseAdmin.from("customers").delete().eq("restaurant_id", rid);
+    await supabaseAdmin.from("restaurant_payments").delete().eq("restaurant_id", rid);
+    await supabaseAdmin.from("user_roles").delete().eq("restaurant_id", rid);
+    await supabaseAdmin.from("signup_leads").update({ restaurant_id: null }).eq("restaurant_id", rid);
+    await supabaseAdmin.from("restaurants").delete().eq("id", rid);
+    return { ok: true };
+  });
+
+const metricsSchema = z.object({ restaurant_id: z.string().uuid().optional().nullable() }).optional();
+export const getGlobalMetrics = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => metricsSchema.parse(i) ?? {})
+  .handler(async ({ data, context }) => {
+    await assertSuperAdmin(context.supabase, context.userId);
+    const filterId = (data as any)?.restaurant_id ?? null;
 
     const now = new Date();
     const start30 = new Date(now); start30.setDate(now.getDate() - 30);
@@ -277,9 +343,11 @@ export const getGlobalMetrics = createServerFn({ method: "GET" })
     const startToday = new Date(now); startToday.setHours(0, 0, 0, 0);
     const trialSoon = new Date(now); trialSoon.setDate(now.getDate() + 7);
 
+    let ordersQ = supabaseAdmin.from("orders").select("restaurant_id,total,status,created_at").gte("created_at", start30.toISOString());
+    if (filterId) ordersQ = ordersQ.eq("restaurant_id", filterId);
     const [{ data: rests }, { data: orders30 }] = await Promise.all([
-      supabaseAdmin.from("restaurants").select("id,name,plan,is_active,trial_ends_at"),
-      supabaseAdmin.from("orders").select("restaurant_id,total,status,created_at").gte("created_at", start30.toISOString()),
+      supabaseAdmin.from("restaurants").select("id,name,plan,is_active,trial_ends_at").order("name"),
+      ordersQ,
     ]);
 
     const restaurants = rests ?? [];
@@ -345,5 +413,7 @@ export const getGlobalMetrics = createServerFn({ method: "GET" })
       daily,
       topStores,
       expiringTrials,
+      restaurants: restaurants.map((r: any) => ({ id: r.id, name: r.name })),
+      filtered_restaurant_id: filterId,
     };
   });

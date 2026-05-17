@@ -491,16 +491,32 @@ function CheckoutDialog({
     }
     setSubmitting(true);
 
-    const { data: cust } = await supabase
-      .from("customers")
-      .insert({ restaurant_id: restaurant.id, name: name.trim(), phone: phone.trim() })
-      .select("id").single();
+    // Busca cliente existente desta loja por telefone (digits-only match)
+    const phoneDigits = phone.replace(/\D/g, "");
+    let custId: string | null = null;
+    if (phoneDigits.length >= 8) {
+      const { data: existing } = await supabase
+        .from("customers")
+        .select("id")
+        .eq("restaurant_id", restaurant.id)
+        .ilike("phone", `%${phoneDigits}%`)
+        .limit(1)
+        .maybeSingle();
+      custId = existing?.id ?? null;
+    }
+    if (!custId) {
+      const { data: cust } = await supabase
+        .from("customers")
+        .insert({ restaurant_id: restaurant.id, name: name.trim(), phone: phone.trim() })
+        .select("id").single();
+      custId = cust?.id ?? null;
+    }
 
     const { data: order, error: oErr } = await supabase
       .from("orders")
       .insert({
         restaurant_id: restaurant.id,
-        customer_id: cust?.id ?? null,
+        customer_id: custId,
         customer_name: name.trim(),
         customer_phone: phone.trim(),
         type: orderType,

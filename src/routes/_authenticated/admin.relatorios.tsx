@@ -34,6 +34,12 @@ const STATUS_LABEL: Record<string, string> = {
   ready: "Pronto", out_for_delivery: "Saiu p/ entrega",
   delivered: "Entregue", cancelled: "Cancelado",
 };
+const TYPE_LABEL: Record<string, string> = {
+  delivery: "Entrega", pickup: "Retirada", dine_in: "No local",
+};
+const PAYMENT_LABEL: Record<string, string> = {
+  cash: "Dinheiro", pix: "Pix", credit_card: "Crédito", debit_card: "Débito",
+};
 
 function fmtMoney(v: number) { return `R$ ${Number(v).toFixed(2).replace(".", ",")}`; }
 function todayISO(offsetDays = 0) {
@@ -82,8 +88,8 @@ function RelatoriosPage() {
       new Date(o.created_at).toLocaleString("pt-BR"),
       o.customer_name,
       o.customer_phone,
-      o.type,
-      o.payment,
+      TYPE_LABEL[o.type] ?? o.type,
+      PAYMENT_LABEL[o.payment] ?? o.payment,
       STATUS_LABEL[o.status] ?? o.status,
       Number(o.subtotal).toFixed(2),
       Number(o.delivery_fee).toFixed(2),
@@ -100,8 +106,8 @@ function RelatoriosPage() {
         <td>${new Date(o.created_at).toLocaleString("pt-BR")}</td>
         <td>${o.customer_name}</td>
         <td>${STATUS_LABEL[o.status] ?? o.status}</td>
-        <td>${o.type}</td>
-        <td>${o.payment}</td>
+        <td>${TYPE_LABEL[o.type] ?? o.type}</td>
+        <td>${PAYMENT_LABEL[o.payment] ?? o.payment}</td>
         <td class="right">${fmtMoney(o.total)}</td>
       </tr>`).join("");
     const html = `
@@ -175,8 +181,8 @@ function RelatoriosPage() {
                   <td className="p-3 text-muted-foreground">{new Date(o.created_at).toLocaleString("pt-BR")}</td>
                   <td className="p-3">{o.customer_name}</td>
                   <td className="p-3">{STATUS_LABEL[o.status] ?? o.status}</td>
-                  <td className="p-3">{o.type}</td>
-                  <td className="p-3">{o.payment}</td>
+                  <td className="p-3">{TYPE_LABEL[o.type] ?? o.type}</td>
+                  <td className="p-3">{PAYMENT_LABEL[o.payment] ?? o.payment}</td>
                   <td className="p-3 text-right font-medium">{fmtMoney(Number(o.total))}</td>
                 </tr>
               ))}

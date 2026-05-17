@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { getGlobalMetrics } from "@/lib/super-admin.functions";
 import { Card } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AlertTriangle, BarChart3 } from "lucide-react";
 import {
   LineChart, Line, ResponsiveContainer, XAxis, YAxis, Tooltip as ReTooltip, CartesianGrid,
@@ -21,21 +22,35 @@ function SuperOverview() {
   const fetchMetrics = useServerFn(getGlobalMetrics);
   const [data, setData] = useState<Awaited<ReturnType<typeof getGlobalMetrics>> | null>(null);
   const [loading, setLoading] = useState(true);
+  const [storeFilter, setStoreFilter] = useState<string>("all");
 
   useEffect(() => {
-    fetchMetrics().then((r) => { setData(r); setLoading(false); }).catch((e) => {
-      toast.error(e?.message ?? "Erro ao carregar métricas");
-      setLoading(false);
-    });
-  }, []);
+    setLoading(true);
+    fetchMetrics({ data: { restaurant_id: storeFilter === "all" ? null : storeFilter } })
+      .then((r) => { setData(r); setLoading(false); })
+      .catch((e) => { toast.error(e?.message ?? "Erro ao carregar métricas"); setLoading(false); });
+  }, [storeFilter]);
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex items-center gap-3">
-        <BarChart3 className="h-8 w-8 text-brand-violet" />
-        <div>
-          <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight leading-[0.95]">Visão geral</h1>
-          <p className="text-muted-foreground">Métricas globais da plataforma</p>
+      <div className="flex items-center gap-3 justify-between flex-wrap">
+        <div className="flex items-center gap-3">
+          <BarChart3 className="h-8 w-8 text-brand-violet" />
+          <div>
+            <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight leading-[0.95]">Visão geral</h1>
+            <p className="text-muted-foreground">Métricas globais da plataforma</p>
+          </div>
+        </div>
+        <div className="min-w-[240px]">
+          <Select value={storeFilter} onValueChange={setStoreFilter}>
+            <SelectTrigger><SelectValue placeholder="Filtrar por loja" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todas as lojas</SelectItem>
+              {(data?.restaurants ?? []).map((r) => (
+                <SelectItem key={r.id} value={r.id}>{r.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 

@@ -82,6 +82,24 @@ function PdvPage() {
   };
   const removeLine = (id: string) => setCart(prev => prev.filter(l => l.product_id !== id));
 
+  // Buscar cliente já existente desta loja pelo telefone
+  const lookupCustomer = async () => {
+    if (!restaurantId) return;
+    const digits = customer.phone.replace(/\D/g, "");
+    if (digits.length < 8) return toast.error("Digite o telefone primeiro");
+    const { data } = await supabase
+      .from("customers")
+      .select("name,phone")
+      .eq("restaurant_id", restaurantId)
+      .ilike("phone", `%${digits}%`)
+      .order("last_order_at", { ascending: false, nullsFirst: false })
+      .limit(1);
+    const c = (data ?? [])[0];
+    if (!c) return toast.info("Cliente novo nesta loja");
+    setCustomer({ name: c.name, phone: c.phone });
+    toast.success(`Cliente encontrado: ${c.name}`);
+  };
+
   const subtotal = cart.reduce((s, l) => s + l.unit_price * l.quantity, 0);
   const total = Math.max(0, subtotal + (type === "delivery" ? Number(deliveryFee) : 0) - Number(discount));
 
@@ -199,7 +217,10 @@ function PdvPage() {
           </div>
           <div>
             <Label>Telefone / WhatsApp</Label>
-            <Input value={customer.phone} onChange={e => setCustomer(c => ({ ...c, phone: e.target.value }))} placeholder="(27) 9..." className="border-2 border-ink" />
+            <div className="flex gap-2">
+              <Input value={customer.phone} onChange={e => setCustomer(c => ({ ...c, phone: e.target.value }))} placeholder="(27) 9..." className="border-2 border-ink" onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); lookupCustomer(); } }} />
+              <Button type="button" variant="outline" size="icon" className="shrink-0 border-2 border-ink" onClick={lookupCustomer} title="Buscar cliente"><Search className="h-4 w-4" /></Button>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-2">
