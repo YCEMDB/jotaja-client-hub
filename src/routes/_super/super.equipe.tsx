@@ -67,7 +67,7 @@ function EquipePage() {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-6">
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-3">
           <ShieldCheck className="h-8 w-8 text-brand-violet" />
@@ -81,8 +81,8 @@ function EquipePage() {
         </Button>
       </div>
 
-      <Card className="overflow-hidden">
-        <table className="w-full text-sm">
+      <Card className="overflow-x-auto">
+        <table className="w-full text-sm min-w-[640px]">
           <thead className="bg-muted">
             <tr className="text-left">
               <th className="p-3">Nome</th>
@@ -106,7 +106,7 @@ function EquipePage() {
                 </td>
               </tr>
             ))}
-            {!admins.length && <tr><td colSpan={4} className="p-8 text-center text-muted-foreground">Nenhum super-admin</td></tr>}
+            {!admins.length && <tr><td colSpan={4} className="p-4 md:p-8 text-center text-muted-foreground">Nenhum super-admin</td></tr>}
           </tbody>
         </table>
       </Card>

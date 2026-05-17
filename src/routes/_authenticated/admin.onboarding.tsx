@@ -75,7 +75,7 @@ function Onboarding() {
         <p className="text-muted-foreground mt-2">Leva menos de 1 minuto. Você pode ajustar tudo depois.</p>
       </div>
 
-      <Card className="p-8">
+      <Card className="p-4 md:p-8">
         <form onSubmit={onSubmit} className="space-y-5">
           <div>
             <Label htmlFor="name">Nome do restaurante *</Label>

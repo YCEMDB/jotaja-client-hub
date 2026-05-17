@@ -120,10 +120,10 @@ function RelatoriosPage() {
     printReportHTML(`Relatório de Pedidos — ${from} a ${to}`, html);
   };
 
-  if (!restaurantId) return <div className="p-8">Configure seu restaurante primeiro.</div>;
+  if (!restaurantId) return <div className="p-4 md:p-8">Configure seu restaurante primeiro.</div>;
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-6">
       <div className="flex items-end justify-between flex-wrap gap-4">
         <div>
           <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight leading-[0.95]">Relatórios</h1>
@@ -160,9 +160,9 @@ function RelatoriosPage() {
         <Card className="p-4"><p className="text-xs text-muted-foreground">Cancelados</p><p className="text-2xl font-bold">{stats.cancelled}</p></Card>
       </div>
 
-      <Card className="overflow-hidden">
+      <Card className="overflow-x-auto">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[640px]">
             <thead className="bg-muted">
               <tr className="text-left">
                 <th className="p-3">#</th>
@@ -187,7 +187,7 @@ function RelatoriosPage() {
                 </tr>
               ))}
               {!orders.length && !loading && (
-                <tr><td colSpan={7} className="p-8 text-center text-muted-foreground">Nenhum pedido no período</td></tr>
+                <tr><td colSpan={7} className="p-4 md:p-8 text-center text-muted-foreground">Nenhum pedido no período</td></tr>
               )}
             </tbody>
           </table>

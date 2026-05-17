@@ -52,7 +52,7 @@ function ConfiguracoesPage() {
   };
 
   return (
-    <div className="p-6 space-y-6 max-w-3xl">
+    <div className="p-4 md:p-6 space-y-6 max-w-3xl">
       <div className="flex items-center gap-3">
         <Settings2 className="h-8 w-8 text-brand-violet" />
         <div>

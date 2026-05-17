@@ -130,7 +130,7 @@ function LojasPage() {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-6">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-3">
           <Building2 className="h-8 w-8 text-brand-violet" />
@@ -157,9 +157,9 @@ function LojasPage() {
         <Input className="pl-9" placeholder="Buscar por nome, slug ou e-mail do dono..." value={search} onChange={(e) => setSearch(e.target.value)} />
       </div>
 
-      <Card className="overflow-hidden">
+      <Card className="overflow-x-auto">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[640px]">
             <thead className="bg-muted">
               <tr className="text-left">
                 <th className="p-3">Restaurante</th>
@@ -195,7 +195,7 @@ function LojasPage() {
                   </tr>
                 );
               })}
-              {!filtered.length && (<tr><td colSpan={9} className="p-8 text-center text-muted-foreground">Nenhum restaurante encontrado</td></tr>)}
+              {!filtered.length && (<tr><td colSpan={9} className="p-4 md:p-8 text-center text-muted-foreground">Nenhum restaurante encontrado</td></tr>)}
             </tbody>
           </table>
         </div>

@@ -54,10 +54,10 @@ function CuponsPage() {
     load();
   };
 
-  if (!restaurantId) return <div className="p-8">Configure seu restaurante primeiro.</div>;
+  if (!restaurantId) return <div className="p-4 md:p-8">Configure seu restaurante primeiro.</div>;
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight leading-[0.95]">Cupons</h1>

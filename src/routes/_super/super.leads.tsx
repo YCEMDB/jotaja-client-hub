@@ -67,7 +67,7 @@ function LeadsPage() {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-6">
       <div className="flex items-center gap-3">
         <Inbox className="h-8 w-8 text-brand-violet" />
         <div>
@@ -87,9 +87,9 @@ function LeadsPage() {
         ))}
       </div>
 
-      <Card className="overflow-hidden">
+      <Card className="overflow-x-auto">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[640px]">
             <thead className="bg-muted">
               <tr className="text-left">
                 <th className="p-3">Recebido</th>
@@ -130,7 +130,7 @@ function LeadsPage() {
                   </td>
                 </tr>
               ))}
-              {!list.length && (<tr><td colSpan={5} className="p-8 text-center text-muted-foreground">Nenhum lead nessa categoria</td></tr>)}
+              {!list.length && (<tr><td colSpan={5} className="p-4 md:p-8 text-center text-muted-foreground">Nenhum lead nessa categoria</td></tr>)}
             </tbody>
           </table>
         </div>

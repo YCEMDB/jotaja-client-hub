@@ -51,7 +51,7 @@ function Clientes() {
   const totalOrders = customers.reduce((sum, c) => sum + Number(c.total_orders ?? 0), 0);
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <div className="mb-6">
         <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight leading-[0.95]">Clientes</h1>
         <p className="text-muted-foreground">Sua base de clientes</p>
