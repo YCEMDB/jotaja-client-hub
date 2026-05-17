@@ -30,15 +30,6 @@ function SuperLayout() {
     if (!isSuperAdmin) { nav({ to: "/admin" }); }
   }, [user, loading, metaLoading, isSuperAdmin, nav]);
 
-  if (loading || metaLoading) {
-    return (
-      <div className="min-h-screen grid place-items-center bg-background bg-gradient-mesh">
-        <div className="font-display text-3xl text-ink animate-pulse">Carregando…</div>
-      </div>
-    );
-  }
-  if (!user || !isSuperAdmin) return null;
-
   const [collapsed, setCollapsed] = useState<boolean>(() => {
     if (typeof window === "undefined") return false;
     return localStorage.getItem("super_sidebar_collapsed") === "1";
@@ -50,6 +41,16 @@ function SuperLayout() {
       return next;
     });
   };
+
+  if (loading || metaLoading) {
+    return (
+      <div className="min-h-screen grid place-items-center bg-background bg-gradient-mesh">
+        <div className="font-display text-3xl text-ink animate-pulse">Carregando…</div>
+      </div>
+    );
+  }
+  if (!user || !isSuperAdmin) return null;
+
 
   return (
     <div className="min-h-screen flex bg-background">
