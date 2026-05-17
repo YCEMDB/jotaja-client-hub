@@ -82,6 +82,24 @@ function PdvPage() {
   };
   const removeLine = (id: string) => setCart(prev => prev.filter(l => l.product_id !== id));
 
+  // Buscar cliente já existente desta loja pelo telefone
+  const lookupCustomer = async () => {
+    if (!restaurantId) return;
+    const digits = customer.phone.replace(/\D/g, "");
+    if (digits.length < 8) return toast.error("Digite o telefone primeiro");
+    const { data } = await supabase
+      .from("customers")
+      .select("name,phone")
+      .eq("restaurant_id", restaurantId)
+      .ilike("phone", `%${digits}%`)
+      .order("last_order_at", { ascending: false, nullsFirst: false })
+      .limit(1);
+    const c = (data ?? [])[0];
+    if (!c) return toast.info("Cliente novo nesta loja");
+    setCustomer({ name: c.name, phone: c.phone });
+    toast.success(`Cliente encontrado: ${c.name}`);
+  };
+
   const subtotal = cart.reduce((s, l) => s + l.unit_price * l.quantity, 0);
   const total = Math.max(0, subtotal + (type === "delivery" ? Number(deliveryFee) : 0) - Number(discount));
 
