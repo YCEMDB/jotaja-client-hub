@@ -59,7 +59,7 @@ export const createTenant = createServerFn({ method: "POST" })
     // 1. Auto-generate unique slug from restaurant name
     const slug = await generateUniqueSlug(data.restaurant_name);
 
-    // 2. Find or create user
+    // 2. Find or create user — always force a known password so the dono can log in
     const password = genPassword();
     let ownerId: string | null = null;
     let createdNewUser = false;
@@ -68,6 +68,12 @@ export const createTenant = createServerFn({ method: "POST" })
     const found = list?.users.find((u) => u.email?.toLowerCase() === data.owner_email.toLowerCase());
     if (found) {
       ownerId = found.id;
+      // Usuário já existe — reseta senha e confirma o e-mail
+      const { error: updErr } = await supabaseAdmin.auth.admin.updateUserById(found.id, {
+        password,
+        email_confirm: true,
+      });
+      if (updErr) throw new Response(updErr.message, { status: 500 });
     } else {
       const { data: created, error: createErr } = await supabaseAdmin.auth.admin.createUser({
         email: data.owner_email,
@@ -117,9 +123,146 @@ export const createTenant = createServerFn({ method: "POST" })
       ok: true,
       restaurant_id: rest.id,
       owner_id: ownerId,
-      temporary_password: createdNewUser ? password : null,
+      owner_email: data.owner_email,
+      owner_full_name: data.owner_full_name,
+      restaurant_name: data.restaurant_name,
+      temporary_password: password,
       created_new_user: createdNewUser,
     };
+  });
+
+const resetPwdSchema = z.object({ restaurant_id: z.string().uuid() });
+
+export const resetOwnerPassword = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => resetPwdSchema.parse(i))
+  .handler(async ({ data, context }) => {
+    await assertSuperAdmin(context.supabase, context.userId);
+    const { data: rest, error } = await supabaseAdmin
+      .from("restaurants")
+      .select("id,name,owner_id")
+      .eq("id", data.restaurant_id)
+      .single();
+    if (error || !rest) throw new Response("Restaurante não encontrado", { status: 404 });
+    const { data: ownerInfo } = await supabaseAdmin.auth.admin.getUserById(rest.owner_id);
+    if (!ownerInfo?.user?.email) throw new Response("Dono sem e-mail cadastrado", { status: 400 });
+    const password = genPassword();
+    const { error: upErr } = await supabaseAdmin.auth.admin.updateUserById(rest.owner_id, {
+      password,
+      email_confirm: true,
+    });
+    if (upErr) throw new Response(upErr.message, { status: 500 });
+    const { data: prof } = await supabaseAdmin.from("profiles").select("full_name").eq("id", rest.owner_id).maybeSingle();
+    return {
+      ok: true,
+      owner_email: ownerInfo.user.email,
+      owner_full_name: prof?.full_name ?? null,
+      restaurant_name: rest.name,
+      temporary_password: password,
+    };
+  });
+
+const addAdminSchema = z.object({
+  full_name: z.string().trim().min(2).max(120),
+  email: z.string().trim().email().max(255),
+});
+
+export const addSuperAdmin = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => addAdminSchema.parse(i))
+  .handler(async ({ data, context }) => {
+    await assertSuperAdmin(context.supabase, context.userId);
+    const password = genPassword();
+    const { data: list } = await supabaseAdmin.auth.admin.listUsers({ perPage: 200 });
+    const found = list?.users.find((u) => u.email?.toLowerCase() === data.email.toLowerCase());
+    let userId: string;
+    let createdNewUser = false;
+    if (found) {
+      userId = found.id;
+      const { error } = await supabaseAdmin.auth.admin.updateUserById(found.id, { password, email_confirm: true });
+      if (error) throw new Response(error.message, { status: 500 });
+    } else {
+      const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
+        email: data.email,
+        password,
+        email_confirm: true,
+        user_metadata: { full_name: data.full_name },
+      });
+      if (error || !created.user) throw new Response(error?.message ?? "Erro ao criar usuário", { status: 500 });
+      userId = created.user.id;
+      createdNewUser = true;
+    }
+    // Insere role (ignora duplicata)
+    const { data: existing } = await supabaseAdmin
+      .from("user_roles")
+      .select("id")
+      .eq("user_id", userId)
+      .eq("role", "super_admin")
+      .maybeSingle();
+    if (!existing) {
+      const { error } = await supabaseAdmin.from("user_roles").insert({
+        user_id: userId,
+        role: "super_admin",
+        restaurant_id: null,
+      });
+      if (error) throw new Response(error.message, { status: 500 });
+    }
+    return {
+      ok: true,
+      user_id: userId,
+      email: data.email,
+      full_name: data.full_name,
+      temporary_password: password,
+      created_new_user: createdNewUser,
+    };
+  });
+
+const removeAdminSchema = z.object({ user_id: z.string().uuid() });
+export const removeSuperAdmin = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => removeAdminSchema.parse(i))
+  .handler(async ({ data, context }) => {
+    await assertSuperAdmin(context.supabase, context.userId);
+    if (data.user_id === context.userId) throw new Response("Você não pode remover seu próprio acesso", { status: 400 });
+    const { error } = await supabaseAdmin
+      .from("user_roles")
+      .delete()
+      .eq("user_id", data.user_id)
+      .eq("role", "super_admin");
+    if (error) throw new Response(error.message, { status: 500 });
+    return { ok: true };
+  });
+
+export const listSuperAdmins = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertSuperAdmin(context.supabase, context.userId);
+    const { data: roles } = await supabaseAdmin
+      .from("user_roles")
+      .select("user_id,created_at")
+      .eq("role", "super_admin");
+    const ids = (roles ?? []).map((r: any) => r.user_id);
+    if (!ids.length) return { admins: [] as any[] };
+    const { data: profiles } = await supabaseAdmin
+      .from("profiles")
+      .select("id,full_name,email")
+      .in("id", ids);
+    const profMap = new Map((profiles ?? []).map((p: any) => [p.id, p]));
+    // Fallback: fetch emails via auth.admin for users sem profile
+    const { data: usersList } = await supabaseAdmin.auth.admin.listUsers({ perPage: 200 });
+    const userMap = new Map((usersList?.users ?? []).map((u) => [u.id, u]));
+    const admins = (roles ?? []).map((r: any) => {
+      const p: any = profMap.get(r.user_id);
+      const u = userMap.get(r.user_id);
+      return {
+        user_id: r.user_id,
+        email: p?.email ?? u?.email ?? null,
+        full_name: p?.full_name ?? u?.user_metadata?.full_name ?? null,
+        added_at: r.created_at,
+        is_self: r.user_id === context.userId,
+      };
+    });
+    return { admins };
   });
 
 export const getGlobalMetrics = createServerFn({ method: "GET" })

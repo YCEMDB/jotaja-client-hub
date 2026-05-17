@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { createTenant } from "@/lib/super-admin.functions";
+import { sendTransactionalEmail } from "@/lib/email/send";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, Mail } from "lucide-react";
 import { toast } from "sonner";
 
 export type Plan = "trial" | "essential" | "professional";
@@ -62,6 +63,25 @@ export function CreateTenantDialog({
       toast.success("Loja criada com sucesso!");
       setResult({ password: r.temporary_password, createdNew: r.created_new_user });
       onCreated();
+      // Dispara e-mail de boas-vindas com as credenciais
+      try {
+        await sendTransactionalEmail({
+          templateName: "restaurant-welcome",
+          recipientEmail: form.owner_email,
+          idempotencyKey: `welcome-${r.restaurant_id}`,
+          templateData: {
+            restaurantName: form.restaurant_name,
+            ownerName: form.owner_full_name,
+            loginUrl: "https://comandahub.online/auth",
+            email: form.owner_email,
+            temporaryPassword: r.temporary_password,
+            isReset: false,
+          },
+        });
+        toast.success("E-mail com credenciais enviado ao dono", { icon: "📧" });
+      } catch (e: any) {
+        toast.warning(`Loja criada, mas e-mail falhou: ${e?.message ?? "erro"}`);
+      }
     } catch (e: any) {
       toast.error(e?.message ?? "Erro ao criar loja");
     } finally {
@@ -84,7 +104,7 @@ export function CreateTenantDialog({
 
         {result ? (
           <div className="space-y-3">
-            <p className="text-sm">Loja criada com sucesso. {result.createdNew ? "Envie estas credenciais ao dono:" : "O dono já tinha conta — ele entra com a senha atual."}</p>
+            <p className="text-sm flex items-center gap-2"><Mail className="h-4 w-4 text-brand-orange" /> Loja criada. As credenciais foram enviadas por e-mail ao dono e estão abaixo como fallback.</p>
             {result.password && (
               <Card className="p-4 bg-muted/40">
                 <p className="text-xs text-muted-foreground mb-1">E-mail</p>
