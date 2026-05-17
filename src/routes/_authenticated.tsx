@@ -61,18 +61,31 @@ function AuthLayout() {
     return <BlockedStoreScreen restaurantName={activeRestaurant.name} reason={blocked.reason} />;
   }
 
+  const [collapsed, setCollapsed] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("admin_sidebar_collapsed") === "1";
+  });
+  const toggleCollapsed = () => {
+    setCollapsed((c) => {
+      const next = !c;
+      try { localStorage.setItem("admin_sidebar_collapsed", next ? "1" : "0"); } catch {}
+      return next;
+    });
+  };
+
   return (
     <div className="min-h-screen flex bg-background">
       {/* Sidebar — ink brutalist */}
-      <aside className="w-64 bg-ink text-background flex flex-col border-r-2 border-ink relative">
+      <aside className={`${collapsed ? "w-16" : "w-64"} transition-[width] duration-200 bg-ink text-background flex flex-col border-r-2 border-ink relative`}>
         {/* Decorative noise/grain */}
         <div className="absolute inset-0 bg-noise opacity-40 pointer-events-none" />
 
         <Link
           to="/admin"
-          className="relative p-5 flex items-center gap-3 border-b-2 border-background/10 hover:bg-background/5 transition-colors"
+          className={`relative p-5 flex items-center gap-3 border-b-2 border-background/10 hover:bg-background/5 transition-colors ${collapsed ? "justify-center px-2" : ""}`}
+          title="ComandaHub"
         >
-          <div className="h-11 w-11 rounded-xl bg-brand-orange border-2 border-background grid place-items-center shadow-[3px_3px_0_0_oklch(0.62_0.24_0)]">
+          <div className="h-11 w-11 rounded-xl bg-brand-orange border-2 border-background grid place-items-center shadow-[3px_3px_0_0_oklch(0.62_0.24_0)] shrink-0">
             <svg viewBox="0 0 48 48" className="h-7 w-7" aria-hidden="true">
               <rect x="12" y="13" width="20" height="4.5" rx="2.25" fill="#fff" />
               <rect x="12" y="21.75" width="14" height="4.5" rx="2.25" fill="#fff" />
@@ -80,13 +93,25 @@ function AuthLayout() {
               <circle cx="36" cy="24" r="3.25" fill="#0a0a0a" />
             </svg>
           </div>
-          <div className="leading-none">
-            <div className="font-display text-lg tracking-tight">ComandaHub</div>
-            <div className="text-[10px] uppercase tracking-[0.2em] text-background/50 mt-1">painel</div>
-          </div>
+          {!collapsed && (
+            <div className="leading-none">
+              <div className="font-display text-lg tracking-tight">ComandaHub</div>
+              <div className="text-[10px] uppercase tracking-[0.2em] text-background/50 mt-1">painel</div>
+            </div>
+          )}
         </Link>
 
-        {(isSuperAdmin || restaurants.length > 1) && restaurants.length > 0 && (
+        {/* Toggle */}
+        <button
+          onClick={toggleCollapsed}
+          className="relative mx-3 mt-3 mb-1 flex items-center justify-center gap-2 px-2 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wide text-background/70 hover:bg-background/10 border-2 border-background/15 transition-all"
+          title={collapsed ? "Expandir menu" : "Recolher menu"}
+          aria-label={collapsed ? "Expandir menu" : "Recolher menu"}
+        >
+          {collapsed ? <PanelLeftOpen className="h-4 w-4" /> : <><PanelLeftClose className="h-4 w-4" /> Recolher</>}
+        </button>
+
+        {!collapsed && (isSuperAdmin || restaurants.length > 1) && restaurants.length > 0 && (
           <div className="relative p-3 border-b-2 border-background/10">
             <label className="text-[10px] uppercase tracking-[0.18em] font-bold text-background/60 px-1">Restaurante</label>
             <Select value={restaurantId ?? ""} onValueChange={selectRestaurant}>
@@ -106,35 +131,40 @@ function AuthLayout() {
           {isSuperAdmin && (
             <Link
               to="/super"
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold uppercase tracking-wide hover:bg-background/10 transition-all mb-3 border-2 border-brand-violet/60 text-brand-violet"
+              title="Ir para Super-Admin"
+              className={`flex items-center ${collapsed ? "justify-center" : "gap-3"} px-3 py-2.5 rounded-lg text-sm font-bold uppercase tracking-wide hover:bg-background/10 transition-all mb-3 border-2 border-brand-violet/60 text-brand-violet`}
             >
-              <ShieldCheck className="h-4 w-4" />
-              Ir para Super-Admin
+              <ShieldCheck className="h-4 w-4 shrink-0" />
+              {!collapsed && "Ir para Super-Admin"}
             </Link>
           )}
           {NAV.map((item) => (
             <Link
               key={item.to}
               to={item.to}
+              title={item.label}
               activeOptions={{ exact: item.to === "/admin" }}
               activeProps={{
                 className: "!bg-brand-orange !text-ink !border-background shadow-[3px_3px_0_0_oklch(0.62_0.24_0)] translate-x-0.5",
               }}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold uppercase tracking-wide border-2 border-transparent hover:bg-background/10 transition-all"
+              className={`flex items-center ${collapsed ? "justify-center" : "gap-3"} px-3 py-2.5 rounded-lg text-sm font-bold uppercase tracking-wide border-2 border-transparent hover:bg-background/10 transition-all`}
             >
-              <item.icon className="h-4 w-4" />
-              {item.label}
+              <item.icon className="h-4 w-4 shrink-0" />
+              {!collapsed && item.label}
             </Link>
           ))}
         </nav>
 
         <div className="relative p-3 border-t-2 border-background/10">
-          <div className="px-2 py-1.5 text-[11px] text-background/60 truncate font-medium">{user?.email}</div>
+          {!collapsed && (
+            <div className="px-2 py-1.5 text-[11px] text-background/60 truncate font-medium">{user?.email}</div>
+          )}
           <button
             onClick={async () => { await signOut(); nav({ to: "/auth" }); }}
-            className="w-full mt-1 flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-bold uppercase tracking-wide text-background/80 hover:bg-destructive hover:text-background border-2 border-transparent hover:border-background transition-all"
+            title="Sair"
+            className={`w-full mt-1 flex items-center ${collapsed ? "justify-center" : "gap-2"} px-3 py-2 rounded-lg text-sm font-bold uppercase tracking-wide text-background/80 hover:bg-destructive hover:text-background border-2 border-transparent hover:border-background transition-all`}
           >
-            <LogOut className="h-4 w-4" /> Sair
+            <LogOut className="h-4 w-4 shrink-0" /> {!collapsed && "Sair"}
           </button>
         </div>
       </aside>
