@@ -48,6 +48,7 @@ import { Route as ApiPublic_domainCheckRouteImport } from './routes/api/public/_
 import { Route as SuperSuperPlanosRouteImport } from './routes/_super/super.planos'
 import { Route as SuperSuperLojasRouteImport } from './routes/_super/super.lojas'
 import { Route as SuperSuperLeadsRouteImport } from './routes/_super/super.leads'
+import { Route as SuperSuperEquipeRouteImport } from './routes/_super/super.equipe'
 import { Route as SuperSuperConfiguracoesRouteImport } from './routes/_super/super.configuracoes'
 import { Route as SuperSuperAvisosRouteImport } from './routes/_super/super.avisos'
 import { Route as AuthenticatedAdminSuperRouteImport } from './routes/_authenticated/admin.super'
@@ -268,6 +269,11 @@ const SuperSuperLeadsRoute = SuperSuperLeadsRouteImport.update({
   path: '/super/leads',
   getParentRoute: () => SuperRoute,
 } as any)
+const SuperSuperEquipeRoute = SuperSuperEquipeRouteImport.update({
+  id: '/super/equipe',
+  path: '/super/equipe',
+  getParentRoute: () => SuperRoute,
+} as any)
 const SuperSuperConfiguracoesRoute = SuperSuperConfiguracoesRouteImport.update({
   id: '/super/configuracoes',
   path: '/super/configuracoes',
@@ -407,6 +413,7 @@ export interface FileRoutesByFullPath {
   '/admin/super': typeof AuthenticatedAdminSuperRoute
   '/super/avisos': typeof SuperSuperAvisosRoute
   '/super/configuracoes': typeof SuperSuperConfiguracoesRoute
+  '/super/equipe': typeof SuperSuperEquipeRoute
   '/super/leads': typeof SuperSuperLeadsRoute
   '/super/lojas': typeof SuperSuperLojasRoute
   '/super/planos': typeof SuperSuperPlanosRoute
@@ -463,6 +470,7 @@ export interface FileRoutesByTo {
   '/admin/super': typeof AuthenticatedAdminSuperRoute
   '/super/avisos': typeof SuperSuperAvisosRoute
   '/super/configuracoes': typeof SuperSuperConfiguracoesRoute
+  '/super/equipe': typeof SuperSuperEquipeRoute
   '/super/leads': typeof SuperSuperLeadsRoute
   '/super/lojas': typeof SuperSuperLojasRoute
   '/super/planos': typeof SuperSuperPlanosRoute
@@ -522,6 +530,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/super': typeof AuthenticatedAdminSuperRoute
   '/_super/super/avisos': typeof SuperSuperAvisosRoute
   '/_super/super/configuracoes': typeof SuperSuperConfiguracoesRoute
+  '/_super/super/equipe': typeof SuperSuperEquipeRoute
   '/_super/super/leads': typeof SuperSuperLeadsRoute
   '/_super/super/lojas': typeof SuperSuperLojasRoute
   '/_super/super/planos': typeof SuperSuperPlanosRoute
@@ -580,6 +589,7 @@ export interface FileRouteTypes {
     | '/admin/super'
     | '/super/avisos'
     | '/super/configuracoes'
+    | '/super/equipe'
     | '/super/leads'
     | '/super/lojas'
     | '/super/planos'
@@ -636,6 +646,7 @@ export interface FileRouteTypes {
     | '/admin/super'
     | '/super/avisos'
     | '/super/configuracoes'
+    | '/super/equipe'
     | '/super/leads'
     | '/super/lojas'
     | '/super/planos'
@@ -694,6 +705,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/super'
     | '/_super/super/avisos'
     | '/_super/super/configuracoes'
+    | '/_super/super/equipe'
     | '/_super/super/leads'
     | '/_super/super/lojas'
     | '/_super/super/planos'
@@ -1026,6 +1038,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SuperSuperLeadsRouteImport
       parentRoute: typeof SuperRoute
     }
+    '/_super/super/equipe': {
+      id: '/_super/super/equipe'
+      path: '/super/equipe'
+      fullPath: '/super/equipe'
+      preLoaderRoute: typeof SuperSuperEquipeRouteImport
+      parentRoute: typeof SuperRoute
+    }
     '/_super/super/configuracoes': {
       id: '/_super/super/configuracoes'
       path: '/super/configuracoes'
@@ -1183,6 +1202,7 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 interface SuperRouteChildren {
   SuperSuperAvisosRoute: typeof SuperSuperAvisosRoute
   SuperSuperConfiguracoesRoute: typeof SuperSuperConfiguracoesRoute
+  SuperSuperEquipeRoute: typeof SuperSuperEquipeRoute
   SuperSuperLeadsRoute: typeof SuperSuperLeadsRoute
   SuperSuperLojasRoute: typeof SuperSuperLojasRoute
   SuperSuperPlanosRoute: typeof SuperSuperPlanosRoute
@@ -1192,6 +1212,7 @@ interface SuperRouteChildren {
 const SuperRouteChildren: SuperRouteChildren = {
   SuperSuperAvisosRoute: SuperSuperAvisosRoute,
   SuperSuperConfiguracoesRoute: SuperSuperConfiguracoesRoute,
+  SuperSuperEquipeRoute: SuperSuperEquipeRoute,
   SuperSuperLeadsRoute: SuperSuperLeadsRoute,
   SuperSuperLojasRoute: SuperSuperLojasRoute,
   SuperSuperPlanosRoute: SuperSuperPlanosRoute,
