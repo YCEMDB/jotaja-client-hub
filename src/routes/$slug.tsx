@@ -516,7 +516,7 @@ function CheckoutDialog({
       .from("orders")
       .insert({
         restaurant_id: restaurant.id,
-        customer_id: cust?.id ?? null,
+        customer_id: custId,
         customer_name: name.trim(),
         customer_phone: phone.trim(),
         type: orderType,
