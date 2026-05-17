@@ -34,6 +34,12 @@ const STATUS_LABEL: Record<string, string> = {
   ready: "Pronto", out_for_delivery: "Saiu p/ entrega",
   delivered: "Entregue", cancelled: "Cancelado",
 };
+const TYPE_LABEL: Record<string, string> = {
+  delivery: "Entrega", pickup: "Retirada", dine_in: "No local",
+};
+const PAYMENT_LABEL: Record<string, string> = {
+  cash: "Dinheiro", pix: "Pix", credit_card: "Crédito", debit_card: "Débito",
+};
 
 function fmtMoney(v: number) { return `R$ ${Number(v).toFixed(2).replace(".", ",")}`; }
 function todayISO(offsetDays = 0) {
