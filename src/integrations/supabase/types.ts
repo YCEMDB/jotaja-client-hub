@@ -845,6 +845,7 @@ export type Database = {
           mp_public_key: string | null
           name: string
           opening_hours: Json | null
+          order_number_seq: number
           owner_id: string
           phone: string | null
           pickup_instructions: string | null
@@ -891,6 +892,7 @@ export type Database = {
           mp_public_key?: string | null
           name: string
           opening_hours?: Json | null
+          order_number_seq?: number
           owner_id: string
           phone?: string | null
           pickup_instructions?: string | null
@@ -937,6 +939,7 @@ export type Database = {
           mp_public_key?: string | null
           name?: string
           opening_hours?: Json | null
+          order_number_seq?: number
           owner_id?: string
           phone?: string | null
           pickup_instructions?: string | null
