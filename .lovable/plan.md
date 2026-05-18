@@ -1,26 +1,50 @@
-## Problema
+## O que vai ser criado
 
-Os avisos publicados em **Super-Admin → Avisos globais** são gravados em `global_announcements`, mas nenhum componente do painel das lojas (`/admin/*`) lê essa tabela. Resultado: o aviso nunca é renderizado para os restaurantes.
+Um sistema de caixa por loja, acessível em **/admin/caixa**, com:
 
-A RLS já permite a leitura (`ann_auth_select` libera SELECT para `authenticated`), então é só plugar a UI.
+1. **Abertura de caixa** — informar valor inicial (troco), fica como sessão "aberta".
+2. **Movimentações manuais** durante o turno:
+   - **Sangria** (retirada de dinheiro)
+   - **Reforço** (entrada de troco)
+   - **Despesa** (saída para gastos)
+   - Cada uma com motivo/descrição.
+3. **Vendas em dinheiro entradas automaticamente** — pedidos da loja pagos em "Dinheiro" (PDV ou delivery) criados/atualizados enquanto a sessão estiver aberta entram como entrada automática.
+4. **Fechamento de caixa** — operador digita o valor contado em espécie. Sistema mostra:
+   - Valor inicial
+   - + Entradas em dinheiro (vendas + reforços)
+   - – Saídas (sangrias + despesas)
+   - = **Valor esperado**
+   - Valor contado pelo operador
+   - **Diferença** (sobra/falta)
+   - Campo de observações.
+5. **Relatório / Histórico** — lista de sessões fechadas com data, operador, totais, diferença e botão para ver detalhes (todas as movimentações + pedidos vinculados).
 
-## Mudanças
+## Mudanças no banco
 
-1. **Novo componente** `src/components/GlobalAnnouncementsBanner.tsx`
-   - Busca em `global_announcements` os registros onde `is_active = true` e (`expires_at IS NULL` ou `expires_at > now()`).
-   - Ordena por `created_at desc`.
-   - Renderiza uma faixa no topo por aviso, com cor conforme `variant` (info/success/warning/danger), ícone `Megaphone` e botão "X" para dispensar localmente (guarda IDs dispensados em `localStorage` — `dismissed_announcements`).
-   - Inscreve em realtime (`postgres_changes` em `global_announcements`) para atualizar sem reload quando o admin publica/desativa.
+Duas tabelas novas:
 
-2. **Integrar no layout** `src/routes/_authenticated.tsx`
-   - Renderizar `<GlobalAnnouncementsBanner />` no topo do `<main>`, acima do `<Outlet />`.
-   - Aparece em todas as páginas do painel da loja.
+- **`cash_sessions`** — `restaurant_id`, `opened_by`, `opened_at`, `opening_amount`, `closed_by`, `closed_at`, `closing_amount`, `expected_amount`, `difference`, `status` (`open`/`closed`), `notes`.
+- **`cash_movements`** — `session_id`, `restaurant_id`, `type` (`sale`/`reinforcement`/`withdrawal`/`expense`), `amount`, `description`, `order_id` (opcional, para vendas), `created_by`, `created_at`.
 
-3. **(Opcional) Também no Super-Admin** — exibir no `_super.tsx` para o próprio admin ver como ficou. Posso incluir se quiser.
+Restrições:
+- Apenas **uma sessão aberta por loja por vez** (índice único parcial em `status='open'`).
+- RLS: time da loja (já existe `private.has_restaurant_access`) faz CRUD; super-admin vê tudo.
+- Trigger que vincula pedidos pagos em dinheiro à sessão aberta automaticamente (quando `payment='cash'` e `status` muda para confirmado/entregue), inserindo um `cash_movement` tipo `sale`.
 
-## Sem mudanças
+## Mudanças no app
 
-- Tabela, RLS e tela de criação já estão prontas.
-- Sem migração necessária.
+- Nova rota **`src/routes/_authenticated/admin.caixa.tsx`** com três modos:
+  - Sem sessão aberta → tela de **Abertura**.
+  - Sessão aberta → painel com resumo em tempo real (entradas, saídas, esperado), botões de Sangria/Reforço/Despesa e botão **Fechar caixa**.
+  - Aba **Histórico** com sessões fechadas e detalhamento.
+- Item "Caixa" no menu lateral do admin (entre PDV e Pedidos).
+- Exportar CSV do histórico (reuso de `src/lib/export-csv.ts`).
+
+## Detalhes técnicos
+
+- Atualização em realtime via canal `cash-session-{id}` em `cash_movements` para mostrar vendas em dinheiro aparecendo no caixa sem refresh.
+- Valores em `numeric(10,2)` como o resto do schema.
+- Diferença salva em `cash_sessions` para o relatório.
+- Sem dependências novas.
 
 Posso aplicar?

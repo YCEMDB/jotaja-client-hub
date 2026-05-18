@@ -61,6 +61,7 @@ import { Route as AuthenticatedAdminCuponsRouteImport } from './routes/_authenti
 import { Route as AuthenticatedAdminConfiguracoesRouteImport } from './routes/_authenticated/admin.configuracoes'
 import { Route as AuthenticatedAdminClientesRouteImport } from './routes/_authenticated/admin.clientes'
 import { Route as AuthenticatedAdminCardapioRouteImport } from './routes/_authenticated/admin.cardapio'
+import { Route as AuthenticatedAdminCaixaRouteImport } from './routes/_authenticated/admin.caixa'
 import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
@@ -342,6 +343,11 @@ const AuthenticatedAdminCardapioRoute =
     path: '/admin/cardapio',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedAdminCaixaRoute = AuthenticatedAdminCaixaRouteImport.update({
+  id: '/admin/caixa',
+  path: '/admin/caixa',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const LovableEmailTransactionalSendRoute =
   LovableEmailTransactionalSendRouteImport.update({
     id: '/lovable/email/transactional/send',
@@ -401,6 +407,7 @@ export interface FileRoutesByFullPath {
   '/segmentos/hamburgueria': typeof SegmentosHamburgueriaRoute
   '/segmentos/pizzaria': typeof SegmentosPizzariaRoute
   '/blog/': typeof BlogIndexRoute
+  '/admin/caixa': typeof AuthenticatedAdminCaixaRoute
   '/admin/cardapio': typeof AuthenticatedAdminCardapioRoute
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
@@ -458,6 +465,7 @@ export interface FileRoutesByTo {
   '/segmentos/hamburgueria': typeof SegmentosHamburgueriaRoute
   '/segmentos/pizzaria': typeof SegmentosPizzariaRoute
   '/blog': typeof BlogIndexRoute
+  '/admin/caixa': typeof AuthenticatedAdminCaixaRoute
   '/admin/cardapio': typeof AuthenticatedAdminCardapioRoute
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
@@ -518,6 +526,7 @@ export interface FileRoutesById {
   '/segmentos/hamburgueria': typeof SegmentosHamburgueriaRoute
   '/segmentos/pizzaria': typeof SegmentosPizzariaRoute
   '/blog/': typeof BlogIndexRoute
+  '/_authenticated/admin/caixa': typeof AuthenticatedAdminCaixaRoute
   '/_authenticated/admin/cardapio': typeof AuthenticatedAdminCardapioRoute
   '/_authenticated/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/_authenticated/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
@@ -577,6 +586,7 @@ export interface FileRouteTypes {
     | '/segmentos/hamburgueria'
     | '/segmentos/pizzaria'
     | '/blog/'
+    | '/admin/caixa'
     | '/admin/cardapio'
     | '/admin/clientes'
     | '/admin/configuracoes'
@@ -634,6 +644,7 @@ export interface FileRouteTypes {
     | '/segmentos/hamburgueria'
     | '/segmentos/pizzaria'
     | '/blog'
+    | '/admin/caixa'
     | '/admin/cardapio'
     | '/admin/clientes'
     | '/admin/configuracoes'
@@ -693,6 +704,7 @@ export interface FileRouteTypes {
     | '/segmentos/hamburgueria'
     | '/segmentos/pizzaria'
     | '/blog/'
+    | '/_authenticated/admin/caixa'
     | '/_authenticated/admin/cardapio'
     | '/_authenticated/admin/clientes'
     | '/_authenticated/admin/configuracoes'
@@ -1129,6 +1141,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminCardapioRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/admin/caixa': {
+      id: '/_authenticated/admin/caixa'
+      path: '/admin/caixa'
+      fullPath: '/admin/caixa'
+      preLoaderRoute: typeof AuthenticatedAdminCaixaRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/lovable/email/transactional/send': {
       id: '/lovable/email/transactional/send'
       path: '/lovable/email/transactional/send'
@@ -1168,6 +1187,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedAdminCaixaRoute: typeof AuthenticatedAdminCaixaRoute
   AuthenticatedAdminCardapioRoute: typeof AuthenticatedAdminCardapioRoute
   AuthenticatedAdminClientesRoute: typeof AuthenticatedAdminClientesRoute
   AuthenticatedAdminConfiguracoesRoute: typeof AuthenticatedAdminConfiguracoesRoute
@@ -1182,6 +1202,7 @@ interface AuthenticatedRouteChildren {
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAdminCaixaRoute: AuthenticatedAdminCaixaRoute,
   AuthenticatedAdminCardapioRoute: AuthenticatedAdminCardapioRoute,
   AuthenticatedAdminClientesRoute: AuthenticatedAdminClientesRoute,
   AuthenticatedAdminConfiguracoesRoute: AuthenticatedAdminConfiguracoesRoute,

@@ -62,6 +62,101 @@ export type Database = {
         }
         Relationships: []
       }
+      cash_movements: {
+        Row: {
+          amount: number
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          order_id: string | null
+          restaurant_id: string
+          session_id: string
+          type: Database["public"]["Enums"]["cash_movement_type"]
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          order_id?: string | null
+          restaurant_id: string
+          session_id: string
+          type: Database["public"]["Enums"]["cash_movement_type"]
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          order_id?: string | null
+          restaurant_id?: string
+          session_id?: string
+          type?: Database["public"]["Enums"]["cash_movement_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cash_movements_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "cash_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cash_sessions: {
+        Row: {
+          closed_at: string | null
+          closed_by: string | null
+          closing_amount: number | null
+          created_at: string
+          difference: number | null
+          expected_amount: number | null
+          id: string
+          notes: string | null
+          opened_at: string
+          opened_by: string
+          opening_amount: number
+          restaurant_id: string
+          status: Database["public"]["Enums"]["cash_session_status"]
+          updated_at: string
+        }
+        Insert: {
+          closed_at?: string | null
+          closed_by?: string | null
+          closing_amount?: number | null
+          created_at?: string
+          difference?: number | null
+          expected_amount?: number | null
+          id?: string
+          notes?: string | null
+          opened_at?: string
+          opened_by: string
+          opening_amount?: number
+          restaurant_id: string
+          status?: Database["public"]["Enums"]["cash_session_status"]
+          updated_at?: string
+        }
+        Update: {
+          closed_at?: string | null
+          closed_by?: string | null
+          closing_amount?: number | null
+          created_at?: string
+          difference?: number | null
+          expected_amount?: number | null
+          id?: string
+          notes?: string | null
+          opened_at?: string
+          opened_by?: string
+          opening_amount?: number
+          restaurant_id?: string
+          status?: Database["public"]["Enums"]["cash_session_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           created_at: string
@@ -1091,6 +1186,8 @@ export type Database = {
     }
     Enums: {
       app_role: "super_admin" | "owner" | "employee"
+      cash_movement_type: "sale" | "reinforcement" | "withdrawal" | "expense"
+      cash_session_status: "open" | "closed"
       coupon_type: "percentage" | "fixed" | "free_shipping"
       lead_status: "new" | "contacted" | "approved" | "rejected"
       order_status:
@@ -1233,6 +1330,8 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["super_admin", "owner", "employee"],
+      cash_movement_type: ["sale", "reinforcement", "withdrawal", "expense"],
+      cash_session_status: ["open", "closed"],
       coupon_type: ["percentage", "fixed", "free_shipping"],
       lead_status: ["new", "contacted", "approved", "rejected"],
       order_status: [

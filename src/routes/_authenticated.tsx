@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import {
   LayoutDashboard, ShoppingBag, UtensilsCrossed, Users, Settings, LogOut,
-  Tags, Truck, BarChart3, ShieldCheck, ShoppingCart,
+  Tags, Truck, BarChart3, ShieldCheck, ShoppingCart, Wallet,
   PanelLeftClose, PanelLeftOpen, Menu,
 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -20,6 +20,7 @@ const NAV = [
   { to: "/admin", label: "Painel", icon: LayoutDashboard },
   { to: "/admin/pedidos", label: "Pedidos", icon: ShoppingBag },
   { to: "/admin/pdv", label: "PDV Manual", icon: ShoppingCart },
+  { to: "/admin/caixa", label: "Caixa", icon: Wallet },
   { to: "/admin/cardapio", label: "Cardápio", icon: UtensilsCrossed },
   { to: "/admin/cupons", label: "Cupons", icon: Tags },
   { to: "/admin/entregadores", label: "Entregadores", icon: Truck },
