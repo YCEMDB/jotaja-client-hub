@@ -18,7 +18,7 @@ import {
   Wallet, ArrowDownCircle, ArrowUpCircle, Receipt, Lock, Unlock,
   Plus, TrendingUp, TrendingDown, Loader2, FileDown, Eye,
 } from "lucide-react";
-import { exportToCSV } from "@/lib/export-csv";
+import { downloadCSV } from "@/lib/export-csv";
 
 export const Route = createFileRoute("/_authenticated/admin/caixa")({
   component: CaixaPage,
