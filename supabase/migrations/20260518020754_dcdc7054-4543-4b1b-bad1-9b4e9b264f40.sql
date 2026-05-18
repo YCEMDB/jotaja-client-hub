@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.register_cash_sale_on_order() FROM PUBLIC, anon, authenticated;
