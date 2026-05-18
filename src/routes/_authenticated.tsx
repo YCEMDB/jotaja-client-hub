@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import {
   LayoutDashboard, ShoppingBag, UtensilsCrossed, Users, Settings, LogOut,
-  Tags, Truck, BarChart3, ShieldCheck, ShoppingCart,
+  Tags, Truck, BarChart3, ShieldCheck, ShoppingCart, Wallet,
   PanelLeftClose, PanelLeftOpen, Menu,
 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
