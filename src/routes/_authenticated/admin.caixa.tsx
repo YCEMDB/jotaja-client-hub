@@ -146,8 +146,8 @@ function CaixaPage() {
     <div className="space-y-6">
       <PageHeader
         title="Caixa"
-        description="Controle de abertura, movimentações e fechamento."
-        icon={Wallet}
+        subtitle="Controle de abertura, movimentações e fechamento."
+        kicker="Operação"
       />
 
       <Tabs value={tab} onValueChange={setTab}>
