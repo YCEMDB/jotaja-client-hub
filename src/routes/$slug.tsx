@@ -564,6 +564,40 @@ function CheckoutDialog({
 
     setSubmitting(false);
     toast.success("Pedido enviado!");
+
+    // Envia resumo do pedido pelo WhatsApp do restaurante
+    const waDigits = (restaurant.whatsapp ?? "").replace(/\D/g, "");
+    if (waDigits.length >= 10) {
+      const lines: string[] = [];
+      lines.push(`*Novo pedido — ${restaurant.name}*`);
+      lines.push("");
+      lines.push(`*Cliente:* ${name.trim()}`);
+      lines.push(`*Telefone:* ${phone.trim()}`);
+      lines.push(`*Tipo:* ${orderType === "delivery" ? "Entrega" : "Retirada"}`);
+      if (orderType === "delivery") {
+        const addr = `${street}, ${number}${complement ? " — " + complement : ""}${area?.neighborhood ? " (" + area.neighborhood + ")" : ""}`;
+        lines.push(`*Endereço:* ${addr}`);
+      }
+      const payLabel = payment === "pix" ? "PIX" : payment === "cash" ? "Dinheiro" : payment === "credit_card" ? "Cartão de crédito" : "Cartão de débito";
+      lines.push(`*Pagamento:* ${payLabel}`);
+      if (payment === "cash" && changeFor) lines.push(`*Troco para:* R$ ${Number(changeFor).toFixed(2)}`);
+      lines.push("");
+      lines.push("*Itens:*");
+      cart.forEach((i) => {
+        const price = Number(i.product.promo_price ?? i.product.price);
+        lines.push(`• ${i.qty}x ${i.product.name} — R$ ${(price * i.qty).toFixed(2)}`);
+      });
+      lines.push("");
+      lines.push(`*Subtotal:* R$ ${subtotal.toFixed(2)}`);
+      if (finalShipping > 0) lines.push(`*Entrega:* R$ ${finalShipping.toFixed(2)}`);
+      if (discount > 0 && coupon?.type !== "free_shipping") lines.push(`*Desconto:* -R$ ${discount.toFixed(2)}`);
+      if (coupon) lines.push(`*Cupom:* ${coupon.code}`);
+      lines.push(`*Total:* R$ ${total.toFixed(2)}`);
+      if (notes.trim()) { lines.push(""); lines.push(`*Observações:* ${notes.trim()}`); }
+      const url = `https://wa.me/${waDigits.startsWith("55") ? waDigits : "55" + waDigits}?text=${encodeURIComponent(lines.join("\n"))}`;
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+
     onSuccess(order.id);
   };
 
