@@ -517,18 +517,17 @@ function HistoryView({ history }: { history: Session[] }) {
 
   const exportCsv = () => {
     if (!history.length) return;
-    exportToCSV(
-      history.map((s) => ({
-        Abertura: new Date(s.opened_at).toLocaleString("pt-BR"),
-        Fechamento: s.closed_at ? new Date(s.closed_at).toLocaleString("pt-BR") : "",
-        ValorInicial: Number(s.opening_amount).toFixed(2),
-        Esperado: Number(s.expected_amount ?? 0).toFixed(2),
-        Contado: Number(s.closing_amount ?? 0).toFixed(2),
-        Diferenca: Number(s.difference ?? 0).toFixed(2),
-        Observacoes: s.notes ?? "",
-      })),
-      "caixa-historico",
-    );
+    const header = ["Abertura", "Fechamento", "Valor inicial", "Esperado", "Contado", "Diferenca", "Observacoes"];
+    const rows = history.map((s) => [
+      new Date(s.opened_at).toLocaleString("pt-BR"),
+      s.closed_at ? new Date(s.closed_at).toLocaleString("pt-BR") : "",
+      Number(s.opening_amount).toFixed(2),
+      Number(s.expected_amount ?? 0).toFixed(2),
+      Number(s.closing_amount ?? 0).toFixed(2),
+      Number(s.difference ?? 0).toFixed(2),
+      s.notes ?? "",
+    ]);
+    downloadCSV("caixa-historico.csv", [header, ...rows]);
   };
 
   if (!history.length) {
