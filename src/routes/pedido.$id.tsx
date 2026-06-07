@@ -51,28 +51,20 @@ function PedidoStatus() {
   const [loading, setLoading] = useState(true);
 
   const load = async () => {
-    const { data: o } = await supabase.from("orders").select("*").eq("id", id).maybeSingle();
-    if (!o) { setLoading(false); return; }
-    setOrder(o as Order);
-    const [itemsRes, restRes] = await Promise.all([
-      supabase.from("order_items").select("*").eq("order_id", id),
-      supabase.from("restaurants").select("name,slug,whatsapp,primary_color").eq("id", o.restaurant_id).maybeSingle(),
-    ]);
-    setItems((itemsRes.data ?? []) as OrderItem[]);
-    setRestaurant(restRes.data as Restaurant);
+    const { data } = await supabase.rpc("get_public_order", { p_id: id });
+    const payload = data as any;
+    if (!payload?.order) { setLoading(false); return; }
+    setOrder(payload.order as Order);
+    setItems((payload.items ?? []) as OrderItem[]);
+    setRestaurant((payload.restaurant ?? null) as Restaurant | null);
     setLoading(false);
   };
 
   useEffect(() => {
     load();
-    const ch = supabase
-      .channel(`order-${id}`)
-      .on("postgres_changes",
-        { event: "UPDATE", schema: "public", table: "orders", filter: `id=eq.${id}` },
-        (payload) => setOrder((prev) => prev ? { ...prev, ...(payload.new as Order) } : prev),
-      )
-      .subscribe();
-    return () => { supabase.removeChannel(ch); };
+    // Poll every 5s for status updates (public access goes through the RPC)
+    const t = setInterval(load, 5000);
+    return () => clearInterval(t);
   }, [id]);
 
   if (loading) return <div className="min-h-screen grid place-items-center">Carregando…</div>;

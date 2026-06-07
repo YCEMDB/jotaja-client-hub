@@ -52,8 +52,9 @@ function OrderTrackPage() {
   const createPix = useServerFn(createPixPayment);
 
   const load = async () => {
-    const { data } = await supabase.from("orders").select("*").eq("id", orderId).maybeSingle();
-    setOrder(data as any);
+    const { data } = await supabase.rpc("get_public_order", { p_id: orderId });
+    const payload = data as any;
+    setOrder((payload?.order ?? null) as any);
     setLoading(false);
   };
 
