@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const createPixSchema = z.object({
   orderId: z.string().uuid(),
@@ -105,3 +106,63 @@ export const markOrderPaid = createServerFn({ method: "POST" })
     if (error) return { ok: false, error: error.message };
     return { ok: true };
   });
+
+// ─── Mercado Pago: testar conexão ────────────────────────────────
+// Valida o access token chamando GET /users/me e confirma capacidade PIX.
+// Usa o middleware autenticado + RLS para garantir que o usuário só
+// consulta credenciais de um restaurante do qual ele é dono/equipe.
+
+const verifyMpSchema = z.object({
+  restaurantId: z.string().uuid(),
+});
+
+export const verifyMercadoPago = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => verifyMpSchema.parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+
+    // RLS valida acesso: se não for da equipe, retorna vazio
+    const { data: secret, error: secretErr } = await supabase
+      .from("restaurant_secrets")
+      .select("mp_access_token")
+      .eq("restaurant_id", data.restaurantId)
+      .maybeSingle();
+
+    if (secretErr) return { ok: false as const, error: "Erro ao ler credenciais" };
+    const token = secret?.mp_access_token?.trim();
+    if (!token) return { ok: false as const, error: "Nenhum Access Token configurado" };
+
+    try {
+      const res = await fetch("https://api.mercadopago.com/users/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const body: any = await res.json().catch(() => ({}));
+
+      if (res.status === 401 || res.status === 403) {
+        return { ok: false as const, error: "Access Token inválido ou expirado" };
+      }
+      if (!res.ok) {
+        return { ok: false as const, error: body?.message ?? `Erro ${res.status} ao consultar Mercado Pago` };
+      }
+
+      const env: "production" | "sandbox" =
+        token.startsWith("TEST-") ? "sandbox" : "production";
+
+      return {
+        ok: true as const,
+        environment: env,
+        account: {
+          id: body?.id ? String(body.id) : null,
+          nickname: body?.nickname ?? null,
+          email: body?.email ?? null,
+          country: body?.country_id ?? null,
+          site: body?.site_id ?? null,
+        },
+      };
+    } catch (e) {
+      console.error("verifyMercadoPago error", e);
+      return { ok: false as const, error: "Falha de rede ao contatar o Mercado Pago" };
+    }
+  });
+
