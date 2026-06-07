@@ -28,13 +28,21 @@ export const createPixPayment = createServerFn({ method: "POST" })
       };
     }
 
-    const { data: rest } = await supabaseAdmin
-      .from("restaurants")
-      .select("mp_access_token, name")
-      .eq("id", order.restaurant_id)
-      .maybeSingle();
+    const [{ data: secret }, { data: restRow }] = await Promise.all([
+      supabaseAdmin
+        .from("restaurant_secrets")
+        .select("mp_access_token")
+        .eq("restaurant_id", order.restaurant_id)
+        .maybeSingle(),
+      supabaseAdmin
+        .from("restaurants")
+        .select("name")
+        .eq("id", order.restaurant_id)
+        .maybeSingle(),
+    ]);
+    const rest = { mp_access_token: secret?.mp_access_token ?? null, name: restRow?.name ?? "" };
 
-    if (!rest?.mp_access_token)
+    if (!rest.mp_access_token)
       return { ok: false, error: "Restaurante não configurou Mercado Pago" };
 
     const expiresAt = new Date(Date.now() + 30 * 60 * 1000);

@@ -468,15 +468,21 @@ function CheckoutDialog({
     const code = couponCode.trim().toUpperCase();
     if (!code) return;
     setValidatingCoupon(true);
-    const { data } = await supabase
-      .from("coupons").select("*")
-      .eq("restaurant_id", restaurant.id).eq("code", code).eq("is_active", true).maybeSingle();
+    const { data } = await supabase.rpc("validate_public_coupon", {
+      p_restaurant_id: restaurant.id,
+      p_code: code,
+      p_subtotal: subtotal,
+    });
     setValidatingCoupon(false);
-    if (!data) return toast.error("Cupom inválido");
-    if (data.expires_at && new Date(data.expires_at) < new Date()) return toast.error("Cupom expirado");
-    if (data.max_uses && (data.uses_count ?? 0) >= data.max_uses) return toast.error("Cupom esgotado");
-    if (Number(data.min_order ?? 0) > subtotal) return toast.error(`Cupom requer pedido mínimo de R$ ${Number(data.min_order).toFixed(2)}`);
-    setCoupon(data as Coupon);
+    const result = data as any;
+    if (!result?.ok) {
+      const err = result?.error;
+      if (err === "expired") return toast.error("Cupom expirado");
+      if (err === "exhausted") return toast.error("Cupom esgotado");
+      if (err === "min_order") return toast.error(`Cupom requer pedido mínimo de R$ ${Number(result.min_order).toFixed(2)}`);
+      return toast.error("Cupom inválido");
+    }
+    setCoupon(result.coupon as Coupon);
     toast.success("Cupom aplicado!");
   };
 
