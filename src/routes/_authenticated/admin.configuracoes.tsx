@@ -9,7 +9,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Trash2, Upload, Copy, Check, Printer, MapPin } from "lucide-react";
+import { Plus, Trash2, Upload, Copy, Check, Printer, MapPin, Eye, EyeOff, ShieldCheck, ShieldAlert, Loader2, Link as LinkIcon, Unplug } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { useServerFn } from "@tanstack/react-start";
+import { verifyMercadoPago } from "@/lib/payments.functions";
 import { toast } from "sonner";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
@@ -456,21 +459,63 @@ function AreasTab({ areas, restaurantId, onSaved }: { areas: DeliveryArea[]; res
 
 function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
   const [token, setToken] = useState("");
+  const [savedToken, setSavedToken] = useState<string | null>(null);
   const [pubKey, setPubKey] = useState(r.mp_public_key ?? "");
   const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [showToken, setShowToken] = useState(false);
+  const [testing, setTesting] = useState(false);
+  const [account, setAccount] = useState<null | {
+    environment: "production" | "sandbox";
+    nickname: string | null;
+    email: string | null;
+  }>(null);
+  const [copiedHook, setCopiedHook] = useState(false);
 
+  const verify = useServerFn(verifyMercadoPago);
+  const webhookUrl = typeof window !== "undefined" ? `${window.location.origin}/api/public/mercadopago-webhook` : "";
+
+  const reload = async () => {
+    setLoading(true);
+    const { data } = await supabase
+      .from("restaurant_secrets")
+      .select("mp_access_token")
+      .eq("restaurant_id", r.id)
+      .maybeSingle();
+    const t = data?.mp_access_token ?? null;
+    setSavedToken(t);
+    setToken(t ?? "");
+    setLoading(false);
+  };
+
+  useEffect(() => { reload(); }, [r.id]);
+
+  // Auto-validar quando já existe token salvo
   useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      const { data } = await supabase
-        .from("restaurant_secrets")
-        .select("mp_access_token")
-        .eq("restaurant_id", r.id)
-        .maybeSingle();
-      if (!cancelled) setToken(data?.mp_access_token ?? "");
-    })();
-    return () => { cancelled = true; };
-  }, [r.id]);
+    if (savedToken) void runTest(true);
+    else setAccount(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [savedToken]);
+
+  const runTest = async (silent = false) => {
+    setTesting(true);
+    try {
+      const res = await verify({ data: { restaurantId: r.id } });
+      if (res.ok) {
+        setAccount({
+          environment: res.environment,
+          nickname: res.account.nickname,
+          email: res.account.email,
+        });
+        if (!silent) toast.success(`Conectado como ${res.account.nickname ?? res.account.email ?? "Mercado Pago"}`);
+      } else {
+        setAccount(null);
+        if (!silent) toast.error(res.error);
+      }
+    } finally {
+      setTesting(false);
+    }
+  };
 
   const save = async () => {
     setSaving(true);
@@ -489,43 +534,146 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
     const error = pubErr ?? secErr;
     if (error) return toast.error(error.message);
     toast.success("Credenciais salvas");
+    setSavedToken(trimmedToken);
+    onSaved();
+    if (trimmedToken) void runTest();
+  };
+
+  const disconnect = async () => {
+    if (!confirm("Remover a conexão com o Mercado Pago? Pedidos via PIX serão pausados.")) return;
+    setSaving(true);
+    const { error } = await supabase
+      .from("restaurant_secrets")
+      .upsert({ restaurant_id: r.id, mp_access_token: null, updated_at: new Date().toISOString() }, { onConflict: "restaurant_id" });
+    setSaving(false);
+    if (error) return toast.error(error.message);
+    setToken("");
+    setSavedToken(null);
+    setAccount(null);
+    toast.success("Mercado Pago desconectado");
     onSaved();
   };
 
+  const copyWebhook = async () => {
+    try {
+      await navigator.clipboard.writeText(webhookUrl);
+      setCopiedHook(true);
+      toast.success("URL copiada!");
+      setTimeout(() => setCopiedHook(false), 1800);
+    } catch { toast.error("Não foi possível copiar"); }
+  };
+
+  const isConnected = !!savedToken && !!account;
+  const isInvalid = !!savedToken && !account && !testing;
+  const tokenChanged = (token.trim() || null) !== savedToken;
+
   return (
     <Card className="p-6 space-y-5">
-      <div>
-        <h3 className="font-semibold">PIX via Mercado Pago</h3>
-        <p className="text-sm text-muted-foreground mt-1">
-          Conecte sua conta do Mercado Pago para gerar QR Codes PIX automáticos. O dinheiro cai direto na sua conta.
-        </p>
+      <div className="flex items-start justify-between gap-3 flex-wrap">
+        <div>
+          <h3 className="font-semibold flex items-center gap-2">
+            PIX via Mercado Pago
+            {loading || testing ? (
+              <Badge variant="secondary" className="gap-1"><Loader2 className="h-3 w-3 animate-spin" /> verificando</Badge>
+            ) : isConnected ? (
+              <Badge className="gap-1 bg-emerald-600 hover:bg-emerald-600 text-white">
+                <ShieldCheck className="h-3 w-3" />
+                {account.environment === "production" ? "Conectado" : "Conectado (Sandbox)"}
+              </Badge>
+            ) : isInvalid ? (
+              <Badge variant="destructive" className="gap-1"><ShieldAlert className="h-3 w-3" /> token inválido</Badge>
+            ) : (
+              <Badge variant="outline">Não conectado</Badge>
+            )}
+          </h3>
+          <p className="text-sm text-muted-foreground mt-1">
+            Conecte sua conta do Mercado Pago para gerar QR Codes PIX automáticos. O dinheiro cai direto na sua conta.
+          </p>
+          {isConnected && (account.nickname || account.email) && (
+            <p className="text-xs text-muted-foreground mt-1">
+              Conta: <strong>{account.nickname ?? account.email}</strong>
+              {account.email && account.nickname ? ` · ${account.email}` : ""}
+            </p>
+          )}
+        </div>
+        <div className="flex gap-2">
+          {savedToken && (
+            <Button size="sm" variant="outline" onClick={() => runTest()} disabled={testing}>
+              {testing ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShieldCheck className="h-4 w-4" />}
+              Testar conexão
+            </Button>
+          )}
+          {savedToken && (
+            <Button size="sm" variant="ghost" onClick={disconnect} disabled={saving} className="text-destructive hover:text-destructive">
+              <Unplug className="h-4 w-4" /> Desconectar
+            </Button>
+          )}
+        </div>
       </div>
 
       <div className="text-xs bg-muted/50 p-3 rounded-lg space-y-1">
-        <p className="font-semibold">Como obter:</p>
+        <p className="font-semibold flex items-center gap-1"><LinkIcon className="h-3 w-3" /> Como obter o Access Token:</p>
         <ol className="list-decimal list-inside space-y-0.5 text-muted-foreground">
-          <li>Acesse <a href="https://www.mercadopago.com.br/developers/panel/app" target="_blank" className="underline">painel de desenvolvedores</a></li>
-          <li>Crie uma aplicação (tipo: Pagamentos online)</li>
-          <li>Copie o <strong>Access Token</strong> de produção e cole abaixo</li>
+          <li>Acesse o <a href="https://www.mercadopago.com.br/developers/panel/app" target="_blank" rel="noreferrer" className="underline">painel de desenvolvedores</a></li>
+          <li>Crie uma aplicação do tipo <strong>Pagamentos online</strong></li>
+          <li>Em <em>Credenciais de produção</em>, copie o <strong>Access Token</strong> (começa com <code>APP_USR-</code>)</li>
+          <li>Para testar antes de ir ao ar, use o <strong>Access Token de teste</strong> (começa com <code>TEST-</code>)</li>
         </ol>
       </div>
 
       <div>
         <Label>Access Token</Label>
-        <Input type="password" value={token} onChange={(e) => setToken(e.target.value)} placeholder="APP_USR-..." className="font-mono" />
+        <div className="flex gap-2">
+          <Input
+            type={showToken ? "text" : "password"}
+            value={token}
+            onChange={(e) => setToken(e.target.value)}
+            placeholder="APP_USR-... ou TEST-..."
+            className="font-mono"
+          />
+          <Button
+            type="button" variant="outline" size="icon"
+            onClick={() => setShowToken((v) => !v)}
+            aria-label={showToken ? "Ocultar token" : "Mostrar token"}
+            title={showToken ? "Ocultar token" : "Mostrar token"}
+          >
+            {showToken ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          </Button>
+        </div>
+        {token.trim() && !/^(APP_USR|TEST)-/.test(token.trim()) && (
+          <p className="text-xs text-amber-600 mt-1">⚠️ Tokens do Mercado Pago começam com <code>APP_USR-</code> (produção) ou <code>TEST-</code> (sandbox).</p>
+        )}
       </div>
+
       <div>
         <Label>Public Key (opcional)</Label>
         <Input value={pubKey} onChange={(e) => setPubKey(e.target.value)} placeholder="APP_USR-..." className="font-mono" />
+        <p className="text-xs text-muted-foreground mt-1">Usada apenas se você integrar o checkout transparente do MP no front.</p>
       </div>
 
-      <div className="text-xs bg-amber-50 border border-amber-200 text-amber-900 p-3 rounded-lg">
-        <strong>Webhook:</strong> configure a URL abaixo no painel do Mercado Pago (Suas integrações → Webhooks):
-        <code className="block mt-1 bg-white p-1.5 rounded font-mono break-all">{typeof window !== "undefined" ? window.location.origin : ""}/api/public/mercadopago-webhook</code>
-        Eventos: <strong>payment</strong>
+      <div className="text-xs bg-amber-50 border border-amber-200 text-amber-900 p-3 rounded-lg space-y-2">
+        <div>
+          <strong>Webhook (obrigatório):</strong> cole a URL abaixo no painel do Mercado Pago em
+          {" "}<em>Suas integrações → Webhooks</em>. Evento: <strong>payment</strong>.
+        </div>
+        <div className="flex gap-2 items-center">
+          <code className="flex-1 bg-white px-2 py-1.5 rounded font-mono text-[11px] break-all">{webhookUrl}</code>
+          <Button type="button" size="sm" variant="outline" onClick={copyWebhook}>
+            {copiedHook ? <Check className="h-4 w-4 text-emerald-600" /> : <Copy className="h-4 w-4" />}
+          </Button>
+        </div>
       </div>
 
-      <Button onClick={save} disabled={saving}>{saving ? "Salvando…" : "Salvar credenciais"}</Button>
+      <div className="flex gap-2">
+        <Button onClick={save} disabled={saving || (!tokenChanged && pubKey.trim() === (r.mp_public_key ?? ""))}>
+          {saving ? "Salvando…" : "Salvar credenciais"}
+        </Button>
+        {tokenChanged && savedToken && (
+          <Button variant="outline" onClick={() => { setToken(savedToken ?? ""); }} disabled={saving}>
+            Cancelar
+          </Button>
+        )}
+      </div>
     </Card>
   );
 }
