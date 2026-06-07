@@ -26,16 +26,16 @@ export const Route = createFileRoute("/api/public/mercadopago-webhook")({
 
           if (!order) return new Response("order not found", { status: 200 });
 
-          const { data: rest } = await supabaseAdmin
-            .from("restaurants")
+          const { data: secret } = await supabaseAdmin
+            .from("restaurant_secrets")
             .select("mp_access_token")
-            .eq("id", order.restaurant_id)
+            .eq("restaurant_id", order.restaurant_id)
             .maybeSingle();
 
-          if (!rest?.mp_access_token) return new Response("no token", { status: 200 });
+          if (!secret?.mp_access_token) return new Response("no token", { status: 200 });
 
           const res = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
-            headers: { Authorization: `Bearer ${rest.mp_access_token}` },
+            headers: { Authorization: `Bearer ${secret.mp_access_token}` },
           });
           const payment: any = await res.json();
           if (!res.ok) return new Response("mp fetch failed", { status: 200 });

@@ -455,17 +455,38 @@ function AreasTab({ areas, restaurantId, onSaved }: { areas: DeliveryArea[]; res
 }
 
 function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
-  const [token, setToken] = useState(r.mp_access_token ?? "");
+  const [token, setToken] = useState("");
   const [pubKey, setPubKey] = useState(r.mp_public_key ?? "");
   const [saving, setSaving] = useState(false);
 
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase
+        .from("restaurant_secrets")
+        .select("mp_access_token")
+        .eq("restaurant_id", r.id)
+        .maybeSingle();
+      if (!cancelled) setToken(data?.mp_access_token ?? "");
+    })();
+    return () => { cancelled = true; };
+  }, [r.id]);
+
   const save = async () => {
     setSaving(true);
-    const { error } = await supabase.from("restaurants").update({
-      mp_access_token: token.trim() || null,
-      mp_public_key: pubKey.trim() || null,
-    }).eq("id", r.id);
+    const trimmedToken = token.trim() || null;
+    const [{ error: pubErr }, { error: secErr }] = await Promise.all([
+      supabase.from("restaurants").update({
+        mp_public_key: pubKey.trim() || null,
+      }).eq("id", r.id),
+      supabase.from("restaurant_secrets").upsert({
+        restaurant_id: r.id,
+        mp_access_token: trimmedToken,
+        updated_at: new Date().toISOString(),
+      }, { onConflict: "restaurant_id" }),
+    ]);
     setSaving(false);
+    const error = pubErr ?? secErr;
     if (error) return toast.error(error.message);
     toast.success("Credenciais salvas");
     onSaved();
