@@ -906,6 +906,32 @@ export type Database = {
         }
         Relationships: []
       }
+      restaurant_secrets: {
+        Row: {
+          mp_access_token: string | null
+          restaurant_id: string
+          updated_at: string
+        }
+        Insert: {
+          mp_access_token?: string | null
+          restaurant_id: string
+          updated_at?: string
+        }
+        Update: {
+          mp_access_token?: string | null
+          restaurant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "restaurant_secrets_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: true
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       restaurants: {
         Row: {
           accent_color: string | null
@@ -936,7 +962,6 @@ export type Database = {
           min_order_value: number | null
           month_reset_at: string
           monthly_order_count: number
-          mp_access_token: string | null
           mp_public_key: string | null
           name: string
           opening_hours: Json | null
@@ -983,7 +1008,6 @@ export type Database = {
           min_order_value?: number | null
           month_reset_at?: string
           monthly_order_count?: number
-          mp_access_token?: string | null
           mp_public_key?: string | null
           name: string
           opening_hours?: Json | null
@@ -1030,7 +1054,6 @@ export type Database = {
           min_order_value?: number | null
           month_reset_at?: string
           monthly_order_count?: number
-          mp_access_token?: string | null
           mp_public_key?: string | null
           name?: string
           opening_hours?: Json | null
@@ -1166,6 +1189,7 @@ export type Database = {
         Args: { payload: Json; queue_name: string }
         Returns: number
       }
+      get_public_order: { Args: { p_id: string }; Returns: Json }
       move_to_dlq: {
         Args: {
           dlq_name: string
@@ -1182,6 +1206,10 @@ export type Database = {
           msg_id: number
           read_ct: number
         }[]
+      }
+      validate_public_coupon: {
+        Args: { p_code: string; p_restaurant_id: string; p_subtotal?: number }
+        Returns: Json
       }
     }
     Enums: {
