@@ -78,9 +78,10 @@ function LojaPage() {
     (async () => {
       // Slugs reservados nunca correspondem a uma loja real
       if (isReservedSlug(slug)) { setLoading(false); return; }
-      const { data: r } = await supabase.rpc("get_public_restaurant", { p_slug: slug });
-      if (!r) { setLoading(false); return; }
-      setRestaurant(r as Restaurant);
+      const { data: rRaw } = await supabase.rpc("get_public_restaurant", { p_slug: slug });
+      const r = rRaw as unknown as Restaurant | null;
+      if (!r || !r.id) { setLoading(false); return; }
+      setRestaurant(r);
       const [c, p] = await Promise.all([
         supabase.from("categories").select("*").eq("restaurant_id", r.id).eq("is_active", true).order("position"),
         supabase.from("products").select("*").eq("restaurant_id", r.id).eq("is_available", true).order("position"),
