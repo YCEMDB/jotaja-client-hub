@@ -58,7 +58,7 @@ export const createPixPayment = createServerFn({ method: "POST" })
         first_name: order.customer_name?.split(" ")[0] ?? "Cliente",
       },
       external_reference: order.id,
-      notification_url: `${process.env.SUPABASE_URL?.replace("supabase.co", "lovable.app") ?? ""}/api/public/mercadopago-webhook`,
+      notification_url: `${process.env.PUBLIC_SITE_URL ?? "https://comandahub.online"}/api/public/mercadopago-webhook`,
     };
 
     const res = await fetch("https://api.mercadopago.com/v1/payments", {
@@ -105,6 +105,50 @@ export const markOrderPaid = createServerFn({ method: "POST" })
       .eq("id", data.orderId);
     if (error) return { ok: false, error: error.message };
     return { ok: true };
+  });
+
+// Polling fallback — consulta o MP diretamente quando o webhook ainda não chegou
+const syncPixSchema = z.object({ orderId: z.string().uuid() });
+
+export const syncPixPayment = createServerFn({ method: "POST" })
+  .inputValidator((d) => syncPixSchema.parse(d))
+  .handler(async ({ data }) => {
+    const { data: order } = await supabaseAdmin
+      .from("orders")
+      .select("id, restaurant_id, mp_payment_id, payment_status")
+      .eq("id", data.orderId)
+      .maybeSingle();
+    if (!order || !order.mp_payment_id) return { ok: false, status: "no_payment" };
+    if (order.payment_status === "paid") return { ok: true, status: "paid" };
+
+    const { data: secret } = await supabaseAdmin
+      .from("restaurant_secrets")
+      .select("mp_access_token")
+      .eq("restaurant_id", order.restaurant_id)
+      .maybeSingle();
+    if (!secret?.mp_access_token) return { ok: false, status: "no_token" };
+
+    const res = await fetch(`https://api.mercadopago.com/v1/payments/${order.mp_payment_id}`, {
+      headers: { Authorization: `Bearer ${secret.mp_access_token}` },
+    });
+    if (!res.ok) return { ok: false, status: "mp_error" };
+    const p: any = await res.json();
+    const s = p?.status as string;
+    let payment_status: "paid" | "failed" | "refunded" | "pending" = "pending";
+    if (s === "approved") payment_status = "paid";
+    else if (s === "rejected" || s === "cancelled") payment_status = "failed";
+    else if (s === "refunded") payment_status = "refunded";
+
+    if (payment_status !== order.payment_status) {
+      await supabaseAdmin
+        .from("orders")
+        .update({
+          payment_status,
+          paid_at: payment_status === "paid" ? new Date().toISOString() : null,
+        })
+        .eq("id", order.id);
+    }
+    return { ok: true, status: payment_status };
   });
 
 // ─── Mercado Pago: testar conexão ────────────────────────────────
