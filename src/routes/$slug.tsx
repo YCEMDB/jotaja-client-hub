@@ -56,6 +56,8 @@ type Restaurant = {
   mp_online_ready?: boolean;
 };
 type Category = { id: string; name: string; position: number | null; is_active: boolean | null };
+  mp_online_ready?: boolean;
+};
 type Product = {
   id: string; name: string; description: string | null; price: number;
   promo_price: number | null; image_url: string | null; category_id: string | null;
