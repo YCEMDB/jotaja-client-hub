@@ -50,6 +50,7 @@ function OrderTrackPage() {
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
   const createPix = useServerFn(createPixPayment);
+  const syncPix = useServerFn(syncPixPayment);
 
   const load = async () => {
     const { data } = await supabase.rpc("get_public_order", { p_id: orderId });
@@ -70,12 +71,18 @@ function OrderTrackPage() {
       .finally(() => { setGenerating(false); load(); });
   }, [order?.id]);
 
-  // Poll every 4s for payment + status
+  // Poll every 4s: refresh order AND sync MP status (fallback if webhook não chegou)
   useEffect(() => {
     if (!order || order.payment_status === "paid") return;
-    const t = setInterval(load, 4000);
+    const tick = async () => {
+      if (order.payment === "pix") {
+        try { await syncPix({ data: { orderId } }); } catch {}
+      }
+      await load();
+    };
+    const t = setInterval(tick, 4000);
     return () => clearInterval(t);
-  }, [order?.payment_status]);
+  }, [order?.payment_status, order?.payment]);
 
   if (loading) return <div className="p-8 text-center">Carregando…</div>;
   if (!order) return <div className="p-8 text-center">Pedido não encontrado.</div>;
