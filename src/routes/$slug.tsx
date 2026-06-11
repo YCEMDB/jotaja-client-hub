@@ -78,8 +78,7 @@ function LojaPage() {
     (async () => {
       // Slugs reservados nunca correspondem a uma loja real
       if (isReservedSlug(slug)) { setLoading(false); return; }
-      const { data: r } = await supabase
-        .from("restaurants").select("*").eq("slug", slug).maybeSingle();
+      const { data: r } = await supabase.rpc("get_public_restaurant", { p_slug: slug });
       if (!r) { setLoading(false); return; }
       setRestaurant(r as Restaurant);
       const [c, p] = await Promise.all([
