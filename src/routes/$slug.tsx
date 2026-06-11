@@ -438,7 +438,12 @@ function CheckoutDialog({
   const [number, setNumber] = useState("");
   const [areaId, setAreaId] = useState<string>("");
   const [complement, setComplement] = useState("");
-  const [payment, setPayment] = useState<"cash" | "pix" | "credit_card" | "debit_card">("pix");
+  const allowPix = restaurant.accept_pix_online !== false;
+  const allowCash = restaurant.accept_cash_on_delivery !== false;
+  const allowCard = restaurant.accept_card_on_delivery !== false;
+  const defaultPayment: "cash" | "pix" | "credit_card" | "debit_card" =
+    allowPix ? "pix" : allowCash ? "cash" : allowCard ? "credit_card" : "pix";
+  const [payment, setPayment] = useState<"cash" | "pix" | "credit_card" | "debit_card">(defaultPayment);
   const [changeFor, setChangeFor] = useState("");
   const [notes, setNotes] = useState("");
   const [couponCode, setCouponCode] = useState("");
