@@ -1199,6 +1199,7 @@ export type Database = {
         Returns: number
       }
       get_public_order: { Args: { p_id: string }; Returns: Json }
+      get_public_restaurant: { Args: { p_slug: string }; Returns: Json }
       move_to_dlq: {
         Args: {
           dlq_name: string

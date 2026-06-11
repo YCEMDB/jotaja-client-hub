@@ -196,14 +196,9 @@ function PedidosPage() {
       if (rest) setRestaurant(rest as any);
     })();
     setNotifEnabled(typeof Notification !== "undefined" && Notification.permission === "granted");
-    const ch = supabase
-      .channel("orders-kanban")
-      .on("postgres_changes",
-        { event: "*", schema: "public", table: "orders", filter: `restaurant_id=eq.${restaurantId}` },
-        () => load(),
-      )
-      .subscribe();
-    return () => { supabase.removeChannel(ch); };
+    // Polling a cada 5s — substitui Realtime (removido por segurança de canal)
+    const iv = setInterval(load, 5000);
+    return () => { clearInterval(iv); };
   }, [restaurantId]);
 
   const enableNotifications = async () => {
