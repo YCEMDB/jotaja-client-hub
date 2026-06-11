@@ -935,6 +935,9 @@ export type Database = {
       restaurants: {
         Row: {
           accent_color: string | null
+          accept_card_on_delivery: boolean
+          accept_cash_on_delivery: boolean
+          accept_pix_online: boolean
           accepts_delivery: boolean | null
           accepts_dine_in: boolean | null
           accepts_pickup: boolean | null
@@ -981,6 +984,9 @@ export type Database = {
         }
         Insert: {
           accent_color?: string | null
+          accept_card_on_delivery?: boolean
+          accept_cash_on_delivery?: boolean
+          accept_pix_online?: boolean
           accepts_delivery?: boolean | null
           accepts_dine_in?: boolean | null
           accepts_pickup?: boolean | null
@@ -1027,6 +1033,9 @@ export type Database = {
         }
         Update: {
           accent_color?: string | null
+          accept_card_on_delivery?: boolean
+          accept_cash_on_delivery?: boolean
+          accept_pix_online?: boolean
           accepts_delivery?: boolean | null
           accepts_dine_in?: boolean | null
           accepts_pickup?: boolean | null
