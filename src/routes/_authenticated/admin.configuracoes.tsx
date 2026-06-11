@@ -568,6 +568,8 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
   const tokenChanged = (token.trim() || null) !== savedToken;
 
   return (
+    <div className="space-y-5">
+      <PaymentMethodsCard r={r} onSaved={onSaved} mpConnected={isConnected} />
     <Card className="p-6 space-y-5">
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <div>
