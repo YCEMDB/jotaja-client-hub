@@ -50,6 +50,10 @@ type Restaurant = {
   is_open: boolean | null; min_order_value: number | null;
   accepts_delivery: boolean | null; accepts_pickup: boolean | null;
   whatsapp: string | null;
+  accept_pix_online?: boolean | null;
+  accept_cash_on_delivery?: boolean | null;
+  accept_card_on_delivery?: boolean | null;
+  mp_online_ready?: boolean;
 };
 type Category = { id: string; name: string; position: number | null; is_active: boolean | null };
 type Product = {
