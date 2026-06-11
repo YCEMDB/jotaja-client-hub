@@ -568,6 +568,8 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
   const tokenChanged = (token.trim() || null) !== savedToken;
 
   return (
+    <div className="space-y-5">
+      <PaymentMethodsCard r={r} onSaved={onSaved} mpConnected={isConnected} />
     <Card className="p-6 space-y-5">
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <div>
@@ -673,6 +675,86 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
             Cancelar
           </Button>
         )}
+      </div>
+    </Card>
+    </div>
+  );
+}
+
+function PaymentMethodsCard({ r, onSaved, mpConnected }: { r: Restaurant; onSaved: () => void; mpConnected: boolean }) {
+  const [pix, setPix] = useState<boolean>(r.accept_pix_online !== false);
+  const [cash, setCash] = useState<boolean>(r.accept_cash_on_delivery !== false);
+  const [card, setCard] = useState<boolean>(r.accept_card_on_delivery !== false);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    setPix(r.accept_pix_online !== false);
+    setCash(r.accept_cash_on_delivery !== false);
+    setCard(r.accept_card_on_delivery !== false);
+  }, [r.id]);
+
+  const save = async () => {
+    setSaving(true);
+    const { error } = await supabase.from("restaurants").update({
+      accept_pix_online: pix,
+      accept_cash_on_delivery: cash,
+      accept_card_on_delivery: card,
+    } as any).eq("id", r.id);
+    setSaving(false);
+    if (error) return toast.error(error.message);
+    toast.success("Formas de pagamento atualizadas");
+    onSaved();
+  };
+
+  const dirty =
+    pix !== (r.accept_pix_online !== false) ||
+    cash !== (r.accept_cash_on_delivery !== false) ||
+    card !== (r.accept_card_on_delivery !== false);
+
+  return (
+    <Card className="p-6 space-y-4">
+      <div>
+        <h3 className="font-semibold">Formas de pagamento aceitas</h3>
+        <p className="text-sm text-muted-foreground">Escolha quais opções aparecem para o cliente no checkout do cardápio.</p>
+      </div>
+
+      <div className="space-y-3">
+        <label className="flex items-start justify-between gap-4 p-3 border rounded-lg cursor-pointer">
+          <div>
+            <p className="font-medium">PIX online (pagar agora)</p>
+            <p className="text-xs text-muted-foreground">QR Code gerado automaticamente via Mercado Pago. Confirmação automática do pagamento.</p>
+            {pix && !mpConnected && (
+              <p className="text-xs text-amber-600 mt-1">⚠️ Mercado Pago não está conectado. Conecte abaixo para o PIX online funcionar.</p>
+            )}
+          </div>
+          <Switch checked={pix} onCheckedChange={setPix} />
+        </label>
+
+        <label className="flex items-start justify-between gap-4 p-3 border rounded-lg cursor-pointer">
+          <div>
+            <p className="font-medium">Dinheiro (pagar na entrega/retirada)</p>
+            <p className="text-xs text-muted-foreground">Cliente paga em espécie ao receber. Pode informar troco.</p>
+          </div>
+          <Switch checked={cash} onCheckedChange={setCash} />
+        </label>
+
+        <label className="flex items-start justify-between gap-4 p-3 border rounded-lg cursor-pointer">
+          <div>
+            <p className="font-medium">Cartão (pagar na entrega/retirada)</p>
+            <p className="text-xs text-muted-foreground">Crédito ou débito na maquininha, ao receber o pedido.</p>
+          </div>
+          <Switch checked={card} onCheckedChange={setCard} />
+        </label>
+      </div>
+
+      {!pix && !cash && !card && (
+        <p className="text-xs text-destructive">Selecione pelo menos uma forma de pagamento.</p>
+      )}
+
+      <div>
+        <Button onClick={save} disabled={saving || !dirty || (!pix && !cash && !card)}>
+          {saving ? "Salvando…" : "Salvar formas de pagamento"}
+        </Button>
       </div>
     </Card>
   );

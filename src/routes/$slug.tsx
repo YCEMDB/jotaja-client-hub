@@ -50,6 +50,10 @@ type Restaurant = {
   is_open: boolean | null; min_order_value: number | null;
   accepts_delivery: boolean | null; accepts_pickup: boolean | null;
   whatsapp: string | null;
+  accept_pix_online?: boolean | null;
+  accept_cash_on_delivery?: boolean | null;
+  accept_card_on_delivery?: boolean | null;
+  mp_online_ready?: boolean;
 };
 type Category = { id: string; name: string; position: number | null; is_active: boolean | null };
 type Product = {
@@ -434,7 +438,12 @@ function CheckoutDialog({
   const [number, setNumber] = useState("");
   const [areaId, setAreaId] = useState<string>("");
   const [complement, setComplement] = useState("");
-  const [payment, setPayment] = useState<"cash" | "pix" | "credit_card" | "debit_card">("pix");
+  const allowPix = restaurant.accept_pix_online !== false;
+  const allowCash = restaurant.accept_cash_on_delivery !== false;
+  const allowCard = restaurant.accept_card_on_delivery !== false;
+  const defaultPayment: "cash" | "pix" | "credit_card" | "debit_card" =
+    allowPix ? "pix" : allowCash ? "cash" : allowCard ? "credit_card" : "pix";
+  const [payment, setPayment] = useState<"cash" | "pix" | "credit_card" | "debit_card">(defaultPayment);
   const [changeFor, setChangeFor] = useState("");
   const [notes, setNotes] = useState("");
   const [couponCode, setCouponCode] = useState("");
@@ -663,15 +672,22 @@ function CheckoutDialog({
 
           <div>
             <Label>Forma de pagamento</Label>
-            <Select value={payment} onValueChange={(v) => setPayment(v as any)}>
-              <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="pix">PIX</SelectItem>
-                <SelectItem value="cash">Dinheiro</SelectItem>
-                <SelectItem value="credit_card">Cartão de crédito (na entrega)</SelectItem>
-                <SelectItem value="debit_card">Cartão de débito (na entrega)</SelectItem>
-              </SelectContent>
-            </Select>
+            {(allowPix || allowCash || allowCard) ? (
+              <Select value={payment} onValueChange={(v) => setPayment(v as any)}>
+                <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {allowPix && <SelectItem value="pix">PIX (pagar online agora)</SelectItem>}
+                  {allowCash && <SelectItem value="cash">Dinheiro (pagar na {orderType === "delivery" ? "entrega" : "retirada"})</SelectItem>}
+                  {allowCard && <SelectItem value="credit_card">Cartão de crédito (na {orderType === "delivery" ? "entrega" : "retirada"})</SelectItem>}
+                  {allowCard && <SelectItem value="debit_card">Cartão de débito (na {orderType === "delivery" ? "entrega" : "retirada"})</SelectItem>}
+                </SelectContent>
+              </Select>
+            ) : (
+              <p className="text-xs text-destructive mt-1">Este restaurante não configurou formas de pagamento.</p>
+            )}
+            {allowPix && (
+              <p className="text-[11px] text-muted-foreground mt-1">PIX: confirmação automática. Demais opções: pague ao receber.</p>
+            )}
           </div>
 
           {payment === "cash" && (
