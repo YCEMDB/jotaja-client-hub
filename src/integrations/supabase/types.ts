@@ -193,6 +193,13 @@ export type Database = {
             referencedRelation: "restaurants"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "categories_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       coupons: {
@@ -243,6 +250,13 @@ export type Database = {
             referencedRelation: "restaurants"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "coupons_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       customers: {
@@ -290,6 +304,13 @@ export type Database = {
             referencedRelation: "restaurants"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "customers_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       delivery_areas: {
@@ -329,6 +350,13 @@ export type Database = {
             columns: ["restaurant_id"]
             isOneToOne: false
             referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_areas_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_public"
             referencedColumns: ["id"]
           },
         ]
@@ -373,6 +401,13 @@ export type Database = {
             columns: ["restaurant_id"]
             isOneToOne: false
             referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delivery_drivers_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_public"
             referencedColumns: ["id"]
           },
         ]
@@ -682,6 +717,13 @@ export type Database = {
             referencedRelation: "restaurants"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "orders_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       product_option_groups: {
@@ -815,6 +857,13 @@ export type Database = {
             referencedRelation: "restaurants"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "products_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       profiles: {
@@ -860,6 +909,13 @@ export type Database = {
             columns: ["restaurant_id"]
             isOneToOne: false
             referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_restaurant_fk"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_public"
             referencedColumns: ["id"]
           },
         ]
@@ -928,6 +984,13 @@ export type Database = {
             columns: ["restaurant_id"]
             isOneToOne: true
             referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "restaurant_secrets_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: true
+            referencedRelation: "restaurants_public"
             referencedColumns: ["id"]
           },
         ]
@@ -1183,11 +1246,92 @@ export type Database = {
             referencedRelation: "restaurants"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "user_roles_restaurant_fk"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
     }
     Views: {
-      [_ in never]: never
+      restaurants_public: {
+        Row: {
+          accent_color: string | null
+          accept_card_on_delivery: boolean | null
+          accept_cash_on_delivery: boolean | null
+          accept_pix_online: boolean | null
+          accepts_delivery: boolean | null
+          accepts_dine_in: boolean | null
+          accepts_pickup: boolean | null
+          cover_url: string | null
+          description: string | null
+          id: string | null
+          is_active: boolean | null
+          is_open: boolean | null
+          logo_url: string | null
+          min_order_value: number | null
+          mp_public_key: string | null
+          name: string | null
+          opening_hours: Json | null
+          pickup_instructions: string | null
+          pickup_time_minutes: number | null
+          primary_color: string | null
+          slug: string | null
+          whatsapp: string | null
+        }
+        Insert: {
+          accent_color?: string | null
+          accept_card_on_delivery?: boolean | null
+          accept_cash_on_delivery?: boolean | null
+          accept_pix_online?: boolean | null
+          accepts_delivery?: boolean | null
+          accepts_dine_in?: boolean | null
+          accepts_pickup?: boolean | null
+          cover_url?: string | null
+          description?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          is_open?: boolean | null
+          logo_url?: string | null
+          min_order_value?: number | null
+          mp_public_key?: string | null
+          name?: string | null
+          opening_hours?: Json | null
+          pickup_instructions?: string | null
+          pickup_time_minutes?: number | null
+          primary_color?: string | null
+          slug?: string | null
+          whatsapp?: string | null
+        }
+        Update: {
+          accent_color?: string | null
+          accept_card_on_delivery?: boolean | null
+          accept_cash_on_delivery?: boolean | null
+          accept_pix_online?: boolean | null
+          accepts_delivery?: boolean | null
+          accepts_dine_in?: boolean | null
+          accepts_pickup?: boolean | null
+          cover_url?: string | null
+          description?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          is_open?: boolean | null
+          logo_url?: string | null
+          min_order_value?: number | null
+          mp_public_key?: string | null
+          name?: string | null
+          opening_hours?: Json | null
+          pickup_instructions?: string | null
+          pickup_time_minutes?: number | null
+          primary_color?: string | null
+          slug?: string | null
+          whatsapp?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       delete_email: {
