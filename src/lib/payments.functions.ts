@@ -58,7 +58,7 @@ export const createPixPayment = createServerFn({ method: "POST" })
         first_name: order.customer_name?.split(" ")[0] ?? "Cliente",
       },
       external_reference: order.id,
-      notification_url: `${process.env.SUPABASE_URL?.replace("supabase.co", "lovable.app") ?? ""}/api/public/mercadopago-webhook`,
+      notification_url: `${process.env.PUBLIC_SITE_URL ?? "https://comandahub.online"}/api/public/mercadopago-webhook`,
     };
 
     const res = await fetch("https://api.mercadopago.com/v1/payments", {
