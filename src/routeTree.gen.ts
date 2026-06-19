@@ -14,9 +14,19 @@ import { Route as SuporteRouteImport } from './routes/suporte'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as SlaRouteImport } from './routes/sla'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as SistemaParaRestaurantesRouteImport } from './routes/sistema-para-restaurantes'
+import { Route as SistemaParaPizzariasRouteImport } from './routes/sistema-para-pizzarias'
+import { Route as SistemaParaLanchonetesRouteImport } from './routes/sistema-para-lanchonetes'
+import { Route as SistemaParaHamburgueriasRouteImport } from './routes/sistema-para-hamburguerias'
+import { Route as SistemaParaDeliveryRouteImport } from './routes/sistema-para-delivery'
+import { Route as SistemaParaBaresRouteImport } from './routes/sistema-para-bares'
+import { Route as SistemaParaAcaiteriasRouteImport } from './routes/sistema-para-acaiterias'
+import { Route as SistemaDeComandasDigitaisRouteImport } from './routes/sistema-de-comandas-digitais'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
+import { Route as GestaoDeRestaurantesRouteImport } from './routes/gestao-de-restaurantes'
 import { Route as EmpresaRouteImport } from './routes/empresa'
+import { Route as ControleDeMesasRouteImport } from './routes/controle-de-mesas'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as CardapioDigitalRouteImport } from './routes/cardapio-digital'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -32,7 +42,11 @@ import { Route as PedidoOrderIdRouteImport } from './routes/pedido.$orderId'
 import { Route as LojaSlugRouteImport } from './routes/loja.$slug'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
 import { Route as ComparativoComandahubVsSaiposRouteImport } from './routes/comparativo.comandahub-vs-saipos'
+import { Route as ComparativoComandahubVsPlanilhaRouteImport } from './routes/comparativo.comandahub-vs-planilha'
 import { Route as ComparativoComandahubVsGoomerRouteImport } from './routes/comparativo.comandahub-vs-goomer'
+import { Route as ComparativoComandahubVsControleManualRouteImport } from './routes/comparativo.comandahub-vs-controle-manual'
+import { Route as ComparativoComandahubVsComandaDePapelRouteImport } from './routes/comparativo.comandahub-vs-comanda-de-papel'
+import { Route as ComparativoComandahubVsCadernoRouteImport } from './routes/comparativo.comandahub-vs-caderno'
 import { Route as ComparativoComandahubVsAnotaAiRouteImport } from './routes/comparativo.comandahub-vs-anota-ai'
 import { Route as BlogSistemaDePedidosParaRestauranteRouteImport } from './routes/blog.sistema-de-pedidos-para-restaurante'
 import { Route as BlogComoMontarCardapioDigitalCanvaVsPlataformaRouteImport } from './routes/blog.como-montar-cardapio-digital-canva-vs-plataforma'
@@ -92,6 +106,48 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SistemaParaRestaurantesRoute = SistemaParaRestaurantesRouteImport.update({
+  id: '/sistema-para-restaurantes',
+  path: '/sistema-para-restaurantes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SistemaParaPizzariasRoute = SistemaParaPizzariasRouteImport.update({
+  id: '/sistema-para-pizzarias',
+  path: '/sistema-para-pizzarias',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SistemaParaLanchonetesRoute = SistemaParaLanchonetesRouteImport.update({
+  id: '/sistema-para-lanchonetes',
+  path: '/sistema-para-lanchonetes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SistemaParaHamburgueriasRoute =
+  SistemaParaHamburgueriasRouteImport.update({
+    id: '/sistema-para-hamburguerias',
+    path: '/sistema-para-hamburguerias',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const SistemaParaDeliveryRoute = SistemaParaDeliveryRouteImport.update({
+  id: '/sistema-para-delivery',
+  path: '/sistema-para-delivery',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SistemaParaBaresRoute = SistemaParaBaresRouteImport.update({
+  id: '/sistema-para-bares',
+  path: '/sistema-para-bares',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SistemaParaAcaiteriasRoute = SistemaParaAcaiteriasRouteImport.update({
+  id: '/sistema-para-acaiterias',
+  path: '/sistema-para-acaiterias',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SistemaDeComandasDigitaisRoute =
+  SistemaDeComandasDigitaisRouteImport.update({
+    id: '/sistema-de-comandas-digitais',
+    path: '/sistema-de-comandas-digitais',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
@@ -102,9 +158,19 @@ const PrivacidadeRoute = PrivacidadeRouteImport.update({
   path: '/privacidade',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GestaoDeRestaurantesRoute = GestaoDeRestaurantesRouteImport.update({
+  id: '/gestao-de-restaurantes',
+  path: '/gestao-de-restaurantes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EmpresaRoute = EmpresaRouteImport.update({
   id: '/empresa',
   path: '/empresa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ControleDeMesasRoute = ControleDeMesasRouteImport.update({
+  id: '/controle-de-mesas',
+  path: '/controle-de-mesas',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContatoRoute = ContatoRouteImport.update({
@@ -181,10 +247,34 @@ const ComparativoComandahubVsSaiposRoute =
     path: '/comparativo/comandahub-vs-saipos',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ComparativoComandahubVsPlanilhaRoute =
+  ComparativoComandahubVsPlanilhaRouteImport.update({
+    id: '/comparativo/comandahub-vs-planilha',
+    path: '/comparativo/comandahub-vs-planilha',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ComparativoComandahubVsGoomerRoute =
   ComparativoComandahubVsGoomerRouteImport.update({
     id: '/comparativo/comandahub-vs-goomer',
     path: '/comparativo/comandahub-vs-goomer',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ComparativoComandahubVsControleManualRoute =
+  ComparativoComandahubVsControleManualRouteImport.update({
+    id: '/comparativo/comandahub-vs-controle-manual',
+    path: '/comparativo/comandahub-vs-controle-manual',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ComparativoComandahubVsComandaDePapelRoute =
+  ComparativoComandahubVsComandaDePapelRouteImport.update({
+    id: '/comparativo/comandahub-vs-comanda-de-papel',
+    path: '/comparativo/comandahub-vs-comanda-de-papel',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ComparativoComandahubVsCadernoRoute =
+  ComparativoComandahubVsCadernoRouteImport.update({
+    id: '/comparativo/comandahub-vs-caderno',
+    path: '/comparativo/comandahub-vs-caderno',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ComparativoComandahubVsAnotaAiRoute =
@@ -378,9 +468,19 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/cardapio-digital': typeof CardapioDigitalRoute
   '/contato': typeof ContatoRoute
+  '/controle-de-mesas': typeof ControleDeMesasRoute
   '/empresa': typeof EmpresaRoute
+  '/gestao-de-restaurantes': typeof GestaoDeRestaurantesRoute
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sistema-de-comandas-digitais': typeof SistemaDeComandasDigitaisRoute
+  '/sistema-para-acaiterias': typeof SistemaParaAcaiteriasRoute
+  '/sistema-para-bares': typeof SistemaParaBaresRoute
+  '/sistema-para-delivery': typeof SistemaParaDeliveryRoute
+  '/sistema-para-hamburguerias': typeof SistemaParaHamburgueriasRoute
+  '/sistema-para-lanchonetes': typeof SistemaParaLanchonetesRoute
+  '/sistema-para-pizzarias': typeof SistemaParaPizzariasRoute
+  '/sistema-para-restaurantes': typeof SistemaParaRestaurantesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sla': typeof SlaRoute
   '/sobre': typeof SobreRoute
@@ -392,7 +492,11 @@ export interface FileRoutesByFullPath {
   '/blog/como-montar-cardapio-digital-canva-vs-plataforma': typeof BlogComoMontarCardapioDigitalCanvaVsPlataformaRoute
   '/blog/sistema-de-pedidos-para-restaurante': typeof BlogSistemaDePedidosParaRestauranteRoute
   '/comparativo/comandahub-vs-anota-ai': typeof ComparativoComandahubVsAnotaAiRoute
+  '/comparativo/comandahub-vs-caderno': typeof ComparativoComandahubVsCadernoRoute
+  '/comparativo/comandahub-vs-comanda-de-papel': typeof ComparativoComandahubVsComandaDePapelRoute
+  '/comparativo/comandahub-vs-controle-manual': typeof ComparativoComandahubVsControleManualRoute
   '/comparativo/comandahub-vs-goomer': typeof ComparativoComandahubVsGoomerRoute
+  '/comparativo/comandahub-vs-planilha': typeof ComparativoComandahubVsPlanilhaRoute
   '/comparativo/comandahub-vs-saipos': typeof ComparativoComandahubVsSaiposRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/loja/$slug': typeof LojaSlugRoute
@@ -435,9 +539,19 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/cardapio-digital': typeof CardapioDigitalRoute
   '/contato': typeof ContatoRoute
+  '/controle-de-mesas': typeof ControleDeMesasRoute
   '/empresa': typeof EmpresaRoute
+  '/gestao-de-restaurantes': typeof GestaoDeRestaurantesRoute
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sistema-de-comandas-digitais': typeof SistemaDeComandasDigitaisRoute
+  '/sistema-para-acaiterias': typeof SistemaParaAcaiteriasRoute
+  '/sistema-para-bares': typeof SistemaParaBaresRoute
+  '/sistema-para-delivery': typeof SistemaParaDeliveryRoute
+  '/sistema-para-hamburguerias': typeof SistemaParaHamburgueriasRoute
+  '/sistema-para-lanchonetes': typeof SistemaParaLanchonetesRoute
+  '/sistema-para-pizzarias': typeof SistemaParaPizzariasRoute
+  '/sistema-para-restaurantes': typeof SistemaParaRestaurantesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sla': typeof SlaRoute
   '/sobre': typeof SobreRoute
@@ -449,7 +563,11 @@ export interface FileRoutesByTo {
   '/blog/como-montar-cardapio-digital-canva-vs-plataforma': typeof BlogComoMontarCardapioDigitalCanvaVsPlataformaRoute
   '/blog/sistema-de-pedidos-para-restaurante': typeof BlogSistemaDePedidosParaRestauranteRoute
   '/comparativo/comandahub-vs-anota-ai': typeof ComparativoComandahubVsAnotaAiRoute
+  '/comparativo/comandahub-vs-caderno': typeof ComparativoComandahubVsCadernoRoute
+  '/comparativo/comandahub-vs-comanda-de-papel': typeof ComparativoComandahubVsComandaDePapelRoute
+  '/comparativo/comandahub-vs-controle-manual': typeof ComparativoComandahubVsControleManualRoute
   '/comparativo/comandahub-vs-goomer': typeof ComparativoComandahubVsGoomerRoute
+  '/comparativo/comandahub-vs-planilha': typeof ComparativoComandahubVsPlanilhaRoute
   '/comparativo/comandahub-vs-saipos': typeof ComparativoComandahubVsSaiposRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/loja/$slug': typeof LojaSlugRoute
@@ -495,9 +613,19 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/cardapio-digital': typeof CardapioDigitalRoute
   '/contato': typeof ContatoRoute
+  '/controle-de-mesas': typeof ControleDeMesasRoute
   '/empresa': typeof EmpresaRoute
+  '/gestao-de-restaurantes': typeof GestaoDeRestaurantesRoute
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sistema-de-comandas-digitais': typeof SistemaDeComandasDigitaisRoute
+  '/sistema-para-acaiterias': typeof SistemaParaAcaiteriasRoute
+  '/sistema-para-bares': typeof SistemaParaBaresRoute
+  '/sistema-para-delivery': typeof SistemaParaDeliveryRoute
+  '/sistema-para-hamburguerias': typeof SistemaParaHamburgueriasRoute
+  '/sistema-para-lanchonetes': typeof SistemaParaLanchonetesRoute
+  '/sistema-para-pizzarias': typeof SistemaParaPizzariasRoute
+  '/sistema-para-restaurantes': typeof SistemaParaRestaurantesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sla': typeof SlaRoute
   '/sobre': typeof SobreRoute
@@ -509,7 +637,11 @@ export interface FileRoutesById {
   '/blog/como-montar-cardapio-digital-canva-vs-plataforma': typeof BlogComoMontarCardapioDigitalCanvaVsPlataformaRoute
   '/blog/sistema-de-pedidos-para-restaurante': typeof BlogSistemaDePedidosParaRestauranteRoute
   '/comparativo/comandahub-vs-anota-ai': typeof ComparativoComandahubVsAnotaAiRoute
+  '/comparativo/comandahub-vs-caderno': typeof ComparativoComandahubVsCadernoRoute
+  '/comparativo/comandahub-vs-comanda-de-papel': typeof ComparativoComandahubVsComandaDePapelRoute
+  '/comparativo/comandahub-vs-controle-manual': typeof ComparativoComandahubVsControleManualRoute
   '/comparativo/comandahub-vs-goomer': typeof ComparativoComandahubVsGoomerRoute
+  '/comparativo/comandahub-vs-planilha': typeof ComparativoComandahubVsPlanilhaRoute
   '/comparativo/comandahub-vs-saipos': typeof ComparativoComandahubVsSaiposRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/loja/$slug': typeof LojaSlugRoute
@@ -554,9 +686,19 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cardapio-digital'
     | '/contato'
+    | '/controle-de-mesas'
     | '/empresa'
+    | '/gestao-de-restaurantes'
     | '/privacidade'
     | '/reset-password'
+    | '/sistema-de-comandas-digitais'
+    | '/sistema-para-acaiterias'
+    | '/sistema-para-bares'
+    | '/sistema-para-delivery'
+    | '/sistema-para-hamburguerias'
+    | '/sistema-para-lanchonetes'
+    | '/sistema-para-pizzarias'
+    | '/sistema-para-restaurantes'
     | '/sitemap.xml'
     | '/sla'
     | '/sobre'
@@ -568,7 +710,11 @@ export interface FileRouteTypes {
     | '/blog/como-montar-cardapio-digital-canva-vs-plataforma'
     | '/blog/sistema-de-pedidos-para-restaurante'
     | '/comparativo/comandahub-vs-anota-ai'
+    | '/comparativo/comandahub-vs-caderno'
+    | '/comparativo/comandahub-vs-comanda-de-papel'
+    | '/comparativo/comandahub-vs-controle-manual'
     | '/comparativo/comandahub-vs-goomer'
+    | '/comparativo/comandahub-vs-planilha'
     | '/comparativo/comandahub-vs-saipos'
     | '/email/unsubscribe'
     | '/loja/$slug'
@@ -611,9 +757,19 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cardapio-digital'
     | '/contato'
+    | '/controle-de-mesas'
     | '/empresa'
+    | '/gestao-de-restaurantes'
     | '/privacidade'
     | '/reset-password'
+    | '/sistema-de-comandas-digitais'
+    | '/sistema-para-acaiterias'
+    | '/sistema-para-bares'
+    | '/sistema-para-delivery'
+    | '/sistema-para-hamburguerias'
+    | '/sistema-para-lanchonetes'
+    | '/sistema-para-pizzarias'
+    | '/sistema-para-restaurantes'
     | '/sitemap.xml'
     | '/sla'
     | '/sobre'
@@ -625,7 +781,11 @@ export interface FileRouteTypes {
     | '/blog/como-montar-cardapio-digital-canva-vs-plataforma'
     | '/blog/sistema-de-pedidos-para-restaurante'
     | '/comparativo/comandahub-vs-anota-ai'
+    | '/comparativo/comandahub-vs-caderno'
+    | '/comparativo/comandahub-vs-comanda-de-papel'
+    | '/comparativo/comandahub-vs-controle-manual'
     | '/comparativo/comandahub-vs-goomer'
+    | '/comparativo/comandahub-vs-planilha'
     | '/comparativo/comandahub-vs-saipos'
     | '/email/unsubscribe'
     | '/loja/$slug'
@@ -670,9 +830,19 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cardapio-digital'
     | '/contato'
+    | '/controle-de-mesas'
     | '/empresa'
+    | '/gestao-de-restaurantes'
     | '/privacidade'
     | '/reset-password'
+    | '/sistema-de-comandas-digitais'
+    | '/sistema-para-acaiterias'
+    | '/sistema-para-bares'
+    | '/sistema-para-delivery'
+    | '/sistema-para-hamburguerias'
+    | '/sistema-para-lanchonetes'
+    | '/sistema-para-pizzarias'
+    | '/sistema-para-restaurantes'
     | '/sitemap.xml'
     | '/sla'
     | '/sobre'
@@ -684,7 +854,11 @@ export interface FileRouteTypes {
     | '/blog/como-montar-cardapio-digital-canva-vs-plataforma'
     | '/blog/sistema-de-pedidos-para-restaurante'
     | '/comparativo/comandahub-vs-anota-ai'
+    | '/comparativo/comandahub-vs-caderno'
+    | '/comparativo/comandahub-vs-comanda-de-papel'
+    | '/comparativo/comandahub-vs-controle-manual'
     | '/comparativo/comandahub-vs-goomer'
+    | '/comparativo/comandahub-vs-planilha'
     | '/comparativo/comandahub-vs-saipos'
     | '/email/unsubscribe'
     | '/loja/$slug'
@@ -730,9 +904,19 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   CardapioDigitalRoute: typeof CardapioDigitalRoute
   ContatoRoute: typeof ContatoRoute
+  ControleDeMesasRoute: typeof ControleDeMesasRoute
   EmpresaRoute: typeof EmpresaRoute
+  GestaoDeRestaurantesRoute: typeof GestaoDeRestaurantesRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  SistemaDeComandasDigitaisRoute: typeof SistemaDeComandasDigitaisRoute
+  SistemaParaAcaiteriasRoute: typeof SistemaParaAcaiteriasRoute
+  SistemaParaBaresRoute: typeof SistemaParaBaresRoute
+  SistemaParaDeliveryRoute: typeof SistemaParaDeliveryRoute
+  SistemaParaHamburgueriasRoute: typeof SistemaParaHamburgueriasRoute
+  SistemaParaLanchonetesRoute: typeof SistemaParaLanchonetesRoute
+  SistemaParaPizzariasRoute: typeof SistemaParaPizzariasRoute
+  SistemaParaRestaurantesRoute: typeof SistemaParaRestaurantesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SlaRoute: typeof SlaRoute
   SobreRoute: typeof SobreRoute
@@ -744,7 +928,11 @@ export interface RootRouteChildren {
   BlogComoMontarCardapioDigitalCanvaVsPlataformaRoute: typeof BlogComoMontarCardapioDigitalCanvaVsPlataformaRoute
   BlogSistemaDePedidosParaRestauranteRoute: typeof BlogSistemaDePedidosParaRestauranteRoute
   ComparativoComandahubVsAnotaAiRoute: typeof ComparativoComandahubVsAnotaAiRoute
+  ComparativoComandahubVsCadernoRoute: typeof ComparativoComandahubVsCadernoRoute
+  ComparativoComandahubVsComandaDePapelRoute: typeof ComparativoComandahubVsComandaDePapelRoute
+  ComparativoComandahubVsControleManualRoute: typeof ComparativoComandahubVsControleManualRoute
   ComparativoComandahubVsGoomerRoute: typeof ComparativoComandahubVsGoomerRoute
+  ComparativoComandahubVsPlanilhaRoute: typeof ComparativoComandahubVsPlanilhaRoute
   ComparativoComandahubVsSaiposRoute: typeof ComparativoComandahubVsSaiposRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
   LojaSlugRoute: typeof LojaSlugRoute
@@ -799,6 +987,62 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sistema-para-restaurantes': {
+      id: '/sistema-para-restaurantes'
+      path: '/sistema-para-restaurantes'
+      fullPath: '/sistema-para-restaurantes'
+      preLoaderRoute: typeof SistemaParaRestaurantesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sistema-para-pizzarias': {
+      id: '/sistema-para-pizzarias'
+      path: '/sistema-para-pizzarias'
+      fullPath: '/sistema-para-pizzarias'
+      preLoaderRoute: typeof SistemaParaPizzariasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sistema-para-lanchonetes': {
+      id: '/sistema-para-lanchonetes'
+      path: '/sistema-para-lanchonetes'
+      fullPath: '/sistema-para-lanchonetes'
+      preLoaderRoute: typeof SistemaParaLanchonetesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sistema-para-hamburguerias': {
+      id: '/sistema-para-hamburguerias'
+      path: '/sistema-para-hamburguerias'
+      fullPath: '/sistema-para-hamburguerias'
+      preLoaderRoute: typeof SistemaParaHamburgueriasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sistema-para-delivery': {
+      id: '/sistema-para-delivery'
+      path: '/sistema-para-delivery'
+      fullPath: '/sistema-para-delivery'
+      preLoaderRoute: typeof SistemaParaDeliveryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sistema-para-bares': {
+      id: '/sistema-para-bares'
+      path: '/sistema-para-bares'
+      fullPath: '/sistema-para-bares'
+      preLoaderRoute: typeof SistemaParaBaresRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sistema-para-acaiterias': {
+      id: '/sistema-para-acaiterias'
+      path: '/sistema-para-acaiterias'
+      fullPath: '/sistema-para-acaiterias'
+      preLoaderRoute: typeof SistemaParaAcaiteriasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sistema-de-comandas-digitais': {
+      id: '/sistema-de-comandas-digitais'
+      path: '/sistema-de-comandas-digitais'
+      fullPath: '/sistema-de-comandas-digitais'
+      preLoaderRoute: typeof SistemaDeComandasDigitaisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reset-password': {
       id: '/reset-password'
       path: '/reset-password'
@@ -813,11 +1057,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacidadeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/gestao-de-restaurantes': {
+      id: '/gestao-de-restaurantes'
+      path: '/gestao-de-restaurantes'
+      fullPath: '/gestao-de-restaurantes'
+      preLoaderRoute: typeof GestaoDeRestaurantesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/empresa': {
       id: '/empresa'
       path: '/empresa'
       fullPath: '/empresa'
       preLoaderRoute: typeof EmpresaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/controle-de-mesas': {
+      id: '/controle-de-mesas'
+      path: '/controle-de-mesas'
+      fullPath: '/controle-de-mesas'
+      preLoaderRoute: typeof ControleDeMesasRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contato': {
@@ -925,11 +1183,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ComparativoComandahubVsSaiposRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/comparativo/comandahub-vs-planilha': {
+      id: '/comparativo/comandahub-vs-planilha'
+      path: '/comparativo/comandahub-vs-planilha'
+      fullPath: '/comparativo/comandahub-vs-planilha'
+      preLoaderRoute: typeof ComparativoComandahubVsPlanilhaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/comparativo/comandahub-vs-goomer': {
       id: '/comparativo/comandahub-vs-goomer'
       path: '/comparativo/comandahub-vs-goomer'
       fullPath: '/comparativo/comandahub-vs-goomer'
       preLoaderRoute: typeof ComparativoComandahubVsGoomerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/comparativo/comandahub-vs-controle-manual': {
+      id: '/comparativo/comandahub-vs-controle-manual'
+      path: '/comparativo/comandahub-vs-controle-manual'
+      fullPath: '/comparativo/comandahub-vs-controle-manual'
+      preLoaderRoute: typeof ComparativoComandahubVsControleManualRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/comparativo/comandahub-vs-comanda-de-papel': {
+      id: '/comparativo/comandahub-vs-comanda-de-papel'
+      path: '/comparativo/comandahub-vs-comanda-de-papel'
+      fullPath: '/comparativo/comandahub-vs-comanda-de-papel'
+      preLoaderRoute: typeof ComparativoComandahubVsComandaDePapelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/comparativo/comandahub-vs-caderno': {
+      id: '/comparativo/comandahub-vs-caderno'
+      path: '/comparativo/comandahub-vs-caderno'
+      fullPath: '/comparativo/comandahub-vs-caderno'
+      preLoaderRoute: typeof ComparativoComandahubVsCadernoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/comparativo/comandahub-vs-anota-ai': {
@@ -1231,9 +1517,19 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   CardapioDigitalRoute: CardapioDigitalRoute,
   ContatoRoute: ContatoRoute,
+  ControleDeMesasRoute: ControleDeMesasRoute,
   EmpresaRoute: EmpresaRoute,
+  GestaoDeRestaurantesRoute: GestaoDeRestaurantesRoute,
   PrivacidadeRoute: PrivacidadeRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  SistemaDeComandasDigitaisRoute: SistemaDeComandasDigitaisRoute,
+  SistemaParaAcaiteriasRoute: SistemaParaAcaiteriasRoute,
+  SistemaParaBaresRoute: SistemaParaBaresRoute,
+  SistemaParaDeliveryRoute: SistemaParaDeliveryRoute,
+  SistemaParaHamburgueriasRoute: SistemaParaHamburgueriasRoute,
+  SistemaParaLanchonetesRoute: SistemaParaLanchonetesRoute,
+  SistemaParaPizzariasRoute: SistemaParaPizzariasRoute,
+  SistemaParaRestaurantesRoute: SistemaParaRestaurantesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SlaRoute: SlaRoute,
   SobreRoute: SobreRoute,
@@ -1250,7 +1546,13 @@ const rootRouteChildren: RootRouteChildren = {
   BlogSistemaDePedidosParaRestauranteRoute:
     BlogSistemaDePedidosParaRestauranteRoute,
   ComparativoComandahubVsAnotaAiRoute: ComparativoComandahubVsAnotaAiRoute,
+  ComparativoComandahubVsCadernoRoute: ComparativoComandahubVsCadernoRoute,
+  ComparativoComandahubVsComandaDePapelRoute:
+    ComparativoComandahubVsComandaDePapelRoute,
+  ComparativoComandahubVsControleManualRoute:
+    ComparativoComandahubVsControleManualRoute,
   ComparativoComandahubVsGoomerRoute: ComparativoComandahubVsGoomerRoute,
+  ComparativoComandahubVsPlanilhaRoute: ComparativoComandahubVsPlanilhaRoute,
   ComparativoComandahubVsSaiposRoute: ComparativoComandahubVsSaiposRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
   LojaSlugRoute: LojaSlugRoute,
