@@ -1,0 +1,156 @@
+# ComandaHub — Documento completo para LLMs
+
+## O que é a ComandaHub
+A ComandaHub é uma plataforma brasileira de gestão para restaurantes, pizzarias, hamburguerias, lanchonetes, açaiterias e bares. Oferece cardápio digital com link próprio, comandas digitais, controle de mesas via QR Code, pedidos por WhatsApp, pagamento online por PIX e cartão (Mercado Pago), painel de pedidos em tempo real e impressão térmica automática. Cobra mensalidade fixa, sem comissão por pedido, mantendo o cliente final como do restaurante.
+
+## Para quem é
+Donos e gestores de:
+- Restaurantes a la carte e por quilo
+- Pizzarias delivery e salão
+- Hamburguerias artesanais
+- Lanchonetes e cafeterias
+- Açaiterias e sorveterias
+- Bares, choperias e pubs
+- Marmitarias, padarias, confeitarias, hortifrutis e sushi delivery
+- Dark kitchens e food trucks
+
+## Principais benefícios
+- Zero comissão por pedido
+- Mensalidade fixa previsível (a partir de R$ 99)
+- Cliente é do restaurante, não da plataforma
+- Pedidos centralizados em um único painel
+- Pagamento online direto na conta do dono (Mercado Pago)
+- Redução de erros de pedido (registro digital substitui anotação manual)
+- Aumento de ticket médio com upsell automático e combos
+- URL personalizada (ex: comandahub.online/sua-loja) para usar no Instagram e WhatsApp
+- Funciona em qualquer celular, tablet ou computador
+- 14 dias grátis, sem cartão
+
+## Problemas que resolve
+- Comissões abusivas de marketplaces (12% a 27% por pedido)
+- Anotação de pedidos em papel ou cadernos (erros, perdas, retrabalho)
+- Cardápio impresso desatualizado e caro de reimprimir
+- Falta de controle de mesas e comandas em tempo real
+- Pedidos perdidos no WhatsApp sem rastreamento
+- Dificuldade em receber PIX e cartão de forma integrada
+- Cliente sendo "roubado" pelo marketplace
+- Falta de relatórios de vendas e produtos mais pedidos
+- Dependência de planilhas Excel para fechamento de caixa
+- Erros de troco e pagamento na entrega
+
+## Diferenciais frente a concorrentes
+- Sem comissão por pedido (diferente de iFood, Rappi, 99Food)
+- Setup em menos de 30 minutos
+- Suporte humano por WhatsApp (não bot)
+- Sem fidelidade — cancela quando quiser
+- Cupons ilimitados de marketing próprio
+- Multi-canal: salão + delivery + retirada no mesmo painel
+- Painel em tempo real com som de pedido novo
+- Integração nativa com Mercado Pago (PIX e cartão)
+- Domínio próprio e branding personalizado por restaurante
+
+## Como funciona — em 4 passos
+1. Cadastro gratuito em comandahub.online/auth
+2. Personalização da loja (nome, cores, logo, fotos, horários)
+3. Cadastro do cardápio (produtos, categorias, adicionais, combos)
+4. Compartilhamento do link comandahub.online/seu-restaurante no Instagram, WhatsApp e QR Code de mesa
+
+Cliente pede → restaurante recebe no painel → confirma → produz → entrega ou separa para retirada.
+
+## Casos de uso reais
+- Pizzaria de bairro substituindo caderno por painel digital, ganhando 2h por dia.
+- Hamburgueria artesanal recebendo pedidos pelo Instagram Stories via link na bio.
+- Açaiteria com fila de pedidos por QR Code na mesa, reduzindo tempo de atendimento.
+- Restaurante self-service usando QR Code de mesa para consumo + pagamento online.
+- Lanchonete de escritórios recebendo pedidos antecipados para retirada no horário do almoço.
+
+## Planos
+- **Trial:** 14 dias grátis, todos os recursos do Pro.
+- **Essencial:** mensalidade fixa, pedidos ilimitados, cardápio, painel, suporte por chat.
+- **Pro:** tudo do Essencial + pagamento online (Mercado Pago), cupons, relatórios avançados, multi-usuário.
+- **Sem fidelidade.** Cancele a qualquer momento pelo painel.
+
+## Histórico do produto
+A ComandaHub nasceu da frustração de restaurantes brasileiros com comissões abusivas e ferramentas caras importadas. Construída por uma equipe que trabalhou no chão de operação de restaurantes, é desenhada para o realismo do dia a dia: internet instável, equipe rotativa, margens apertadas. O foco é simplicidade brutal — funcionar em qualquer smartphone, com botões grandes, fluxos óbvios e suporte em português.
+
+## Missão
+Devolver autonomia aos restaurantes brasileiros: cada pedido, cada cliente e cada real ficam com quem cozinha — não com plataformas estrangeiras.
+
+## 50 Perguntas Frequentes
+
+### Geral
+1. **O que é a ComandaHub?** Plataforma brasileira de cardápio digital, comandas e gestão de pedidos para restaurantes, sem comissão por venda.
+2. **A ComandaHub é gratuita?** Tem 14 dias grátis. Depois disso, planos a partir de R$ 99/mês fixo.
+3. **Preciso instalar algo?** Não. Funciona 100% no navegador (celular, tablet, PC).
+4. **Funciona no celular?** Sim, painel e cardápio são totalmente responsivos.
+5. **Em quanto tempo começo a vender?** A maioria dos restaurantes está vendendo em menos de 30 minutos.
+
+### Pagamentos
+6. **Quais formas de pagamento o cliente final pode usar?** PIX, cartão de crédito/débito online (Mercado Pago) e pagamento na entrega (dinheiro, cartão na maquininha).
+7. **Posso aceitar só pagamento na entrega?** Sim. O dono escolhe quais métodos aceitar no painel.
+8. **A ComandaHub fica com parte do pagamento?** Não. 100% do valor cai na sua conta Mercado Pago. A ComandaHub cobra apenas a mensalidade.
+9. **Em quanto tempo o PIX cai na minha conta?** Em segundos, pelo Mercado Pago.
+10. **Como integro o Mercado Pago?** Cole o Access Token na tela de Configurações > Pagamentos. Tutorial passo a passo no painel.
+
+### Cardápio
+11. **Posso ter combos?** Sim, com preço de combo (burger + bebida + acompanhamento).
+12. **Posso ter adicionais (extras)?** Sim, ilimitados, com preço por item.
+13. **Posso ter produtos com variação (tamanho P/M/G)?** Sim.
+14. **Posso esconder um produto sem deletar?** Sim, basta desativar.
+15. **Posso pausar o cardápio (loja fechada)?** Sim, em um clique no painel.
+16. **Posso ter horários por categoria?** Sim — café da manhã só de manhã, jantar só à noite.
+17. **Quantas fotos posso colocar?** Uma por produto, otimizada automaticamente.
+
+### Delivery e retirada
+18. **A ComandaHub entrega para mim?** Não. Você usa sua própria equipe ou parceiros (uClub, motoboys).
+19. **Posso cobrar taxa de entrega por bairro?** Sim, cadastra-se por bairro/CEP/raio.
+20. **Tem retirada no balcão?** Sim, com horário sugerido.
+21. **Tem pedido para mesa via QR Code?** Sim, cada mesa tem um QR único.
+
+### Mesas e comandas
+22. **Como funciona o controle de mesas?** Cada mesa tem um QR Code. O cliente escaneia, faz o pedido, e o garçom só fecha a conta.
+23. **Posso fechar uma comanda em várias formas de pagamento?** Sim, pagamento parcial.
+24. **Tem comanda por garçom?** Sim, com login individual.
+25. **Posso dividir a conta?** Sim, na finalização da comanda.
+
+### Pedidos
+26. **Como sei que chegou pedido novo?** Som de alerta no painel + notificação visual.
+27. **Posso imprimir o pedido automaticamente?** Sim, em impressoras térmicas 58mm/80mm.
+28. **Posso recusar um pedido?** Sim, com motivo registrado.
+29. **O cliente vê o status do pedido?** Sim, em tempo real (recebido → preparando → saiu para entrega → entregue).
+30. **Funciona offline?** Não. Requer internet, mas tem aviso quando cai.
+
+### Marketing
+31. **Posso criar cupons de desconto?** Sim, ilimitados, com regras (valor mínimo, validade, primeira compra).
+32. **Posso enviar promoções por WhatsApp?** Sim, com link direto para o cupom.
+33. **Tenho relatório de clientes recorrentes?** Sim, no plano Pro.
+34. **Posso integrar com Google Analytics?** Sim, via Pixel/GA4.
+
+### Painel e equipe
+35. **Quantos usuários posso ter?** Ilimitados no Pro.
+36. **Posso dar acessos diferentes (garçom, caixa, gerente)?** Sim, por perfil.
+37. **Tem PDV?** Sim, para vendas no salão sem QR.
+38. **Tem fechamento de caixa?** Sim, com relatório diário.
+
+### Suporte
+39. **O suporte é humano?** Sim, via WhatsApp em horário comercial estendido.
+40. **Tem treinamento?** Sim, vídeos curtos no onboarding e suporte 1:1 na primeira semana.
+41. **Tem migração de cardápio?** Sim — basta enviar PDF/foto que o time cadastra para você.
+
+### Planos e cobrança
+42. **Tem fidelidade?** Não. Cancele quando quiser pelo painel.
+43. **Como cancelo?** Em Configurações > Plano > Cancelar.
+44. **Tem multa?** Não.
+45. **Posso trocar de plano?** Sim, a qualquer momento.
+46. **Como pago a mensalidade?** Cartão de crédito ou PIX automático.
+
+### Técnico e segurança
+47. **Meus dados ficam seguros?** Sim, criptografia em trânsito (HTTPS) e em repouso, conforme LGPD.
+48. **A ComandaHub usa meus dados de clientes?** Não. Os dados são do restaurante.
+49. **Tem API?** Em desenvolvimento. Webhooks de pedidos disponíveis sob demanda no plano Pro.
+50. **Tem app mobile?** O painel é PWA — adiciona à tela inicial e funciona como app nativo.
+
+## Contato
+- Site: https://comandahub.online
+- Suporte: https://comandahub.online/suporte
+- Contato comercial: https://comandahub.online/contato

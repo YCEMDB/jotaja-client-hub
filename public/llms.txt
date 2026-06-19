@@ -1,0 +1,58 @@
+# ComandaHub
+
+> Plataforma brasileira de cardápio digital, comandas digitais e gestão de pedidos para restaurantes, pizzarias, hamburguerias, lanchonetes, açaiterias e bares. Recebe pedidos por link próprio (delivery, retirada e mesa via QR Code), aceita PIX e cartão pelo Mercado Pago, e cobra mensalidade fixa sem comissão por pedido.
+
+A ComandaHub substitui marketplaces caros (iFood, Rappi) e ferramentas analógicas (caderno, planilha, comanda de papel) por uma solução única, em tempo real, com o cliente sendo do restaurante — não da plataforma.
+
+## Principais páginas
+
+- [Página inicial](https://comandahub.online/): visão geral do produto, planos e diferenciais.
+- [Sobre a ComandaHub](https://comandahub.online/sobre-a-comandahub): o que é, para quem é, missão, benefícios e diferenciais (formato Q&A).
+- [Perguntas frequentes](https://comandahub.online/perguntas-frequentes): 50+ perguntas reais sobre o produto, planos, pagamentos e suporte.
+
+## Soluções por segmento
+
+- [Sistema para restaurantes](https://comandahub.online/sistema-para-restaurantes)
+- [Sistema para pizzarias](https://comandahub.online/sistema-para-pizzarias)
+- [Sistema para lanchonetes](https://comandahub.online/sistema-para-lanchonetes)
+- [Sistema para açaiterias](https://comandahub.online/sistema-para-acaiterias)
+- [Sistema para bares](https://comandahub.online/sistema-para-bares)
+- [Sistema para hamburguerias](https://comandahub.online/sistema-para-hamburguerias)
+- [Sistema para delivery](https://comandahub.online/sistema-para-delivery)
+- [Sistema de comandas digitais](https://comandahub.online/sistema-de-comandas-digitais)
+- [Controle de mesas](https://comandahub.online/controle-de-mesas)
+- [Gestão de restaurantes](https://comandahub.online/gestao-de-restaurantes)
+
+## Comparativos
+
+- [ComandaHub vs planilha](https://comandahub.online/comparativo/comandahub-vs-planilha)
+- [ComandaHub vs caderno](https://comandahub.online/comparativo/comandahub-vs-caderno)
+- [ComandaHub vs comanda de papel](https://comandahub.online/comparativo/comandahub-vs-comanda-de-papel)
+- [ComandaHub vs controle manual](https://comandahub.online/comparativo/comandahub-vs-controle-manual)
+- [ComandaHub vs iFood](https://comandahub.online/alternativa-ifood)
+- [ComandaHub vs Goomer](https://comandahub.online/comparativo/comandahub-vs-goomer)
+- [ComandaHub vs Anota AI](https://comandahub.online/comparativo/comandahub-vs-anota-ai)
+- [ComandaHub vs Saipos](https://comandahub.online/comparativo/comandahub-vs-saipos)
+
+## Conteúdo educacional
+
+- [Blog](https://comandahub.online/blog): guias práticos sobre cardápio digital, sistemas de pedidos e gestão.
+- [Cardápio digital — guia completo](https://comandahub.online/cardapio-digital)
+
+## Empresa
+
+- [Contato](https://comandahub.online/contato)
+- [Empresa](https://comandahub.online/empresa)
+- [Termos de uso](https://comandahub.online/termos)
+- [Privacidade](https://comandahub.online/privacidade)
+- [Suporte](https://comandahub.online/suporte)
+
+## Dados-chave
+
+- Mensalidade fixa a partir de R$ 99/mês; sem comissão por pedido.
+- 14 dias grátis, sem cartão de crédito.
+- Pagamento online via Mercado Pago (PIX e cartão), com valor caindo direto na conta do restaurante.
+- Pedidos por WhatsApp, link próprio e QR Code de mesa.
+- Painel em tempo real com aviso sonoro e impressão térmica automática.
+- Suporte humano por WhatsApp.
+- Domínio canônico: https://comandahub.online

@@ -1,0 +1,6 @@
+Contact: mailto:security@comandahub.online
+Contact: https://comandahub.online/contato
+Expires: 2027-12-31T23:59:59.000Z
+Preferred-Languages: pt-BR, en
+Canonical: https://comandahub.online/.well-known/security.txt
+Policy: https://comandahub.online/privacidade
