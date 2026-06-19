@@ -4,6 +4,7 @@ const BASE = "https://comandahub.online";
 
 const urls: { path: string; priority: number; changefreq: string }[] = [
   { path: "/", priority: 1.0, changefreq: "weekly" },
+  { path: "/glossario", priority: 0.8, changefreq: "monthly" },
   { path: "/sobre-a-comandahub", priority: 0.9, changefreq: "monthly" },
   { path: "/perguntas-frequentes", priority: 0.9, changefreq: "monthly" },
   { path: "/cardapio-digital", priority: 0.9, changefreq: "weekly" },

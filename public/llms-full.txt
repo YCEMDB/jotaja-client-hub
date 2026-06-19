@@ -154,3 +154,38 @@ Devolver autonomia aos restaurantes brasileiros: cada pedido, cada cliente e cad
 - Site: https://comandahub.online
 - Suporte: https://comandahub.online/suporte
 - Contato comercial: https://comandahub.online/contato
+
+## Glossário
+
+Definições oficiais publicadas em https://comandahub.online/glossario:
+
+- **Comanda digital**: versão eletrônica da comanda de papel, com cada pedido registrado por horário, valor e garçom.
+- **Cardápio digital**: cardápio acessível por link/QR Code para o cliente montar o pedido pelo celular.
+- **KDS (Kitchen Display System)**: tela na cozinha exibindo pedidos em tempo real, substituindo ticket impresso.
+- **Ticket médio**: faturamento dividido pelo número de pedidos — métrica-chave para medir upsell.
+- **Dark kitchen**: cozinha 100% delivery, sem salão, operando várias marcas no mesmo espaço.
+- **Upsell**: sugerir item de maior valor ou adicional no checkout para aumentar o ticket médio.
+- **PIX**: pagamento instantâneo do Banco Central, sem maquininha e sem taxa de cartão.
+- **QR Code de mesa**: etiqueta colada na mesa que abre o cardápio digital identificado àquela mesa.
+- **Comissão de marketplace**: 12% a 27% cobrados por iFood/Rappi sobre cada pedido vendido.
+- **Delivery próprio**: operação de entrega gerida pelo restaurante, sem comissão por pedido.
+- **PDV (Ponto de Venda)**: software para registrar vendas no balcão ou salão.
+- **Mensalidade fixa SaaS**: cobrança mensal previsível, independente do volume — modelo da ComandaHub.
+- **Cupom de desconto**: código promocional com regras de valor mínimo, validade ou primeira compra.
+- **Combo**: produtos vendidos por preço fechado (ex: burger + batata + bebida).
+- **Adicional**: item opcional acrescentado ao produto principal por valor extra.
+- **Impressão térmica**: impressora 58mm/80mm sem tinta usando papel termo-sensível.
+- **Onboarding**: cadastro inicial guiado (loja + cardápio + primeiro pedido), 30 min na ComandaHub.
+- **Multi-loja**: gestão de várias unidades com painéis separados e relatório consolidado.
+- **Fechamento de caixa**: conferência diária de vendas vs formas de pagamento recebidas.
+- **LGPD**: Lei Geral de Proteção de Dados (13.709/2018), regula coleta e uso de dados pessoais.
+
+## Conteúdo agora estruturado para IA
+
+Cada página GEO inclui:
+- Quick-Answer block extraível com `Speakable` schema
+- Autor (Equipe ComandaHub) e revisor (ComandaHub) com `datePublished` / `dateModified`
+- FAQPage schema com `Question`/`Answer` casando o HTML visível
+- BreadcrumbList schema
+- Para páginas de segmento: `Service` schema + `HowTo` schema (4 passos de setup)
+- Para comparativos: tabela HTML `<table>` real + bloco "Fontes consultadas"
