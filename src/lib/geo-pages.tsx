@@ -431,3 +431,118 @@ export const COMPARISON_PAGES: Record<string, Omit<GeoPageProps, "schemaType">> 
     ]),
   },
 };
+
+// =====================================================================
+// Enriquecimento GEO: sources, datas, HowTo, Service, comparison tables
+// Aplicado em runtime sobre os objetos exportados.
+// =====================================================================
+
+const COMMON_SOURCES = [
+  { label: "Pesquisa Anual ABRASEL sobre custos operacionais em restaurantes", url: "https://abrasel.com.br/", publisher: "ABRASEL" },
+  { label: "Pesquisa SEBRAE — Mercado de food service no Brasil", url: "https://sebrae.com.br/", publisher: "SEBRAE" },
+  { label: "Banco Central do Brasil — Estatísticas do Pix", url: "https://www.bcb.gov.br/estabilidadefinanceira/estatisticaspix", publisher: "Banco Central do Brasil" },
+];
+
+const SEGMENT_SERVICE: Record<string, { name: string; serviceType: string; audience: string }> = {
+  "sistema-para-restaurantes": { name: "Sistema para Restaurantes", serviceType: "Restaurant Management Software", audience: "Restaurantes" },
+  "sistema-para-pizzarias": { name: "Sistema para Pizzarias", serviceType: "Pizzeria Management Software", audience: "Pizzarias" },
+  "sistema-para-lanchonetes": { name: "Sistema para Lanchonetes", serviceType: "Snack Bar POS", audience: "Lanchonetes e cafeterias" },
+  "sistema-para-acaiterias": { name: "Sistema para Açaiterias", serviceType: "Açaí Shop POS", audience: "Açaiterias e sorveterias" },
+  "sistema-para-bares": { name: "Sistema para Bares", serviceType: "Bar Management Software", audience: "Bares, choperias e pubs" },
+  "sistema-para-hamburguerias": { name: "Sistema para Hamburguerias", serviceType: "Burger Shop POS", audience: "Hamburguerias" },
+  "sistema-para-delivery": { name: "Sistema de Delivery Próprio", serviceType: "Online Food Ordering", audience: "Restaurantes que fazem delivery" },
+  "sistema-de-comandas-digitais": { name: "Sistema de Comandas Digitais", serviceType: "Digital Tab System", audience: "Bares e restaurantes" },
+  "controle-de-mesas": { name: "Controle de Mesas com QR Code", serviceType: "Table Management", audience: "Restaurantes com salão" },
+  "gestao-de-restaurantes": { name: "Gestão de Restaurantes", serviceType: "Restaurant ERP", audience: "Restaurantes de todos os portes" },
+};
+
+const HOWTO_STANDARD = {
+  name: "Como começar a usar a ComandaHub em 4 passos",
+  description: "Setup completo do cardápio digital ao primeiro pedido em até 30 minutos.",
+  steps: [
+    { name: "Cadastro gratuito", text: "Crie sua conta em comandahub.online/auth com email. Sem cartão de crédito, 14 dias grátis." },
+    { name: "Personalize a loja", text: "Defina nome, cores, logo, horários de funcionamento e bairros atendidos." },
+    { name: "Cadastre o cardápio", text: "Adicione categorias, produtos, fotos, preços, combos e adicionais. Importação assistida sob demanda." },
+    { name: "Compartilhe o link", text: "Use comandahub.online/seu-restaurante na bio do Instagram, WhatsApp e QR Code da mesa. Os pedidos chegam no painel em tempo real." },
+  ],
+};
+
+const SEGMENT_HOWTO_KEYS = [
+  "sistema-para-restaurantes",
+  "sistema-para-pizzarias",
+  "sistema-para-delivery",
+  "sistema-de-comandas-digitais",
+  "controle-de-mesas",
+  "gestao-de-restaurantes",
+];
+
+for (const key of Object.keys(GEO_PAGES)) {
+  const entry = GEO_PAGES[key] as GeoPageProps;
+  entry.datePublished = entry.datePublished ?? "2024-06-01";
+  entry.dateModified = entry.dateModified ?? new Date().toISOString().split("T")[0];
+  entry.sources = entry.sources ?? COMMON_SOURCES;
+  if (SEGMENT_SERVICE[key]) entry.service = entry.service ?? SEGMENT_SERVICE[key];
+  if (SEGMENT_HOWTO_KEYS.includes(key)) entry.howTo = entry.howTo ?? HOWTO_STANDARD;
+}
+
+// Tabelas comparativas reais (<table>) por comparativo.
+const COMPARISON_TABLES: Record<string, GeoPageProps["comparisonTable"]> = {
+  "planilha": {
+    caption: "ComandaHub vs Planilha Excel",
+    headers: ["Critério", "Planilha Excel", "ComandaHub"],
+    rows: [
+      ["Atualização em tempo real", "Não (manual)", "Sim, instantânea"],
+      ["Alerta sonoro de pedido novo", "Não", "Sim"],
+      ["Pagamento PIX / cartão integrado", "Não", "Sim (Mercado Pago)"],
+      ["Backup automático em nuvem", "Não", "Sim, contínuo"],
+      ["Cardápio público para o cliente", "Não", "Sim, link próprio"],
+      ["Relatório de vendas automatizado", "Manual", "Automático"],
+      ["Custo mensal", "R$ 0 (e horas de trabalho)", "R$ 99 fixo, sem comissão"],
+    ],
+  },
+  "caderno": {
+    caption: "ComandaHub vs Caderno de pedidos",
+    headers: ["Critério", "Caderno", "ComandaHub"],
+    rows: [
+      ["Risco de pedido errado por letra ruim", "Alto", "Zero (registro digital)"],
+      ["Perda de comanda", "Comum", "Impossível"],
+      ["Tempo de fechamento de caixa", "30-60 min/dia", "Automático"],
+      ["Relatório por garçom", "Não", "Sim"],
+      ["Backup", "Inexistente", "Nuvem contínua"],
+      ["Pagamento integrado", "Não", "PIX / cartão Mercado Pago"],
+    ],
+  },
+  "comanda-de-papel": {
+    caption: "ComandaHub vs Comanda de papel",
+    headers: ["Critério", "Comanda de papel", "ComandaHub"],
+    rows: [
+      ["Perda de comanda", "Comum", "Impossível"],
+      ["Soma da conta", "Manual", "Automática"],
+      ["Divisão de conta entre clientes", "Manual", "Automática"],
+      ["Fechamento de caixa", "Manual", "Automático"],
+      ["Relatório por garçom / turno", "Não", "Sim"],
+      ["Pagamento online", "Maquininha à parte", "PIX e cartão integrados"],
+    ],
+  },
+  "controle-manual": {
+    caption: "ComandaHub vs Controle manual (caderno + planilha + WhatsApp)",
+    headers: ["Critério", "Controle manual", "ComandaHub"],
+    rows: [
+      ["Horas/dia consumidas", "2 a 3 horas", "Minutos"],
+      ["Erro silencioso de caixa", "Frequente", "Zerado"],
+      ["Pedidos centralizados", "Não (vários canais)", "Sim (painel único)"],
+      ["Fechamento financeiro", "Manual", "Automático"],
+      ["Relatórios de produto mais vendido", "Não", "Sim"],
+      ["Backup de dados", "Você é responsável", "Nuvem contínua"],
+    ],
+  },
+};
+
+for (const key of Object.keys(COMPARISON_PAGES)) {
+  const entry = COMPARISON_PAGES[key] as GeoPageProps;
+  entry.datePublished = entry.datePublished ?? "2024-06-01";
+  entry.dateModified = entry.dateModified ?? new Date().toISOString().split("T")[0];
+  entry.sources = entry.sources ?? COMMON_SOURCES;
+  if (COMPARISON_TABLES[key]) entry.comparisonTable = entry.comparisonTable ?? COMPARISON_TABLES[key];
+}
+
