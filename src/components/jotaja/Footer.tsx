@@ -17,21 +17,41 @@ export function Footer() {
 
           {[
             {
-              title: "Produto",
+              title: "Soluções",
               links: [
-                { label: "Funcionalidades", href: "#funcionalidades" },
-                { label: "Planos", href: "#planos" },
-                { label: "Depoimentos", href: "#depoimentos" },
-                { label: "FAQ", href: "#faq" },
+                { label: "Restaurantes", href: "/sistema-para-restaurantes" },
+                { label: "Pizzarias", href: "/sistema-para-pizzarias" },
+                { label: "Hamburguerias", href: "/sistema-para-hamburguerias" },
+                { label: "Lanchonetes", href: "/sistema-para-lanchonetes" },
+                { label: "Bares", href: "/sistema-para-bares" },
+                { label: "Açaiterias", href: "/sistema-para-acaiterias" },
+                { label: "Delivery", href: "/sistema-para-delivery" },
+                { label: "Comandas digitais", href: "/sistema-de-comandas-digitais" },
+                { label: "Controle de mesas", href: "/controle-de-mesas" },
+                { label: "Gestão de restaurantes", href: "/gestao-de-restaurantes" },
+              ],
+            },
+            {
+              title: "Comparativos",
+              links: [
+                { label: "vs iFood", href: "/alternativa-ifood" },
+                { label: "vs Goomer", href: "/comparativo/comandahub-vs-goomer" },
+                { label: "vs Anota AI", href: "/comparativo/comandahub-vs-anota-ai" },
+                { label: "vs Saipos", href: "/comparativo/comandahub-vs-saipos" },
+                { label: "vs Planilha", href: "/comparativo/comandahub-vs-planilha" },
+                { label: "vs Caderno", href: "/comparativo/comandahub-vs-caderno" },
+                { label: "vs Comanda de papel", href: "/comparativo/comandahub-vs-comanda-de-papel" },
+                { label: "vs Controle manual", href: "/comparativo/comandahub-vs-controle-manual" },
               ],
             },
             {
               title: "Empresa",
               links: [
-                { label: "Sobre", href: "/sobre" },
-                { label: "Empresa", href: "/empresa" },
-                { label: "Contato", href: "/contato" },
+                { label: "Sobre a ComandaHub", href: "/sobre-a-comandahub" },
+                { label: "Perguntas frequentes", href: "/perguntas-frequentes" },
                 { label: "Blog", href: "/blog" },
+                { label: "Contato", href: "/contato" },
+                { label: "Empresa", href: "/empresa" },
               ],
             },
             {
@@ -39,6 +59,8 @@ export function Footer() {
               links: [
                 { label: "Termos", href: "/termos" },
                 { label: "Privacidade", href: "/privacidade" },
+                { label: "SLA", href: "/sla" },
+                { label: "Suporte", href: "/suporte" },
               ],
             },
           ].map((col) => (
