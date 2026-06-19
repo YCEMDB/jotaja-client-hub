@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermosRouteImport } from './routes/termos'
 import { Route as SuporteRouteImport } from './routes/suporte'
+import { Route as SobreAComandahubRouteImport } from './routes/sobre-a-comandahub'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as SlaRouteImport } from './routes/sla'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
@@ -24,6 +25,7 @@ import { Route as SistemaParaAcaiteriasRouteImport } from './routes/sistema-para
 import { Route as SistemaDeComandasDigitaisRouteImport } from './routes/sistema-de-comandas-digitais'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
+import { Route as PerguntasFrequentesRouteImport } from './routes/perguntas-frequentes'
 import { Route as GestaoDeRestaurantesRouteImport } from './routes/gestao-de-restaurantes'
 import { Route as EmpresaRouteImport } from './routes/empresa'
 import { Route as ControleDeMesasRouteImport } from './routes/controle-de-mesas'
@@ -91,6 +93,11 @@ const SuporteRoute = SuporteRouteImport.update({
   path: '/suporte',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SobreAComandahubRoute = SobreAComandahubRouteImport.update({
+  id: '/sobre-a-comandahub',
+  path: '/sobre-a-comandahub',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SobreRoute = SobreRouteImport.update({
   id: '/sobre',
   path: '/sobre',
@@ -156,6 +163,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
 const PrivacidadeRoute = PrivacidadeRouteImport.update({
   id: '/privacidade',
   path: '/privacidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PerguntasFrequentesRoute = PerguntasFrequentesRouteImport.update({
+  id: '/perguntas-frequentes',
+  path: '/perguntas-frequentes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GestaoDeRestaurantesRoute = GestaoDeRestaurantesRouteImport.update({
@@ -471,6 +483,7 @@ export interface FileRoutesByFullPath {
   '/controle-de-mesas': typeof ControleDeMesasRoute
   '/empresa': typeof EmpresaRoute
   '/gestao-de-restaurantes': typeof GestaoDeRestaurantesRoute
+  '/perguntas-frequentes': typeof PerguntasFrequentesRoute
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sistema-de-comandas-digitais': typeof SistemaDeComandasDigitaisRoute
@@ -484,6 +497,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sla': typeof SlaRoute
   '/sobre': typeof SobreRoute
+  '/sobre-a-comandahub': typeof SobreAComandahubRoute
   '/suporte': typeof SuporteRoute
   '/termos': typeof TermosRoute
   '/blog/como-criar-cardapio-digital-qr-code': typeof BlogComoCriarCardapioDigitalQrCodeRoute
@@ -542,6 +556,7 @@ export interface FileRoutesByTo {
   '/controle-de-mesas': typeof ControleDeMesasRoute
   '/empresa': typeof EmpresaRoute
   '/gestao-de-restaurantes': typeof GestaoDeRestaurantesRoute
+  '/perguntas-frequentes': typeof PerguntasFrequentesRoute
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sistema-de-comandas-digitais': typeof SistemaDeComandasDigitaisRoute
@@ -555,6 +570,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sla': typeof SlaRoute
   '/sobre': typeof SobreRoute
+  '/sobre-a-comandahub': typeof SobreAComandahubRoute
   '/suporte': typeof SuporteRoute
   '/termos': typeof TermosRoute
   '/blog/como-criar-cardapio-digital-qr-code': typeof BlogComoCriarCardapioDigitalQrCodeRoute
@@ -616,6 +632,7 @@ export interface FileRoutesById {
   '/controle-de-mesas': typeof ControleDeMesasRoute
   '/empresa': typeof EmpresaRoute
   '/gestao-de-restaurantes': typeof GestaoDeRestaurantesRoute
+  '/perguntas-frequentes': typeof PerguntasFrequentesRoute
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sistema-de-comandas-digitais': typeof SistemaDeComandasDigitaisRoute
@@ -629,6 +646,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sla': typeof SlaRoute
   '/sobre': typeof SobreRoute
+  '/sobre-a-comandahub': typeof SobreAComandahubRoute
   '/suporte': typeof SuporteRoute
   '/termos': typeof TermosRoute
   '/blog/como-criar-cardapio-digital-qr-code': typeof BlogComoCriarCardapioDigitalQrCodeRoute
@@ -689,6 +707,7 @@ export interface FileRouteTypes {
     | '/controle-de-mesas'
     | '/empresa'
     | '/gestao-de-restaurantes'
+    | '/perguntas-frequentes'
     | '/privacidade'
     | '/reset-password'
     | '/sistema-de-comandas-digitais'
@@ -702,6 +721,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/sla'
     | '/sobre'
+    | '/sobre-a-comandahub'
     | '/suporte'
     | '/termos'
     | '/blog/como-criar-cardapio-digital-qr-code'
@@ -760,6 +780,7 @@ export interface FileRouteTypes {
     | '/controle-de-mesas'
     | '/empresa'
     | '/gestao-de-restaurantes'
+    | '/perguntas-frequentes'
     | '/privacidade'
     | '/reset-password'
     | '/sistema-de-comandas-digitais'
@@ -773,6 +794,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/sla'
     | '/sobre'
+    | '/sobre-a-comandahub'
     | '/suporte'
     | '/termos'
     | '/blog/como-criar-cardapio-digital-qr-code'
@@ -833,6 +855,7 @@ export interface FileRouteTypes {
     | '/controle-de-mesas'
     | '/empresa'
     | '/gestao-de-restaurantes'
+    | '/perguntas-frequentes'
     | '/privacidade'
     | '/reset-password'
     | '/sistema-de-comandas-digitais'
@@ -846,6 +869,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/sla'
     | '/sobre'
+    | '/sobre-a-comandahub'
     | '/suporte'
     | '/termos'
     | '/blog/como-criar-cardapio-digital-qr-code'
@@ -907,6 +931,7 @@ export interface RootRouteChildren {
   ControleDeMesasRoute: typeof ControleDeMesasRoute
   EmpresaRoute: typeof EmpresaRoute
   GestaoDeRestaurantesRoute: typeof GestaoDeRestaurantesRoute
+  PerguntasFrequentesRoute: typeof PerguntasFrequentesRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SistemaDeComandasDigitaisRoute: typeof SistemaDeComandasDigitaisRoute
@@ -920,6 +945,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SlaRoute: typeof SlaRoute
   SobreRoute: typeof SobreRoute
+  SobreAComandahubRoute: typeof SobreAComandahubRoute
   SuporteRoute: typeof SuporteRoute
   TermosRoute: typeof TermosRoute
   BlogComoCriarCardapioDigitalQrCodeRoute: typeof BlogComoCriarCardapioDigitalQrCodeRoute
@@ -964,6 +990,13 @@ declare module '@tanstack/react-router' {
       path: '/suporte'
       fullPath: '/suporte'
       preLoaderRoute: typeof SuporteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sobre-a-comandahub': {
+      id: '/sobre-a-comandahub'
+      path: '/sobre-a-comandahub'
+      fullPath: '/sobre-a-comandahub'
+      preLoaderRoute: typeof SobreAComandahubRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sobre': {
@@ -1055,6 +1088,13 @@ declare module '@tanstack/react-router' {
       path: '/privacidade'
       fullPath: '/privacidade'
       preLoaderRoute: typeof PrivacidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/perguntas-frequentes': {
+      id: '/perguntas-frequentes'
+      path: '/perguntas-frequentes'
+      fullPath: '/perguntas-frequentes'
+      preLoaderRoute: typeof PerguntasFrequentesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/gestao-de-restaurantes': {
@@ -1520,6 +1560,7 @@ const rootRouteChildren: RootRouteChildren = {
   ControleDeMesasRoute: ControleDeMesasRoute,
   EmpresaRoute: EmpresaRoute,
   GestaoDeRestaurantesRoute: GestaoDeRestaurantesRoute,
+  PerguntasFrequentesRoute: PerguntasFrequentesRoute,
   PrivacidadeRoute: PrivacidadeRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SistemaDeComandasDigitaisRoute: SistemaDeComandasDigitaisRoute,
@@ -1533,6 +1574,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SlaRoute: SlaRoute,
   SobreRoute: SobreRoute,
+  SobreAComandahubRoute: SobreAComandahubRoute,
   SuporteRoute: SuporteRoute,
   TermosRoute: TermosRoute,
   BlogComoCriarCardapioDigitalQrCodeRoute:
