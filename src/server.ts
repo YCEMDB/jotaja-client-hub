@@ -66,15 +66,45 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
   return brandedErrorResponse();
 }
 
+// Hardening: append baseline security headers to every response.
+// CSP is intentionally permissive enough for Supabase, Mercado Pago, Google Fonts
+// and Lovable-injected dev scripts; tighten further once the app no longer needs
+// inline styles/scripts from third-party widgets.
+const SECURITY_HEADERS: Record<string, string> = {
+  "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "SAMEORIGIN",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+  "Permissions-Policy": "camera=(), microphone=(), geolocation=(self), payment=(self)",
+  "Content-Security-Policy":
+    "default-src 'self'; " +
+    "img-src 'self' data: blob: https:; " +
+    "font-src 'self' data: https://fonts.gstatic.com; " +
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.mercadopago.com https://sdk.mercadopago.com https://*.lovable.dev https://*.lovable.app; " +
+    "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.mercadopago.com https://*.mercadopago.com https://*.lovable.dev https://*.lovable.app; " +
+    "frame-src https://*.mercadopago.com; " +
+    "object-src 'none'; base-uri 'self'; form-action 'self'",
+};
+
+function withSecurityHeaders(response: Response): Response {
+  // Don't clobber explicit per-route headers; only fill in missing ones.
+  const headers = new Headers(response.headers);
+  for (const [k, v] of Object.entries(SECURITY_HEADERS)) {
+    if (!headers.has(k)) headers.set(k, v);
+  }
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
+      return withSecurityHeaders(await normalizeCatastrophicSsrResponse(response));
     } catch (error) {
       console.error(error);
-      return brandedErrorResponse();
+      return withSecurityHeaders(brandedErrorResponse());
     }
   },
 };

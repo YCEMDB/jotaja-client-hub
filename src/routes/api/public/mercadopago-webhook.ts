@@ -1,12 +1,36 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { createHmac, timingSafeEqual } from "node:crypto";
+
+// Verifies Mercado Pago x-signature header (ts=...,v1=...) using MP_WEBHOOK_SECRET.
+// Returns true when the secret is unset (soft-fail to avoid breaking existing tenants
+// that have not yet rotated to a signed webhook), and false on a real mismatch.
+function verifyMpSignature(request: Request, rawBody: string, paymentId: string | null): boolean {
+  const secret = process.env.MP_WEBHOOK_SECRET;
+  if (!secret) return true;
+  const header = request.headers.get("x-signature") ?? "";
+  const requestId = request.headers.get("x-request-id") ?? "";
+  const parts = Object.fromEntries(
+    header.split(",").map((p) => p.split("=").map((s) => s.trim())) as [string, string][],
+  );
+  const ts = parts.ts;
+  const v1 = parts.v1;
+  if (!ts || !v1 || !paymentId) return false;
+  const manifest = `id:${paymentId};request-id:${requestId};ts:${ts};`;
+  const expected = createHmac("sha256", secret).update(manifest).digest("hex");
+  const a = Buffer.from(expected);
+  const b = Buffer.from(v1);
+  if (a.length !== b.length) return false;
+  return timingSafeEqual(a, b);
+}
 
 export const Route = createFileRoute("/api/public/mercadopago-webhook")({
   server: {
     handlers: {
       POST: async ({ request }) => {
         try {
-          const body = await request.json().catch(() => ({} as any));
+          const rawBody = await request.text();
+          const body = rawBody ? (() => { try { return JSON.parse(rawBody); } catch { return {} as any; } })() : ({} as any);
           // MP sends: { type: "payment", data: { id: "..." } } or topic=payment&id=...
           const url = new URL(request.url);
           const paymentId =
@@ -15,6 +39,10 @@ export const Route = createFileRoute("/api/public/mercadopago-webhook")({
 
           if (!paymentId || (type && type !== "payment")) {
             return new Response("ignored", { status: 200 });
+          }
+
+          if (!verifyMpSignature(request, rawBody, String(paymentId))) {
+            return new Response("invalid signature", { status: 401 });
           }
 
           // Find order by mp_payment_id to get the restaurant token
