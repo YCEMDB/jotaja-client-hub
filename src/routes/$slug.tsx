@@ -513,7 +513,7 @@ function CheckoutDialog({
         p_restaurant_id: restaurant.id,
         p_name: name.trim(),
         p_phone: phone.trim(),
-        p_email: null,
+        p_email: undefined,
       });
       if (upErr) {
         console.error("upsert_public_customer failed", upErr);
