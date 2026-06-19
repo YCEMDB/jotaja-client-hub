@@ -41,6 +41,10 @@ export const Route = createFileRoute("/api/public/mercadopago-webhook")({
             return new Response("ignored", { status: 200 });
           }
 
+          if (!verifyMpSignature(request, rawBody, String(paymentId))) {
+            return new Response("invalid signature", { status: 401 });
+          }
+
           // Find order by mp_payment_id to get the restaurant token
           const { data: order } = await supabaseAdmin
             .from("orders")
