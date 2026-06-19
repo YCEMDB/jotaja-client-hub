@@ -38,6 +38,7 @@ A ComandaHub substitui marketplaces caros (iFood, Rappi) e ferramentas analógic
 
 - [Blog](https://comandahub.online/blog): guias práticos sobre cardápio digital, sistemas de pedidos e gestão.
 - [Cardápio digital — guia completo](https://comandahub.online/cardapio-digital)
+- [Glossário de gestão de restaurantes](https://comandahub.online/glossario): 20+ termos definidos (comanda digital, KDS, ticket médio, dark kitchen, PIX, QR Code de mesa, LGPD).
 
 ## Empresa
 

@@ -26,6 +26,7 @@ import { Route as SistemaDeComandasDigitaisRouteImport } from './routes/sistema-
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as PerguntasFrequentesRouteImport } from './routes/perguntas-frequentes'
+import { Route as GlossarioRouteImport } from './routes/glossario'
 import { Route as GestaoDeRestaurantesRouteImport } from './routes/gestao-de-restaurantes'
 import { Route as EmpresaRouteImport } from './routes/empresa'
 import { Route as ControleDeMesasRouteImport } from './routes/controle-de-mesas'
@@ -168,6 +169,11 @@ const PrivacidadeRoute = PrivacidadeRouteImport.update({
 const PerguntasFrequentesRoute = PerguntasFrequentesRouteImport.update({
   id: '/perguntas-frequentes',
   path: '/perguntas-frequentes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GlossarioRoute = GlossarioRouteImport.update({
+  id: '/glossario',
+  path: '/glossario',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GestaoDeRestaurantesRoute = GestaoDeRestaurantesRouteImport.update({
@@ -483,6 +489,7 @@ export interface FileRoutesByFullPath {
   '/controle-de-mesas': typeof ControleDeMesasRoute
   '/empresa': typeof EmpresaRoute
   '/gestao-de-restaurantes': typeof GestaoDeRestaurantesRoute
+  '/glossario': typeof GlossarioRoute
   '/perguntas-frequentes': typeof PerguntasFrequentesRoute
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -556,6 +563,7 @@ export interface FileRoutesByTo {
   '/controle-de-mesas': typeof ControleDeMesasRoute
   '/empresa': typeof EmpresaRoute
   '/gestao-de-restaurantes': typeof GestaoDeRestaurantesRoute
+  '/glossario': typeof GlossarioRoute
   '/perguntas-frequentes': typeof PerguntasFrequentesRoute
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -632,6 +640,7 @@ export interface FileRoutesById {
   '/controle-de-mesas': typeof ControleDeMesasRoute
   '/empresa': typeof EmpresaRoute
   '/gestao-de-restaurantes': typeof GestaoDeRestaurantesRoute
+  '/glossario': typeof GlossarioRoute
   '/perguntas-frequentes': typeof PerguntasFrequentesRoute
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -707,6 +716,7 @@ export interface FileRouteTypes {
     | '/controle-de-mesas'
     | '/empresa'
     | '/gestao-de-restaurantes'
+    | '/glossario'
     | '/perguntas-frequentes'
     | '/privacidade'
     | '/reset-password'
@@ -780,6 +790,7 @@ export interface FileRouteTypes {
     | '/controle-de-mesas'
     | '/empresa'
     | '/gestao-de-restaurantes'
+    | '/glossario'
     | '/perguntas-frequentes'
     | '/privacidade'
     | '/reset-password'
@@ -855,6 +866,7 @@ export interface FileRouteTypes {
     | '/controle-de-mesas'
     | '/empresa'
     | '/gestao-de-restaurantes'
+    | '/glossario'
     | '/perguntas-frequentes'
     | '/privacidade'
     | '/reset-password'
@@ -931,6 +943,7 @@ export interface RootRouteChildren {
   ControleDeMesasRoute: typeof ControleDeMesasRoute
   EmpresaRoute: typeof EmpresaRoute
   GestaoDeRestaurantesRoute: typeof GestaoDeRestaurantesRoute
+  GlossarioRoute: typeof GlossarioRoute
   PerguntasFrequentesRoute: typeof PerguntasFrequentesRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
@@ -1095,6 +1108,13 @@ declare module '@tanstack/react-router' {
       path: '/perguntas-frequentes'
       fullPath: '/perguntas-frequentes'
       preLoaderRoute: typeof PerguntasFrequentesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/glossario': {
+      id: '/glossario'
+      path: '/glossario'
+      fullPath: '/glossario'
+      preLoaderRoute: typeof GlossarioRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/gestao-de-restaurantes': {
@@ -1560,6 +1580,7 @@ const rootRouteChildren: RootRouteChildren = {
   ControleDeMesasRoute: ControleDeMesasRoute,
   EmpresaRoute: EmpresaRoute,
   GestaoDeRestaurantesRoute: GestaoDeRestaurantesRoute,
+  GlossarioRoute: GlossarioRoute,
   PerguntasFrequentesRoute: PerguntasFrequentesRoute,
   PrivacidadeRoute: PrivacidadeRoute,
   ResetPasswordRoute: ResetPasswordRoute,
