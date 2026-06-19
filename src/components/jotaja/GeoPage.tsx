@@ -208,7 +208,7 @@ export function GeoPage(props: GeoPageProps) {
             <ul>
               {related.map((r) => (
                 <li key={r.to}>
-                  <Link to={r.to}>{r.label}</Link>
+                  <a href={r.to}>{r.label}</a>
                 </li>
               ))}
             </ul>
