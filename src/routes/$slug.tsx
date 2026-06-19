@@ -506,25 +506,20 @@ function CheckoutDialog({
     }
     setSubmitting(true);
 
-    // Busca cliente existente desta loja por telefone (digits-only match)
-    const phoneDigits = phone.replace(/\D/g, "");
+    // Upsert seguro de cliente via RPC (dedup por telefone, valida restaurante ativo)
     let custId: string | null = null;
-    if (phoneDigits.length >= 8) {
-      const { data: existing } = await supabase
-        .from("customers")
-        .select("id")
-        .eq("restaurant_id", restaurant.id)
-        .ilike("phone", `%${phoneDigits}%`)
-        .limit(1)
-        .maybeSingle();
-      custId = existing?.id ?? null;
-    }
-    if (!custId) {
-      const { data: cust } = await supabase
-        .from("customers")
-        .insert({ restaurant_id: restaurant.id, name: name.trim(), phone: phone.trim() })
-        .select("id").single();
-      custId = cust?.id ?? null;
+    {
+      const { data: upsertId, error: upErr } = await supabase.rpc("upsert_public_customer", {
+        p_restaurant_id: restaurant.id,
+        p_name: name.trim(),
+        p_phone: phone.trim(),
+        p_email: null,
+      });
+      if (upErr) {
+        console.error("upsert_public_customer failed", upErr);
+      } else {
+        custId = (upsertId as string | null) ?? null;
+      }
     }
 
     const { data: order, error: oErr } = await supabase
