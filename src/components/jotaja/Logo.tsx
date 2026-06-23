@@ -44,7 +44,7 @@ export function Logo({ className = "", markOnly = false, size = "md" }: LogoProp
         <span
           className={`logo-wordmark font-display ${wordSize} leading-none tracking-tight text-ink`}
         >
-          comanda<span className="text-brand-orange">hub</span>
+          coman<span className="text-brand-orange">dex</span>
         </span>
       )}
     </span>
