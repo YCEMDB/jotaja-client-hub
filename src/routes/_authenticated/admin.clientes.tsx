@@ -8,7 +8,7 @@ import { Users, Search, Phone, Mail, ShoppingBag } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin/clientes")({
   component: Clientes,
-  head: () => ({ meta: [{ title: "Clientes — ComandaHub" }] }),
+  head: () => ({ meta: [{ title: "Clientes — Comandex" }] }),
 });
 
 interface Customer {

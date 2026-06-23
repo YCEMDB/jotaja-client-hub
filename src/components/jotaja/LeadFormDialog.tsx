@@ -67,7 +67,7 @@ export function LeadForm({ variant = "light", onDone }: LeadFormProps) {
     }
 
     const txt = encodeURIComponent(
-      `Oi! Quero conhecer o ComandaHub.\n\n` +
+      `Oi! Quero conhecer o Comandex.\n\n` +
       `• Nome: ${parsed.data.name}\n` +
       `• Restaurante: ${parsed.data.restaurant_name}\n` +
       `• E-mail: ${parsed.data.email}\n` +

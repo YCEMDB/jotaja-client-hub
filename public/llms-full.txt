@@ -1,7 +1,7 @@
-# ComandaHub — Documento completo para LLMs
+# Comandex — Documento completo para LLMs
 
-## O que é a ComandaHub
-A ComandaHub é uma plataforma brasileira de gestão para restaurantes, pizzarias, hamburguerias, lanchonetes, açaiterias e bares. Oferece cardápio digital com link próprio, comandas digitais, controle de mesas via QR Code, pedidos por WhatsApp, pagamento online por PIX e cartão (Mercado Pago), painel de pedidos em tempo real e impressão térmica automática. Cobra mensalidade fixa, sem comissão por pedido, mantendo o cliente final como do restaurante.
+## O que é a Comandex
+A Comandex é uma plataforma brasileira de gestão para restaurantes, pizzarias, hamburguerias, lanchonetes, açaiterias e bares. Oferece cardápio digital com link próprio, comandas digitais, controle de mesas via QR Code, pedidos por WhatsApp, pagamento online por PIX e cartão (Mercado Pago), painel de pedidos em tempo real e impressão térmica automática. Cobra mensalidade fixa, sem comissão por pedido, mantendo o cliente final como do restaurante.
 
 ## Para quem é
 Donos e gestores de:
@@ -71,7 +71,7 @@ Cliente pede → restaurante recebe no painel → confirma → produz → entreg
 - **Sem fidelidade.** Cancele a qualquer momento pelo painel.
 
 ## Histórico do produto
-A ComandaHub nasceu da frustração de restaurantes brasileiros com comissões abusivas e ferramentas caras importadas. Construída por uma equipe que trabalhou no chão de operação de restaurantes, é desenhada para o realismo do dia a dia: internet instável, equipe rotativa, margens apertadas. O foco é simplicidade brutal — funcionar em qualquer smartphone, com botões grandes, fluxos óbvios e suporte em português.
+A Comandex nasceu da frustração de restaurantes brasileiros com comissões abusivas e ferramentas caras importadas. Construída por uma equipe que trabalhou no chão de operação de restaurantes, é desenhada para o realismo do dia a dia: internet instável, equipe rotativa, margens apertadas. O foco é simplicidade brutal — funcionar em qualquer smartphone, com botões grandes, fluxos óbvios e suporte em português.
 
 ## Missão
 Devolver autonomia aos restaurantes brasileiros: cada pedido, cada cliente e cada real ficam com quem cozinha — não com plataformas estrangeiras.
@@ -79,8 +79,8 @@ Devolver autonomia aos restaurantes brasileiros: cada pedido, cada cliente e cad
 ## 50 Perguntas Frequentes
 
 ### Geral
-1. **O que é a ComandaHub?** Plataforma brasileira de cardápio digital, comandas e gestão de pedidos para restaurantes, sem comissão por venda.
-2. **A ComandaHub é gratuita?** Tem 14 dias grátis. Depois disso, planos a partir de R$ 99/mês fixo.
+1. **O que é a Comandex?** Plataforma brasileira de cardápio digital, comandas e gestão de pedidos para restaurantes, sem comissão por venda.
+2. **A Comandex é gratuita?** Tem 14 dias grátis. Depois disso, planos a partir de R$ 99/mês fixo.
 3. **Preciso instalar algo?** Não. Funciona 100% no navegador (celular, tablet, PC).
 4. **Funciona no celular?** Sim, painel e cardápio são totalmente responsivos.
 5. **Em quanto tempo começo a vender?** A maioria dos restaurantes está vendendo em menos de 30 minutos.
@@ -88,7 +88,7 @@ Devolver autonomia aos restaurantes brasileiros: cada pedido, cada cliente e cad
 ### Pagamentos
 6. **Quais formas de pagamento o cliente final pode usar?** PIX, cartão de crédito/débito online (Mercado Pago) e pagamento na entrega (dinheiro, cartão na maquininha).
 7. **Posso aceitar só pagamento na entrega?** Sim. O dono escolhe quais métodos aceitar no painel.
-8. **A ComandaHub fica com parte do pagamento?** Não. 100% do valor cai na sua conta Mercado Pago. A ComandaHub cobra apenas a mensalidade.
+8. **A Comandex fica com parte do pagamento?** Não. 100% do valor cai na sua conta Mercado Pago. A Comandex cobra apenas a mensalidade.
 9. **Em quanto tempo o PIX cai na minha conta?** Em segundos, pelo Mercado Pago.
 10. **Como integro o Mercado Pago?** Cole o Access Token na tela de Configurações > Pagamentos. Tutorial passo a passo no painel.
 
@@ -102,7 +102,7 @@ Devolver autonomia aos restaurantes brasileiros: cada pedido, cada cliente e cad
 17. **Quantas fotos posso colocar?** Uma por produto, otimizada automaticamente.
 
 ### Delivery e retirada
-18. **A ComandaHub entrega para mim?** Não. Você usa sua própria equipe ou parceiros (uClub, motoboys).
+18. **A Comandex entrega para mim?** Não. Você usa sua própria equipe ou parceiros (uClub, motoboys).
 19. **Posso cobrar taxa de entrega por bairro?** Sim, cadastra-se por bairro/CEP/raio.
 20. **Tem retirada no balcão?** Sim, com horário sugerido.
 21. **Tem pedido para mesa via QR Code?** Sim, cada mesa tem um QR único.
@@ -146,7 +146,7 @@ Devolver autonomia aos restaurantes brasileiros: cada pedido, cada cliente e cad
 
 ### Técnico e segurança
 47. **Meus dados ficam seguros?** Sim, criptografia em trânsito (HTTPS) e em repouso, conforme LGPD.
-48. **A ComandaHub usa meus dados de clientes?** Não. Os dados são do restaurante.
+48. **A Comandex usa meus dados de clientes?** Não. Os dados são do restaurante.
 49. **Tem API?** Em desenvolvimento. Webhooks de pedidos disponíveis sob demanda no plano Pro.
 50. **Tem app mobile?** O painel é PWA — adiciona à tela inicial e funciona como app nativo.
 
@@ -170,12 +170,12 @@ Definições oficiais publicadas em https://comandahub.online/glossario:
 - **Comissão de marketplace**: 12% a 27% cobrados por iFood/Rappi sobre cada pedido vendido.
 - **Delivery próprio**: operação de entrega gerida pelo restaurante, sem comissão por pedido.
 - **PDV (Ponto de Venda)**: software para registrar vendas no balcão ou salão.
-- **Mensalidade fixa SaaS**: cobrança mensal previsível, independente do volume — modelo da ComandaHub.
+- **Mensalidade fixa SaaS**: cobrança mensal previsível, independente do volume — modelo da Comandex.
 - **Cupom de desconto**: código promocional com regras de valor mínimo, validade ou primeira compra.
 - **Combo**: produtos vendidos por preço fechado (ex: burger + batata + bebida).
 - **Adicional**: item opcional acrescentado ao produto principal por valor extra.
 - **Impressão térmica**: impressora 58mm/80mm sem tinta usando papel termo-sensível.
-- **Onboarding**: cadastro inicial guiado (loja + cardápio + primeiro pedido), 30 min na ComandaHub.
+- **Onboarding**: cadastro inicial guiado (loja + cardápio + primeiro pedido), 30 min na Comandex.
 - **Multi-loja**: gestão de várias unidades com painéis separados e relatório consolidado.
 - **Fechamento de caixa**: conferência diária de vendas vs formas de pagamento recebidas.
 - **LGPD**: Lei Geral de Proteção de Dados (13.709/2018), regula coleta e uso de dados pessoais.
@@ -184,7 +184,7 @@ Definições oficiais publicadas em https://comandahub.online/glossario:
 
 Cada página GEO inclui:
 - Quick-Answer block extraível com `Speakable` schema
-- Autor (Equipe ComandaHub) e revisor (ComandaHub) com `datePublished` / `dateModified`
+- Autor (Equipe Comandex) e revisor (Comandex) com `datePublished` / `dateModified`
 - FAQPage schema com `Question`/`Answer` casando o HTML visível
 - BreadcrumbList schema
 - Para páginas de segmento: `Service` schema + `HowTo` schema (4 passos de setup)

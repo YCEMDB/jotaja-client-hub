@@ -2,9 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ContentLayout } from "@/components/jotaja/ContentLayout";
 
 const URL = "https://comandahub.online/privacidade";
-const TITLE = "Política de Privacidade — ComandaHub";
+const TITLE = "Política de Privacidade — Comandex";
 const DESC =
-  "Política de privacidade do ComandaHub: quais dados coletamos, como usamos, com quem compartilhamos e como você exerce seus direitos pela LGPD.";
+  "Política de privacidade do Comandex: quais dados coletamos, como usamos, com quem compartilhamos e como você exerce seus direitos pela LGPD.";
 
 export const Route = createFileRoute("/privacidade")({
   head: () => ({
@@ -29,7 +29,7 @@ function Privacidade() {
         <em>Última atualização: 16 de maio de 2026.</em>
       </p>
       <p className="lead">
-        Esta política descreve como o ComandaHub coleta, usa, armazena e
+        Esta política descreve como o Comandex coleta, usa, armazena e
         protege os dados pessoais dos restaurantes contratantes, dos
         usuários do painel e dos consumidores finais que fazem pedidos
         nos cardápios hospedados em nossa plataforma. Estamos em
@@ -39,10 +39,10 @@ function Privacidade() {
 
       <h2>1. Quem é o controlador dos dados</h2>
       <p>
-        O ComandaHub é controlador dos dados de cadastro do restaurante e
+        O Comandex é controlador dos dados de cadastro do restaurante e
         do usuário do painel. Para os dados dos consumidores finais
         (pedidos feitos no cardápio), o restaurante contratante é o
-        controlador e o ComandaHub atua como operador.
+        controlador e o Comandex atua como operador.
       </p>
 
       <h2>2. Dados que coletamos</h2>

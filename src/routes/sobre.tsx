@@ -2,9 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ContentLayout } from "@/components/jotaja/ContentLayout";
 
 const URL = "https://comandahub.online/sobre";
-const TITLE = "Sobre o ComandaHub — plataforma de delivery próprio";
+const TITLE = "Sobre o Comandex — plataforma de delivery próprio";
 const DESC =
-  "Conheça a história, missão e visão do ComandaHub: ajudar restaurantes brasileiros a venderem direto, sem comissão e com autonomia total.";
+  "Conheça a história, missão e visão do Comandex: ajudar restaurantes brasileiros a venderem direto, sem comissão e com autonomia total.";
 
 export const Route = createFileRoute("/sobre")({
   head: () => ({
@@ -24,7 +24,7 @@ export const Route = createFileRoute("/sobre")({
 function Sobre() {
   return (
     <ContentLayout>
-      <h1>Sobre o ComandaHub</h1>
+      <h1>Sobre o Comandex</h1>
       <p className="lead">
         Somos uma plataforma brasileira que ajuda restaurantes, pizzarias,
         hamburguerias e lanchonetes a venderem direto pelo WhatsApp e
@@ -56,7 +56,7 @@ function Sobre() {
         <li><strong>Brasilidade</strong> — feito por quem conhece o dia a dia daqui.</li>
       </ul>
 
-      <h2>Quem usa o ComandaHub</h2>
+      <h2>Quem usa o Comandex</h2>
       <p>
         Hoje atendemos centenas de restaurantes em todo o Brasil — de
         operações de bairro a redes com várias unidades. Pizzarias,

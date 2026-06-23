@@ -14,11 +14,11 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
   head: () => ({
     meta: [
-      { title: "Entrar — ComandaHub" },
-      { name: "description", content: "Acesse sua conta ComandaHub para gerenciar pedidos, cardápio e clientes do seu restaurante." },
+      { title: "Entrar — Comandex" },
+      { name: "description", content: "Acesse sua conta Comandex para gerenciar pedidos, cardápio e clientes do seu restaurante." },
       { name: "robots", content: "noindex, nofollow" },
-      { property: "og:title", content: "Entrar — ComandaHub" },
-      { property: "og:description", content: "Acesse o painel ComandaHub do seu restaurante." },
+      { property: "og:title", content: "Entrar — Comandex" },
+      { property: "og:description", content: "Acesse o painel Comandex do seu restaurante." },
     ],
   }),
 });
@@ -50,7 +50,7 @@ function AuthPage() {
             Acesse o painel da sua loja para gerenciar pedidos, cardápio e entregadores.
           </p>
         </div>
-        <p className="text-sm text-primary-foreground/60">© 2026 ComandaHub</p>
+        <p className="text-sm text-primary-foreground/60">© 2026 Comandex</p>
       </div>
 
       <div className="flex items-center justify-center p-6 lg:p-12">

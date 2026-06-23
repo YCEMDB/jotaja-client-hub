@@ -4,7 +4,7 @@ import { ContentLayout } from "@/components/jotaja/ContentLayout";
 const URL = "https://comandahub.online/segmentos/hamburgueria";
 const TITLE = "Cardápio digital para hamburgueria: combos, ponto e adicionais";
 const DESC =
-  "ComandaHub para hamburgueria: combos, ponto da carne, adicionais ilimitados, PIX, delivery próprio e cardápio com fotos que vendem. Sem comissão.";
+  "Comandex para hamburgueria: combos, ponto da carne, adicionais ilimitados, PIX, delivery próprio e cardápio com fotos que vendem. Sem comissão.";
 
 export const Route = createFileRoute("/segmentos/hamburgueria")({
   head: () => ({
@@ -28,7 +28,7 @@ function HamburgueriaPage() {
       <p className="lead">
         Hamburgueria vive de combo, adicional e detalhe (ponto, queijo, bacon).
         Um cardápio digital bom aumenta o ticket médio em 20–30% só com sugestão
-        no fluxo. O ComandaHub entrega isso sem cobrar comissão.
+        no fluxo. O Comandex entrega isso sem cobrar comissão.
       </p>
 
       <h2>Funcionalidades pensadas para hamburgueria</h2>
@@ -66,7 +66,7 @@ function HamburgueriaPage() {
 
       <h2>Delivery próprio + WhatsApp</h2>
       <p>
-        Use o link do ComandaHub na bio do Instagram e no WhatsApp Business.{" "}
+        Use o link do Comandex na bio do Instagram e no WhatsApp Business.{" "}
         <Link to="/blog/como-fazer-cardapio-digital-whatsapp">
           Tutorial completo aqui
         </Link>

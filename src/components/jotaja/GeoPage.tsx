@@ -61,13 +61,13 @@ const DEFAULT_PUBLISHED = "2024-06-01";
 const AUTHOR_NODE = {
   "@type": "Organization",
   "@id": `${BASE}/#equipe`,
-  name: "Equipe ComandaHub",
+  name: "Equipe Comandex",
   url: BASE,
 };
 const PUBLISHER_NODE = {
   "@type": "Organization",
   "@id": `${BASE}/#organization`,
-  name: "ComandaHub",
+  name: "Comandex",
   url: BASE,
   logo: { "@type": "ImageObject", url: `${BASE}/apple-touch-icon.png` },
 };
@@ -148,7 +148,7 @@ export function buildGeoHead(props: GeoPageProps) {
       ? {
           "@context": "https://schema.org",
           "@type": "SoftwareApplication",
-          name: "ComandaHub",
+          name: "Comandex",
           applicationCategory: "BusinessApplication",
           applicationSubCategory: "Restaurant Management Software",
           operatingSystem: "Web, iOS, Android (PWA)",
@@ -301,7 +301,7 @@ export function GeoPage(props: GeoPageProps) {
       <header>
         <h1>{h1}</h1>
         <p className="not-prose mt-2 text-xs text-muted-foreground" aria-label="Autoria e revisão">
-          Por <strong>Equipe ComandaHub</strong> · Revisado pela ComandaHub ·{" "}
+          Por <strong>Equipe Comandex</strong> · Revisado pela Comandex ·{" "}
           <span>
             Publicado em <time dateTime={datePublished}>{ptDate(datePublished)}</time> ·
             Atualizado em <time dateTime={dateModified}>{ptDate(dateModified)}</time>
@@ -428,7 +428,7 @@ export function GeoPage(props: GeoPageProps) {
         )}
 
         <section aria-label="Próximos passos" className="not-prose mt-12 rounded-2xl border-2 border-ink bg-gradient-sunset p-8 text-white shadow-brutal">
-          <h2 className="font-display text-2xl md:text-3xl mb-3">Teste a ComandaHub grátis por 14 dias</h2>
+          <h2 className="font-display text-2xl md:text-3xl mb-3">Teste a Comandex grátis por 14 dias</h2>
           <p className="mb-6 text-white/90">Sem cartão de crédito. Sem comissão por pedido. Sem fidelidade.</p>
           <Link
             to="/auth"

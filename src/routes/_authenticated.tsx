@@ -56,7 +56,7 @@ function SidebarBody({
         to="/admin"
         onClick={onNavigate}
         className={`relative p-5 flex items-center gap-3 border-b-2 border-background/10 hover:bg-background/5 transition-colors ${collapsed ? "justify-center px-2" : ""}`}
-        title="ComandaHub"
+        title="Comandex"
       >
         <div className="h-11 w-11 rounded-xl bg-brand-orange border-2 border-background grid place-items-center shadow-[3px_3px_0_0_oklch(0.62_0.24_0)] shrink-0">
           <svg viewBox="0 0 48 48" className="h-7 w-7" aria-hidden="true">
@@ -68,7 +68,7 @@ function SidebarBody({
         </div>
         {!collapsed && (
           <div className="leading-none">
-            <div className="font-display text-lg tracking-tight">ComandaHub</div>
+            <div className="font-display text-lg tracking-tight">Comandex</div>
             <div className="text-[10px] uppercase tracking-[0.2em] text-background/50 mt-1">painel</div>
           </div>
         )}
@@ -256,7 +256,7 @@ function AuthLayout() {
                 <circle cx="36" cy="24" r="3.25" fill="#0a0a0a" />
               </svg>
             </div>
-            <span className="font-display text-base truncate">ComandaHub</span>
+            <span className="font-display text-base truncate">Comandex</span>
           </Link>
         </header>
 

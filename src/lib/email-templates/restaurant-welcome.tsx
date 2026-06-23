@@ -22,12 +22,12 @@ const RestaurantWelcomeEmail = ({
   <Html lang="pt-BR" dir="ltr">
     <Head />
     <Preview>
-      {isReset ? `Sua senha do ComandaHub foi redefinida` : `Bem-vindo ao ComandaHub — ${restaurantName}`}
+      {isReset ? `Sua senha do Comandex foi redefinida` : `Bem-vindo ao Comandex — ${restaurantName}`}
     </Preview>
     <Body style={main}>
       <Container style={container}>
         <Section style={brandBar}>
-          <Text style={brandText}>COMANDAHUB</Text>
+          <Text style={brandText}>COMANDEX</Text>
         </Section>
         <Heading style={h1}>
           {isReset ? 'Sua senha foi redefinida' : `Bem-vindo, ${ownerName ?? 'parceiro'}!`}
@@ -35,7 +35,7 @@ const RestaurantWelcomeEmail = ({
         <Text style={text}>
           {isReset
             ? `O administrador redefiniu a senha de acesso ao painel de ${restaurantName}. Use as credenciais abaixo para entrar e troque a senha em "Configurações" no primeiro acesso.`
-            : `Seu restaurante ${restaurantName} acaba de ser criado no ComandaHub. Abaixo estão suas credenciais de acesso ao painel. Recomendamos trocar a senha no primeiro login em "Configurações → Perfil".`}
+            : `Seu restaurante ${restaurantName} acaba de ser criado no Comandex. Abaixo estão suas credenciais de acesso ao painel. Recomendamos trocar a senha no primeiro login em "Configurações → Perfil".`}
         </Text>
 
         <Section style={credsBox}>
@@ -62,8 +62,8 @@ export const template = {
   component: RestaurantWelcomeEmail,
   subject: (d: Record<string, any>) =>
     d?.isReset
-      ? 'Sua senha do ComandaHub foi redefinida'
-      : `Bem-vindo ao ComandaHub — ${d?.restaurantName ?? 'seu restaurante'}`,
+      ? 'Sua senha do Comandex foi redefinida'
+      : `Bem-vindo ao Comandex — ${d?.restaurantName ?? 'seu restaurante'}`,
   displayName: 'Boas-vindas ao restaurante',
   previewData: {
     restaurantName: 'Sabor da Casa',

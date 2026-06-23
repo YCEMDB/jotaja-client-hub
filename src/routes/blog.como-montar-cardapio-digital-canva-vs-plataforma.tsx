@@ -57,7 +57,7 @@ function CanvaPage() {
         garçom anota o pedido. Funciona como um menu bonito digitalizado.
       </p>
 
-      <h2>Quando usar plataforma (ComandaHub)</h2>
+      <h2>Quando usar plataforma (Comandex)</h2>
       <p>
         Sempre que você quer <strong>receber pedido pelo celular do cliente</strong>:
         delivery, pegue-e-leve, autoatendimento de mesa. A plataforma cuida do
@@ -68,12 +68,12 @@ function CanvaPage() {
       <ol>
         <li>Use Canva para criar arte do QR Code, flyer e identidade visual.</li>
         <li>
-          Use ComandaHub para o <strong>cardápio funcional</strong> que recebe
+          Use Comandex para o <strong>cardápio funcional</strong> que recebe
           pedido.
         </li>
         <li>
-          Cole o QR Code do ComandaHub na arte do Canva. Pronto: design Canva +
-          inteligência ComandaHub.
+          Cole o QR Code do Comandex na arte do Canva. Pronto: design Canva +
+          inteligência Comandex.
         </li>
       </ol>
 

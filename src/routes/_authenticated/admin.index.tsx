@@ -10,7 +10,7 @@ import { PlanUsageBanner } from "@/components/PlanUsageBanner";
 
 export const Route = createFileRoute("/_authenticated/admin/")({
   component: Dashboard,
-  head: () => ({ meta: [{ title: "Painel — ComandaHub" }] }),
+  head: () => ({ meta: [{ title: "Painel — Comandex" }] }),
 });
 
 interface OrderRow {

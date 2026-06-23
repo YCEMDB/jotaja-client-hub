@@ -7,7 +7,7 @@ type LogoProps = {
 };
 
 /**
- * Professional ComandaHub logo lockup.
+ * Professional Comandex logo lockup.
  * - Geometric mark + wordmark in Archivo Black.
  * - Animations are CSS-driven and only run on instances inside `.animate-logo-in`.
  */
@@ -24,7 +24,7 @@ export function Logo({ className = "", markOnly = false, size = "md" }: LogoProp
   return (
     <span
       className={`logo-lockup inline-flex items-center gap-2.5 select-none ${className}`}
-      aria-label="ComandaHub"
+      aria-label="Comandex"
     >
       <svg
         viewBox="0 0 48 48"

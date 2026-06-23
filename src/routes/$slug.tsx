@@ -27,8 +27,8 @@ import { isReservedSlug } from "@/lib/reserved-slugs";
 export const Route = createFileRoute("/$slug")({
   component: LojaPage,
   head: ({ params }) => {
-    const title = `${params.slug} — Cardápio digital | ComandaHub`;
-    const description = `Faça seu pedido online no ${params.slug}. Cardápio digital, pagamento via Pix e entrega rápida pela ComandaHub.`;
+    const title = `${params.slug} — Cardápio digital | Comandex`;
+    const description = `Faça seu pedido online no ${params.slug}. Cardápio digital, pagamento via Pix e entrega rápida pela Comandex.`;
     return {
       meta: [
         { title },

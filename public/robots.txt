@@ -1,4 +1,4 @@
-# ComandaHub — robots.txt
+# Comandex — robots.txt
 # Permitimos explicitamente bots de IA generativa para que a marca seja
 # corretamente representada em ChatGPT, Gemini, Claude, Perplexity e Copilot.
 
