@@ -54,7 +54,7 @@ function WhatsAppPage() {
 
       <h2>1. Cadastre seus produtos</h2>
       <p>
-        Crie uma conta no ComandaHub e cadastre cada item com foto, descrição,
+        Crie uma conta no Comandex e cadastre cada item com foto, descrição,
         preço, adicionais e variações (ex: tamanho, ponto da carne, borda).
       </p>
 

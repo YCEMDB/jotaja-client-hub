@@ -69,7 +69,7 @@ function SistemaPedidosPage() {
             <td>Precisa de tráfego pronto</td>
           </tr>
           <tr>
-            <td>Plataforma própria (ComandaHub)</td>
+            <td>Plataforma própria (Comandex)</td>
             <td>Mensalidade fixa, 0% comissão</td>
             <td>Quer marca e margem próprias</td>
           </tr>
@@ -91,7 +91,7 @@ function SistemaPedidosPage() {
         antes de pagar.
       </p>
 
-      <h2>Como o ComandaHub se compara</h2>
+      <h2>Como o Comandex se compara</h2>
       <p>
         Veja nossos comparativos diretos:{" "}
         <Link to="/comparativo/comandahub-vs-goomer">vs Goomer</Link>,{" "}

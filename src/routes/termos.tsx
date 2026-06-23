@@ -2,9 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ContentLayout } from "@/components/jotaja/ContentLayout";
 
 const URL = "https://comandahub.online/termos";
-const TITLE = "Termos de Uso — ComandaHub";
+const TITLE = "Termos de Uso — Comandex";
 const DESC =
-  "Termos de uso da plataforma ComandaHub: regras de utilização, responsabilidades, pagamentos, cancelamento e propriedade intelectual.";
+  "Termos de uso da plataforma Comandex: regras de utilização, responsabilidades, pagamentos, cancelamento e propriedade intelectual.";
 
 export const Route = createFileRoute("/termos")({
   head: () => ({
@@ -29,7 +29,7 @@ function Termos() {
         <em>Última atualização: 16 de maio de 2026.</em>
       </p>
       <p className="lead">
-        Estes Termos regulam o uso da plataforma ComandaHub. Ao criar uma
+        Estes Termos regulam o uso da plataforma Comandex. Ao criar uma
         conta ou utilizar qualquer funcionalidade, você concorda com as
         condições abaixo.
       </p>
@@ -75,7 +75,7 @@ function Termos() {
       <h2>6. Conteúdo do cliente</h2>
       <p>
         Imagens, textos, cardápios e marcas inseridos pelo cliente
-        permanecem de sua propriedade. O ComandaHub apenas hospeda e exibe
+        permanecem de sua propriedade. O Comandex apenas hospeda e exibe
         esse conteúdo conforme necessário para a prestação do serviço.
       </p>
 
@@ -96,7 +96,7 @@ function Termos() {
 
       <h2>9. Limitação de responsabilidade</h2>
       <p>
-        O ComandaHub é uma ferramenta tecnológica. As decisões comerciais,
+        O Comandex é uma ferramenta tecnológica. As decisões comerciais,
         a operação do restaurante, a qualidade dos produtos vendidos e o
         relacionamento com clientes finais são de responsabilidade
         exclusiva do contratante.

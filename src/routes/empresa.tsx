@@ -2,9 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ContentLayout } from "@/components/jotaja/ContentLayout";
 
 const URL = "https://comandahub.online/empresa";
-const TITLE = "Empresa — ComandaHub";
+const TITLE = "Empresa — Comandex";
 const DESC =
-  "Informações institucionais do ComandaHub: razão social, propósito, equipe e como falar com o time comercial e de imprensa.";
+  "Informações institucionais do Comandex: razão social, propósito, equipe e como falar com o time comercial e de imprensa.";
 
 export const Route = createFileRoute("/empresa")({
   head: () => ({
@@ -26,7 +26,7 @@ function Empresa() {
     <ContentLayout>
       <h1>Empresa</h1>
       <p className="lead">
-        ComandaHub é uma plataforma de tecnologia para restaurantes
+        Comandex é uma plataforma de tecnologia para restaurantes
         brasileiros, focada em delivery próprio, cardápio digital e gestão
         de pedidos.
       </p>

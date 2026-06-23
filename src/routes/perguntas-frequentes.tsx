@@ -8,8 +8,8 @@ import {
 } from "@/components/ui/accordion";
 
 const URL = "https://comandahub.online/perguntas-frequentes";
-const TITLE = "Perguntas Frequentes — ComandaHub";
-const DESC = "50+ perguntas reais sobre a ComandaHub: planos, pagamento, cardápio, delivery, mesas, suporte e técnico. Tudo o que você precisa antes de começar.";
+const TITLE = "Perguntas Frequentes — Comandex";
+const DESC = "50+ perguntas reais sobre a Comandex: planos, pagamento, cardápio, delivery, mesas, suporte e técnico. Tudo o que você precisa antes de começar.";
 
 type FAQ = { q: string; aShort: string; aLong: string };
 type Group = { title: string; items: FAQ[] };
@@ -18,9 +18,9 @@ const groups: Group[] = [
   {
     title: "Geral",
     items: [
-      { q: "O que é a ComandaHub?", aShort: "Plataforma brasileira de cardápio digital, comandas e gestão de restaurantes.", aLong: "A ComandaHub centraliza pedidos (salão, delivery, retirada), mesas, comandas digitais, pagamento online e relatórios em um painel único, sem comissão por pedido." },
-      { q: "Para quem a ComandaHub serve?", aShort: "Restaurantes, pizzarias, hamburguerias, lanchonetes, açaiterias, bares e dark kitchens.", aLong: "Qualquer operação que vende comida ou bebida por delivery, retirada ou consumo no salão. Funciona tanto para 1 unidade quanto para múltiplas lojas." },
-      { q: "A ComandaHub é gratuita?", aShort: "Tem 14 dias grátis, depois R$ 99/mês fixo.", aLong: "Os 14 dias liberam todos os recursos do plano Pro sem precisar cadastrar cartão. Depois, planos a partir de R$ 99/mês, sem comissão por pedido." },
+      { q: "O que é a Comandex?", aShort: "Plataforma brasileira de cardápio digital, comandas e gestão de restaurantes.", aLong: "A Comandex centraliza pedidos (salão, delivery, retirada), mesas, comandas digitais, pagamento online e relatórios em um painel único, sem comissão por pedido." },
+      { q: "Para quem a Comandex serve?", aShort: "Restaurantes, pizzarias, hamburguerias, lanchonetes, açaiterias, bares e dark kitchens.", aLong: "Qualquer operação que vende comida ou bebida por delivery, retirada ou consumo no salão. Funciona tanto para 1 unidade quanto para múltiplas lojas." },
+      { q: "A Comandex é gratuita?", aShort: "Tem 14 dias grátis, depois R$ 99/mês fixo.", aLong: "Os 14 dias liberam todos os recursos do plano Pro sem precisar cadastrar cartão. Depois, planos a partir de R$ 99/mês, sem comissão por pedido." },
       { q: "Preciso instalar algum programa?", aShort: "Não. Funciona 100% no navegador.", aLong: "Painel e cardápio rodam direto no Chrome, Safari, Edge ou Firefox, no celular, tablet ou computador. Pode ser instalado como PWA na tela inicial." },
       { q: "Funciona no celular do garçom?", aShort: "Sim, totalmente.", aLong: "A interface é otimizada para celular, com botões grandes, fluxo curto e funciona em Android e iPhone." },
       { q: "Em quanto tempo começo a vender?", aShort: "Em média 30 minutos.", aLong: "Cadastro, personalização da loja (nome, cores, logo), cadastro do cardápio e o link já está pronto para compartilhar." },
@@ -31,12 +31,12 @@ const groups: Group[] = [
     title: "Pagamentos",
     items: [
       { q: "Quais formas de pagamento o cliente pode usar?", aShort: "PIX, cartão online (Mercado Pago) e pagamento na entrega.", aLong: "O dono escolhe no painel quais aceitar: PIX/cartão online via Mercado Pago, dinheiro, cartão na maquininha ou todos combinados." },
-      { q: "A ComandaHub fica com parte do pagamento?", aShort: "Não. 100% do valor cai na sua conta.", aLong: "A ComandaHub cobra somente a mensalidade fixa. Tarifas do Mercado Pago (PIX e cartão) são as do próprio MP, sem markup nosso." },
-      { q: "Em quanto tempo o PIX cai na conta?", aShort: "Em segundos.", aLong: "O Mercado Pago credita o PIX em segundos. O painel da ComandaHub mostra o pedido como pago automaticamente via webhook." },
+      { q: "A Comandex fica com parte do pagamento?", aShort: "Não. 100% do valor cai na sua conta.", aLong: "A Comandex cobra somente a mensalidade fixa. Tarifas do Mercado Pago (PIX e cartão) são as do próprio MP, sem markup nosso." },
+      { q: "Em quanto tempo o PIX cai na conta?", aShort: "Em segundos.", aLong: "O Mercado Pago credita o PIX em segundos. O painel da Comandex mostra o pedido como pago automaticamente via webhook." },
       { q: "Como integro o Mercado Pago?", aShort: "Colando o Access Token no painel.", aLong: "Em Configurações > Pagamentos, cole o Access Token gerado na sua conta Mercado Pago. Tutorial em vídeo no onboarding." },
       { q: "Posso aceitar só pagamento na entrega?", aShort: "Sim.", aLong: "Você liga e desliga cada método (PIX online, cartão online, dinheiro na entrega, cartão na maquininha) independentemente no painel." },
-      { q: "Tem taxa para o cliente final?", aShort: "Não pela ComandaHub.", aLong: "O cliente final não paga taxa para nossa plataforma. As tarifas de cartão/PIX são do Mercado Pago e ficam por sua conta." },
-      { q: "Como pago a mensalidade da ComandaHub?", aShort: "Cartão de crédito ou PIX recorrente.", aLong: "Cobrança automática mensal pelo cartão cadastrado ou PIX recorrente. Você recebe boleto/NF por email." },
+      { q: "Tem taxa para o cliente final?", aShort: "Não pela Comandex.", aLong: "O cliente final não paga taxa para nossa plataforma. As tarifas de cartão/PIX são do Mercado Pago e ficam por sua conta." },
+      { q: "Como pago a mensalidade da Comandex?", aShort: "Cartão de crédito ou PIX recorrente.", aLong: "Cobrança automática mensal pelo cartão cadastrado ou PIX recorrente. Você recebe boleto/NF por email." },
     ],
   },
   {
@@ -50,13 +50,13 @@ const groups: Group[] = [
       { q: "Posso pausar a loja inteira?", aShort: "Sim, em 1 clique.", aLong: "Botão 'Loja fechada' no painel deixa o cardápio visível mas bloqueia novos pedidos com mensagem personalizável." },
       { q: "Tem horário por categoria?", aShort: "Sim.", aLong: "Cada categoria pode ter horário/dias de funcionamento (ex: café da manhã 7h-11h, jantar 18h-23h)." },
       { q: "Quantas fotos por produto?", aShort: "Uma, otimizada automaticamente.", aLong: "Foto é redimensionada e comprimida para carregar rápido no celular do cliente." },
-      { q: "O time pode cadastrar o cardápio por mim?", aShort: "Sim, no onboarding.", aLong: "Envie PDF/foto do cardápio atual e o time da ComandaHub cadastra para você gratuitamente no plano Pro." },
+      { q: "O time pode cadastrar o cardápio por mim?", aShort: "Sim, no onboarding.", aLong: "Envie PDF/foto do cardápio atual e o time da Comandex cadastra para você gratuitamente no plano Pro." },
     ],
   },
   {
     title: "Delivery e retirada",
     items: [
-      { q: "A ComandaHub fornece entregadores?", aShort: "Não.", aLong: "Você usa sua própria equipe ou contrata terceiros (motoboys, uClub, Lalamove). A plataforma só gerencia o pedido." },
+      { q: "A Comandex fornece entregadores?", aShort: "Não.", aLong: "Você usa sua própria equipe ou contrata terceiros (motoboys, uClub, Lalamove). A plataforma só gerencia o pedido." },
       { q: "Posso cobrar taxa por bairro?", aShort: "Sim.", aLong: "Cadastra-se a taxa por bairro, CEP ou raio em km. Cliente vê a taxa antes de confirmar o pedido." },
       { q: "Tem retirada no balcão?", aShort: "Sim.", aLong: "Cliente escolhe retirada e horário sugerido. O pedido entra na fila com flag de retirada." },
       { q: "O cliente acompanha o status?", aShort: "Sim, em tempo real.", aLong: "Status: recebido → preparando → saiu para entrega / pronto para retirada → entregue. Atualizado pelo painel a cada mudança." },
@@ -114,7 +114,7 @@ const groups: Group[] = [
     title: "Técnico e segurança",
     items: [
       { q: "Meus dados ficam seguros?", aShort: "Sim, conforme LGPD.", aLong: "Criptografia em trânsito (HTTPS) e em repouso. Backup diário automatizado. Conformidade LGPD documentada na política de privacidade." },
-      { q: "A ComandaHub usa meus dados de clientes?", aShort: "Não.", aLong: "Os dados de clientes pertencem ao restaurante. Não vendemos, não compartilhamos com terceiros, não usamos para campanhas próprias." },
+      { q: "A Comandex usa meus dados de clientes?", aShort: "Não.", aLong: "Os dados de clientes pertencem ao restaurante. Não vendemos, não compartilhamos com terceiros, não usamos para campanhas próprias." },
       { q: "Tem API?", aShort: "Webhooks sim, REST em desenvolvimento.", aLong: "Webhooks de pedido (novo, status alterado, pago) disponíveis no plano Pro sob demanda. API REST pública entra no roadmap 2026." },
       { q: "Tem app mobile?", aShort: "É PWA.", aLong: "O painel é Progressive Web App: adiciona à tela inicial do celular e funciona como app nativo, com notificação push." },
       { q: "Funciona offline?", aShort: "Não.", aLong: "Requer internet ativa. Quando a conexão cai, o painel avisa em tela e retoma sozinho ao reconectar." },
@@ -161,7 +161,7 @@ function FAQsPage() {
       <header>
         <h1>Perguntas frequentes</h1>
         <p className="lead">
-          {allFAQs.length} respostas reais sobre a ComandaHub — planos, pagamento, cardápio, delivery, mesas, suporte e técnico.
+          {allFAQs.length} respostas reais sobre a Comandex — planos, pagamento, cardápio, delivery, mesas, suporte e técnico.
         </p>
       </header>
 

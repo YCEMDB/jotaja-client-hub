@@ -18,7 +18,7 @@ const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
 }
 
 // Configuration
-const SITE_NAME = "ComandaHub"
+const SITE_NAME = "Comandex"
 const ROOT_DOMAIN = "comandahub.online"
 
 // Sample data for preview mode ONLY (not used in actual email sending).

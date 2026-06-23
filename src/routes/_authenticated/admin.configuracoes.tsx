@@ -20,7 +20,7 @@ import {
 
 export const Route = createFileRoute("/_authenticated/admin/configuracoes")({
   component: ConfigPage,
-  head: () => ({ meta: [{ title: "Configurações — ComandaHub" }] }),
+  head: () => ({ meta: [{ title: "Configurações — Comandex" }] }),
 });
 
 const DAYS = [
@@ -936,7 +936,7 @@ function ImpressaoTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
         </ol>
         <KioskCommandBox />
         <ol className="list-decimal list-inside space-y-2 text-muted-foreground" start={4}>
-          <li>Abra o ComandaHub por esse atalho. Pronto — os cupons saem direto sem janela de confirmação.</li>
+          <li>Abra o Comandex por esse atalho. Pronto — os cupons saem direto sem janela de confirmação.</li>
           <li>Quando chegar pedido novo, o navegador imprime automaticamente na impressora padrão.</li>
         </ol>
         <div className="bg-amber-50 border border-amber-200 text-amber-900 p-3 rounded-lg text-xs">
@@ -945,7 +945,7 @@ function ImpressaoTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
         <Button variant="outline" size="sm" onClick={() => {
           const w = window.open("", "_blank", "width=300,height=400");
           if (w) {
-            w.document.write("<html><head><title>Teste de Impressão ComandaHub</title></head><body style='font-family:monospace;padding:20px;text-align:center'><h2>TESTE OK</h2><p>Se você está vendo esta janela, sua impressora está pronta.</p></body></html>");
+            w.document.write("<html><head><title>Teste de Impressão Comandex</title></head><body style='font-family:monospace;padding:20px;text-align:center'><h2>TESTE OK</h2><p>Se você está vendo esta janela, sua impressora está pronta.</p></body></html>");
             w.document.close();
             w.focus();
             w.print();

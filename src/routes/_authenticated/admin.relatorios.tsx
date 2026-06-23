@@ -11,7 +11,7 @@ import { downloadCSV, printReportHTML } from "@/lib/export-csv";
 
 export const Route = createFileRoute("/_authenticated/admin/relatorios")({
   component: RelatoriosPage,
-  head: () => ({ meta: [{ title: "Relatórios — ComandaHub" }] }),
+  head: () => ({ meta: [{ title: "Relatórios — Comandex" }] }),
 });
 
 type OrderRow = {

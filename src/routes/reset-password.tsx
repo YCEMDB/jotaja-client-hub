@@ -13,7 +13,7 @@ export const Route = createFileRoute("/reset-password")({
   component: ResetPasswordPage,
   head: () => ({
     meta: [
-      { title: "Redefinir senha — ComandaHub" },
+      { title: "Redefinir senha — Comandex" },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),
@@ -28,7 +28,7 @@ function ResetPasswordPage() {
   const [errMsg, setErrMsg] = useState<string>("");
 
   useEffect(() => {
-    // O webhook do ComandaHub envia o link no formato:
+    // O webhook do Comandex envia o link no formato:
     // https://comandahub.online/reset-password?token_hash=xxx&type=recovery
     // (PKCE/OTP — precisa de verifyOtp antes do updateUser)
     //

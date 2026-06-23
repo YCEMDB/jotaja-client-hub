@@ -13,7 +13,7 @@ import { isReservedSlug } from "@/lib/reserved-slugs";
 
 export const Route = createFileRoute("/_authenticated/admin/onboarding")({
   component: Onboarding,
-  head: () => ({ meta: [{ title: "Configurar restaurante — ComandaHub" }] }),
+  head: () => ({ meta: [{ title: "Configurar restaurante — Comandex" }] }),
 });
 
 const schema = z.object({

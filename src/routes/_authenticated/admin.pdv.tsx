@@ -12,7 +12,7 @@ import { Plus, Minus, Trash2, ShoppingCart, Search } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin/pdv")({
   component: PdvPage,
-  head: () => ({ meta: [{ title: "PDV Manual — ComandaHub" }] }),
+  head: () => ({ meta: [{ title: "PDV Manual — Comandex" }] }),
 });
 
 type Product = {

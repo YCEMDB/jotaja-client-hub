@@ -4,7 +4,7 @@ import { ContentLayout } from "@/components/jotaja/ContentLayout";
 const URL = "https://comandahub.online/blog/como-fazer-cardapio-digital-gratis";
 const TITLE = "Cardápio digital grátis: como fazer (e quando vale a pena)";
 const DESC =
-  "Quer cardápio digital gratuito? Veja as melhores opções, limitações e como começar grátis no ComandaHub sem perder funcionalidade essencial.";
+  "Quer cardápio digital gratuito? Veja as melhores opções, limitações e como começar grátis no Comandex sem perder funcionalidade essencial.";
 
 export const Route = createFileRoute(
   "/blog/como-fazer-cardapio-digital-gratis",
@@ -63,7 +63,7 @@ function GratisPage() {
       <h2>Como criar um cardápio digital grátis de verdade</h2>
       <ol>
         <li>
-          Crie conta no <Link to="/auth">ComandaHub</Link> — você ganha período
+          Crie conta no <Link to="/auth">Comandex</Link> — você ganha período
           de teste sem cobrança.
         </li>
         <li>Cadastre produtos com foto, descrição e preço.</li>
@@ -104,7 +104,7 @@ function GratisPage() {
       </ul>
 
       <p className="lead">
-        <Link to="/auth">Comece grátis no ComandaHub</Link> sem cartão de
+        <Link to="/auth">Comece grátis no Comandex</Link> sem cartão de
         crédito.
       </p>
     </ContentLayout>

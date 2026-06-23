@@ -15,7 +15,7 @@ import { ensureNotificationPermission, playOrderBeep, showOrderNotification } fr
 
 export const Route = createFileRoute("/_authenticated/admin/pedidos")({
   component: PedidosPage,
-  head: () => ({ meta: [{ title: "Pedidos — ComandaHub" }] }),
+  head: () => ({ meta: [{ title: "Pedidos — Comandex" }] }),
 });
 
 type OrderStatus = "pending" | "confirmed" | "preparing" | "ready" | "out_for_delivery" | "delivered" | "cancelled";
@@ -173,7 +173,7 @@ function PedidosPage() {
         if (autoPrintRef.current) {
           const { data: its } = await supabase.from("order_items").select("*").eq("order_id", o.id);
           printReceipt({
-            restaurantName: restaurantRef.current?.name ?? "ComandaHub",
+            restaurantName: restaurantRef.current?.name ?? "Comandex",
             restaurantPhone: restaurantRef.current?.phone ?? null,
             order: o as any,
             items: (its ?? []) as any,
@@ -231,7 +231,7 @@ function PedidosPage() {
   const printOrder = async (o: Order) => {
     const { data } = await supabase.from("order_items").select("*").eq("order_id", o.id);
     printReceipt({
-      restaurantName: restaurant?.name ?? "ComandaHub",
+      restaurantName: restaurant?.name ?? "Comandex",
       restaurantPhone: restaurant?.phone ?? null,
       order: o as any,
       items: (data ?? []) as any,

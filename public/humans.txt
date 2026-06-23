@@ -1,5 +1,5 @@
 /* TEAM */
-Equipe: ComandaHub
+Equipe: Comandex
 Site: https://comandahub.online
 Local: Brasil
 

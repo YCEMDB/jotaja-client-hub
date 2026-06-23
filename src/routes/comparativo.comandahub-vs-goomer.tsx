@@ -2,9 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ContentLayout } from "@/components/jotaja/ContentLayout";
 
 const URL = "https://comandahub.online/comparativo/comandahub-vs-goomer";
-const TITLE = "ComandaHub vs Goomer: qual é melhor para seu restaurante?";
+const TITLE = "Comandex vs Goomer: qual é melhor para seu restaurante?";
 const DESC =
-  "Comparativo completo entre ComandaHub e Goomer: preços, comissão, funcionalidades, cardápio digital, integração WhatsApp e suporte. Veja qual escolher em 2026.";
+  "Comparativo completo entre Comandex e Goomer: preços, comissão, funcionalidades, cardápio digital, integração WhatsApp e suporte. Veja qual escolher em 2026.";
 
 export const Route = createFileRoute("/comparativo/comandahub-vs-goomer")({
   head: () => ({
@@ -24,10 +24,10 @@ export const Route = createFileRoute("/comparativo/comandahub-vs-goomer")({
 function VsGoomerPage() {
   return (
     <ContentLayout>
-      <h1>ComandaHub vs Goomer: comparativo completo (2026)</h1>
+      <h1>Comandex vs Goomer: comparativo completo (2026)</h1>
       <p className="lead">
         Goomer é uma das plataformas mais conhecidas de cardápio digital no
-        Brasil. ComandaHub é a alternativa moderna, focada em delivery próprio
+        Brasil. Comandex é a alternativa moderna, focada em delivery próprio
         sem comissão. Veja qual atende melhor o seu restaurante.
       </p>
 
@@ -38,7 +38,7 @@ function VsGoomerPage() {
           QR Code para mesa e já tem outro sistema de delivery.
         </li>
         <li>
-          <strong>Escolha ComandaHub</strong> se você quer cardápio digital +
+          <strong>Escolha Comandex</strong> se você quer cardápio digital +
           delivery próprio + WhatsApp + PIX num único lugar, sem comissão.
         </li>
       </ul>
@@ -48,7 +48,7 @@ function VsGoomerPage() {
         <thead>
           <tr>
             <th></th>
-            <th>ComandaHub</th>
+            <th>Comandex</th>
             <th>Goomer</th>
           </tr>
         </thead>
@@ -98,10 +98,10 @@ function VsGoomerPage() {
         marca é consolidada.
       </p>
 
-      <h2>Quando o ComandaHub é melhor</h2>
+      <h2>Quando o Comandex é melhor</h2>
       <p>
         Se o seu restaurante vive de <strong>delivery</strong> (próprio ou
-        misto), o ComandaHub entrega mais valor por mensalidade: cardápio
+        misto), o Comandex entrega mais valor por mensalidade: cardápio
         digital, WhatsApp, PIX, gestão de entregadores e relatórios — tudo
         nativo, sem precisar integrar três sistemas diferentes.
       </p>
@@ -110,12 +110,12 @@ function VsGoomerPage() {
       <ul>
         <li>
           <Link to="/comparativo/comandahub-vs-anota-ai">
-            ComandaHub vs Anota.ai
+            Comandex vs Anota.ai
           </Link>
         </li>
         <li>
           <Link to="/comparativo/comandahub-vs-saipos">
-            ComandaHub vs Saipos
+            Comandex vs Saipos
           </Link>
         </li>
         <li>
@@ -124,7 +124,7 @@ function VsGoomerPage() {
       </ul>
 
       <p className="lead">
-        <Link to="/auth">Teste o ComandaHub grátis</Link> e compare na prática.
+        <Link to="/auth">Teste o Comandex grátis</Link> e compare na prática.
       </p>
     </ContentLayout>
   );

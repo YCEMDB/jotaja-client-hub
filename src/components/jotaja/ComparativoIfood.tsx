@@ -20,7 +20,7 @@ export function ComparativoIfood() {
             <TrendingUp className="w-4 h-4" /> Comparativo
           </span>
           <h2 className="font-display text-3xl md:text-5xl font-extrabold leading-tight">
-            ComandaHub <span className="text-gradient-primary">vs</span> aplicativos com comissão
+            Comandex <span className="text-gradient-primary">vs</span> aplicativos com comissão
           </h2>
         </div>
 
@@ -28,7 +28,7 @@ export function ComparativoIfood() {
           <div className="grid grid-cols-3 bg-primary text-primary-foreground">
             <div className="p-5 font-display font-bold text-sm uppercase tracking-wide">Recurso</div>
             <div className="p-5 font-display font-bold text-center text-sm uppercase tracking-wide opacity-80">Apps tradicionais</div>
-            <div className="p-5 font-display font-bold text-center bg-accent text-accent-foreground text-sm uppercase tracking-wide">ComandaHub</div>
+            <div className="p-5 font-display font-bold text-center bg-accent text-accent-foreground text-sm uppercase tracking-wide">Comandex</div>
           </div>
 
           {linhas.map((l, i) => (

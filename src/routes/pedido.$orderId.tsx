@@ -13,8 +13,8 @@ export const Route = createFileRoute("/pedido/$orderId")({
   component: OrderTrackPage,
   head: () => ({
     meta: [
-      { title: "Acompanhar pedido — ComandaHub" },
-      { name: "description", content: "Acompanhe o status do seu pedido em tempo real pela ComandaHub." },
+      { title: "Acompanhar pedido — Comandex" },
+      { name: "description", content: "Acompanhe o status do seu pedido em tempo real pela Comandex." },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),

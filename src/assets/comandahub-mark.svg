@@ -1,6 +1,6 @@
 <svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
-  <title id="title">ComandaHub</title>
-  <desc id="desc">Símbolo ComandaHub com monograma profissional.</desc>
+  <title id="title">Comandex</title>
+  <desc id="desc">Símbolo Comandex com monograma profissional.</desc>
   <defs><linearGradient id="g" x1="78" y1="58" x2="434" y2="458" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#38BDF8"/><stop offset="0.48" stop-color="#2563EB"/><stop offset="1" stop-color="#1D4ED8"/></linearGradient></defs>
   <rect x="48" y="48" width="416" height="416" rx="112" fill="url(#g)"/>
   <path d="M319 139H240C174 139 121 191 121 256C121 321 174 373 240 373H319" stroke="white" stroke-width="43" stroke-linecap="round"/>

@@ -2,9 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ContentLayout } from "@/components/jotaja/ContentLayout";
 
 const URL = "https://comandahub.online/comparativo/comandahub-vs-saipos";
-const TITLE = "ComandaHub vs Saipos: ERP completo ou delivery próprio?";
+const TITLE = "Comandex vs Saipos: ERP completo ou delivery próprio?";
 const DESC =
-  "Saipos é ERP robusto para restaurante. ComandaHub é foco em delivery próprio sem comissão. Veja qual encaixa no seu negócio.";
+  "Saipos é ERP robusto para restaurante. Comandex é foco em delivery próprio sem comissão. Veja qual encaixa no seu negócio.";
 
 export const Route = createFileRoute("/comparativo/comandahub-vs-saipos")({
   head: () => ({
@@ -24,10 +24,10 @@ export const Route = createFileRoute("/comparativo/comandahub-vs-saipos")({
 function VsSaiposPage() {
   return (
     <ContentLayout>
-      <h1>ComandaHub vs Saipos: qual escolher em 2026?</h1>
+      <h1>Comandex vs Saipos: qual escolher em 2026?</h1>
       <p className="lead">
         Saipos é um ERP gastronômico consolidado, com módulos de fiscal,
-        estoque, financeiro e PDV. ComandaHub foca em cardápio digital +
+        estoque, financeiro e PDV. Comandex foca em cardápio digital +
         delivery próprio sem comissão. Cada um resolve um tipo de dor.
       </p>
 
@@ -36,7 +36,7 @@ function VsSaiposPage() {
         <thead>
           <tr>
             <th></th>
-            <th>ComandaHub</th>
+            <th>Comandex</th>
             <th>Saipos</th>
           </tr>
         </thead>
@@ -81,7 +81,7 @@ function VsSaiposPage() {
         contábil avançada e equipe dedicada à TI.
       </p>
 
-      <h2>Quando escolher ComandaHub</h2>
+      <h2>Quando escolher Comandex</h2>
       <p>
         Você quer começar (ou trocar) hoje, ter cardápio digital, receber pelo
         WhatsApp, despachar entregador e ver relatórios — sem implantação de
@@ -92,12 +92,12 @@ function VsSaiposPage() {
       <ul>
         <li>
           <Link to="/comparativo/comandahub-vs-goomer">
-            ComandaHub vs Goomer
+            Comandex vs Goomer
           </Link>
         </li>
         <li>
           <Link to="/comparativo/comandahub-vs-anota-ai">
-            ComandaHub vs Anota.ai
+            Comandex vs Anota.ai
           </Link>
         </li>
         <li>
@@ -106,7 +106,7 @@ function VsSaiposPage() {
       </ul>
 
       <p className="lead">
-        <Link to="/auth">Teste o ComandaHub grátis</Link> em menos de 5 minutos.
+        <Link to="/auth">Teste o Comandex grátis</Link> em menos de 5 minutos.
       </p>
     </ContentLayout>
   );
