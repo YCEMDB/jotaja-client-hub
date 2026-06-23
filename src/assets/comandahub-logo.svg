@@ -1,35 +1,28 @@
-<svg width="1280" height="280" viewBox="0 0 1280 280" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="chTitle chDesc">
-  <title id="chTitle">Comandex</title>
-  <desc id="chDesc">Logo Comandex — bloco brutalista com gradiente sunset e wordmark Archivo Black.</desc>
+<svg width="1280" height="280" viewBox="0 0 1280 280" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="cxTitle cxDesc">
+  <title id="cxTitle">Comandex</title>
+  <desc id="cxDesc">Logo Comandex — bloco brutalista com gradiente sunset e wordmark Archivo Black.</desc>
   <defs>
-    <linearGradient id="chSunset" x1="30" y1="30" x2="250" y2="250" gradientUnits="userSpaceOnUse">
+    <linearGradient id="cxSunset" x1="30" y1="30" x2="250" y2="250" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#ff6b35"/>
       <stop offset="0.55" stop-color="#e84393"/>
       <stop offset="1" stop-color="#7c5cff"/>
     </linearGradient>
   </defs>
 
-  <!-- Brutalist shadow block -->
   <rect x="40" y="46" width="220" height="220" rx="10" fill="#0a0a0a"/>
-  <!-- Main mark -->
-  <rect x="30" y="36" width="220" height="220" rx="10" fill="url(#chSunset)" stroke="#0a0a0a" stroke-width="4"/>
+  <rect x="30" y="36" width="220" height="220" rx="10" fill="url(#cxSunset)" stroke="#0a0a0a" stroke-width="4"/>
 
-  <!-- Monogram CH built from thick brutalist strokes -->
-  <!-- C -->
   <path d="M178 96 H112 a36 36 0 0 0 -36 36 v28 a36 36 0 0 0 36 36 h66"
         stroke="#0a0a0a" stroke-width="22" stroke-linecap="square" fill="none"/>
-  <!-- H bar accent (amber dot for energy) -->
   <circle cx="206" cy="146" r="14" fill="#fbbf24" stroke="#0a0a0a" stroke-width="4"/>
 
-  <!-- Wordmark -->
   <text x="296" y="180"
         font-family="'Archivo Black', 'Archivo', 'Inter', sans-serif"
-        font-size="128" font-weight="900" letter-spacing="-4" fill="#0a0a0a">Comanda</text>
-  <text x="934" y="180"
+        font-size="128" font-weight="900" letter-spacing="-4" fill="#0a0a0a">Coman</text>
+  <text x="744" y="180"
         font-family="'Archivo Black', 'Archivo', 'Inter', sans-serif"
-        font-size="128" font-weight="900" letter-spacing="-4" fill="#e84393">Hub</text>
+        font-size="128" font-weight="900" letter-spacing="-4" fill="#e84393">dex</text>
 
-  <!-- underline accent bar -->
   <rect x="298" y="200" width="220" height="10" fill="#ff6b35"/>
   <rect x="524" y="200" width="60" height="10" fill="#7c5cff"/>
 </svg>
