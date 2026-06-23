@@ -11,12 +11,14 @@ const buttonVariants = cva(
       variant: {
         default:
           "bg-ink text-background border-2 border-ink shadow-[4px_4px_0_0_oklch(0.69_0.22_38)] hover:shadow-[6px_6px_0_0_oklch(0.69_0.22_38)] hover:-translate-x-0.5 hover:-translate-y-0.5",
+        gradient:
+          "bg-gradient-sunset text-white border-2 border-ink shadow-[4px_4px_0_0_oklch(0.15_0.02_30)] hover:shadow-[6px_6px_0_0_oklch(0.15_0.02_30)] hover:-translate-x-0.5 hover:-translate-y-0.5 [text-shadow:0_1px_0_rgb(0_0_0_/_25%)]",
         destructive:
           "bg-destructive text-destructive-foreground border-2 border-ink shadow-[4px_4px_0_0_oklch(0.15_0.02_30)] hover:shadow-[6px_6px_0_0_oklch(0.15_0.02_30)] hover:-translate-x-0.5 hover:-translate-y-0.5",
         outline:
           "border-2 border-ink bg-background text-ink shadow-[4px_4px_0_0_oklch(0.15_0.02_30)] hover:bg-ink hover:text-background hover:shadow-[6px_6px_0_0_oklch(0.69_0.22_38)] hover:-translate-x-0.5 hover:-translate-y-0.5",
         secondary:
-          "bg-brand-orange text-background border-2 border-ink shadow-[4px_4px_0_0_oklch(0.15_0.02_30)] hover:shadow-[6px_6px_0_0_oklch(0.15_0.02_30)] hover:-translate-x-0.5 hover:-translate-y-0.5",
+          "bg-gradient-sunset text-white border-2 border-ink shadow-[4px_4px_0_0_oklch(0.15_0.02_30)] hover:shadow-[6px_6px_0_0_oklch(0.15_0.02_30)] hover:-translate-x-0.5 hover:-translate-y-0.5 [text-shadow:0_1px_0_rgb(0_0_0_/_25%)]",
         ghost: "text-ink hover:bg-ink hover:text-background rounded-lg",
         link: "text-ink underline-offset-4 underline decoration-2 decoration-brand-orange hover:decoration-brand-magenta",
       },
