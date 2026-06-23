@@ -201,6 +201,70 @@
 
   .transition-smooth { transition: var(--transition-smooth); }
 
+  /* === Identidade visual Comandex — utilitários de gradiente reutilizáveis === */
+
+  /* Borda com gradiente sunset (mesma do logo). Aplica em qualquer container. */
+  .border-gradient-sunset {
+    border: 2px solid transparent;
+    background:
+      linear-gradient(var(--card), var(--card)) padding-box,
+      var(--gradient-sunset) border-box;
+  }
+
+  /* Card "brand": faixa de gradiente no topo + sombra brutal. */
+  .card-brand {
+    position: relative;
+    background-color: var(--card);
+    border: 2px solid var(--ink);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-brutal);
+    overflow: hidden;
+  }
+  .card-brand::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 6px;
+    background: var(--gradient-sunset);
+  }
+
+  /* Hover lift padrão (cards interativos) */
+  .lift-on-hover {
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .lift-on-hover:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--shadow-brutal-lg);
+  }
+
+  /* Ring/foco com a cor da marca */
+  .ring-brand { box-shadow: 0 0 0 3px oklch(0.69 0.22 38 / 0.35); }
+
+  /* Divisor com gradiente do logo */
+  .divider-sunset {
+    height: 4px;
+    background: var(--gradient-sunset);
+    border-radius: 9999px;
+  }
+
+  /* Chip/badge brand */
+  .chip-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem 0.7rem;
+    border-radius: 9999px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: linear-gradient(var(--card), var(--card)) padding-box,
+                var(--gradient-sunset) border-box;
+    border: 2px solid transparent;
+  }
+
   .bg-grid {
     background-image:
       linear-gradient(to right, oklch(0.88 0.02 40 / 0.5) 1px, transparent 1px),
