@@ -241,7 +241,7 @@ function LojasPage() {
               <DialogHeader><DialogTitle>{editing.name}</DialogTitle></DialogHeader>
               <div className="space-y-4">
                 <div>
-                  <Label className="text-xs">Plano</Label>
+                  <Label className="text-xs">Plano (status comercial)</Label>
                   <Select value={editing.plan} onValueChange={(v) => setEditing({ ...editing, plan: v as Plan })}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
@@ -250,6 +250,51 @@ function LojasPage() {
                       <SelectItem value="professional">Professional</SelectItem>
                     </SelectContent>
                   </Select>
+                </div>
+
+                <div className="rounded-lg border-2 border-ink p-3 bg-gradient-to-br from-brand-orange/5 to-brand-magenta/5">
+                  <Label className="text-xs font-bold uppercase">Plano de recursos (limites e features)</Label>
+                  <Select
+                    value={editing.plan_id ?? "starter"}
+                    onValueChange={(v) => setEditing({ ...editing, plan_id: v })}
+                  >
+                    <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {appPlans.map((p) => (
+                        <SelectItem key={p.id} value={p.id}>
+                          {p.name} — R$ {Number(p.price_monthly).toFixed(0)}/mês
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  {(() => {
+                    const sel = appPlans.find((p) => p.id === (editing.plan_id ?? "starter"));
+                    if (!sel) return null;
+                    return (
+                      <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
+                        {FEATURE_ROWS.map((row) => {
+                          const v = fmtFeatureValue(sel.features?.[row.key]);
+                          const isBool = typeof v === "boolean";
+                          return (
+                            <div key={row.key} className="flex items-center justify-between gap-2 py-1 border-b border-dashed border-ink/10 last:border-0">
+                              <span className="text-muted-foreground">{row.label}</span>
+                              {isBool ? (
+                                v
+                                  ? <Check className="h-4 w-4 text-emerald-600" />
+                                  : <X className="h-4 w-4 text-destructive/60" />
+                              ) : (
+                                <span className="font-mono font-semibold">{v as string}</span>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })()}
+                  <p className="text-[11px] text-muted-foreground mt-2">
+                    Define as features e limites efetivos do restaurante (cupons, PDV, pagamento online, etc).
+                  </p>
                 </div>
                 <div className="flex items-center justify-between rounded border p-3">
                   <div><Label>Restaurante ativo</Label><p className="text-xs text-muted-foreground">Inativos não aparecem publicamente e o dono vê tela de bloqueio</p></div>
