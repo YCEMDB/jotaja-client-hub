@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { LogIn, Search, AlertTriangle, Plus, Building2, RotateCcw, Trash2, KeyRound } from "lucide-react";
+import { LogIn, Search, AlertTriangle, Plus, Building2, RotateCcw, Trash2, KeyRound, Check, X } from "lucide-react";
 import { toast } from "sonner";
 import { CreateTenantDialog } from "@/components/super/CreateTenantDialog";
 import { PaymentsSection } from "@/components/super/PaymentsSection";
@@ -24,8 +24,9 @@ export const Route = createFileRoute("/_super/super/lojas")({
 });
 
 type Plan = "trial" | "essential" | "professional";
+type AppPlan = { id: string; name: string; price_monthly: number; features: Record<string, any> };
 type Row = {
-  id: string; name: string; slug: string; owner_id: string; plan: Plan;
+  id: string; name: string; slug: string; owner_id: string; plan: Plan; plan_id: string | null;
   is_active: boolean; is_open: boolean; trial_ends_at: string | null;
   subscription_ends_at: string | null; admin_notes: string | null; created_at: string;
   owner_email?: string | null; owner_name?: string | null;
@@ -38,6 +39,27 @@ const PLAN_COLOR: Record<Plan, string> = {
   essential: "bg-blue-500/15 text-blue-700 border-blue-300",
   professional: "bg-emerald-500/15 text-emerald-700 border-emerald-300",
 };
+
+const FEATURE_ROWS: { key: string; label: string }[] = [
+  { key: "max_orders_per_month", label: "Pedidos / mês" },
+  { key: "max_users", label: "Usuários" },
+  { key: "max_locations", label: "Unidades" },
+  { key: "coupons", label: "Cupons promocionais" },
+  { key: "drivers", label: "Gestão de entregadores" },
+  { key: "manual_pdv", label: "PDV manual (balcão)" },
+  { key: "online_payment", label: "Pagamento online" },
+  { key: "auto_print", label: "Impressão automática" },
+  { key: "advanced_reports", label: "Relatórios avançados" },
+  { key: "priority_support", label: "Suporte prioritário" },
+  { key: "multi_location", label: "Multi-unidades" },
+  { key: "api_access", label: "Acesso à API" },
+];
+
+function fmtFeatureValue(v: any) {
+  if (v === null || v === undefined) return "Ilimitado";
+  if (typeof v === "boolean") return v;
+  return String(v);
+}
 
 function fmtMoney(v: number) { return `R$ ${Number(v).toFixed(2).replace(".", ",")}`; }
 function fmtDate(s: string | null) { return s ? new Date(s).toLocaleDateString("pt-BR") : "—"; }
