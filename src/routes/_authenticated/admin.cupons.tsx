@@ -16,11 +16,20 @@ import {
 } from "@/components/ui/select";
 import { Plus, Pencil, Trash2, Tag } from "lucide-react";
 import { toast } from "sonner";
+import { FeatureGate } from "@/components/FeatureGate";
 
 export const Route = createFileRoute("/_authenticated/admin/cupons")({
-  component: CuponsPage,
+  component: CuponsGated,
   head: () => ({ meta: [{ title: "Cupons — Comandex" }] }),
 });
+
+function CuponsGated() {
+  return (
+    <FeatureGate feature="coupons">
+      <CuponsPage />
+    </FeatureGate>
+  );
+}
 
 type CouponType = "percentage" | "fixed" | "free_shipping";
 type Coupon = {

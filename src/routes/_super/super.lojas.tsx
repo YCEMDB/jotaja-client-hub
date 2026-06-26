@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { LogIn, Search, AlertTriangle, Plus, Building2, RotateCcw, Trash2, KeyRound } from "lucide-react";
+import { LogIn, Search, AlertTriangle, Plus, Building2, RotateCcw, Trash2, KeyRound, Check, X } from "lucide-react";
 import { toast } from "sonner";
 import { CreateTenantDialog } from "@/components/super/CreateTenantDialog";
 import { PaymentsSection } from "@/components/super/PaymentsSection";
@@ -24,8 +24,9 @@ export const Route = createFileRoute("/_super/super/lojas")({
 });
 
 type Plan = "trial" | "essential" | "professional";
+type AppPlan = { id: string; name: string; price_monthly: number; features: Record<string, any> };
 type Row = {
-  id: string; name: string; slug: string; owner_id: string; plan: Plan;
+  id: string; name: string; slug: string; owner_id: string; plan: Plan; plan_id: string | null;
   is_active: boolean; is_open: boolean; trial_ends_at: string | null;
   subscription_ends_at: string | null; admin_notes: string | null; created_at: string;
   owner_email?: string | null; owner_name?: string | null;
@@ -38,6 +39,27 @@ const PLAN_COLOR: Record<Plan, string> = {
   essential: "bg-blue-500/15 text-blue-700 border-blue-300",
   professional: "bg-emerald-500/15 text-emerald-700 border-emerald-300",
 };
+
+const FEATURE_ROWS: { key: string; label: string }[] = [
+  { key: "max_orders_per_month", label: "Pedidos / mês" },
+  { key: "max_users", label: "Usuários" },
+  { key: "max_locations", label: "Unidades" },
+  { key: "coupons", label: "Cupons promocionais" },
+  { key: "drivers", label: "Gestão de entregadores" },
+  { key: "manual_pdv", label: "PDV manual (balcão)" },
+  { key: "online_payment", label: "Pagamento online" },
+  { key: "auto_print", label: "Impressão automática" },
+  { key: "advanced_reports", label: "Relatórios avançados" },
+  { key: "priority_support", label: "Suporte prioritário" },
+  { key: "multi_location", label: "Multi-unidades" },
+  { key: "api_access", label: "Acesso à API" },
+];
+
+function fmtFeatureValue(v: any) {
+  if (v === null || v === undefined) return "Ilimitado";
+  if (typeof v === "boolean") return v;
+  return String(v);
+}
 
 function fmtMoney(v: number) { return `R$ ${Number(v).toFixed(2).replace(".", ",")}`; }
 function fmtDate(s: string | null) { return s ? new Date(s).toLocaleDateString("pt-BR") : "—"; }
@@ -54,13 +76,18 @@ function LojasPage() {
   const resetTenantFn = useServerFn(resetTenant);
   const deleteTenantFn = useServerFn(deleteTenant);
   const resetPwdFn = useServerFn(resetOwnerPassword);
+  const [appPlans, setAppPlans] = useState<AppPlan[]>([]);
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+    supabase.from("app_plans").select("id,name,price_monthly,features").order("price_monthly")
+      .then(({ data }) => setAppPlans((data as AppPlan[]) ?? []));
+  }, []);
 
   const load = async () => {
     const { data: rest } = await supabase
       .from("restaurants")
-      .select("id,name,slug,owner_id,plan,is_active,is_open,trial_ends_at,subscription_ends_at,admin_notes,created_at")
+      .select("id,name,slug,owner_id,plan,plan_id,is_active,is_open,trial_ends_at,subscription_ends_at,admin_notes,created_at")
       .order("created_at", { ascending: false });
     const list = (rest ?? []) as Row[];
     if (!list.length) { setRows([]); return; }
@@ -115,8 +142,14 @@ function LojasPage() {
   const save = async () => {
     if (!editing) return;
     setBusy(true);
+    // Map plan_id to legacy plan enum for backwards compat
+    const legacyPlan: Plan =
+      editing.plan_id === "starter" ? "essential" :
+      editing.plan_id === "pro" || editing.plan_id === "business" ? "professional" :
+      editing.plan;
     const { error } = await supabase.from("restaurants").update({
-      plan: editing.plan,
+      plan: legacyPlan,
+      plan_id: editing.plan_id,
       is_active: editing.is_active,
       trial_ends_at: editing.trial_ends_at,
       subscription_ends_at: editing.subscription_ends_at,
@@ -180,7 +213,7 @@ function LojasPage() {
                   <tr key={r.id} className="border-t hover:bg-muted/50">
                     <td className="p-3"><div className="font-medium">{r.name}</div><div className="text-xs text-muted-foreground">/{r.slug}</div></td>
                     <td className="p-3 text-xs"><div>{r.owner_name ?? "—"}</div><div className="text-muted-foreground">{r.owner_email ?? "—"}</div></td>
-                    <td className="p-3"><Badge variant="outline" className={PLAN_COLOR[r.plan]}>{PLAN_LABEL[r.plan]}</Badge></td>
+                    <td className="p-3"><div className="flex flex-col gap-1"><Badge variant="outline" className={PLAN_COLOR[r.plan]}>{PLAN_LABEL[r.plan]}</Badge><span className="text-[10px] uppercase font-bold text-muted-foreground">{r.plan_id ?? "starter"}</span></div></td>
                     <td className="p-3">{r.is_active ? <Badge variant="outline" className="border-green-300 text-green-700">Ativo</Badge> : <Badge variant="outline" className="border-red-300 text-red-700">Inativo</Badge>}</td>
                     <td className="p-3 text-xs"><span className={trialExpired ? "text-destructive flex items-center gap-1" : ""}>{trialExpired && <AlertTriangle className="h-3 w-3" />}{fmtDate(r.trial_ends_at)}</span></td>
                     <td className="p-3 text-xs">{fmtDate(r.subscription_ends_at)}</td>
@@ -208,7 +241,7 @@ function LojasPage() {
               <DialogHeader><DialogTitle>{editing.name}</DialogTitle></DialogHeader>
               <div className="space-y-4">
                 <div>
-                  <Label className="text-xs">Plano</Label>
+                  <Label className="text-xs">Plano (status comercial)</Label>
                   <Select value={editing.plan} onValueChange={(v) => setEditing({ ...editing, plan: v as Plan })}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
@@ -217,6 +250,51 @@ function LojasPage() {
                       <SelectItem value="professional">Professional</SelectItem>
                     </SelectContent>
                   </Select>
+                </div>
+
+                <div className="rounded-lg border-2 border-ink p-3 bg-gradient-to-br from-brand-orange/5 to-brand-magenta/5">
+                  <Label className="text-xs font-bold uppercase">Plano de recursos (limites e features)</Label>
+                  <Select
+                    value={editing.plan_id ?? "starter"}
+                    onValueChange={(v) => setEditing({ ...editing, plan_id: v })}
+                  >
+                    <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {appPlans.map((p) => (
+                        <SelectItem key={p.id} value={p.id}>
+                          {p.name} — R$ {Number(p.price_monthly).toFixed(0)}/mês
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  {(() => {
+                    const sel = appPlans.find((p) => p.id === (editing.plan_id ?? "starter"));
+                    if (!sel) return null;
+                    return (
+                      <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
+                        {FEATURE_ROWS.map((row) => {
+                          const v = fmtFeatureValue(sel.features?.[row.key]);
+                          const isBool = typeof v === "boolean";
+                          return (
+                            <div key={row.key} className="flex items-center justify-between gap-2 py-1 border-b border-dashed border-ink/10 last:border-0">
+                              <span className="text-muted-foreground">{row.label}</span>
+                              {isBool ? (
+                                v
+                                  ? <Check className="h-4 w-4 text-emerald-600" />
+                                  : <X className="h-4 w-4 text-destructive/60" />
+                              ) : (
+                                <span className="font-mono font-semibold">{v as string}</span>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })()}
+                  <p className="text-[11px] text-muted-foreground mt-2">
+                    Define as features e limites efetivos do restaurante (cupons, PDV, pagamento online, etc).
+                  </p>
                 </div>
                 <div className="flex items-center justify-between rounded border p-3">
                   <div><Label>Restaurante ativo</Label><p className="text-xs text-muted-foreground">Inativos não aparecem publicamente e o dono vê tela de bloqueio</p></div>

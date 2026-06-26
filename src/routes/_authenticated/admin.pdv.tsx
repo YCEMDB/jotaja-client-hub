@@ -9,11 +9,20 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Plus, Minus, Trash2, ShoppingCart, Search } from "lucide-react";
+import { FeatureGate } from "@/components/FeatureGate";
 
 export const Route = createFileRoute("/_authenticated/admin/pdv")({
-  component: PdvPage,
+  component: PdvGated,
   head: () => ({ meta: [{ title: "PDV Manual — Comandex" }] }),
 });
+
+function PdvGated() {
+  return (
+    <FeatureGate feature="manual_pdv">
+      <PdvPage />
+    </FeatureGate>
+  );
+}
 
 type Product = {
   id: string;
