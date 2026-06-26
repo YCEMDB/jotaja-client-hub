@@ -76,13 +76,18 @@ function LojasPage() {
   const resetTenantFn = useServerFn(resetTenant);
   const deleteTenantFn = useServerFn(deleteTenant);
   const resetPwdFn = useServerFn(resetOwnerPassword);
+  const [appPlans, setAppPlans] = useState<AppPlan[]>([]);
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+    supabase.from("app_plans").select("id,name,price_monthly,features").order("price_monthly")
+      .then(({ data }) => setAppPlans((data as AppPlan[]) ?? []));
+  }, []);
 
   const load = async () => {
     const { data: rest } = await supabase
       .from("restaurants")
-      .select("id,name,slug,owner_id,plan,is_active,is_open,trial_ends_at,subscription_ends_at,admin_notes,created_at")
+      .select("id,name,slug,owner_id,plan,plan_id,is_active,is_open,trial_ends_at,subscription_ends_at,admin_notes,created_at")
       .order("created_at", { ascending: false });
     const list = (rest ?? []) as Row[];
     if (!list.length) { setRows([]); return; }
@@ -137,8 +142,14 @@ function LojasPage() {
   const save = async () => {
     if (!editing) return;
     setBusy(true);
+    // Map plan_id to legacy plan enum for backwards compat
+    const legacyPlan: Plan =
+      editing.plan_id === "starter" ? "essential" :
+      editing.plan_id === "pro" || editing.plan_id === "business" ? "professional" :
+      editing.plan;
     const { error } = await supabase.from("restaurants").update({
-      plan: editing.plan,
+      plan: legacyPlan,
+      plan_id: editing.plan_id,
       is_active: editing.is_active,
       trial_ends_at: editing.trial_ends_at,
       subscription_ends_at: editing.subscription_ends_at,
