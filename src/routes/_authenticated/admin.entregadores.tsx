@@ -10,11 +10,20 @@ import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Plus, Pencil, Trash2, Truck } from "lucide-react";
 import { toast } from "sonner";
+import { FeatureGate } from "@/components/FeatureGate";
 
 export const Route = createFileRoute("/_authenticated/admin/entregadores")({
-  component: Entregadores,
+  component: EntregadoresGated,
   head: () => ({ meta: [{ title: "Entregadores — Comandex" }] }),
 });
+
+function EntregadoresGated() {
+  return (
+    <FeatureGate feature="drivers">
+      <Entregadores />
+    </FeatureGate>
+  );
+}
 
 interface Driver {
   id: string;
