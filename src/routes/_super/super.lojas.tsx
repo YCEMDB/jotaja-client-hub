@@ -213,7 +213,7 @@ function LojasPage() {
                   <tr key={r.id} className="border-t hover:bg-muted/50">
                     <td className="p-3"><div className="font-medium">{r.name}</div><div className="text-xs text-muted-foreground">/{r.slug}</div></td>
                     <td className="p-3 text-xs"><div>{r.owner_name ?? "—"}</div><div className="text-muted-foreground">{r.owner_email ?? "—"}</div></td>
-                    <td className="p-3"><Badge variant="outline" className={PLAN_COLOR[r.plan]}>{PLAN_LABEL[r.plan]}</Badge></td>
+                    <td className="p-3"><div className="flex flex-col gap-1"><Badge variant="outline" className={PLAN_COLOR[r.plan]}>{PLAN_LABEL[r.plan]}</Badge><span className="text-[10px] uppercase font-bold text-muted-foreground">{r.plan_id ?? "starter"}</span></div></td>
                     <td className="p-3">{r.is_active ? <Badge variant="outline" className="border-green-300 text-green-700">Ativo</Badge> : <Badge variant="outline" className="border-red-300 text-red-700">Inativo</Badge>}</td>
                     <td className="p-3 text-xs"><span className={trialExpired ? "text-destructive flex items-center gap-1" : ""}>{trialExpired && <AlertTriangle className="h-3 w-3" />}{fmtDate(r.trial_ends_at)}</span></td>
                     <td className="p-3 text-xs">{fmtDate(r.subscription_ends_at)}</td>
