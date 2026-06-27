@@ -155,59 +155,61 @@ function LojaPage() {
         <div className="absolute -bottom-32 -left-20 h-72 w-72 rounded-full bg-brand-magenta/25 blur-3xl pointer-events-none" />
         {restaurant.cover_url && (
           <div
-            className="h-44 md:h-60 bg-center bg-cover border-b-2 border-background/20"
+            className="h-32 sm:h-44 md:h-60 bg-center bg-cover border-b-2 border-background/20"
             style={{ backgroundImage: `linear-gradient(180deg, transparent 0%, oklch(0.12 0.025 25 / 0.5) 100%), url(${restaurant.cover_url})` }}
           />
         )}
-        <div className="relative container mx-auto px-4 py-6 flex items-center gap-4 flex-wrap">
-          <div className="h-20 w-20 md:h-24 md:w-24 rounded-2xl bg-brand-orange border-2 border-background grid place-items-center overflow-hidden shrink-0 shadow-[5px_5px_0_0_oklch(0.62_0.24_0)]">
-            {restaurant.logo_url ? (
-              <img src={restaurant.logo_url} alt={restaurant.name} className="h-full w-full object-cover" />
-            ) : (
-              <span className="font-display text-3xl text-ink">{restaurant.name[0]}</span>
-            )}
-          </div>
-          <div className="flex-1 min-w-0">
-            <h1 className="font-display text-3xl md:text-5xl tracking-tight leading-[0.92] truncate text-background">
-              {restaurant.name}
-              <span className="inline-block w-3 h-3 ml-1 -mb-0.5 bg-brand-orange align-baseline" />
-            </h1>
-            {restaurant.description && (
-              <p className="text-sm md:text-base text-background/70 line-clamp-2 mt-1.5">{restaurant.description}</p>
-            )}
-            <div className="flex items-center gap-2 mt-3 text-xs flex-wrap">
-              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md font-display text-[11px] uppercase tracking-wider border-2 border-background ${restaurant.is_open ? "bg-brand-orange text-ink" : "bg-background/10 text-background/60"}`}>
-                <span className={`h-1.5 w-1.5 rounded-full ${restaurant.is_open ? "bg-ink animate-pulse" : "bg-background/40"}`} />
-                {restaurant.is_open ? "Aberto agora" : "Fechado"}
-              </span>
-              {Number(restaurant.min_order_value) > 0 && (
-                <span className="text-background/60 font-bold">Mín. R$ {Number(restaurant.min_order_value).toFixed(2)}</span>
+        <div className="relative container mx-auto px-3 sm:px-4 py-4 sm:py-6">
+          <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-3 sm:gap-4">
+            <div className="h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 rounded-2xl bg-brand-orange border-2 border-background grid place-items-center overflow-hidden shrink-0 shadow-[4px_4px_0_0_oklch(0.62_0.24_0)] sm:shadow-[5px_5px_0_0_oklch(0.62_0.24_0)]">
+              {restaurant.logo_url ? (
+                <img src={restaurant.logo_url} alt={restaurant.name} className="h-full w-full object-cover" />
+              ) : (
+                <span className="font-display text-2xl sm:text-3xl text-ink">{restaurant.name[0]}</span>
               )}
             </div>
+            <div className="min-w-0">
+              <h1 className="font-display text-xl sm:text-3xl md:text-5xl tracking-tight leading-[0.95] truncate text-background">
+                {restaurant.name}
+                <span className="inline-block w-2 h-2 sm:w-3 sm:h-3 ml-1 -mb-0.5 bg-brand-orange align-baseline" />
+              </h1>
+              {restaurant.description && (
+                <p className="text-xs sm:text-sm md:text-base text-background/70 line-clamp-2 mt-1 sm:mt-1.5">{restaurant.description}</p>
+              )}
+              <div className="flex items-center gap-2 mt-2 sm:mt-3 text-xs flex-wrap">
+                <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md font-display text-[10px] sm:text-[11px] uppercase tracking-wider border-2 border-background ${restaurant.is_open ? "bg-brand-orange text-ink" : "bg-background/10 text-background/60"}`}>
+                  <span className={`h-1.5 w-1.5 rounded-full ${restaurant.is_open ? "bg-ink animate-pulse" : "bg-background/40"}`} />
+                  {restaurant.is_open ? "Aberto" : "Fechado"}
+                </span>
+                {Number(restaurant.min_order_value) > 0 && (
+                  <span className="text-background/60 font-bold text-[11px]">Mín. R$ {Number(restaurant.min_order_value).toFixed(2)}</span>
+                )}
+              </div>
+            </div>
+            <Button
+              variant="secondary"
+              size="sm"
+              className="shrink-0 gap-1 sm:gap-2 h-9 px-2.5 sm:px-3"
+              onClick={() => setTrackOpen(true)}
+            >
+              <ClipboardList className="h-4 w-4" />
+              <span className="hidden sm:inline">Acompanhar pedido</span>
+              <span className="sm:hidden text-xs">Pedidos</span>
+            </Button>
           </div>
-          <Button
-            variant="secondary"
-            size="sm"
-            className="shrink-0 gap-2"
-            onClick={() => setTrackOpen(true)}
-          >
-            <ClipboardList className="h-4 w-4" />
-            <span className="hidden sm:inline">Acompanhar pedido</span>
-            <span className="sm:hidden">Pedidos</span>
-          </Button>
         </div>
       </div>
 
       {/* Category nav */}
       {categories.length > 0 && (
         <div className="sticky top-0 z-10 bg-background border-b-2 border-ink">
-          <div className="container mx-auto px-4 overflow-x-auto">
-            <div className="flex gap-2 py-3">
+          <div className="container mx-auto px-3 sm:px-4 overflow-x-auto scrollbar-hide">
+            <div className="flex gap-2 py-2.5 sm:py-3">
               {categories.map((c) => (
                 <a
                   key={c.id}
                   href={`#cat-${c.id}`}
-                  className="px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider rounded-lg border-2 border-ink/80 bg-background hover:bg-ink hover:text-background whitespace-nowrap transition-colors"
+                  className="px-3 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider rounded-lg border-2 border-ink/80 bg-background hover:bg-ink hover:text-background whitespace-nowrap transition-colors"
                 >
                   {c.name}
                 </a>
@@ -218,56 +220,66 @@ function LojaPage() {
       )}
 
       {/* Menu */}
-      <div className="container mx-auto px-4 py-8 pb-32 space-y-10">
-        {categories.length === 0 ? (
-          <Card className="p-12 text-center">
-            <p className="text-ink/60 font-bold">Cardápio em construção. Volte em breve!</p>
-          </Card>
-        ) : (
-          categories.map((cat) => {
-            const items = products.filter((p) => p.category_id === cat.id);
-            if (items.length === 0) return null;
+      <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 pb-32 space-y-8 sm:space-y-10">
+        {(() => {
+          const grouped = categories
+            .map((cat) => ({ cat, items: products.filter((p) => p.category_id === cat.id) }))
+            .filter((g) => g.items.length > 0);
+          const orphan = products.filter((p) => !p.category_id || !categories.some((c) => c.id === p.category_id));
+          if (orphan.length > 0) {
+            grouped.push({ cat: { id: "outros", name: "Outros", position: 999, is_active: true }, items: orphan });
+          }
+          if (grouped.length === 0) {
             return (
-              <section key={cat.id} id={`cat-${cat.id}`} className="scroll-mt-20">
-                <h2 className="font-display text-2xl md:text-3xl text-ink mb-4 tracking-tight">
-                  {cat.name}
-                  <span className="inline-block w-2 h-2 ml-1 -mb-0.5 bg-brand-magenta align-baseline" />
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {items.map((p) => (
-                    <Card
-                      key={p.id}
-                      className="p-3 flex gap-3 cursor-pointer hover:shadow-[6px_6px_0_0_oklch(0.69_0.22_38)] hover:-translate-x-0.5 hover:-translate-y-0.5"
-                      onClick={() => setSelectedProduct(p)}
-                    >
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-display text-base text-ink leading-tight">{p.name}</h3>
-                        {p.description && <p className="text-sm text-ink/60 line-clamp-2 mt-1">{p.description}</p>}
-                        <div className="mt-2 flex items-baseline gap-2">
-                          {p.promo_price != null ? (
-                            <>
-                              <span className="text-ink/40 line-through text-xs">R$ {Number(p.price).toFixed(2)}</span>
-                              <span className="font-display text-lg text-brand-magenta">R$ {Number(p.promo_price).toFixed(2)}</span>
-                            </>
-                          ) : (
-                            <span className="font-display text-lg text-ink">R$ {Number(p.price).toFixed(2)}</span>
-                          )}
-                        </div>
-                      </div>
-                      <div className="h-24 w-24 rounded-xl bg-muted border-2 border-ink/80 shrink-0 overflow-hidden grid place-items-center">
-                        {p.image_url ? (
-                          <img src={p.image_url} alt={p.name} className="h-full w-full object-cover" />
+              <Card className="p-8 sm:p-12 text-center">
+                <p className="text-ink/60 font-bold">
+                  {products.length === 0 && categories.length === 0
+                    ? "Cardápio em construção. Volte em breve!"
+                    : "Nenhum item disponível no momento."}
+                </p>
+              </Card>
+            );
+          }
+          return grouped.map(({ cat, items }) => (
+            <section key={cat.id} id={`cat-${cat.id}`} className="scroll-mt-16 sm:scroll-mt-20">
+              <h2 className="font-display text-xl sm:text-2xl md:text-3xl text-ink mb-3 sm:mb-4 tracking-tight">
+                {cat.name}
+                <span className="inline-block w-2 h-2 ml-1 -mb-0.5 bg-brand-magenta align-baseline" />
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                {items.map((p) => (
+                  <Card
+                    key={p.id}
+                    className="p-2.5 sm:p-3 flex gap-3 cursor-pointer active:scale-[0.99] hover:shadow-[6px_6px_0_0_oklch(0.69_0.22_38)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all"
+                    onClick={() => setSelectedProduct(p)}
+                  >
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-display text-sm sm:text-base text-ink leading-tight">{p.name}</h3>
+                      {p.description && <p className="text-xs sm:text-sm text-ink/60 line-clamp-2 mt-1">{p.description}</p>}
+                      <div className="mt-2 flex items-baseline gap-2 flex-wrap">
+                        {p.promo_price != null ? (
+                          <>
+                            <span className="text-ink/40 line-through text-xs">R$ {Number(p.price).toFixed(2)}</span>
+                            <span className="font-display text-base sm:text-lg text-brand-magenta">R$ {Number(p.promo_price).toFixed(2)}</span>
+                          </>
                         ) : (
-                          <ImageIcon className="h-6 w-6 text-ink/40" />
+                          <span className="font-display text-base sm:text-lg text-ink">R$ {Number(p.price).toFixed(2)}</span>
                         )}
                       </div>
-                    </Card>
-                  ))}
-                </div>
-              </section>
-            );
-          })
-        )}
+                    </div>
+                    <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-xl bg-muted border-2 border-ink/80 shrink-0 overflow-hidden grid place-items-center">
+                      {p.image_url ? (
+                        <img src={p.image_url} alt={p.name} className="h-full w-full object-cover" loading="lazy" />
+                      ) : (
+                        <ImageIcon className="h-6 w-6 text-ink/40" />
+                      )}
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </section>
+          ));
+        })()}
       </div>
 
       {/* Floating cart */}
