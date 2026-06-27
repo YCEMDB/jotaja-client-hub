@@ -83,11 +83,11 @@ function LojaPage() {
       if (!r || !r.id) { setLoading(false); return; }
       setRestaurant(r);
       const [c, p] = await Promise.all([
-        supabase.from("categories").select("*").eq("restaurant_id", r.id).eq("is_active", true).order("position"),
-        supabase.from("products").select("*").eq("restaurant_id", r.id).eq("is_available", true).order("position"),
+        supabase.rpc("get_public_categories", { p_slug: slug }),
+        supabase.rpc("get_public_products", { p_slug: slug }),
       ]);
-      setCategories(c.data ?? []);
-      setProducts(p.data ?? []);
+      setCategories((c.data as Category[]) ?? []);
+      setProducts((p.data as Product[]) ?? []);
       setLoading(false);
     })();
   }, [slug]);

@@ -1345,7 +1345,29 @@ export type Database = {
         Args: { payload: Json; queue_name: string }
         Returns: number
       }
+      get_public_categories: {
+        Args: { p_slug: string }
+        Returns: {
+          id: string
+          is_active: boolean
+          name: string
+          position: number
+        }[]
+      }
       get_public_order: { Args: { p_id: string }; Returns: Json }
+      get_public_products: {
+        Args: { p_slug: string }
+        Returns: {
+          category_id: string
+          description: string
+          id: string
+          image_url: string
+          is_available: boolean
+          name: string
+          price: number
+          promo_price: number
+        }[]
+      }
       get_public_restaurant: { Args: { p_slug: string }; Returns: Json }
       move_to_dlq: {
         Args: {
