@@ -79,6 +79,7 @@ import { Route as AuthenticatedAdminEquipeRouteImport } from './routes/_authenti
 import { Route as AuthenticatedAdminEntregadoresRouteImport } from './routes/_authenticated/admin.entregadores'
 import { Route as AuthenticatedAdminCuponsRouteImport } from './routes/_authenticated/admin.cupons'
 import { Route as AuthenticatedAdminConfiguracoesRouteImport } from './routes/_authenticated/admin.configuracoes'
+import { Route as AuthenticatedAdminComunicacaoRouteImport } from './routes/_authenticated/admin.comunicacao'
 import { Route as AuthenticatedAdminClientesRouteImport } from './routes/_authenticated/admin.clientes'
 import { Route as AuthenticatedAdminCardapioRouteImport } from './routes/_authenticated/admin.cardapio'
 import { Route as AuthenticatedAdminCaixaRouteImport } from './routes/_authenticated/admin.caixa'
@@ -461,6 +462,12 @@ const AuthenticatedAdminConfiguracoesRoute =
     path: '/admin/configuracoes',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedAdminComunicacaoRoute =
+  AuthenticatedAdminComunicacaoRouteImport.update({
+    id: '/admin/comunicacao',
+    path: '/admin/comunicacao',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedAdminClientesRoute =
   AuthenticatedAdminClientesRouteImport.update({
     id: '/admin/clientes',
@@ -569,6 +576,7 @@ export interface FileRoutesByFullPath {
   '/admin/caixa': typeof AuthenticatedAdminCaixaRoute
   '/admin/cardapio': typeof AuthenticatedAdminCardapioRoute
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
+  '/admin/comunicacao': typeof AuthenticatedAdminComunicacaoRoute
   '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
   '/admin/cupons': typeof AuthenticatedAdminCuponsRoute
   '/admin/entregadores': typeof AuthenticatedAdminEntregadoresRoute
@@ -649,6 +657,7 @@ export interface FileRoutesByTo {
   '/admin/caixa': typeof AuthenticatedAdminCaixaRoute
   '/admin/cardapio': typeof AuthenticatedAdminCardapioRoute
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
+  '/admin/comunicacao': typeof AuthenticatedAdminComunicacaoRoute
   '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
   '/admin/cupons': typeof AuthenticatedAdminCuponsRoute
   '/admin/entregadores': typeof AuthenticatedAdminEntregadoresRoute
@@ -732,6 +741,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/caixa': typeof AuthenticatedAdminCaixaRoute
   '/_authenticated/admin/cardapio': typeof AuthenticatedAdminCardapioRoute
   '/_authenticated/admin/clientes': typeof AuthenticatedAdminClientesRoute
+  '/_authenticated/admin/comunicacao': typeof AuthenticatedAdminComunicacaoRoute
   '/_authenticated/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
   '/_authenticated/admin/cupons': typeof AuthenticatedAdminCuponsRoute
   '/_authenticated/admin/entregadores': typeof AuthenticatedAdminEntregadoresRoute
@@ -814,6 +824,7 @@ export interface FileRouteTypes {
     | '/admin/caixa'
     | '/admin/cardapio'
     | '/admin/clientes'
+    | '/admin/comunicacao'
     | '/admin/configuracoes'
     | '/admin/cupons'
     | '/admin/entregadores'
@@ -894,6 +905,7 @@ export interface FileRouteTypes {
     | '/admin/caixa'
     | '/admin/cardapio'
     | '/admin/clientes'
+    | '/admin/comunicacao'
     | '/admin/configuracoes'
     | '/admin/cupons'
     | '/admin/entregadores'
@@ -976,6 +988,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/caixa'
     | '/_authenticated/admin/cardapio'
     | '/_authenticated/admin/clientes'
+    | '/_authenticated/admin/comunicacao'
     | '/_authenticated/admin/configuracoes'
     | '/_authenticated/admin/cupons'
     | '/_authenticated/admin/entregadores'
@@ -1560,6 +1573,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminConfiguracoesRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/admin/comunicacao': {
+      id: '/_authenticated/admin/comunicacao'
+      path: '/admin/comunicacao'
+      fullPath: '/admin/comunicacao'
+      preLoaderRoute: typeof AuthenticatedAdminComunicacaoRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/admin/clientes': {
       id: '/_authenticated/admin/clientes'
       path: '/admin/clientes'
@@ -1637,6 +1657,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedAdminCaixaRoute: typeof AuthenticatedAdminCaixaRoute
   AuthenticatedAdminCardapioRoute: typeof AuthenticatedAdminCardapioRoute
   AuthenticatedAdminClientesRoute: typeof AuthenticatedAdminClientesRoute
+  AuthenticatedAdminComunicacaoRoute: typeof AuthenticatedAdminComunicacaoRoute
   AuthenticatedAdminConfiguracoesRoute: typeof AuthenticatedAdminConfiguracoesRoute
   AuthenticatedAdminCuponsRoute: typeof AuthenticatedAdminCuponsRoute
   AuthenticatedAdminEntregadoresRoute: typeof AuthenticatedAdminEntregadoresRoute
@@ -1655,6 +1676,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAdminCaixaRoute: AuthenticatedAdminCaixaRoute,
   AuthenticatedAdminCardapioRoute: AuthenticatedAdminCardapioRoute,
   AuthenticatedAdminClientesRoute: AuthenticatedAdminClientesRoute,
+  AuthenticatedAdminComunicacaoRoute: AuthenticatedAdminComunicacaoRoute,
   AuthenticatedAdminConfiguracoesRoute: AuthenticatedAdminConfiguracoesRoute,
   AuthenticatedAdminCuponsRoute: AuthenticatedAdminCuponsRoute,
   AuthenticatedAdminEntregadoresRoute: AuthenticatedAdminEntregadoresRoute,
