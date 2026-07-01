@@ -35,7 +35,8 @@ type CouponType = "percentage" | "fixed" | "free_shipping";
 type Coupon = {
   id: string; code: string; type: CouponType; value: number;
   min_order: number | null; max_uses: number | null; uses_count: number | null;
-  expires_at: string | null; is_active: boolean | null;
+  expires_at: string | null; starts_at: string | null;
+  max_uses_per_customer: number | null; is_active: boolean | null;
 };
 
 function CuponsPage() {
