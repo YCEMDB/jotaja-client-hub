@@ -86,8 +86,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "msapplication-TileColor", content: "#2563EB" },
       { name: "msapplication-TileImage", content: "/icon-144.png" },
       // Defaults — sobrescritos por cada rota
-      { title: "Comandex — Plataforma de delivery próprio para restaurantes" },
-      { name: "description", content: "Cardápio digital, pedidos online, gestão completa e relatórios. Sem comissão por venda, com a sua marca." },
+      { title: "Comandex · Delivery próprio sem comissão para restaurantes" },
+      { name: "description", content: "Cardápio digital, pedidos online e gestão completa — com a sua marca, sem comissão por venda. Comece grátis." },
       { property: "og:site_name", content: "Comandex" },
       { property: "og:locale", content: "pt_BR" },
       { property: "og:type", content: "website" },
