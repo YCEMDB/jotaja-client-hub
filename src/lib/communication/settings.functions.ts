@@ -76,7 +76,7 @@ export const upsertCommunicationSetting = createServerFn({ method: "POST" })
     // Segredos server-side (upsert em tabela protegida).
     if (data.token !== undefined || data.api_key !== undefined) {
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-      const patch: Record<string, unknown> = { settings_id: settingsId };
+      const patch: { settings_id: string; token?: string | null; api_key?: string | null } = { settings_id: settingsId! };
       if (data.token !== undefined) patch.token = data.token;
       if (data.api_key !== undefined) patch.api_key = data.api_key;
       const { error } = await supabaseAdmin
