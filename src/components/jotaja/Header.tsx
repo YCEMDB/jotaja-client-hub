@@ -75,7 +75,8 @@ export function Header() {
 
 
         {open && (
-          <div className="md:hidden pb-4 flex flex-col gap-1 border-t border-border/60 pt-3">
+          <div className="lg:hidden pb-4 flex flex-col gap-1 border-t border-border/60 pt-3">
+
             {navItems.map((item) =>
               item.route ? (
                 <Link
