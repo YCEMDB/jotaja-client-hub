@@ -48,6 +48,7 @@ type Restaurant = {
   logo_url: string | null; cover_url: string | null;
   primary_color: string | null; accent_color: string | null;
   is_open: boolean | null; min_order_value: number | null;
+  is_open_now?: boolean | null;
   accepts_delivery: boolean | null; accepts_pickup: boolean | null;
   whatsapp: string | null;
   accept_pix_online?: boolean | null;
