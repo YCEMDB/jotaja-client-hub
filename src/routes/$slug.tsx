@@ -147,8 +147,15 @@ function LojaPage() {
     "--brand-accent": restaurant.accent_color ?? "#FFC627",
   } as React.CSSProperties;
 
+  const openNow = (restaurant.is_open_now ?? restaurant.is_open) === true;
+
   return (
     <div className="min-h-screen bg-background" style={themeStyle}>
+      {!openNow && (
+        <div className="bg-brand-magenta text-background text-center py-2 px-3 font-display text-xs sm:text-sm uppercase tracking-wider border-b-2 border-ink">
+          Loja fechada no momento — voltamos em breve
+        </div>
+      )}
       {/* Header — brutalist hero */}
       <div className="relative bg-ink text-background border-b-4 border-brand-orange overflow-hidden">
         <div className="absolute inset-0 bg-noise opacity-50 pointer-events-none" />
