@@ -48,9 +48,9 @@ function ComunicacaoInner() {
   return (
     <div className="p-4 md:p-8 space-y-6">
       <PageHeader
-        icon={MessageSquare}
+        kicker="Sprint 4.1"
         title="Central de Comunicação"
-        description="Configure canais, templates e acompanhe a fila de mensagens"
+        subtitle="Configure canais, templates e acompanhe a fila de mensagens"
       />
       <Tabs defaultValue="channels" className="w-full">
         <TabsList className="grid grid-cols-3 w-full md:w-auto">
