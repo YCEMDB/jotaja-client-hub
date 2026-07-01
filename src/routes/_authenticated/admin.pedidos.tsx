@@ -253,9 +253,19 @@ function PedidosPage() {
     }
   };
 
+  const loadHistory = async (orderId: string) => {
+    const { data, error } = await supabase.rpc("get_order_history", { p_order_id: orderId });
+    if (error) { setHistory([]); return; }
+    setHistory((data ?? []) as HistoryEntry[]);
+  };
+
   const openOrder = async (o: Order) => {
     setSelected(o);
-    const { data } = await supabase.from("order_items").select("*").eq("order_id", o.id);
+    setHistory([]);
+    const [{ data }] = await Promise.all([
+      supabase.from("order_items").select("*").eq("order_id", o.id),
+      loadHistory(o.id),
+    ]);
     setItems((data ?? []) as OrderItem[]);
   };
 
