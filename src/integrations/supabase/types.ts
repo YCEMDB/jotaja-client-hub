@@ -273,6 +273,7 @@ export type Database = {
           code: string
           created_at: string
           expires_at: string | null
+          first_purchase_only: boolean
           id: string
           is_active: boolean | null
           max_uses: number | null
@@ -288,6 +289,7 @@ export type Database = {
           code: string
           created_at?: string
           expires_at?: string | null
+          first_purchase_only?: boolean
           id?: string
           is_active?: boolean | null
           max_uses?: number | null
@@ -303,6 +305,7 @@ export type Database = {
           code?: string
           created_at?: string
           expires_at?: string | null
+          first_purchase_only?: boolean
           id?: string
           is_active?: boolean | null
           max_uses?: number | null
@@ -334,39 +337,72 @@ export type Database = {
       customers: {
         Row: {
           addresses: Json | null
+          avg_ticket: number | null
+          cpf: string | null
           created_at: string
           email: string | null
+          email_opt_in: boolean
+          first_order_at: string | null
           id: string
+          is_blocked: boolean
           last_order_at: string | null
+          loyalty_points: number
           name: string
+          notes: string | null
           phone: string
           restaurant_id: string
+          source: string
+          tags: Json
           total_orders: number | null
           total_spent: number | null
+          updated_at: string
+          whatsapp_opt_in: boolean
         }
         Insert: {
           addresses?: Json | null
+          avg_ticket?: number | null
+          cpf?: string | null
           created_at?: string
           email?: string | null
+          email_opt_in?: boolean
+          first_order_at?: string | null
           id?: string
+          is_blocked?: boolean
           last_order_at?: string | null
+          loyalty_points?: number
           name: string
+          notes?: string | null
           phone: string
           restaurant_id: string
+          source?: string
+          tags?: Json
           total_orders?: number | null
           total_spent?: number | null
+          updated_at?: string
+          whatsapp_opt_in?: boolean
         }
         Update: {
           addresses?: Json | null
+          avg_ticket?: number | null
+          cpf?: string | null
           created_at?: string
           email?: string | null
+          email_opt_in?: boolean
+          first_order_at?: string | null
           id?: string
+          is_blocked?: boolean
           last_order_at?: string | null
+          loyalty_points?: number
           name?: string
+          notes?: string | null
           phone?: string
           restaurant_id?: string
+          source?: string
+          tags?: Json
           total_orders?: number | null
           total_spent?: number | null
+          updated_at?: string
+          whatsapp_opt_in?: boolean
         }
         Relationships: [
           {
@@ -1570,33 +1606,36 @@ export type Database = {
         Args: { p_restaurant_id: string; p_user_id: string }
         Returns: undefined
       }
-      upsert_public_customer: {
+      upsert_public_customer:
+        | {
+            Args: {
+              p_email?: string
+              p_name: string
+              p_phone: string
+              p_restaurant_id: string
+            }
+            Returns: string
+          }
+        | {
+            Args: {
+              p_email?: string
+              p_name: string
+              p_phone: string
+              p_restaurant_id: string
+              p_source?: string
+            }
+            Returns: string
+          }
+      validate_public_coupon: {
         Args: {
-          p_email?: string
-          p_name: string
-          p_phone: string
+          p_code: string
+          p_customer_id?: string
+          p_phone?: string
           p_restaurant_id: string
+          p_subtotal?: number
         }
-        Returns: string
+        Returns: Json
       }
-      validate_public_coupon:
-        | {
-            Args: {
-              p_code: string
-              p_restaurant_id: string
-              p_subtotal?: number
-            }
-            Returns: Json
-          }
-        | {
-            Args: {
-              p_code: string
-              p_customer_id?: string
-              p_restaurant_id: string
-              p_subtotal?: number
-            }
-            Returns: Json
-          }
     }
     Enums: {
       app_role: "super_admin" | "owner" | "employee" | "manager"
