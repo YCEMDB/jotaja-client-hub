@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import {
   LayoutDashboard, ShoppingBag, UtensilsCrossed, Users, Settings, LogOut,
-  Tags, Truck, BarChart3, ShieldCheck, ShoppingCart, Wallet,
+  Tags, Truck, BarChart3, ShieldCheck, ShoppingCart, Wallet, Monitor, Cog,
   PanelLeftClose, PanelLeftOpen, Menu, ChevronRight, User as UserIcon,
 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -29,6 +29,7 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { to: "/admin", label: "Painel", icon: LayoutDashboard, exact: true },
       { to: "/admin/pedidos", label: "Pedidos", icon: ShoppingBag },
+      { to: "/admin/kds", label: "KDS", icon: Monitor },
       { to: "/admin/pdv", label: "PDV Manual", icon: ShoppingCart },
       { to: "/admin/caixa", label: "Caixa", icon: Wallet },
     ],
@@ -57,6 +58,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: "Sistema",
     items: [
+      { to: "/admin/operacoes", label: "Operações", icon: Cog },
       { to: "/admin/configuracoes", label: "Configurações", icon: Settings },
     ],
   },
