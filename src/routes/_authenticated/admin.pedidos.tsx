@@ -241,11 +241,15 @@ function PedidosPage() {
   const advance = async (o: Order) => {
     let next = NEXT_STATUS[o.status];
     if (!next) return;
-    // Pickup / dine_in pula "saiu p/ entrega" e vai direto pra "delivered"
     if (o.status === "ready" && (o.type === "pickup" || o.type === "dine_in")) {
       next = "delivered";
     }
-    const { error } = await supabase.from("orders").update({ status: next }).eq("id", o.id);
+    const { error } = await supabase.rpc("update_order_status", {
+      p_order_id: o.id,
+      p_new_status: next,
+      p_source: "panel",
+      p_reason: undefined,
+    });
     if (error) return toast.error(error.message);
     toast.success(`Pedido #${o.order_number} avançado`);
     if (selected?.id === o.id) setSelected({ ...o, status: next });
@@ -253,9 +257,16 @@ function PedidosPage() {
 
   const cancel = async (o: Order) => {
     if (!confirm(`Cancelar pedido #${o.order_number}?`)) return;
-    await supabase.from("orders").update({ status: "cancelled" as OrderStatus }).eq("id", o.id);
+    const { error } = await supabase.rpc("update_order_status", {
+      p_order_id: o.id,
+      p_new_status: "cancelled" as OrderStatus,
+      p_source: "panel",
+      p_reason: "cancelled_by_panel",
+    });
+    if (error) return toast.error(error.message);
     setSelected(null);
   };
+
 
   const markPaid = async (o: Order) => {
     const { error } = await supabase.from("orders")
