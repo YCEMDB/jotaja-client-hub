@@ -268,9 +268,11 @@ function HorariosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
             <option value="force_open">Forçar aberto</option>
             <option value="force_closed">Forçar fechado</option>
           </select>
-          <p className="text-xs text-muted-foreground mt-1">
-            No modo automático, a loja abre/fecha sozinha conforme o horário abaixo.
-          </p>
+          <div className="text-xs text-muted-foreground mt-1 space-y-0.5">
+            <p><strong>Automático:</strong> abre e fecha sozinho conforme o calendário abaixo.</p>
+            <p><strong>Forçar aberto:</strong> aceita pedidos mesmo fora do horário.</p>
+            <p><strong>Forçar fechado:</strong> bloqueia pedidos independente do horário.</p>
+          </div>
         </div>
         <div>
           <Label>Fuso horário</Label>
