@@ -61,7 +61,8 @@ function Onboarding() {
       toast.error(error.message);
       return;
     }
-    await supabase.from("user_roles").insert({ user_id: user.id, role: "owner", restaurant_id: data.id });
+    // Owner role é sincronizado automaticamente via trigger sync_owner_role (Sprint 2.2.a).
+    // restaurants.owner_id é a fonte única de verdade.
     await supabase.from("profiles").update({ restaurant_id: data.id }).eq("id", user.id);
     await refreshProfile();
     toast.success("Restaurante criado!");
