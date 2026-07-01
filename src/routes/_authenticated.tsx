@@ -249,8 +249,11 @@ function AuthLayout() {
   const blocked = useMemo(() => {
     if (!activeRestaurant || isSuperAdmin) return null;
     if (activeRestaurant.is_active === false) {
-      const isTrial = activeRestaurant.plan === "trial";
-      return { reason: isTrial ? ("trial" as const) : ("subscription" as const) };
+      // Trial expirado = tinha trial_ends_at e já venceu. Sem trial_ends_at
+      // ou com data futura → bloqueio é de assinatura.
+      const hadTrial = !!activeRestaurant.trial_ends_at;
+      const trialExpired = hadTrial && new Date(activeRestaurant.trial_ends_at as string).getTime() <= Date.now();
+      return { reason: trialExpired ? ("trial" as const) : ("subscription" as const) };
     }
     return null;
   }, [activeRestaurant, isSuperAdmin]);

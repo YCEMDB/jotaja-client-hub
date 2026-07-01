@@ -13,6 +13,7 @@ import { Plus, Trash2, Upload, Copy, Check, Printer, MapPin, Eye, EyeOff, Shield
 import { Badge } from "@/components/ui/badge";
 import { useServerFn } from "@tanstack/react-start";
 import { verifyMercadoPago } from "@/lib/payments.functions";
+import { FeatureGate } from "@/components/FeatureGate";
 import { toast } from "sonner";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
@@ -86,8 +87,8 @@ function ConfigPage() {
         <TabsContent value="horarios"><HorariosTab r={r} onSaved={load} /></TabsContent>
         <TabsContent value="entrega"><AreasTab areas={areas} restaurantId={restaurantId} onSaved={load} /></TabsContent>
         <TabsContent value="retirada"><RetiradaTab r={r} onSaved={load} /></TabsContent>
-        <TabsContent value="impressao"><ImpressaoTab r={r} onSaved={load} /></TabsContent>
-        <TabsContent value="pagamentos"><PagamentosTab r={r} onSaved={load} /></TabsContent>
+        <TabsContent value="impressao"><FeatureGate feature="auto_print"><ImpressaoTab r={r} onSaved={load} /></FeatureGate></TabsContent>
+        <TabsContent value="pagamentos"><FeatureGate feature="online_payment"><PagamentosTab r={r} onSaved={load} /></FeatureGate></TabsContent>
       </Tabs>
     </div>
   );

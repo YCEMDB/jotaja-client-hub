@@ -81,7 +81,7 @@ const groups: Group[] = [
       { q: "Posso recusar um pedido?", aShort: "Sim, com motivo.", aLong: "Recusa com motivo registrado (produto em falta, fora do horário, fora da área). Cliente é notificado." },
       { q: "Tem PDV para o salão?", aShort: "Sim, embutido.", aLong: "PDV para vendas no balcão sem QR, com pagamento na hora e impressão de comprovante." },
       { q: "Tem fechamento de caixa?", aShort: "Sim, automático.", aLong: "Relatório diário com total vendido, por forma de pagamento, por canal (salão/delivery/retirada), top produtos e ticket médio." },
-      { q: "Quantos usuários posso ter?", aShort: "Ilimitados no Pro.", aLong: "Cadastra-se quantos garçons, caixas e gerentes precisar, com perfis de acesso diferentes." },
+      { q: "Quantos usuários posso ter?", aShort: "1 no Starter, 5 no Pro, ilimitados no Business.", aLong: "Cada usuário tem seu próprio login e perfil de acesso (administrador, gerente, caixa, garçom, cozinha, entregador). Os limites por plano seguem o contrato: Starter 1 usuário, Pro até 5, Business ilimitados." },
     ],
   },
   {

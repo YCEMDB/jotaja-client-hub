@@ -123,9 +123,9 @@ function LeadsPage() {
                       <Button size="sm" variant="outline" onClick={() => setStatus(l, "contacted")} disabled={l.status === "contacted"}>Contatado</Button>
                       <Button size="sm" variant="outline" onClick={() => setStatus(l, "rejected")} disabled={l.status === "rejected"}>Recusar</Button>
                       <Button size="sm" variant="ghost" onClick={() => { setNoteEditing(l); setNoteText(l.notes ?? ""); }}>Nota</Button>
-                      <a href={`https://wa.me/55${l.phone.replace(/\D/g, "")}`} target="_blank" rel="noopener noreferrer">
-                        <Button size="sm" variant="ghost">WhatsApp</Button>
-                      </a>
+                      <Button size="sm" variant="ghost" asChild>
+                        <a href={`https://wa.me/55${l.phone.replace(/\D/g, "")}`} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                      </Button>
                     </div>
                   </td>
                 </tr>

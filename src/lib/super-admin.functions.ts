@@ -346,17 +346,23 @@ export const getGlobalMetrics = createServerFn({ method: "POST" })
     let ordersQ = supabaseAdmin.from("orders").select("restaurant_id,total,status,created_at").gte("created_at", start30.toISOString());
     if (filterId) ordersQ = ordersQ.eq("restaurant_id", filterId);
     const [{ data: rests }, { data: orders30 }] = await Promise.all([
-      supabaseAdmin.from("restaurants").select("id,name,plan,is_active,trial_ends_at").order("name"),
+      supabaseAdmin.from("restaurants").select("id,name,plan_id,is_active,trial_ends_at").order("name"),
       ordersQ,
     ]);
+
+    const nowMs = Date.now();
+    const isTrial = (r: any) => !!r.trial_ends_at && new Date(r.trial_ends_at).getTime() > nowMs;
 
     const restaurants = rests ?? [];
     const totalStores = restaurants.length;
     const activeStores = restaurants.filter((r: any) => r.is_active).length;
-    const trialStores = restaurants.filter((r: any) => r.plan === "trial").length;
+    const trialStores = restaurants.filter(isTrial).length;
 
-    const planValues: Record<string, number> = { trial: 0, essential: 99, professional: 199 };
-    const mrr = restaurants.filter((r: any) => r.is_active).reduce((s: number, r: any) => s + (planValues[r.plan] ?? 0), 0);
+    // Preço mensal por tier real (plan_id). Trial ativo não conta MRR.
+    const planValues: Record<string, number> = { starter: 97, pro: 199, business: 399 };
+    const mrr = restaurants
+      .filter((r: any) => r.is_active && !isTrial(r))
+      .reduce((s: number, r: any) => s + (planValues[r.plan_id ?? "starter"] ?? 0), 0);
 
     const validOrders = (orders30 ?? []).filter((o: any) => o.status !== "cancelled");
     const ordersToday = validOrders.filter((o: any) => new Date(o.created_at) >= startToday);
@@ -391,9 +397,9 @@ export const getGlobalMetrics = createServerFn({ method: "POST" })
       .slice(0, 5)
       .map(([id, revenue]) => ({ id, name: (restMap.get(id) as any)?.name ?? "—", revenue }));
 
-    // Trials expiring within 7 days
+    // Trials expiring within 7 days (baseado em trial_ends_at, não no enum legado)
     const expiringTrials = restaurants
-      .filter((r: any) => r.plan === "trial" && r.trial_ends_at && new Date(r.trial_ends_at) <= trialSoon && new Date(r.trial_ends_at) >= now)
+      .filter((r: any) => r.trial_ends_at && new Date(r.trial_ends_at) <= trialSoon && new Date(r.trial_ends_at) >= now)
       .map((r: any) => ({ id: r.id, name: r.name, trial_ends_at: r.trial_ends_at }))
       .sort((a: any, b: any) => a.trial_ends_at.localeCompare(b.trial_ends_at));
 

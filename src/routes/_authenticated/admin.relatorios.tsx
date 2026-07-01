@@ -8,11 +8,20 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Download, Printer, FileText } from "lucide-react";
 import { downloadCSV, printReportHTML } from "@/lib/export-csv";
+import { FeatureGate } from "@/components/FeatureGate";
 
 export const Route = createFileRoute("/_authenticated/admin/relatorios")({
-  component: RelatoriosPage,
+  component: RelatoriosPageGated,
   head: () => ({ meta: [{ title: "Relatórios — Comandex" }] }),
 });
+
+function RelatoriosPageGated() {
+  return (
+    <FeatureGate feature="advanced_reports">
+      <RelatoriosPage />
+    </FeatureGate>
+  );
+}
 
 type OrderRow = {
   id: string;
