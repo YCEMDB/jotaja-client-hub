@@ -534,51 +534,46 @@ function CheckoutDialog({
       }
     }
 
-    const { data: order, error: oErr } = await supabase
-      .from("orders")
-      .insert({
-        restaurant_id: restaurant.id,
-        customer_id: custId,
-        customer_name: name.trim(),
-        customer_phone: phone.trim(),
-        type: orderType,
-        payment,
-        status: "pending",
-        subtotal,
-        delivery_fee: finalShipping,
-        discount: coupon?.type === "free_shipping" ? 0 : discount,
-        total,
-        coupon_code: coupon?.code ?? null,
-        estimated_minutes: area?.estimated_minutes ?? null,
-        change_for: payment === "cash" && changeFor ? Number(changeFor) : null,
-        notes: notes.trim() || null,
-        delivery_address: orderType === "delivery"
-          ? { street, number, neighborhood: area?.neighborhood ?? null, complement: complement || null }
-          : null,
-      })
-      .select("id").single();
-
-    if (oErr || !order) {
-      setSubmitting(false);
-      if (oErr?.message?.includes("plan_limit_reached")) {
-        return toast.error("Esta loja atingiu o limite de pedidos do mês. Tente novamente em breve.");
-      }
-      return toast.error(oErr?.message ?? "Erro ao criar pedido");
-    }
-
     const itemsPayload = cart.map((i) => ({
-      order_id: order.id,
       product_id: i.product.id,
       product_name: i.product.name,
       quantity: i.qty,
       unit_price: Number(i.product.promo_price ?? i.product.price),
       subtotal: Number(i.product.promo_price ?? i.product.price) * i.qty,
     }));
-    const { error: iErr } = await supabase.from("order_items").insert(itemsPayload);
-    if (iErr) {
+
+    const { data: rpcData, error: oErr } = await supabase.rpc("create_public_order", {
+      p_restaurant_id: restaurant.id,
+      p_customer_id: custId,
+      p_customer_name: name.trim(),
+      p_customer_phone: phone.trim(),
+      p_type: orderType,
+      p_payment: payment,
+      p_subtotal: subtotal,
+      p_delivery_fee: finalShipping,
+      p_discount: coupon?.type === "free_shipping" ? 0 : discount,
+      p_total: total,
+      p_coupon_code: coupon?.code ?? null,
+      p_estimated_minutes: area?.estimated_minutes ?? null,
+      p_change_for: payment === "cash" && changeFor ? Number(changeFor) : null,
+      p_notes: notes.trim() || null,
+      p_delivery_address:
+        orderType === "delivery"
+          ? { street, number, neighborhood: area?.neighborhood ?? null, complement: complement || null }
+          : null,
+      p_items: itemsPayload,
+    } as never);
+
+
+    if (oErr || !rpcData) {
       setSubmitting(false);
-      return toast.error(iErr.message);
+      if (oErr?.message?.includes("plan_limit_reached")) {
+        return toast.error("Esta loja atingiu o limite de pedidos do mês. Tente novamente em breve.");
+      }
+      return toast.error(oErr?.message ?? "Erro ao criar pedido");
     }
+    const order = rpcData as { id: string; order_number: number };
+
 
     if (coupon) {
       await supabase.from("coupons").update({ uses_count: (coupon.uses_count ?? 0) + 1 }).eq("id", coupon.id);

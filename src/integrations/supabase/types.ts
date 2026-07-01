@@ -1337,10 +1337,32 @@ export type Database = {
       }
     }
     Functions: {
+      create_public_order: {
+        Args: {
+          p_change_for: number
+          p_coupon_code: string
+          p_customer_id: string
+          p_customer_name: string
+          p_customer_phone: string
+          p_delivery_address: Json
+          p_delivery_fee: number
+          p_discount: number
+          p_estimated_minutes: number
+          p_items: Json
+          p_notes: string
+          p_payment: string
+          p_restaurant_id: string
+          p_subtotal: number
+          p_total: number
+          p_type: string
+        }
+        Returns: Json
+      }
       delete_email: {
         Args: { message_id: number; queue_name: string }
         Returns: boolean
       }
+      email_queue_dispatch: { Args: never; Returns: undefined }
       enqueue_email: {
         Args: { payload: Json; queue_name: string }
         Returns: number
