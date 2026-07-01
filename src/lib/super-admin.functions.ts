@@ -104,12 +104,8 @@ export const createTenant = createServerFn({ method: "POST" })
       .single();
     if (restErr) throw new Response(restErr.message, { status: 500 });
 
-    // 4. Insert role (owner) for that restaurant
-    await supabaseAdmin.from("user_roles").insert({
-      user_id: ownerId!,
-      role: "owner",
-      restaurant_id: rest.id,
-    });
+    // 4. Owner role é sincronizado automaticamente pelo trigger sync_owner_role
+    //    (Sprint 2.2.a — restaurants.owner_id é a fonte única de verdade).
 
     // 5. Update lead if provided
     if (data.lead_id) {
