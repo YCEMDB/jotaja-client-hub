@@ -52,6 +52,36 @@ type OrderItem = {
   options: any;
 };
 
+type HistoryEntry = {
+  id: string;
+  from_status: OrderStatus | null;
+  to_status: OrderStatus;
+  source: string;
+  reason: string | null;
+  changed_by: string | null;
+  actor_name: string | null;
+  actor_email: string | null;
+  created_at: string;
+};
+
+const STATUS_LABEL: Record<OrderStatus, string> = {
+  pending: "Aguardando",
+  confirmed: "Confirmado",
+  preparing: "Em preparo",
+  ready: "Pronto",
+  out_for_delivery: "Saiu p/ entrega",
+  delivered: "Entregue",
+  cancelled: "Cancelado",
+};
+
+const SOURCE_LABEL: Record<string, string> = {
+  panel: "Painel",
+  pdv: "PDV",
+  system: "Sistema",
+  webhook: "Webhook",
+  customer: "Cliente",
+};
+
 type ColKey = "new" | "preparing" | "ready_delivery" | "ready_pickup" | "out" | "delivered" | "cancelled";
 
 type ColumnDef = {
