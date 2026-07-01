@@ -27,7 +27,8 @@ interface OrderRow {
 }
 
 const COLORS = ["#ff6b35", "#e84393", "#7c5cff", "#f7931e", "#10b981", "#1a1a1a"];
-const ACCENTS = ["bg-brand-orange", "bg-brand-magenta", "bg-brand-violet", "bg-brand-amber"] as const;
+const ACCENTS = ["orange", "magenta", "violet", "amber"] as const;
+
 
 function Dashboard() {
   const { restaurantId } = useAuth();
