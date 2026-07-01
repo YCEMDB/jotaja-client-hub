@@ -100,7 +100,7 @@ function GeralTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
   const [whatsapp, setWhatsapp] = useState(r.whatsapp ?? "");
   const [phone, setPhone] = useState(r.phone ?? "");
   const [email, setEmail] = useState(r.email ?? "");
-  const [isOpen, setIsOpen] = useState(!!r.is_open);
+  // is_open é legado/depreciado. Regra oficial vive em Horários (open_mode + opening_hours + timezone).
   const [acceptsDelivery, setAcceptsDelivery] = useState(!!r.accepts_delivery);
   const [acceptsPickup, setAcceptsPickup] = useState(!!r.accepts_pickup);
   const [minOrder, setMinOrder] = useState(String(r.min_order_value ?? 0));
@@ -110,7 +110,7 @@ function GeralTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
     setSaving(true);
     const { error } = await supabase.from("restaurants").update({
       name, description: description || null, whatsapp: whatsapp || null,
-      phone: phone || null, email: email || null, is_open: isOpen,
+      phone: phone || null, email: email || null,
       accepts_delivery: acceptsDelivery, accepts_pickup: acceptsPickup,
       min_order_value: Number(minOrder) || 0,
     }).eq("id", r.id);
@@ -132,7 +132,9 @@ function GeralTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
       <div><Label>Pedido mínimo (R$)</Label><Input type="number" step="0.01" value={minOrder} onChange={(e) => setMinOrder(e.target.value)} /></div>
 
       <div className="space-y-3 pt-3 border-t">
-        <Toggle label="Loja aberta agora" value={isOpen} onChange={setIsOpen} />
+        <p className="text-xs text-muted-foreground">
+          Para abrir/fechar a loja, use a aba <strong>Horários</strong> (modos automático, forçar aberto ou forçar fechado).
+        </p>
         <Toggle label="Aceita entrega" value={acceptsDelivery} onChange={setAcceptsDelivery} />
         <Toggle label="Aceita retirada no local" value={acceptsPickup} onChange={setAcceptsPickup} />
       </div>
@@ -266,9 +268,11 @@ function HorariosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
             <option value="force_open">Forçar aberto</option>
             <option value="force_closed">Forçar fechado</option>
           </select>
-          <p className="text-xs text-muted-foreground mt-1">
-            No modo automático, a loja abre/fecha sozinha conforme o horário abaixo.
-          </p>
+          <div className="text-xs text-muted-foreground mt-1 space-y-0.5">
+            <p><strong>Automático:</strong> abre e fecha sozinho conforme o calendário abaixo.</p>
+            <p><strong>Forçar aberto:</strong> aceita pedidos mesmo fora do horário.</p>
+            <p><strong>Forçar fechado:</strong> bloqueia pedidos independente do horário.</p>
+          </div>
         </div>
         <div>
           <Label>Fuso horário</Label>
