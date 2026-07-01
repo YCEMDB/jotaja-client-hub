@@ -87,6 +87,8 @@ import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/l
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
+import { Route as ApiPublicHooksCommunicationWorkerRouteImport } from './routes/api/public/hooks/communication-worker'
+import { Route as ApiPublicHooksCommunicationProviderSettingsIdRouteImport } from './routes/api/public/hooks/communication.$provider.$settingsId'
 
 const TermosRoute = TermosRouteImport.update({
   id: '/termos',
@@ -504,6 +506,18 @@ const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
   path: '/lovable/email/auth/preview',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHooksCommunicationWorkerRoute =
+  ApiPublicHooksCommunicationWorkerRouteImport.update({
+    id: '/api/public/hooks/communication-worker',
+    path: '/api/public/hooks/communication-worker',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicHooksCommunicationProviderSettingsIdRoute =
+  ApiPublicHooksCommunicationProviderSettingsIdRouteImport.update({
+    id: '/api/public/hooks/communication/$provider/$settingsId',
+    path: '/api/public/hooks/communication/$provider/$settingsId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -577,11 +591,13 @@ export interface FileRoutesByFullPath {
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/super/': typeof SuperSuperIndexRoute
+  '/api/public/hooks/communication-worker': typeof ApiPublicHooksCommunicationWorkerRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
   '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
+  '/api/public/hooks/communication/$provider/$settingsId': typeof ApiPublicHooksCommunicationProviderSettingsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -655,11 +671,13 @@ export interface FileRoutesByTo {
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/super': typeof SuperSuperIndexRoute
+  '/api/public/hooks/communication-worker': typeof ApiPublicHooksCommunicationWorkerRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
   '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
+  '/api/public/hooks/communication/$provider/$settingsId': typeof ApiPublicHooksCommunicationProviderSettingsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -736,11 +754,13 @@ export interface FileRoutesById {
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_super/super/': typeof SuperSuperIndexRoute
+  '/api/public/hooks/communication-worker': typeof ApiPublicHooksCommunicationWorkerRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
   '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
+  '/api/public/hooks/communication/$provider/$settingsId': typeof ApiPublicHooksCommunicationProviderSettingsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -816,11 +836,13 @@ export interface FileRouteTypes {
     | '/lovable/email/suppression'
     | '/admin/'
     | '/super/'
+    | '/api/public/hooks/communication-worker'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
     | '/lovable/email/transactional/preview'
     | '/lovable/email/transactional/send'
+    | '/api/public/hooks/communication/$provider/$settingsId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -894,11 +916,13 @@ export interface FileRouteTypes {
     | '/lovable/email/suppression'
     | '/admin'
     | '/super'
+    | '/api/public/hooks/communication-worker'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
     | '/lovable/email/transactional/preview'
     | '/lovable/email/transactional/send'
+    | '/api/public/hooks/communication/$provider/$settingsId'
   id:
     | '__root__'
     | '/'
@@ -974,11 +998,13 @@ export interface FileRouteTypes {
     | '/lovable/email/suppression'
     | '/_authenticated/admin/'
     | '/_super/super/'
+    | '/api/public/hooks/communication-worker'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
     | '/lovable/email/transactional/preview'
     | '/lovable/email/transactional/send'
+    | '/api/public/hooks/communication/$provider/$settingsId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1033,11 +1059,13 @@ export interface RootRouteChildren {
   ApiPublic_domainCheckRoute: typeof ApiPublic_domainCheckRoute
   ApiPublicMercadopagoWebhookRoute: typeof ApiPublicMercadopagoWebhookRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
+  ApiPublicHooksCommunicationWorkerRoute: typeof ApiPublicHooksCommunicationWorkerRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
   LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
   LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
   LovableEmailTransactionalSendRoute: typeof LovableEmailTransactionalSendRoute
+  ApiPublicHooksCommunicationProviderSettingsIdRoute: typeof ApiPublicHooksCommunicationProviderSettingsIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1588,6 +1616,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LovableEmailAuthPreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/communication-worker': {
+      id: '/api/public/hooks/communication-worker'
+      path: '/api/public/hooks/communication-worker'
+      fullPath: '/api/public/hooks/communication-worker'
+      preLoaderRoute: typeof ApiPublicHooksCommunicationWorkerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/communication/$provider/$settingsId': {
+      id: '/api/public/hooks/communication/$provider/$settingsId'
+      path: '/api/public/hooks/communication/$provider/$settingsId'
+      fullPath: '/api/public/hooks/communication/$provider/$settingsId'
+      preLoaderRoute: typeof ApiPublicHooksCommunicationProviderSettingsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -1712,22 +1754,16 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublic_domainCheckRoute: ApiPublic_domainCheckRoute,
   ApiPublicMercadopagoWebhookRoute: ApiPublicMercadopagoWebhookRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
+  ApiPublicHooksCommunicationWorkerRoute:
+    ApiPublicHooksCommunicationWorkerRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
   LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
   LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
   LovableEmailTransactionalSendRoute: LovableEmailTransactionalSendRoute,
+  ApiPublicHooksCommunicationProviderSettingsIdRoute:
+    ApiPublicHooksCommunicationProviderSettingsIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
