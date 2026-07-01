@@ -10,7 +10,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Users, Copy, Trash2, Mail, ShieldAlert } from "lucide-react";
+import { Users, Copy, Trash2, Mail, ShieldAlert, RefreshCw } from "lucide-react";
+
+function translateInviteError(msg: string): string {
+  if (msg.includes("plan_limit_reached")) return "Limite de usuários do plano atingido. Faça upgrade.";
+  if (msg.includes("duplicate_invite")) return "Já existe um convite pendente para este e-mail.";
+  if (msg.includes("already_member")) return "Este usuário já faz parte da equipe.";
+  if (msg.includes("is_owner")) return "Este e-mail é o dono do restaurante.";
+  if (msg.includes("invalid_email")) return "E-mail inválido.";
+  if (msg.includes("forbidden")) return "Você não tem permissão para essa ação.";
+  if (msg.includes("already_accepted_or_missing")) return "Convite não encontrado ou já aceito.";
+  return msg;
+}
 
 export const Route = createFileRoute("/_authenticated/admin/equipe")({
   component: EquipePage,
