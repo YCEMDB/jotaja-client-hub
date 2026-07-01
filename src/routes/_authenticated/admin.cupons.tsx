@@ -132,6 +132,8 @@ function CouponDialog({ open, onOpenChange, editing, restaurantId, onSaved }: {
   const [value, setValue] = useState("");
   const [minOrder, setMinOrder] = useState("");
   const [maxUses, setMaxUses] = useState("");
+  const [maxUsesPerCustomer, setMaxUsesPerCustomer] = useState("");
+  const [startsAt, setStartsAt] = useState("");
   const [expiresAt, setExpiresAt] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -142,12 +144,22 @@ function CouponDialog({ open, onOpenChange, editing, restaurantId, onSaved }: {
       setValue(editing?.value != null ? String(editing.value) : "");
       setMinOrder(editing?.min_order != null ? String(editing.min_order) : "");
       setMaxUses(editing?.max_uses != null ? String(editing.max_uses) : "");
+      setMaxUsesPerCustomer(editing?.max_uses_per_customer != null ? String(editing.max_uses_per_customer) : "");
+      setStartsAt(editing?.starts_at ? editing.starts_at.slice(0, 16) : "");
       setExpiresAt(editing?.expires_at ? editing.expires_at.slice(0, 16) : "");
     }
   }, [open, editing]);
 
   const save = async () => {
     if (!code.trim()) return toast.error("Código obrigatório");
+    if (type === "percentage") {
+      const n = Number(value);
+      if (!(n > 0 && n <= 100)) return toast.error("Percentual entre 1 e 100");
+    }
+    if (type === "fixed" && !(Number(value) > 0)) return toast.error("Valor de desconto inválido");
+    if (startsAt && expiresAt && new Date(startsAt) >= new Date(expiresAt)) {
+      return toast.error("Data de início deve ser antes da expiração");
+    }
     setSaving(true);
     const payload = {
       restaurant_id: restaurantId,
@@ -156,6 +168,8 @@ function CouponDialog({ open, onOpenChange, editing, restaurantId, onSaved }: {
       value: type === "free_shipping" ? 0 : Number(value) || 0,
       min_order: Number(minOrder) || 0,
       max_uses: maxUses ? Number(maxUses) : null,
+      max_uses_per_customer: maxUsesPerCustomer ? Number(maxUsesPerCustomer) : null,
+      starts_at: startsAt ? new Date(startsAt).toISOString() : null,
       expires_at: expiresAt ? new Date(expiresAt).toISOString() : null,
     };
     const { error } = editing
