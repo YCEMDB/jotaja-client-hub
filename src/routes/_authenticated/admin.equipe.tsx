@@ -238,6 +238,9 @@ function EquipePage() {
                     <Button size="sm" variant="outline" onClick={() => copyLink(i.token)}>
                       <Copy className="h-4 w-4 mr-1" /> Link
                     </Button>
+                    <Button size="sm" variant="outline" onClick={() => resendInvite(i.id)}>
+                      <RefreshCw className="h-4 w-4 mr-1" /> Reenviar
+                    </Button>
                     <Button size="sm" variant="ghost" onClick={() => cancelInvite(i.id)}>
                       <Trash2 className="h-4 w-4" />
                     </Button>
