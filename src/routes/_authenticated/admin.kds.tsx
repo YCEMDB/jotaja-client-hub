@@ -90,7 +90,7 @@ function KDSPage() {
     if (!restaurantId) return;
     const { data, error } = await supabase.rpc("get_kds_orders", {
       p_restaurant_id: restaurantId,
-      p_station_id: stationFilter === "all" ? null : stationFilter,
+      p_station_id: stationFilter === "all" ? undefined : stationFilter,
     });
     if (error) { toast.error(translateError(error)); return; }
     const list = (data ?? []) as KdsOrder[];
@@ -179,8 +179,7 @@ function KDSPage() {
     const map = new Map<KdsStatus, KdsOrder[]>();
     COLUMNS.forEach((c) => map.set(c.key, []));
     filtered.forEach((o) => {
-      const col = o.status === "delivered" || o.status === "cancelled" ? null : o.status;
-      if (col && map.has(col)) map.get(col)!.push(o);
+      if (map.has(o.status)) map.get(o.status)!.push(o);
     });
     return map;
   }, [filtered]);

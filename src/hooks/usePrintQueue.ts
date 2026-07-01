@@ -41,7 +41,7 @@ export function usePrintQueueConsumer(restaurantId: string | null | undefined, e
         // Buscar dados do pedido e imprimir
         const { data: order } = await supabase
           .from("orders")
-          .select("*")
+          .select("*, restaurants(name, whatsapp)")
           .eq("id", job.order_id)
           .single();
         const { data: items } = await supabase
@@ -50,7 +50,13 @@ export function usePrintQueueConsumer(restaurantId: string | null | undefined, e
           .eq("order_id", job.order_id);
 
         if (order) {
-          await printReceipt({ order, items: items ?? [] });
+          const rest = (order as { restaurants?: { name?: string; whatsapp?: string | null } }).restaurants;
+          await printReceipt({
+            restaurantName: rest?.name ?? "Restaurante",
+            restaurantPhone: rest?.whatsapp ?? null,
+            order,
+            items: items ?? [],
+          });
         }
 
         await supabase
