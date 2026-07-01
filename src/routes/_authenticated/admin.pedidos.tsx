@@ -293,7 +293,7 @@ function PedidosPage() {
     });
     if (error) return toast.error(error.message);
     toast.success(`Pedido #${o.order_number} avançado`);
-    if (selected?.id === o.id) setSelected({ ...o, status: next });
+    if (selected?.id === o.id) { setSelected({ ...o, status: next }); loadHistory(o.id); }
   };
 
   const cancel = async (o: Order) => {
