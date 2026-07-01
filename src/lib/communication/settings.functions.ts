@@ -129,10 +129,14 @@ export const testCommunicationConnection = createServerFn({ method: "POST" })
 
     await supabaseAdmin.rpc("set_settings_health", {
       p_settings_id: data.id,
-      p_health: result.health as CommHealth,
+      p_health: result.health,
       p_latency_ms: result.latency_ms,
-      p_error: result.error ?? null,
+      p_error: result.error ?? (null as unknown as string),
     });
 
-    return result;
+    return {
+      health: result.health,
+      latency_ms: result.latency_ms,
+      error: result.error ?? null,
+    };
   });
