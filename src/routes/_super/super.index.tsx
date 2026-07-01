@@ -36,26 +36,25 @@ function SuperOverview() {
 
   return (
     <div className="p-4 md:p-6 space-y-6">
-      <div className="flex items-center gap-3 justify-between flex-wrap">
-        <div className="flex items-center gap-3">
-          <BarChart3 className="h-8 w-8 text-brand-violet" />
-          <div>
-            <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight leading-[0.95]">Visão geral</h1>
-            <p className="text-muted-foreground">Métricas globais da plataforma</p>
+      <PageHeader
+        kicker="Super-admin"
+        title="Visão geral"
+        subtitle="Métricas globais da plataforma"
+        accent="violet"
+        actions={
+          <div className="min-w-[220px]">
+            <Select value={storeFilter} onValueChange={setStoreFilter}>
+              <SelectTrigger><SelectValue placeholder="Filtrar por loja" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas as lojas</SelectItem>
+                {(data?.restaurants ?? []).map((r) => (
+                  <SelectItem key={r.id} value={r.id}>{r.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-        </div>
-        <div className="min-w-[240px]">
-          <Select value={storeFilter} onValueChange={setStoreFilter}>
-            <SelectTrigger><SelectValue placeholder="Filtrar por loja" /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todas as lojas</SelectItem>
-              {(data?.restaurants ?? []).map((r) => (
-                <SelectItem key={r.id} value={r.id}>{r.name}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
+        }
+      />
 
       {loading ? (
         <div className="p-4 md:p-8 text-center text-muted-foreground">Carregando métricas…</div>
@@ -64,15 +63,16 @@ function SuperOverview() {
       ) : (
         <>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Card className="p-4"><p className="text-xs text-muted-foreground">Lojas totais</p><p className="text-2xl font-bold">{data.totals.totalStores}</p></Card>
-            <Card className="p-4"><p className="text-xs text-muted-foreground">Lojas ativas</p><p className="text-2xl font-bold">{data.totals.activeStores}</p></Card>
-            <Card className="p-4"><p className="text-xs text-muted-foreground">Em trial</p><p className="text-2xl font-bold text-amber-600">{data.totals.trialStores}</p></Card>
-            <Card className="p-4"><p className="text-xs text-muted-foreground">Pagantes</p><p className="text-2xl font-bold text-emerald-600">{data.totals.payingStores}</p></Card>
-            <Card className="p-4"><p className="text-xs text-muted-foreground">MRR estimado</p><p className="text-2xl font-bold">{fmtMoney(data.totals.mrr)}</p></Card>
-            <Card className="p-4"><p className="text-xs text-muted-foreground">Pedidos hoje</p><p className="text-2xl font-bold">{data.totals.ordersToday}</p></Card>
-            <Card className="p-4"><p className="text-xs text-muted-foreground">Pedidos 7d</p><p className="text-2xl font-bold">{data.totals.ordersWeek}</p></Card>
-            <Card className="p-4"><p className="text-xs text-muted-foreground">GMV mês</p><p className="text-2xl font-bold">{fmtMoney(data.totals.revenueMonth)}</p></Card>
+            <StatCard label="Lojas totais" value={data.totals.totalStores} icon={Store} accent="violet" />
+            <StatCard label="Lojas ativas" value={data.totals.activeStores} icon={CheckCircle2} accent="green" />
+            <StatCard label="Em trial" value={data.totals.trialStores} icon={Clock} accent="amber" />
+            <StatCard label="Pagantes" value={data.totals.payingStores} icon={CreditCard} accent="magenta" />
+            <StatCard label="MRR estimado" value={fmtMoney(data.totals.mrr)} icon={DollarSign} accent="green" />
+            <StatCard label="Pedidos hoje" value={data.totals.ordersToday} icon={ShoppingBag} accent="orange" />
+            <StatCard label="Pedidos 7d" value={data.totals.ordersWeek} icon={TrendingUp} accent="blue" />
+            <StatCard label="GMV mês" value={fmtMoney(data.totals.revenueMonth)} icon={DollarSign} accent="violet" />
           </div>
+
 
           <Card className="p-4">
             <p className="font-semibold mb-3">Pedidos por dia (últimos 30 dias)</p>
