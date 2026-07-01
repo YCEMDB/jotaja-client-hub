@@ -113,12 +113,14 @@ export const processCommunicationQueue = createServerFn({ method: "POST" })
       if (send.ok) {
         await supabaseAdmin.rpc("mark_communication_sent", {
           p_id: row.id,
-          p_provider_message_id: send.provider_message_id ?? null,
+          p_provider_message_id: send.provider_message_id ?? (null as unknown as string),
           p_latency_ms: send.latency_ms,
         });
         await supabaseAdmin.rpc("set_settings_health", {
           p_settings_id: row.settings_id,
-          p_health: "healthy" as CommHealth, p_latency_ms: send.latency_ms, p_error: null,
+          p_health: "healthy",
+          p_latency_ms: send.latency_ms,
+          p_error: null as unknown as string,
         });
         circuitRecord(row.settings_id, true);
       } else {
@@ -130,8 +132,9 @@ export const processCommunicationQueue = createServerFn({ method: "POST" })
         });
         await supabaseAdmin.rpc("set_settings_health", {
           p_settings_id: row.settings_id,
-          p_health: "degraded" as CommHealth,
-          p_latency_ms: send.latency_ms, p_error: send.error_message ?? null,
+          p_health: "degraded",
+          p_latency_ms: send.latency_ms,
+          p_error: send.error_message ?? (null as unknown as string),
         });
         circuitRecord(row.settings_id, false);
       }
