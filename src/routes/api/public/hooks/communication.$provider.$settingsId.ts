@@ -47,14 +47,13 @@ export const Route = createFileRoute("/api/public/hooks/communication/$provider/
           : [];
 
         for (const u of updates) {
-          const patch: Record<string, unknown> = {};
-          if (u.status === "sent")      patch.status = "sent";
-          if (u.status === "delivered") patch.status = "sent";
-          if (u.status === "failed")    patch.status = "failed";
-          if (Object.keys(patch).length === 0) continue;
+          let nextStatus: "sent" | "failed" | null = null;
+          if (u.status === "sent" || u.status === "delivered") nextStatus = "sent";
+          else if (u.status === "failed") nextStatus = "failed";
+          if (!nextStatus) continue;
           await supabaseAdmin
             .from("communication_queue")
-            .update(patch)
+            .update({ status: nextStatus })
             .eq("provider_message_id", u.provider_message_id);
 
           await supabaseAdmin.from("communication_logs").insert({
