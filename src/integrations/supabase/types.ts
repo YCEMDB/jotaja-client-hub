@@ -1689,26 +1689,16 @@ export type Database = {
         }
         Returns: Json
       }
-      upsert_public_customer:
-        | {
-            Args: {
-              p_email?: string
-              p_name: string
-              p_phone: string
-              p_restaurant_id: string
-            }
-            Returns: string
-          }
-        | {
-            Args: {
-              p_email?: string
-              p_name: string
-              p_phone: string
-              p_restaurant_id: string
-              p_source?: string
-            }
-            Returns: string
-          }
+      upsert_public_customer: {
+        Args: {
+          p_email?: string
+          p_name: string
+          p_phone: string
+          p_restaurant_id: string
+          p_source?: string
+        }
+        Returns: string
+      }
       validate_public_coupon: {
         Args: {
           p_code: string
