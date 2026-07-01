@@ -502,6 +502,7 @@ function CheckoutDialog({
       p_restaurant_id: restaurant.id,
       p_code: code,
       p_subtotal: subtotal,
+      p_phone: phone.trim() || null,
     } as never);
     setValidatingCoupon(false);
     const result = data as any;
@@ -511,12 +512,41 @@ function CheckoutDialog({
       if (err === "expired") return toast.error("Cupom expirado");
       if (err === "exhausted") return toast.error("Cupom esgotado");
       if (err === "customer_limit") return toast.error("Você já usou este cupom o máximo de vezes");
+      if (err === "first_purchase_only") return toast.error("Cupom exclusivo para a primeira compra");
       if (err === "min_order") return toast.error(`Cupom requer pedido mínimo de R$ ${Number(result.min_order).toFixed(2)}`);
       return toast.error("Cupom inválido");
+    }
+    if (result.requires_phone) {
+      toast.info("Informe seu telefone para confirmar o cupom de primeira compra.");
     }
     setCoupon(result.coupon as Coupon);
     toast.success("Cupom aplicado!");
   };
+
+  // Preview em tempo real: revalida ao mudar subtotal/telefone quando há cupom aplicado.
+  useEffect(() => {
+    if (!coupon) return;
+    const t = setTimeout(async () => {
+      const { data } = await supabase.rpc("validate_public_coupon", {
+        p_restaurant_id: restaurant.id,
+        p_code: coupon.code,
+        p_subtotal: subtotal,
+        p_phone: phone.trim() || null,
+      } as never);
+      const r = data as any;
+      if (!r?.ok) {
+        setCoupon(null);
+        const err = r?.error;
+        if (err === "first_purchase_only") toast.error("Cupom só vale na primeira compra — removido.");
+        else if (err === "min_order") toast.error(`Cupom removido: pedido abaixo do mínimo (R$ ${Number(r.min_order).toFixed(2)}).`);
+        else if (err === "customer_limit") toast.error("Cupom removido: limite por cliente atingido.");
+        else toast.error("Cupom não é mais válido — removido.");
+      }
+    }, 400);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [subtotal, phone, coupon?.code]);
+
 
   const submit = async () => {
     if (!name.trim() || !phone.trim()) return toast.error("Preencha nome e telefone");
