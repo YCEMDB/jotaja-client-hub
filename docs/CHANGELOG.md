@@ -79,6 +79,16 @@ Registro cronológico de entregas.
 - 100% RLS coverage confirmado.
 - Documentação técnica oficial criada (`/docs`) — este pacote.
 
+## Sprint 2.3 — Hardening Comercial + Produção
+- **Rate limit ad-hoc** (`rate_limit_events` + RPC `rate_limit_check`), aplicado em `create_public_order`.
+- **Mercado Pago:** tabela `mp_webhook_events` com idempotência (event_id UNIQUE), attempts, DLQ e backoff.
+- **Feature Gates backend:** triggers `enforce_plan_product_limit`, `_category_limit`, `_coupon_limit` + defaults nos planos.
+- **CHECK constraints:** opening_hours, open_mode, totais, delivery_address, preços, phone, cupons.
+- **Índices:** order_status_history(order_id, created_at); orders(restaurant_id, status); coupons(restaurant_id, upper(code)).
+- **Erros padronizados:** códigos backend + `src/lib/error-messages.ts` (translateError).
+- **useAuth split:** `src/hooks/useAuthDerived.ts` — useCurrentUser, useCurrentRestaurant, usePermissions, useCurrentPlan.
+- Ver [SPRINT_2_3_REPORT.md](./SPRINT_2_3_REPORT.md).
+
 ---
 
 ## Próximas Entregas
