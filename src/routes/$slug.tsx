@@ -147,7 +147,8 @@ function LojaPage() {
     "--brand-accent": restaurant.accent_color ?? "#FFC627",
   } as React.CSSProperties;
 
-  const openNow = (restaurant.is_open_now ?? restaurant.is_open) === true;
+  // Fonte oficial: is_open_now (calculada no servidor a partir de open_mode + opening_hours + timezone).
+  const openNow = restaurant.is_open_now === true;
 
   return (
     <div className="min-h-screen bg-background" style={themeStyle}>
