@@ -562,7 +562,8 @@ function CheckoutDialog({
           ? { street, number, neighborhood: area?.neighborhood ?? null, complement: complement || null }
           : null,
       p_items: itemsPayload,
-    });
+    } as never);
+
 
     if (oErr || !rpcData) {
       setSubmitting(false);
