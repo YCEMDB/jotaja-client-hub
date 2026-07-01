@@ -40,7 +40,7 @@ export interface HealthCheckResult {
   health: CommHealth;
   latency_ms: number;
   error?: string;
-  info?: Record<string, unknown>;
+  info?: unknown;
 }
 
 export interface InboundStatusUpdate {
