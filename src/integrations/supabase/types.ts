@@ -1504,6 +1504,7 @@ export type Database = {
     Functions: {
       accept_team_invite: { Args: { p_token: string }; Returns: Json }
       cancel_team_invite: { Args: { p_invite_id: string }; Returns: undefined }
+      cleanup_expired_invites: { Args: never; Returns: number }
       create_public_order: {
         Args: {
           p_change_for: number
@@ -1606,6 +1607,7 @@ export type Database = {
         Args: { p_restaurant_id: string; p_user_id: string }
         Returns: undefined
       }
+      resend_team_invite: { Args: { p_invite_id: string }; Returns: Json }
       upsert_public_customer:
         | {
             Args: {

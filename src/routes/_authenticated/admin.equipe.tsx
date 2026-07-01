@@ -10,7 +10,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Users, Copy, Trash2, Mail, ShieldAlert } from "lucide-react";
+import { Users, Copy, Trash2, Mail, ShieldAlert, RefreshCw } from "lucide-react";
+
+function translateInviteError(msg: string): string {
+  if (msg.includes("plan_limit_reached")) return "Limite de usuários do plano atingido. Faça upgrade.";
+  if (msg.includes("duplicate_invite")) return "Já existe um convite pendente para este e-mail.";
+  if (msg.includes("already_member")) return "Este usuário já faz parte da equipe.";
+  if (msg.includes("is_owner")) return "Este e-mail é o dono do restaurante.";
+  if (msg.includes("invalid_email")) return "E-mail inválido.";
+  if (msg.includes("forbidden")) return "Você não tem permissão para essa ação.";
+  if (msg.includes("already_accepted_or_missing")) return "Convite não encontrado ou já aceito.";
+  return msg;
+}
 
 export const Route = createFileRoute("/_authenticated/admin/equipe")({
   component: EquipePage,
@@ -81,9 +92,7 @@ function EquipePage() {
     });
     setSubmitting(false);
     if (error) {
-      toast.error(error.message.includes("plan_limit_reached")
-        ? "Limite de usuários do plano atingido. Faça upgrade."
-        : error.message);
+      toast.error(translateInviteError(error.message));
       return;
     }
     setEmail("");
@@ -102,9 +111,22 @@ function EquipePage() {
     toast.success("Link copiado");
   };
 
+  const resendInvite = async (id: string) => {
+    const { data, error } = await supabase.rpc("resend_team_invite", { p_invite_id: id });
+    if (error) return toast.error(translateInviteError(error.message));
+    const token = (data as any)?.token;
+    if (token) {
+      const link = `${window.location.origin}/aceitar-convite/${token}`;
+      await navigator.clipboard.writeText(link).catch(() => {});
+    }
+    toast.success("Convite renovado por mais 7 dias. Link copiado.");
+    load();
+  };
+
   const cancelInvite = async (id: string) => {
+    if (!confirm("Cancelar este convite?")) return;
     const { error } = await supabase.rpc("cancel_team_invite", { p_invite_id: id });
-    if (error) return toast.error(error.message);
+    if (error) return toast.error(translateInviteError(error.message));
     toast.success("Convite cancelado");
     load();
   };
@@ -215,6 +237,9 @@ function EquipePage() {
                   <div className="flex items-center gap-2 shrink-0">
                     <Button size="sm" variant="outline" onClick={() => copyLink(i.token)}>
                       <Copy className="h-4 w-4 mr-1" /> Link
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={() => resendInvite(i.id)}>
+                      <RefreshCw className="h-4 w-4 mr-1" /> Reenviar
                     </Button>
                     <Button size="sm" variant="ghost" onClick={() => cancelInvite(i.id)}>
                       <Trash2 className="h-4 w-4" />
