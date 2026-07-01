@@ -147,6 +147,8 @@
   }
   html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
   }
   body {
     background-color: var(--color-background);
@@ -155,6 +157,31 @@
     font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    min-width: 0;
+  }
+  /* Mídia fluida por padrão — evita overflow horizontal em qualquer viewport */
+  img, video, iframe, canvas {
+    max-width: 100%;
+  }
+  img, video {
+    height: auto;
+  }
+  /* Impede que palavras/URLs longas estourem containers estreitos */
+  p, li, td, th, dd, dt, figcaption, blockquote {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  /* Container: padding menor em mobile, cresce em telas maiores */
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  @media (min-width: 640px) {
+    .container { padding-left: 1.5rem; padding-right: 1.5rem; }
+  }
+  @media (min-width: 1024px) {
+    .container { padding-left: 2rem; padding-right: 2rem; }
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
@@ -162,8 +189,18 @@
     letter-spacing: -0.035em;
     line-height: 0.95;
     text-transform: none;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    hyphens: auto;
   }
   h1 { letter-spacing: -0.05em; }
+
+  /* Alvo de toque mínimo em dispositivos touch (WCAG 2.5.5) */
+  @media (hover: none) and (pointer: coarse) {
+    button:not(.no-min-tap), [role="button"]:not(.no-min-tap) {
+      min-height: 40px;
+    }
+  }
 }
 
 @layer utilities {
