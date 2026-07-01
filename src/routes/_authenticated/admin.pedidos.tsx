@@ -169,6 +169,7 @@ function PedidosPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [selected, setSelected] = useState<Order | null>(null);
   const [items, setItems] = useState<OrderItem[]>([]);
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [restaurant, setRestaurant] = useState<{ name: string; phone: string | null } | null>(null);
   const [notifEnabled, setNotifEnabled] = useState(false);
