@@ -212,6 +212,475 @@ export type Database = {
           },
         ]
       }
+      communication_event_bindings: {
+        Row: {
+          channel: Database["public"]["Enums"]["comm_channel"]
+          conditions: Json
+          created_at: string
+          event_name: string
+          id: string
+          is_active: boolean
+          restaurant_id: string
+          settings_id: string | null
+          template_id: string
+          updated_at: string
+        }
+        Insert: {
+          channel: Database["public"]["Enums"]["comm_channel"]
+          conditions?: Json
+          created_at?: string
+          event_name: string
+          id?: string
+          is_active?: boolean
+          restaurant_id: string
+          settings_id?: string | null
+          template_id: string
+          updated_at?: string
+        }
+        Update: {
+          channel?: Database["public"]["Enums"]["comm_channel"]
+          conditions?: Json
+          created_at?: string
+          event_name?: string
+          id?: string
+          is_active?: boolean
+          restaurant_id?: string
+          settings_id?: string | null
+          template_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "communication_event_bindings_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "communication_event_bindings_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "communication_event_bindings_settings_id_fkey"
+            columns: ["settings_id"]
+            isOneToOne: false
+            referencedRelation: "communication_settings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "communication_event_bindings_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "communication_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      communication_logs: {
+        Row: {
+          attempt: number
+          created_at: string
+          direction: Database["public"]["Enums"]["comm_log_direction"]
+          error: string | null
+          id: number
+          latency_ms: number | null
+          queue_id: string | null
+          raw_request: Json | null
+          raw_response: Json | null
+          restaurant_id: string
+          settings_id: string | null
+          status: string
+        }
+        Insert: {
+          attempt?: number
+          created_at?: string
+          direction: Database["public"]["Enums"]["comm_log_direction"]
+          error?: string | null
+          id?: number
+          latency_ms?: number | null
+          queue_id?: string | null
+          raw_request?: Json | null
+          raw_response?: Json | null
+          restaurant_id: string
+          settings_id?: string | null
+          status: string
+        }
+        Update: {
+          attempt?: number
+          created_at?: string
+          direction?: Database["public"]["Enums"]["comm_log_direction"]
+          error?: string | null
+          id?: number
+          latency_ms?: number | null
+          queue_id?: string | null
+          raw_request?: Json | null
+          raw_response?: Json | null
+          restaurant_id?: string
+          settings_id?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "communication_logs_queue_id_fkey"
+            columns: ["queue_id"]
+            isOneToOne: false
+            referencedRelation: "communication_queue"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "communication_logs_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "communication_logs_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "communication_logs_settings_id_fkey"
+            columns: ["settings_id"]
+            isOneToOne: false
+            referencedRelation: "communication_settings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      communication_providers: {
+        Row: {
+          capabilities: Json
+          channel: Database["public"]["Enums"]["comm_channel"]
+          code: string
+          created_at: string
+          is_active: boolean
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          capabilities?: Json
+          channel: Database["public"]["Enums"]["comm_channel"]
+          code: string
+          created_at?: string
+          is_active?: boolean
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          capabilities?: Json
+          channel?: Database["public"]["Enums"]["comm_channel"]
+          code?: string
+          created_at?: string
+          is_active?: boolean
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      communication_queue: {
+        Row: {
+          attempts: number
+          channel: Database["public"]["Enums"]["comm_channel"]
+          created_at: string
+          error_code: string | null
+          error_message: string | null
+          event_name: string | null
+          id: string
+          idempotency_key: string | null
+          locked_at: string | null
+          locked_by: string | null
+          max_attempts: number
+          next_retry_at: string | null
+          payload: Json
+          provider_message_id: string | null
+          rendered_body: string | null
+          rendered_subject: string | null
+          restaurant_id: string
+          sent_at: string | null
+          settings_id: string | null
+          status: Database["public"]["Enums"]["comm_status"]
+          template_code: string | null
+          template_id: string | null
+          to_address: string
+          updated_at: string
+          variables: Json
+        }
+        Insert: {
+          attempts?: number
+          channel: Database["public"]["Enums"]["comm_channel"]
+          created_at?: string
+          error_code?: string | null
+          error_message?: string | null
+          event_name?: string | null
+          id?: string
+          idempotency_key?: string | null
+          locked_at?: string | null
+          locked_by?: string | null
+          max_attempts?: number
+          next_retry_at?: string | null
+          payload?: Json
+          provider_message_id?: string | null
+          rendered_body?: string | null
+          rendered_subject?: string | null
+          restaurant_id: string
+          sent_at?: string | null
+          settings_id?: string | null
+          status?: Database["public"]["Enums"]["comm_status"]
+          template_code?: string | null
+          template_id?: string | null
+          to_address: string
+          updated_at?: string
+          variables?: Json
+        }
+        Update: {
+          attempts?: number
+          channel?: Database["public"]["Enums"]["comm_channel"]
+          created_at?: string
+          error_code?: string | null
+          error_message?: string | null
+          event_name?: string | null
+          id?: string
+          idempotency_key?: string | null
+          locked_at?: string | null
+          locked_by?: string | null
+          max_attempts?: number
+          next_retry_at?: string | null
+          payload?: Json
+          provider_message_id?: string | null
+          rendered_body?: string | null
+          rendered_subject?: string | null
+          restaurant_id?: string
+          sent_at?: string | null
+          settings_id?: string | null
+          status?: Database["public"]["Enums"]["comm_status"]
+          template_code?: string | null
+          template_id?: string | null
+          to_address?: string
+          updated_at?: string
+          variables?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "communication_queue_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "communication_queue_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "communication_queue_settings_id_fkey"
+            columns: ["settings_id"]
+            isOneToOne: false
+            referencedRelation: "communication_settings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "communication_queue_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "communication_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      communication_secrets: {
+        Row: {
+          api_key: string | null
+          extra: Json
+          settings_id: string
+          token: string | null
+          updated_at: string
+        }
+        Insert: {
+          api_key?: string | null
+          extra?: Json
+          settings_id: string
+          token?: string | null
+          updated_at?: string
+        }
+        Update: {
+          api_key?: string | null
+          extra?: Json
+          settings_id?: string
+          token?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "communication_secrets_settings_id_fkey"
+            columns: ["settings_id"]
+            isOneToOne: true
+            referencedRelation: "communication_settings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      communication_settings: {
+        Row: {
+          channel: Database["public"]["Enums"]["comm_channel"]
+          config: Json
+          created_at: string
+          deleted_at: string | null
+          display_name: string
+          health: Database["public"]["Enums"]["comm_health"]
+          id: string
+          is_active: boolean
+          last_error: string | null
+          last_latency_ms: number | null
+          last_sync_at: string | null
+          provider_code: string
+          restaurant_id: string
+          updated_at: string
+          webhook_secret: string | null
+        }
+        Insert: {
+          channel: Database["public"]["Enums"]["comm_channel"]
+          config?: Json
+          created_at?: string
+          deleted_at?: string | null
+          display_name: string
+          health?: Database["public"]["Enums"]["comm_health"]
+          id?: string
+          is_active?: boolean
+          last_error?: string | null
+          last_latency_ms?: number | null
+          last_sync_at?: string | null
+          provider_code: string
+          restaurant_id: string
+          updated_at?: string
+          webhook_secret?: string | null
+        }
+        Update: {
+          channel?: Database["public"]["Enums"]["comm_channel"]
+          config?: Json
+          created_at?: string
+          deleted_at?: string | null
+          display_name?: string
+          health?: Database["public"]["Enums"]["comm_health"]
+          id?: string
+          is_active?: boolean
+          last_error?: string | null
+          last_latency_ms?: number | null
+          last_sync_at?: string | null
+          provider_code?: string
+          restaurant_id?: string
+          updated_at?: string
+          webhook_secret?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "communication_settings_provider_code_fkey"
+            columns: ["provider_code"]
+            isOneToOne: false
+            referencedRelation: "communication_providers"
+            referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "communication_settings_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "communication_settings_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      communication_templates: {
+        Row: {
+          body: string
+          category: Database["public"]["Enums"]["comm_category"]
+          channel: Database["public"]["Enums"]["comm_channel"]
+          code: string
+          created_at: string
+          deleted_at: string | null
+          id: string
+          is_active: boolean
+          name: string
+          parent_id: string | null
+          restaurant_id: string | null
+          subject: string | null
+          updated_at: string
+          variables: string[]
+          version: number
+        }
+        Insert: {
+          body: string
+          category: Database["public"]["Enums"]["comm_category"]
+          channel: Database["public"]["Enums"]["comm_channel"]
+          code: string
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          parent_id?: string | null
+          restaurant_id?: string | null
+          subject?: string | null
+          updated_at?: string
+          variables?: string[]
+          version?: number
+        }
+        Update: {
+          body?: string
+          category?: Database["public"]["Enums"]["comm_category"]
+          channel?: Database["public"]["Enums"]["comm_channel"]
+          code?: string
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          parent_id?: string | null
+          restaurant_id?: string | null
+          subject?: string | null
+          updated_at?: string
+          variables?: string[]
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "communication_templates_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "communication_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "communication_templates_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "communication_templates_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       coupon_uses: {
         Row: {
           coupon_id: string
@@ -1848,6 +2317,42 @@ export type Database = {
     Functions: {
       accept_team_invite: { Args: { p_token: string }; Returns: Json }
       cancel_team_invite: { Args: { p_invite_id: string }; Returns: undefined }
+      claim_communication_batch: {
+        Args: { p_lock_seconds?: number; p_size?: number; p_worker_id: string }
+        Returns: {
+          attempts: number
+          channel: Database["public"]["Enums"]["comm_channel"]
+          created_at: string
+          error_code: string | null
+          error_message: string | null
+          event_name: string | null
+          id: string
+          idempotency_key: string | null
+          locked_at: string | null
+          locked_by: string | null
+          max_attempts: number
+          next_retry_at: string | null
+          payload: Json
+          provider_message_id: string | null
+          rendered_body: string | null
+          rendered_subject: string | null
+          restaurant_id: string
+          sent_at: string | null
+          settings_id: string | null
+          status: Database["public"]["Enums"]["comm_status"]
+          template_code: string | null
+          template_id: string | null
+          to_address: string
+          updated_at: string
+          variables: Json
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "communication_queue"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       cleanup_expired_invites: { Args: never; Returns: number }
       create_public_order: {
         Args: {
@@ -1883,6 +2388,17 @@ export type Database = {
         Returns: boolean
       }
       email_queue_dispatch: { Args: never; Returns: undefined }
+      enqueue_communication: {
+        Args: {
+          p_channel?: Database["public"]["Enums"]["comm_channel"]
+          p_event: string
+          p_idempotency_key?: string
+          p_restaurant_id: string
+          p_to: string
+          p_variables: Json
+        }
+        Returns: string
+      }
       enqueue_email: {
         Args: { payload: Json; queue_name: string }
         Returns: number
@@ -1957,6 +2473,23 @@ export type Database = {
           user_id: string
         }[]
       }
+      mark_communication_failed: {
+        Args: {
+          p_error_code: string
+          p_error_message: string
+          p_id: string
+          p_retryable: boolean
+        }
+        Returns: undefined
+      }
+      mark_communication_sent: {
+        Args: {
+          p_id: string
+          p_latency_ms: number
+          p_provider_message_id: string
+        }
+        Returns: undefined
+      }
       move_to_dlq: {
         Args: {
           dlq_name: string
@@ -1990,6 +2523,15 @@ export type Database = {
         Returns: undefined
       }
       resend_team_invite: { Args: { p_invite_id: string }; Returns: Json }
+      set_settings_health: {
+        Args: {
+          p_error: string
+          p_health: Database["public"]["Enums"]["comm_health"]
+          p_latency_ms: number
+          p_settings_id: string
+        }
+        Returns: undefined
+      }
       update_order_status: {
         Args: {
           p_new_status: Database["public"]["Enums"]["order_status"]
@@ -2024,6 +2566,32 @@ export type Database = {
       app_role: "super_admin" | "owner" | "employee" | "manager"
       cash_movement_type: "sale" | "reinforcement" | "withdrawal" | "expense"
       cash_session_status: "open" | "closed"
+      comm_category:
+        | "orders"
+        | "payment"
+        | "delivery"
+        | "marketing"
+        | "crm"
+        | "system"
+      comm_channel:
+        | "whatsapp"
+        | "sms"
+        | "email"
+        | "push"
+        | "telegram"
+        | "instagram"
+        | "messenger"
+        | "voice"
+      comm_health: "healthy" | "degraded" | "down" | "unknown"
+      comm_log_direction: "outbound" | "inbound"
+      comm_status:
+        | "pending"
+        | "processing"
+        | "sent"
+        | "failed"
+        | "retrying"
+        | "dead_letter"
+        | "cancelled"
       coupon_type: "percentage" | "fixed" | "free_shipping"
       lead_status: "new" | "contacted" | "approved" | "rejected"
       order_status:
@@ -2168,6 +2736,35 @@ export const Constants = {
       app_role: ["super_admin", "owner", "employee", "manager"],
       cash_movement_type: ["sale", "reinforcement", "withdrawal", "expense"],
       cash_session_status: ["open", "closed"],
+      comm_category: [
+        "orders",
+        "payment",
+        "delivery",
+        "marketing",
+        "crm",
+        "system",
+      ],
+      comm_channel: [
+        "whatsapp",
+        "sms",
+        "email",
+        "push",
+        "telegram",
+        "instagram",
+        "messenger",
+        "voice",
+      ],
+      comm_health: ["healthy", "degraded", "down", "unknown"],
+      comm_log_direction: ["outbound", "inbound"],
+      comm_status: [
+        "pending",
+        "processing",
+        "sent",
+        "failed",
+        "retrying",
+        "dead_letter",
+        "cancelled",
+      ],
       coupon_type: ["percentage", "fixed", "free_shipping"],
       lead_status: ["new", "contacted", "approved", "rejected"],
       order_status: [
