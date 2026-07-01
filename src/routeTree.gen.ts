@@ -56,6 +56,7 @@ import { Route as BlogComoMontarCardapioDigitalCanvaVsPlataformaRouteImport } fr
 import { Route as BlogComoFazerCardapioDigitalWhatsappRouteImport } from './routes/blog.como-fazer-cardapio-digital-whatsapp'
 import { Route as BlogComoFazerCardapioDigitalGratisRouteImport } from './routes/blog.como-fazer-cardapio-digital-gratis'
 import { Route as BlogComoCriarCardapioDigitalQrCodeRouteImport } from './routes/blog.como-criar-cardapio-digital-qr-code'
+import { Route as AceitarConviteTokenRouteImport } from './routes/aceitar-convite.$token'
 import { Route as SuperSuperIndexRouteImport } from './routes/_super/super.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
@@ -72,6 +73,7 @@ import { Route as AuthenticatedAdminRelatoriosRouteImport } from './routes/_auth
 import { Route as AuthenticatedAdminPedidosRouteImport } from './routes/_authenticated/admin.pedidos'
 import { Route as AuthenticatedAdminPdvRouteImport } from './routes/_authenticated/admin.pdv'
 import { Route as AuthenticatedAdminOnboardingRouteImport } from './routes/_authenticated/admin.onboarding'
+import { Route as AuthenticatedAdminEquipeRouteImport } from './routes/_authenticated/admin.equipe'
 import { Route as AuthenticatedAdminEntregadoresRouteImport } from './routes/_authenticated/admin.entregadores'
 import { Route as AuthenticatedAdminCuponsRouteImport } from './routes/_authenticated/admin.cupons'
 import { Route as AuthenticatedAdminConfiguracoesRouteImport } from './routes/_authenticated/admin.configuracoes'
@@ -331,6 +333,11 @@ const BlogComoCriarCardapioDigitalQrCodeRoute =
     path: '/blog/como-criar-cardapio-digital-qr-code',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AceitarConviteTokenRoute = AceitarConviteTokenRouteImport.update({
+  id: '/aceitar-convite/$token',
+  path: '/aceitar-convite/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SuperSuperIndexRoute = SuperSuperIndexRouteImport.update({
   id: '/super/',
   path: '/super/',
@@ -413,6 +420,12 @@ const AuthenticatedAdminOnboardingRoute =
   AuthenticatedAdminOnboardingRouteImport.update({
     id: '/admin/onboarding',
     path: '/admin/onboarding',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedAdminEquipeRoute =
+  AuthenticatedAdminEquipeRouteImport.update({
+    id: '/admin/equipe',
+    path: '/admin/equipe',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 const AuthenticatedAdminEntregadoresRoute =
@@ -507,6 +520,7 @@ export interface FileRoutesByFullPath {
   '/sobre-a-comandahub': typeof SobreAComandahubRoute
   '/suporte': typeof SuporteRoute
   '/termos': typeof TermosRoute
+  '/aceitar-convite/$token': typeof AceitarConviteTokenRoute
   '/blog/como-criar-cardapio-digital-qr-code': typeof BlogComoCriarCardapioDigitalQrCodeRoute
   '/blog/como-fazer-cardapio-digital-gratis': typeof BlogComoFazerCardapioDigitalGratisRoute
   '/blog/como-fazer-cardapio-digital-whatsapp': typeof BlogComoFazerCardapioDigitalWhatsappRoute
@@ -531,6 +545,7 @@ export interface FileRoutesByFullPath {
   '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
   '/admin/cupons': typeof AuthenticatedAdminCuponsRoute
   '/admin/entregadores': typeof AuthenticatedAdminEntregadoresRoute
+  '/admin/equipe': typeof AuthenticatedAdminEquipeRoute
   '/admin/onboarding': typeof AuthenticatedAdminOnboardingRoute
   '/admin/pdv': typeof AuthenticatedAdminPdvRoute
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
@@ -581,6 +596,7 @@ export interface FileRoutesByTo {
   '/sobre-a-comandahub': typeof SobreAComandahubRoute
   '/suporte': typeof SuporteRoute
   '/termos': typeof TermosRoute
+  '/aceitar-convite/$token': typeof AceitarConviteTokenRoute
   '/blog/como-criar-cardapio-digital-qr-code': typeof BlogComoCriarCardapioDigitalQrCodeRoute
   '/blog/como-fazer-cardapio-digital-gratis': typeof BlogComoFazerCardapioDigitalGratisRoute
   '/blog/como-fazer-cardapio-digital-whatsapp': typeof BlogComoFazerCardapioDigitalWhatsappRoute
@@ -605,6 +621,7 @@ export interface FileRoutesByTo {
   '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
   '/admin/cupons': typeof AuthenticatedAdminCuponsRoute
   '/admin/entregadores': typeof AuthenticatedAdminEntregadoresRoute
+  '/admin/equipe': typeof AuthenticatedAdminEquipeRoute
   '/admin/onboarding': typeof AuthenticatedAdminOnboardingRoute
   '/admin/pdv': typeof AuthenticatedAdminPdvRoute
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
@@ -658,6 +675,7 @@ export interface FileRoutesById {
   '/sobre-a-comandahub': typeof SobreAComandahubRoute
   '/suporte': typeof SuporteRoute
   '/termos': typeof TermosRoute
+  '/aceitar-convite/$token': typeof AceitarConviteTokenRoute
   '/blog/como-criar-cardapio-digital-qr-code': typeof BlogComoCriarCardapioDigitalQrCodeRoute
   '/blog/como-fazer-cardapio-digital-gratis': typeof BlogComoFazerCardapioDigitalGratisRoute
   '/blog/como-fazer-cardapio-digital-whatsapp': typeof BlogComoFazerCardapioDigitalWhatsappRoute
@@ -682,6 +700,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
   '/_authenticated/admin/cupons': typeof AuthenticatedAdminCuponsRoute
   '/_authenticated/admin/entregadores': typeof AuthenticatedAdminEntregadoresRoute
+  '/_authenticated/admin/equipe': typeof AuthenticatedAdminEquipeRoute
   '/_authenticated/admin/onboarding': typeof AuthenticatedAdminOnboardingRoute
   '/_authenticated/admin/pdv': typeof AuthenticatedAdminPdvRoute
   '/_authenticated/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
@@ -734,6 +753,7 @@ export interface FileRouteTypes {
     | '/sobre-a-comandahub'
     | '/suporte'
     | '/termos'
+    | '/aceitar-convite/$token'
     | '/blog/como-criar-cardapio-digital-qr-code'
     | '/blog/como-fazer-cardapio-digital-gratis'
     | '/blog/como-fazer-cardapio-digital-whatsapp'
@@ -758,6 +778,7 @@ export interface FileRouteTypes {
     | '/admin/configuracoes'
     | '/admin/cupons'
     | '/admin/entregadores'
+    | '/admin/equipe'
     | '/admin/onboarding'
     | '/admin/pdv'
     | '/admin/pedidos'
@@ -808,6 +829,7 @@ export interface FileRouteTypes {
     | '/sobre-a-comandahub'
     | '/suporte'
     | '/termos'
+    | '/aceitar-convite/$token'
     | '/blog/como-criar-cardapio-digital-qr-code'
     | '/blog/como-fazer-cardapio-digital-gratis'
     | '/blog/como-fazer-cardapio-digital-whatsapp'
@@ -832,6 +854,7 @@ export interface FileRouteTypes {
     | '/admin/configuracoes'
     | '/admin/cupons'
     | '/admin/entregadores'
+    | '/admin/equipe'
     | '/admin/onboarding'
     | '/admin/pdv'
     | '/admin/pedidos'
@@ -884,6 +907,7 @@ export interface FileRouteTypes {
     | '/sobre-a-comandahub'
     | '/suporte'
     | '/termos'
+    | '/aceitar-convite/$token'
     | '/blog/como-criar-cardapio-digital-qr-code'
     | '/blog/como-fazer-cardapio-digital-gratis'
     | '/blog/como-fazer-cardapio-digital-whatsapp'
@@ -908,6 +932,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/configuracoes'
     | '/_authenticated/admin/cupons'
     | '/_authenticated/admin/entregadores'
+    | '/_authenticated/admin/equipe'
     | '/_authenticated/admin/onboarding'
     | '/_authenticated/admin/pdv'
     | '/_authenticated/admin/pedidos'
@@ -961,6 +986,7 @@ export interface RootRouteChildren {
   SobreAComandahubRoute: typeof SobreAComandahubRoute
   SuporteRoute: typeof SuporteRoute
   TermosRoute: typeof TermosRoute
+  AceitarConviteTokenRoute: typeof AceitarConviteTokenRoute
   BlogComoCriarCardapioDigitalQrCodeRoute: typeof BlogComoCriarCardapioDigitalQrCodeRoute
   BlogComoFazerCardapioDigitalGratisRoute: typeof BlogComoFazerCardapioDigitalGratisRoute
   BlogComoFazerCardapioDigitalWhatsappRoute: typeof BlogComoFazerCardapioDigitalWhatsappRoute
@@ -1320,6 +1346,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogComoCriarCardapioDigitalQrCodeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/aceitar-convite/$token': {
+      id: '/aceitar-convite/$token'
+      path: '/aceitar-convite/$token'
+      fullPath: '/aceitar-convite/$token'
+      preLoaderRoute: typeof AceitarConviteTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_super/super/': {
       id: '/_super/super/'
       path: '/super'
@@ -1432,6 +1465,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminOnboardingRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/admin/equipe': {
+      id: '/_authenticated/admin/equipe'
+      path: '/admin/equipe'
+      fullPath: '/admin/equipe'
+      preLoaderRoute: typeof AuthenticatedAdminEquipeRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/admin/entregadores': {
       id: '/_authenticated/admin/entregadores'
       path: '/admin/entregadores'
@@ -1519,6 +1559,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedAdminConfiguracoesRoute: typeof AuthenticatedAdminConfiguracoesRoute
   AuthenticatedAdminCuponsRoute: typeof AuthenticatedAdminCuponsRoute
   AuthenticatedAdminEntregadoresRoute: typeof AuthenticatedAdminEntregadoresRoute
+  AuthenticatedAdminEquipeRoute: typeof AuthenticatedAdminEquipeRoute
   AuthenticatedAdminOnboardingRoute: typeof AuthenticatedAdminOnboardingRoute
   AuthenticatedAdminPdvRoute: typeof AuthenticatedAdminPdvRoute
   AuthenticatedAdminPedidosRoute: typeof AuthenticatedAdminPedidosRoute
@@ -1534,6 +1575,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAdminConfiguracoesRoute: AuthenticatedAdminConfiguracoesRoute,
   AuthenticatedAdminCuponsRoute: AuthenticatedAdminCuponsRoute,
   AuthenticatedAdminEntregadoresRoute: AuthenticatedAdminEntregadoresRoute,
+  AuthenticatedAdminEquipeRoute: AuthenticatedAdminEquipeRoute,
   AuthenticatedAdminOnboardingRoute: AuthenticatedAdminOnboardingRoute,
   AuthenticatedAdminPdvRoute: AuthenticatedAdminPdvRoute,
   AuthenticatedAdminPedidosRoute: AuthenticatedAdminPedidosRoute,
@@ -1598,6 +1640,7 @@ const rootRouteChildren: RootRouteChildren = {
   SobreAComandahubRoute: SobreAComandahubRoute,
   SuporteRoute: SuporteRoute,
   TermosRoute: TermosRoute,
+  AceitarConviteTokenRoute: AceitarConviteTokenRoute,
   BlogComoCriarCardapioDigitalQrCodeRoute:
     BlogComoCriarCardapioDigitalQrCodeRoute,
   BlogComoFazerCardapioDigitalGratisRoute:

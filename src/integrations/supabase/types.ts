@@ -920,6 +920,57 @@ export type Database = {
           },
         ]
       }
+      restaurant_invites: {
+        Row: {
+          accepted_at: string | null
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          invited_by: string | null
+          restaurant_id: string
+          role: Database["public"]["Enums"]["app_role"]
+          token: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_at?: string
+          email: string
+          expires_at?: string
+          id?: string
+          invited_by?: string | null
+          restaurant_id: string
+          role?: Database["public"]["Enums"]["app_role"]
+          token?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          invited_by?: string | null
+          restaurant_id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "restaurant_invites_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "restaurant_invites_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       restaurant_payments: {
         Row: {
           amount: number
@@ -1337,6 +1388,8 @@ export type Database = {
       }
     }
     Functions: {
+      accept_team_invite: { Args: { p_token: string }; Returns: Json }
+      cancel_team_invite: { Args: { p_invite_id: string }; Returns: undefined }
       create_public_order: {
         Args: {
           p_change_for: number
@@ -1355,6 +1408,14 @@ export type Database = {
           p_subtotal: number
           p_total: number
           p_type: string
+        }
+        Returns: Json
+      }
+      create_team_invite: {
+        Args: {
+          p_email: string
+          p_restaurant_id: string
+          p_role?: Database["public"]["Enums"]["app_role"]
         }
         Returns: Json
       }
@@ -1391,6 +1452,21 @@ export type Database = {
         }[]
       }
       get_public_restaurant: { Args: { p_slug: string }; Returns: Json }
+      is_team_owner: {
+        Args: { _restaurant_id: string; _uid: string }
+        Returns: boolean
+      }
+      list_team_members: {
+        Args: { p_restaurant_id: string }
+        Returns: {
+          created_at: string
+          email: string
+          full_name: string
+          is_owner: boolean
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }[]
+      }
       move_to_dlq: {
         Args: {
           dlq_name: string
@@ -1408,6 +1484,10 @@ export type Database = {
           read_ct: number
         }[]
       }
+      remove_team_member: {
+        Args: { p_restaurant_id: string; p_user_id: string }
+        Returns: undefined
+      }
       upsert_public_customer: {
         Args: {
           p_email?: string
@@ -1423,7 +1503,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "super_admin" | "owner" | "employee"
+      app_role: "super_admin" | "owner" | "employee" | "manager"
       cash_movement_type: "sale" | "reinforcement" | "withdrawal" | "expense"
       cash_session_status: "open" | "closed"
       coupon_type: "percentage" | "fixed" | "free_shipping"
@@ -1567,7 +1647,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["super_admin", "owner", "employee"],
+      app_role: ["super_admin", "owner", "employee", "manager"],
       cash_movement_type: ["sale", "reinforcement", "withdrawal", "expense"],
       cash_session_status: ["open", "closed"],
       coupon_type: ["percentage", "fixed", "free_shipping"],
