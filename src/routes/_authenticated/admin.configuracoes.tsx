@@ -100,7 +100,7 @@ function GeralTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
   const [whatsapp, setWhatsapp] = useState(r.whatsapp ?? "");
   const [phone, setPhone] = useState(r.phone ?? "");
   const [email, setEmail] = useState(r.email ?? "");
-  const [isOpen, setIsOpen] = useState(!!r.is_open);
+  // is_open é legado/depreciado. Regra oficial vive em Horários (open_mode + opening_hours + timezone).
   const [acceptsDelivery, setAcceptsDelivery] = useState(!!r.accepts_delivery);
   const [acceptsPickup, setAcceptsPickup] = useState(!!r.accepts_pickup);
   const [minOrder, setMinOrder] = useState(String(r.min_order_value ?? 0));
