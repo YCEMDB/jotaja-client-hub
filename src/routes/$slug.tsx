@@ -48,6 +48,7 @@ type Restaurant = {
   logo_url: string | null; cover_url: string | null;
   primary_color: string | null; accent_color: string | null;
   is_open: boolean | null; min_order_value: number | null;
+  is_open_now?: boolean | null;
   accepts_delivery: boolean | null; accepts_pickup: boolean | null;
   whatsapp: string | null;
   accept_pix_online?: boolean | null;
@@ -146,8 +147,15 @@ function LojaPage() {
     "--brand-accent": restaurant.accent_color ?? "#FFC627",
   } as React.CSSProperties;
 
+  const openNow = (restaurant.is_open_now ?? restaurant.is_open) === true;
+
   return (
     <div className="min-h-screen bg-background" style={themeStyle}>
+      {!openNow && (
+        <div className="bg-brand-magenta text-background text-center py-2 px-3 font-display text-xs sm:text-sm uppercase tracking-wider border-b-2 border-ink">
+          Loja fechada no momento — voltamos em breve
+        </div>
+      )}
       {/* Header — brutalist hero */}
       <div className="relative bg-ink text-background border-b-4 border-brand-orange overflow-hidden">
         <div className="absolute inset-0 bg-noise opacity-50 pointer-events-none" />
@@ -177,9 +185,9 @@ function LojaPage() {
                 <p className="text-xs sm:text-sm md:text-base text-background/70 line-clamp-2 mt-1 sm:mt-1.5">{restaurant.description}</p>
               )}
               <div className="flex items-center gap-2 mt-2 sm:mt-3 text-xs flex-wrap">
-                <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md font-display text-[10px] sm:text-[11px] uppercase tracking-wider border-2 border-background ${restaurant.is_open ? "bg-brand-orange text-ink" : "bg-background/10 text-background/60"}`}>
-                  <span className={`h-1.5 w-1.5 rounded-full ${restaurant.is_open ? "bg-ink animate-pulse" : "bg-background/40"}`} />
-                  {restaurant.is_open ? "Aberto" : "Fechado"}
+                <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md font-display text-[10px] sm:text-[11px] uppercase tracking-wider border-2 border-background ${openNow ? "bg-brand-orange text-ink" : "bg-background/10 text-background/60"}`}>
+                  <span className={`h-1.5 w-1.5 rounded-full ${openNow ? "bg-ink animate-pulse" : "bg-background/40"}`} />
+                  {openNow ? "Aberto" : "Fechado"}
                 </span>
                 {Number(restaurant.min_order_value) > 0 && (
                   <span className="text-background/60 font-bold text-[11px]">Mín. R$ {Number(restaurant.min_order_value).toFixed(2)}</span>
@@ -335,10 +343,10 @@ function LojaPage() {
                 <Button
                   className="w-full h-14 font-display text-base uppercase tracking-wider rounded-xl bg-ink text-background hover:bg-ink/90 border-2 border-ink shadow-[4px_4px_0_0_oklch(0.69_0.22_38)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all disabled:opacity-60"
                   size="lg"
-                  disabled={!restaurant.is_open || subtotal < Number(restaurant.min_order_value ?? 0)}
+                  disabled={!openNow || subtotal < Number(restaurant.min_order_value ?? 0)}
                   onClick={() => setCheckoutOpen(true)}
                 >
-                  {!restaurant.is_open ? "Loja fechada" : `Finalizar pedido • R$ ${subtotal.toFixed(2)}`}
+                  {!openNow ? "Loja fechada" : `Finalizar pedido • R$ ${subtotal.toFixed(2)}`}
                 </Button>
                 <Button
                   type="button"

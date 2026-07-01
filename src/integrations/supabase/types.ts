@@ -1081,6 +1081,7 @@ export type Database = {
           monthly_order_count: number
           mp_public_key: string | null
           name: string
+          open_mode: string
           opening_hours: Json | null
           order_number_seq: number
           owner_id: string
@@ -1092,6 +1093,7 @@ export type Database = {
           primary_color: string | null
           slug: string
           subscription_ends_at: string | null
+          timezone: string
           trial_ends_at: string | null
           updated_at: string
           whatsapp: string | null
@@ -1130,6 +1132,7 @@ export type Database = {
           monthly_order_count?: number
           mp_public_key?: string | null
           name: string
+          open_mode?: string
           opening_hours?: Json | null
           order_number_seq?: number
           owner_id: string
@@ -1141,6 +1144,7 @@ export type Database = {
           primary_color?: string | null
           slug: string
           subscription_ends_at?: string | null
+          timezone?: string
           trial_ends_at?: string | null
           updated_at?: string
           whatsapp?: string | null
@@ -1179,6 +1183,7 @@ export type Database = {
           monthly_order_count?: number
           mp_public_key?: string | null
           name?: string
+          open_mode?: string
           opening_hours?: Json | null
           order_number_seq?: number
           owner_id?: string
@@ -1190,6 +1195,7 @@ export type Database = {
           primary_color?: string | null
           slug?: string
           subscription_ends_at?: string | null
+          timezone?: string
           trial_ends_at?: string | null
           updated_at?: string
           whatsapp?: string | null
@@ -1452,6 +1458,10 @@ export type Database = {
         }[]
       }
       get_public_restaurant: { Args: { p_slug: string }; Returns: Json }
+      is_restaurant_open_now: {
+        Args: { p_restaurant_id: string }
+        Returns: boolean
+      }
       is_team_owner: {
         Args: { _restaurant_id: string; _uid: string }
         Returns: boolean

@@ -231,34 +231,74 @@ function HorariosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
     initial[d.key] = { open: v?.open ?? "18:00", close: v?.close ?? "23:00", closed: v?.closed ?? false };
   });
   const [hours, setHours] = useState(initial);
+  const [openMode, setOpenMode] = useState<string>(r.open_mode ?? "auto");
+  const [tz, setTz] = useState<string>(r.timezone ?? "America/Sao_Paulo");
   const [saving, setSaving] = useState(false);
 
   const save = async () => {
     setSaving(true);
-    const { error } = await supabase.from("restaurants").update({ opening_hours: hours }).eq("id", r.id);
+    const { error } = await supabase.from("restaurants")
+      .update({ opening_hours: hours, open_mode: openMode, timezone: tz })
+      .eq("id", r.id);
     setSaving(false);
     if (error) return toast.error(error.message);
     toast.success("Horários salvos");
     onSaved();
   };
 
+  const TZS = [
+    "America/Sao_Paulo","America/Manaus","America/Belem","America/Fortaleza",
+    "America/Recife","America/Bahia","America/Cuiaba","America/Campo_Grande",
+    "America/Porto_Velho","America/Rio_Branco","America/Noronha",
+  ];
+
   return (
-    <Card className="p-6 space-y-3">
-      {DAYS.map((d) => (
-        <div key={d.key} className="flex items-center gap-3">
-          <span className="w-24 text-sm font-medium">{d.label}</span>
-          <Switch checked={!hours[d.key].closed} onCheckedChange={(v) => setHours({ ...hours, [d.key]: { ...hours[d.key], closed: !v } })} />
-          {!hours[d.key].closed ? (
-            <>
-              <Input type="time" value={hours[d.key].open} onChange={(e) => setHours({ ...hours, [d.key]: { ...hours[d.key], open: e.target.value } })} className="w-32" />
-              <span className="text-muted-foreground">às</span>
-              <Input type="time" value={hours[d.key].close} onChange={(e) => setHours({ ...hours, [d.key]: { ...hours[d.key], close: e.target.value } })} className="w-32" />
-            </>
-          ) : (
-            <span className="text-sm text-muted-foreground">Fechado</span>
-          )}
+    <Card className="p-6 space-y-5">
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div>
+          <Label>Modo de funcionamento</Label>
+          <select
+            value={openMode}
+            onChange={(e) => setOpenMode(e.target.value)}
+            className="mt-1 w-full h-10 rounded-md border border-input bg-background px-3 text-sm"
+          >
+            <option value="auto">Automático (seguir horário)</option>
+            <option value="force_open">Forçar aberto</option>
+            <option value="force_closed">Forçar fechado</option>
+          </select>
+          <p className="text-xs text-muted-foreground mt-1">
+            No modo automático, a loja abre/fecha sozinha conforme o horário abaixo.
+          </p>
         </div>
-      ))}
+        <div>
+          <Label>Fuso horário</Label>
+          <select
+            value={tz}
+            onChange={(e) => setTz(e.target.value)}
+            className="mt-1 w-full h-10 rounded-md border border-input bg-background px-3 text-sm"
+          >
+            {TZS.map((t) => <option key={t} value={t}>{t}</option>)}
+          </select>
+        </div>
+      </div>
+
+      <div className="space-y-3 pt-2 border-t">
+        {DAYS.map((d) => (
+          <div key={d.key} className="flex items-center gap-3 flex-wrap">
+            <span className="w-24 text-sm font-medium">{d.label}</span>
+            <Switch checked={!hours[d.key].closed} onCheckedChange={(v) => setHours({ ...hours, [d.key]: { ...hours[d.key], closed: !v } })} />
+            {!hours[d.key].closed ? (
+              <>
+                <Input type="time" value={hours[d.key].open} onChange={(e) => setHours({ ...hours, [d.key]: { ...hours[d.key], open: e.target.value } })} className="w-32" />
+                <span className="text-muted-foreground">às</span>
+                <Input type="time" value={hours[d.key].close} onChange={(e) => setHours({ ...hours, [d.key]: { ...hours[d.key], close: e.target.value } })} className="w-32" />
+              </>
+            ) : (
+              <span className="text-sm text-muted-foreground">Fechado</span>
+            )}
+          </div>
+        ))}
+      </div>
       <Button onClick={save} disabled={saving} className="mt-4">{saving ? "Salvando…" : "Salvar horários"}</Button>
     </Card>
   );
