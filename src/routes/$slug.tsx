@@ -617,6 +617,7 @@ function CheckoutDialog({
       if (msg.includes("coupon_expired")) return toast.error("Cupom expirado.");
       if (msg.includes("coupon_exhausted")) return toast.error("Cupom esgotado.");
       if (msg.includes("coupon_customer_limit")) return toast.error("Você já usou este cupom o máximo de vezes.");
+      if (msg.includes("coupon_first_purchase_only")) return toast.error("Cupom exclusivo para a primeira compra.");
       if (msg.includes("coupon_min_order")) return toast.error("Pedido não atinge o mínimo para este cupom.");
       if (msg.includes("coupon_invalid")) return toast.error("Cupom inválido.");
       return toast.error(msg || "Erro ao criar pedido");
