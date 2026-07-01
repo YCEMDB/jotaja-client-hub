@@ -1,3 +1,5 @@
+import markUrl from "@/assets/comandex-mark-3d.png";
+
 type LogoProps = {
   className?: string;
   /** Show only the geometric mark (no wordmark) */
@@ -7,13 +9,11 @@ type LogoProps = {
 };
 
 /**
- * Professional Comandex logo lockup.
- * - Geometric mark + wordmark in Archivo Black.
- * - Animations are CSS-driven and only run on instances inside `.animate-logo-in`.
+ * Professional Comandex logo lockup — 3D mark + wordmark.
  */
 export function Logo({ className = "", markOnly = false, size = "md" }: LogoProps) {
   const markSize =
-    size === "sm" ? "h-7" : size === "lg" ? "h-12 md:h-14" : "h-9 md:h-10";
+    size === "sm" ? "h-8" : size === "lg" ? "h-14 md:h-16" : "h-10 md:h-11";
   const wordSize =
     size === "sm"
       ? "text-[1.05rem]"
@@ -26,19 +26,13 @@ export function Logo({ className = "", markOnly = false, size = "md" }: LogoProp
       className={`logo-lockup inline-flex items-center gap-2.5 select-none ${className}`}
       aria-label="Comandex"
     >
-      <svg
-        viewBox="0 0 48 48"
-        className={`logo-mark ${markSize} w-auto shrink-0`}
+      <img
+        src={markUrl}
+        alt=""
         aria-hidden="true"
-      >
-        <rect x="2" y="2" width="44" height="44" rx="11" className="logo-plate" />
-        <g className="logo-bars">
-          <rect x="12" y="13" width="20" height="4.5" rx="2.25" />
-          <rect x="12" y="21.75" width="14" height="4.5" rx="2.25" />
-          <rect x="12" y="30.5" width="20" height="4.5" rx="2.25" />
-        </g>
-        <circle cx="36" cy="24" r="3.25" className="logo-dot" />
-      </svg>
+        className={`logo-mark-3d ${markSize} w-auto shrink-0 object-contain drop-shadow-[0_6px_18px_rgba(255,107,53,0.35)] transition-transform duration-500 ease-out group-hover:-rotate-6 group-hover:scale-105`}
+        draggable={false}
+      />
 
       {!markOnly && (
         <span
@@ -50,3 +44,4 @@ export function Logo({ className = "", markOnly = false, size = "md" }: LogoProp
     </span>
   );
 }
+
