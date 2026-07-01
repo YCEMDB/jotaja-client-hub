@@ -571,6 +571,50 @@ function PedidosPage() {
                   </div>
                 )}
 
+                <div className="border-t pt-3">
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <History className="h-3.5 w-3.5 text-ink/60" />
+                    <span className="text-xs font-bold uppercase tracking-wide text-ink/70">Linha do tempo</span>
+                  </div>
+                  {history.length === 0 ? (
+                    <p className="text-xs text-muted-foreground">Sem histórico registrado.</p>
+                  ) : (
+                    <ol className="relative border-l-2 border-ink/15 pl-4 space-y-3">
+                      {history.map((h, idx) => {
+                        const isLast = idx === history.length - 1;
+                        const cancelled = h.to_status === "cancelled";
+                        return (
+                          <li key={h.id} className="relative">
+                            <span className={`absolute -left-[21px] top-1 h-3 w-3 rounded-full border-2 border-background ${cancelled ? "bg-destructive" : isLast ? "bg-brand-orange" : "bg-ink/40"}`} />
+                            <div className="flex flex-wrap items-center gap-1.5 text-xs">
+                              {h.from_status ? (
+                                <>
+                                  <span className="text-ink/50 line-through">{STATUS_LABEL[h.from_status]}</span>
+                                  <ChevronRight className="h-3 w-3 text-ink/40" />
+                                </>
+                              ) : (
+                                <span className="text-ink/50">Criado</span>
+                              )}
+                              <span className={`font-bold ${cancelled ? "text-destructive" : "text-ink"}`}>{STATUS_LABEL[h.to_status]}</span>
+                              <span className="ml-auto text-[10px] uppercase tracking-wide text-ink/50 font-bold">
+                                {new Date(h.created_at).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}
+                              </span>
+                            </div>
+                            <div className="mt-0.5 text-[11px] text-muted-foreground flex flex-wrap gap-x-2">
+                              <span>{SOURCE_LABEL[h.source] ?? h.source}</span>
+                              {(h.actor_name || h.actor_email) && (
+                                <span>· por {h.actor_name || h.actor_email}</span>
+                              )}
+                              {h.reason && <span>· {h.reason}</span>}
+                            </div>
+                          </li>
+                        );
+                      })}
+                    </ol>
+                  )}
+                </div>
+
+
                 <div className="flex flex-wrap gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => printOrder(selected)}>
                     <Printer className="h-4 w-4 mr-1" />Imprimir
