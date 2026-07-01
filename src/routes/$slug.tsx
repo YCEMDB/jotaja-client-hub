@@ -185,9 +185,9 @@ function LojaPage() {
                 <p className="text-xs sm:text-sm md:text-base text-background/70 line-clamp-2 mt-1 sm:mt-1.5">{restaurant.description}</p>
               )}
               <div className="flex items-center gap-2 mt-2 sm:mt-3 text-xs flex-wrap">
-                <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md font-display text-[10px] sm:text-[11px] uppercase tracking-wider border-2 border-background ${restaurant.is_open ? "bg-brand-orange text-ink" : "bg-background/10 text-background/60"}`}>
-                  <span className={`h-1.5 w-1.5 rounded-full ${restaurant.is_open ? "bg-ink animate-pulse" : "bg-background/40"}`} />
-                  {restaurant.is_open ? "Aberto" : "Fechado"}
+                <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md font-display text-[10px] sm:text-[11px] uppercase tracking-wider border-2 border-background ${openNow ? "bg-brand-orange text-ink" : "bg-background/10 text-background/60"}`}>
+                  <span className={`h-1.5 w-1.5 rounded-full ${openNow ? "bg-ink animate-pulse" : "bg-background/40"}`} />
+                  {openNow ? "Aberto" : "Fechado"}
                 </span>
                 {Number(restaurant.min_order_value) > 0 && (
                   <span className="text-background/60 font-bold text-[11px]">Mín. R$ {Number(restaurant.min_order_value).toFixed(2)}</span>
@@ -343,10 +343,10 @@ function LojaPage() {
                 <Button
                   className="w-full h-14 font-display text-base uppercase tracking-wider rounded-xl bg-ink text-background hover:bg-ink/90 border-2 border-ink shadow-[4px_4px_0_0_oklch(0.69_0.22_38)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all disabled:opacity-60"
                   size="lg"
-                  disabled={!restaurant.is_open || subtotal < Number(restaurant.min_order_value ?? 0)}
+                  disabled={!openNow || subtotal < Number(restaurant.min_order_value ?? 0)}
                   onClick={() => setCheckoutOpen(true)}
                 >
-                  {!restaurant.is_open ? "Loja fechada" : `Finalizar pedido • R$ ${subtotal.toFixed(2)}`}
+                  {!openNow ? "Loja fechada" : `Finalizar pedido • R$ ${subtotal.toFixed(2)}`}
                 </Button>
                 <Button
                   type="button"
