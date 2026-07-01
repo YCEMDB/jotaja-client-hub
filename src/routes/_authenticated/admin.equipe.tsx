@@ -92,9 +92,7 @@ function EquipePage() {
     });
     setSubmitting(false);
     if (error) {
-      toast.error(error.message.includes("plan_limit_reached")
-        ? "Limite de usuários do plano atingido. Faça upgrade."
-        : error.message);
+      toast.error(translateInviteError(error.message));
       return;
     }
     setEmail("");
@@ -113,9 +111,22 @@ function EquipePage() {
     toast.success("Link copiado");
   };
 
+  const resendInvite = async (id: string) => {
+    const { data, error } = await supabase.rpc("resend_team_invite", { p_invite_id: id });
+    if (error) return toast.error(translateInviteError(error.message));
+    const token = (data as any)?.token;
+    if (token) {
+      const link = `${window.location.origin}/aceitar-convite/${token}`;
+      await navigator.clipboard.writeText(link).catch(() => {});
+    }
+    toast.success("Convite renovado por mais 7 dias. Link copiado.");
+    load();
+  };
+
   const cancelInvite = async (id: string) => {
+    if (!confirm("Cancelar este convite?")) return;
     const { error } = await supabase.rpc("cancel_team_invite", { p_invite_id: id });
-    if (error) return toast.error(error.message);
+    if (error) return toast.error(translateInviteError(error.message));
     toast.success("Convite cancelado");
     load();
   };
