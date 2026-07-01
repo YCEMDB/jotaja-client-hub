@@ -248,7 +248,7 @@ function PedidosPage() {
       p_order_id: o.id,
       p_new_status: next,
       p_source: "panel",
-      p_reason: null,
+      p_reason: undefined,
     });
     if (error) return toast.error(error.message);
     toast.success(`Pedido #${o.order_number} avançado`);
