@@ -410,4 +410,113 @@
   @media (prefers-reduced-motion: reduce) {
     .logo-lockup *, .animate-logo-in { animation: none !important; transition: none !important; opacity: 1 !important; transform: none !important; }
   }
+
+  /* ============================================================
+     GLOBAL UPGRADE — cards & buttons (bold Sunset Blaze energy)
+     ============================================================ */
+
+  @keyframes card-in {
+    0% { opacity: 0; transform: translateY(14px) scale(0.985); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes btn-sheen {
+    0% { transform: translateX(-120%) skewX(-20deg); }
+    100% { transform: translateX(220%) skewX(-20deg); }
+  }
+  @keyframes pop-in {
+    0% { opacity: 0; transform: scale(0.92); }
+    60% { opacity: 1; transform: scale(1.02); }
+    100% { transform: scale(1); }
+  }
+  @keyframes glow-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 oklch(0.69 0.22 38 / 0.35); }
+    50%      { box-shadow: 0 0 0 10px oklch(0.69 0.22 38 / 0); }
+  }
+
+  .animate-card-in { animation: card-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .animate-pop-in { animation: pop-in 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+  .animate-glow-pulse { animation: glow-pulse 2.4s ease-in-out infinite; }
+
+  /* --- BOTÕES shadcn: sheen + lift + press --- */
+  button[class*="inline-flex"][class*="rounded-md"],
+  a[class*="inline-flex"][class*="rounded-md"][class*="items-center"] {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+                filter 0.2s ease;
+  }
+  button[class*="inline-flex"][class*="rounded-md"]::after,
+  a[class*="inline-flex"][class*="rounded-md"][class*="items-center"]::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+    transform: translateX(-120%) skewX(-20deg);
+    pointer-events: none;
+    z-index: 1;
+  }
+  button[class*="inline-flex"][class*="rounded-md"]:hover:not(:disabled),
+  a[class*="inline-flex"][class*="rounded-md"][class*="items-center"]:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05) saturate(1.08);
+  }
+  button[class*="inline-flex"][class*="rounded-md"]:hover:not(:disabled)::after,
+  a[class*="inline-flex"][class*="rounded-md"][class*="items-center"]:hover::after {
+    animation: btn-sheen 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  button[class*="inline-flex"][class*="rounded-md"]:active:not(:disabled),
+  a[class*="inline-flex"][class*="rounded-md"][class*="items-center"]:active {
+    transform: translateY(0) scale(0.97);
+    filter: brightness(0.98);
+  }
+
+  button[class*="bg-primary"]:hover:not(:disabled),
+  a[class*="bg-primary"]:hover {
+    box-shadow: var(--shadow-glow);
+  }
+  button[class*="bg-destructive"]:hover:not(:disabled) {
+    box-shadow: 0 20px 60px -10px oklch(0.6 0.24 25 / 0.45);
+  }
+
+  /* --- CARDS shadcn: lift + halo laranja --- */
+  [class*="rounded-xl"][class*="bg-card"][class*="border"],
+  [class*="rounded-lg"][class*="bg-card"][class*="border"] {
+    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+                border-color 0.25s ease;
+    will-change: transform;
+  }
+  [class*="rounded-xl"][class*="bg-card"][class*="border"]:hover,
+  [class*="rounded-lg"][class*="bg-card"][class*="border"]:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 24px 60px -18px oklch(0.15 0.02 30 / 0.25),
+      0 8px 20px -10px oklch(0.69 0.22 38 / 0.22);
+    border-color: color-mix(in oklab, var(--brand-orange) 40%, var(--border));
+  }
+
+  a > [class*="bg-card"][class*="border"]:hover,
+  [role="button"][class*="bg-card"][class*="border"]:hover {
+    box-shadow:
+      0 30px 80px -20px oklch(0.15 0.02 30 / 0.3),
+      var(--shadow-glow);
+  }
+
+  /* Foco visível reforçado */
+  button:focus-visible,
+  a:focus-visible,
+  [role="button"]:focus-visible {
+    outline: 2px solid var(--brand-orange);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    button[class*="inline-flex"]::after,
+    a[class*="inline-flex"]::after { display: none !important; }
+    [class*="bg-card"] { transition: none !important; }
+    [class*="bg-card"]:hover { transform: none !important; }
+  }
 }
