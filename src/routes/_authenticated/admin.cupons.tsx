@@ -210,11 +210,21 @@ function CouponDialog({ open, onOpenChange, editing, restaurantId, onSaved }: {
           )}
           <div className="grid grid-cols-2 gap-3">
             <div><Label>Pedido mín. (R$)</Label><Input type="number" step="0.01" value={minOrder} onChange={(e) => setMinOrder(e.target.value)} /></div>
-            <div><Label>Limite de usos</Label><Input type="number" value={maxUses} onChange={(e) => setMaxUses(e.target.value)} placeholder="Ilimitado" /></div>
+            <div><Label>Limite total de usos</Label><Input type="number" value={maxUses} onChange={(e) => setMaxUses(e.target.value)} placeholder="Ilimitado" /></div>
           </div>
           <div>
-            <Label>Expira em</Label>
-            <Input type="datetime-local" value={expiresAt} onChange={(e) => setExpiresAt(e.target.value)} />
+            <Label>Limite por cliente</Label>
+            <Input type="number" value={maxUsesPerCustomer} onChange={(e) => setMaxUsesPerCustomer(e.target.value)} placeholder="Ilimitado" />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label>Início da validade</Label>
+              <Input type="datetime-local" value={startsAt} onChange={(e) => setStartsAt(e.target.value)} />
+            </div>
+            <div>
+              <Label>Expira em</Label>
+              <Input type="datetime-local" value={expiresAt} onChange={(e) => setExpiresAt(e.target.value)} />
+            </div>
           </div>
         </div>
         <DialogFooter>
