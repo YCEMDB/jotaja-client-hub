@@ -110,7 +110,7 @@ function GeralTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
     setSaving(true);
     const { error } = await supabase.from("restaurants").update({
       name, description: description || null, whatsapp: whatsapp || null,
-      phone: phone || null, email: email || null, is_open: isOpen,
+      phone: phone || null, email: email || null,
       accepts_delivery: acceptsDelivery, accepts_pickup: acceptsPickup,
       min_order_value: Number(minOrder) || 0,
     }).eq("id", r.id);
@@ -132,7 +132,9 @@ function GeralTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
       <div><Label>Pedido mínimo (R$)</Label><Input type="number" step="0.01" value={minOrder} onChange={(e) => setMinOrder(e.target.value)} /></div>
 
       <div className="space-y-3 pt-3 border-t">
-        <Toggle label="Loja aberta agora" value={isOpen} onChange={setIsOpen} />
+        <p className="text-xs text-muted-foreground">
+          Para abrir/fechar a loja, use a aba <strong>Horários</strong> (modos automático, forçar aberto ou forçar fechado).
+        </p>
         <Toggle label="Aceita entrega" value={acceptsDelivery} onChange={setAcceptsDelivery} />
         <Toggle label="Aceita retirada no local" value={acceptsPickup} onChange={setAcceptsPickup} />
       </div>
