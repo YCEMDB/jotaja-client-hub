@@ -1,13 +1,17 @@
-import { createFileRoute, Outlet, Link, useNavigate, useLocation } from "@tanstack/react-router";
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { createFileRoute, Outlet, Link, useNavigate, useLocation, useRouterState } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import {
   LayoutDashboard, ShoppingBag, UtensilsCrossed, Users, Settings, LogOut,
   Tags, Truck, BarChart3, ShieldCheck, ShoppingCart, Wallet,
-  PanelLeftClose, PanelLeftOpen, Menu,
+  PanelLeftClose, PanelLeftOpen, Menu, ChevronRight, User as UserIcon,
 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
+  DropdownMenuSeparator, DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 import { BlockedStoreScreen } from "@/components/BlockedStoreScreen";
 import { GlobalAnnouncementsBanner } from "@/components/GlobalAnnouncementsBanner";
@@ -16,18 +20,48 @@ export const Route = createFileRoute("/_authenticated")({
   component: AuthLayout,
 });
 
-const NAV = [
-  { to: "/admin", label: "Painel", icon: LayoutDashboard },
-  { to: "/admin/pedidos", label: "Pedidos", icon: ShoppingBag },
-  { to: "/admin/pdv", label: "PDV Manual", icon: ShoppingCart },
-  { to: "/admin/caixa", label: "Caixa", icon: Wallet },
-  { to: "/admin/cardapio", label: "Cardápio", icon: UtensilsCrossed },
-  { to: "/admin/cupons", label: "Cupons", icon: Tags },
-  { to: "/admin/entregadores", label: "Entregadores", icon: Truck },
-  { to: "/admin/clientes", label: "Clientes", icon: Users },
-  { to: "/admin/relatorios", label: "Relatórios", icon: BarChart3 },
-  { to: "/admin/configuracoes", label: "Config", icon: Settings },
-] as const;
+type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean };
+type NavGroup = { label: string; items: NavItem[] };
+
+const NAV_GROUPS: NavGroup[] = [
+  {
+    label: "Operação",
+    items: [
+      { to: "/admin", label: "Painel", icon: LayoutDashboard, exact: true },
+      { to: "/admin/pedidos", label: "Pedidos", icon: ShoppingBag },
+      { to: "/admin/pdv", label: "PDV Manual", icon: ShoppingCart },
+      { to: "/admin/caixa", label: "Caixa", icon: Wallet },
+    ],
+  },
+  {
+    label: "Catálogo",
+    items: [
+      { to: "/admin/cardapio", label: "Cardápio", icon: UtensilsCrossed },
+      { to: "/admin/cupons", label: "Cupons", icon: Tags },
+    ],
+  },
+  {
+    label: "Pessoas",
+    items: [
+      { to: "/admin/clientes", label: "Clientes", icon: Users },
+      { to: "/admin/entregadores", label: "Entregadores", icon: Truck },
+    ],
+  },
+  {
+    label: "Insights",
+    items: [
+      { to: "/admin/relatorios", label: "Relatórios", icon: BarChart3 },
+    ],
+  },
+  {
+    label: "Sistema",
+    items: [
+      { to: "/admin/configuracoes", label: "Configurações", icon: Settings },
+    ],
+  },
+];
+
+const ALL_NAV = NAV_GROUPS.flatMap((g) => g.items);
 
 function SidebarBody({
   collapsed,
@@ -35,8 +69,6 @@ function SidebarBody({
   restaurants,
   restaurantId,
   selectRestaurant,
-  userEmail,
-  onSignOut,
   onNavigate,
 }: {
   collapsed: boolean;
@@ -44,8 +76,6 @@ function SidebarBody({
   restaurants: { id: string; name: string }[];
   restaurantId: string | null;
   selectRestaurant: (id: string) => void;
-  userEmail?: string | null;
-  onSignOut: () => void;
   onNavigate?: () => void;
 }) {
   return (
@@ -90,7 +120,7 @@ function SidebarBody({
         </div>
       )}
 
-      <nav className="relative flex-1 p-3 space-y-1.5 overflow-y-auto">
+      <nav className="relative flex-1 p-3 overflow-y-auto">
         {isSuperAdmin && (
           <Link
             to="/super"
@@ -99,40 +129,102 @@ function SidebarBody({
             className={`flex items-center ${collapsed ? "justify-center" : "gap-3"} px-3 py-2.5 rounded-lg text-sm font-bold uppercase tracking-wide hover:bg-background/10 transition-all mb-3 border-2 border-brand-violet/60 text-brand-violet`}
           >
             <ShieldCheck className="h-4 w-4 shrink-0" />
-            {!collapsed && "Ir para Super-Admin"}
+            {!collapsed && "Super-Admin"}
           </Link>
         )}
-        {NAV.map((item) => (
-          <Link
-            key={item.to}
-            to={item.to}
-            onClick={onNavigate}
-            title={item.label}
-            activeOptions={{ exact: item.to === "/admin" }}
-            activeProps={{
-              className: "!bg-brand-orange !text-ink !border-background shadow-[3px_3px_0_0_oklch(0.62_0.24_0)] translate-x-0.5",
-            }}
-            className={`flex items-center ${collapsed ? "justify-center" : "gap-3"} px-3 py-2.5 rounded-lg text-sm font-bold uppercase tracking-wide border-2 border-transparent hover:bg-background/10 transition-all`}
-          >
-            <item.icon className="h-4 w-4 shrink-0" />
-            {!collapsed && item.label}
-          </Link>
+
+        {NAV_GROUPS.map((group) => (
+          <div key={group.label} className="mb-3 last:mb-0">
+            {!collapsed && (
+              <div className="px-3 pb-1.5 pt-1 text-[9px] uppercase tracking-[0.22em] font-bold text-background/40">
+                {group.label}
+              </div>
+            )}
+            <div className="space-y-1">
+              {group.items.map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  onClick={onNavigate}
+                  title={item.label}
+                  activeOptions={{ exact: !!item.exact }}
+                  activeProps={{
+                    className: "!bg-brand-orange !text-ink !border-background shadow-[3px_3px_0_0_oklch(0.62_0.24_0)] translate-x-0.5",
+                  }}
+                  className={`flex items-center ${collapsed ? "justify-center" : "gap-3"} px-3 py-2.5 rounded-lg text-sm font-bold uppercase tracking-wide border-2 border-transparent hover:bg-background/10 transition-all`}
+                >
+                  <item.icon className="h-4 w-4 shrink-0" />
+                  {!collapsed && item.label}
+                </Link>
+              ))}
+            </div>
+          </div>
         ))}
       </nav>
-
-      <div className="relative p-3 border-t-2 border-background/10">
-        {!collapsed && (
-          <div className="px-2 py-1.5 text-[11px] text-background/60 truncate font-medium">{userEmail}</div>
-        )}
-        <button
-          onClick={onSignOut}
-          title="Sair"
-          className={`w-full mt-1 flex items-center ${collapsed ? "justify-center" : "gap-2"} px-3 py-2 rounded-lg text-sm font-bold uppercase tracking-wide text-background/80 hover:bg-destructive hover:text-background border-2 border-transparent hover:border-background transition-all`}
-        >
-          <LogOut className="h-4 w-4 shrink-0" /> {!collapsed && "Sair"}
-        </button>
-      </div>
     </>
+  );
+}
+
+function TopBar({
+  onOpenMobile,
+  userEmail,
+  onSignOut,
+}: {
+  onOpenMobile: () => void;
+  userEmail?: string | null;
+  onSignOut: () => void;
+}) {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const current = ALL_NAV.find((n) => (n.exact ? pathname === n.to : pathname.startsWith(n.to) && n.to !== "/admin")) ??
+    ALL_NAV.find((n) => n.to === "/admin");
+  const groupLabel = NAV_GROUPS.find((g) => g.items.some((i) => i.to === current?.to))?.label ?? "Operação";
+  const initial = (userEmail?.[0] ?? "U").toUpperCase();
+
+  return (
+    <header className="sticky top-0 z-30 flex items-center gap-3 px-4 md:px-6 h-14 md:h-16 bg-background/95 backdrop-blur-md border-b-2 border-ink/10">
+      <button
+        onClick={onOpenMobile}
+        aria-label="Abrir menu"
+        className="md:hidden h-9 w-9 grid place-items-center rounded-lg border-2 border-ink/20 hover:bg-ink/5"
+      >
+        <Menu className="h-5 w-5 text-ink" />
+      </button>
+
+      {/* Breadcrumb */}
+      <nav className="min-w-0 flex-1 flex items-center gap-1.5 text-sm">
+        <span className="hidden sm:inline text-[11px] uppercase tracking-[0.18em] font-bold text-ink/40">
+          {groupLabel}
+        </span>
+        <ChevronRight className="hidden sm:inline h-3.5 w-3.5 text-ink/30 shrink-0" />
+        <span className="font-display text-base md:text-lg text-ink truncate">
+          {current?.label ?? "Painel"}
+        </span>
+      </nav>
+
+      {/* User menu */}
+      <DropdownMenu>
+        <DropdownMenuTrigger className="flex items-center gap-2 rounded-lg border-2 border-ink/15 hover:border-ink/40 hover:bg-ink/5 pl-1 pr-2 md:pr-3 py-1 transition-colors">
+          <div className="h-7 w-7 grid place-items-center rounded-md bg-ink text-background font-bold text-sm">
+            {initial}
+          </div>
+          <span className="hidden md:inline text-xs font-bold text-ink/70 max-w-[160px] truncate">
+            {userEmail}
+          </span>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-56">
+          <DropdownMenuLabel className="truncate text-xs">{userEmail}</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <Link to="/admin/configuracoes" className="cursor-pointer">
+              <UserIcon className="h-4 w-4 mr-2" /> Conta
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={onSignOut} className="cursor-pointer text-destructive focus:text-destructive">
+            <LogOut className="h-4 w-4 mr-2" /> Sair
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </header>
   );
 }
 
@@ -189,9 +281,6 @@ function AuthLayout() {
 
   const handleSignOut = async () => { await signOut(); nav({ to: "/auth" }); };
 
-  const desktopBody = (extra?: ReactNode): ReactNode => extra;
-  void desktopBody;
-
   return (
     <div className="min-h-screen flex bg-background overflow-x-hidden">
       {/* Desktop sidebar */}
@@ -212,8 +301,6 @@ function AuthLayout() {
           restaurants={restaurants}
           restaurantId={restaurantId}
           selectRestaurant={selectRestaurant}
-          userEmail={user?.email}
-          onSignOut={handleSignOut}
         />
       </aside>
 
@@ -228,8 +315,6 @@ function AuthLayout() {
               restaurants={restaurants}
               restaurantId={restaurantId}
               selectRestaurant={selectRestaurant}
-              userEmail={user?.email}
-              onSignOut={() => { setMobileOpen(false); handleSignOut(); }}
               onNavigate={() => setMobileOpen(false)}
             />
           </div>
@@ -238,29 +323,12 @@ function AuthLayout() {
 
       {/* Main */}
       <main className="flex-1 min-w-0 overflow-x-hidden relative flex flex-col">
-        {/* Mobile top bar */}
-        <header className="md:hidden sticky top-0 z-30 flex items-center gap-3 px-4 h-14 bg-ink text-background border-b-2 border-ink">
-          <button
-            onClick={() => setMobileOpen(true)}
-            aria-label="Abrir menu"
-            className="h-9 w-9 grid place-items-center rounded-lg border-2 border-background/20 hover:bg-background/10"
-          >
-            <Menu className="h-5 w-5" />
-          </button>
-          <Link to="/admin" className="flex items-center gap-2 min-w-0">
-            <div className="h-8 w-8 rounded-lg bg-brand-orange border-2 border-background grid place-items-center shrink-0">
-              <svg viewBox="0 0 48 48" className="h-5 w-5" aria-hidden="true">
-                <rect x="12" y="13" width="20" height="4.5" rx="2.25" fill="#fff" />
-                <rect x="12" y="21.75" width="14" height="4.5" rx="2.25" fill="#fff" />
-                <rect x="12" y="30.5" width="20" height="4.5" rx="2.25" fill="#fff" />
-                <circle cx="36" cy="24" r="3.25" fill="#0a0a0a" />
-              </svg>
-            </div>
-            <span className="font-display text-base truncate">Comandex</span>
-          </Link>
-        </header>
-
-        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-radial opacity-60 pointer-events-none" />
+        <TopBar
+          onOpenMobile={() => setMobileOpen(true)}
+          userEmail={user?.email}
+          onSignOut={handleSignOut}
+        />
+        <div className="absolute top-14 md:top-16 left-0 right-0 h-32 bg-gradient-radial opacity-60 pointer-events-none" />
         <div className="relative flex-1 min-w-0">
           <GlobalAnnouncementsBanner />
           <Outlet />

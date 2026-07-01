@@ -7,6 +7,9 @@ import { ShoppingBag, DollarSign, Users, TrendingUp } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, BarChart, Bar, PieChart, Pie, Cell, Legend } from "recharts";
 import { PlanUsageBanner } from "@/components/PlanUsageBanner";
+import { PageHeader } from "@/components/PageHeader";
+import { StatCard } from "@/components/app/StatCard";
+
 
 export const Route = createFileRoute("/_authenticated/admin/")({
   component: Dashboard,
@@ -24,7 +27,8 @@ interface OrderRow {
 }
 
 const COLORS = ["#ff6b35", "#e84393", "#7c5cff", "#f7931e", "#10b981", "#1a1a1a"];
-const ACCENTS = ["bg-brand-orange", "bg-brand-magenta", "bg-brand-violet", "bg-brand-amber"] as const;
+const ACCENTS = ["orange", "magenta", "violet", "amber"] as const;
+
 
 function Dashboard() {
   const { restaurantId } = useAuth();
@@ -59,11 +63,12 @@ function Dashboard() {
   const avgTicket = validOrders.length ? revenue / validOrders.length : 0;
 
   const cards = [
-    { label: "Pedidos", value: validOrders.length.toString(), icon: ShoppingBag, color: "text-blue-600" },
-    { label: "Faturamento", value: `R$ ${revenue.toFixed(2)}`, icon: DollarSign, color: "text-green-600" },
-    { label: "Clientes totais", value: customersCount.toString(), icon: Users, color: "text-purple-600" },
-    { label: "Ticket médio", value: `R$ ${avgTicket.toFixed(2)}`, icon: TrendingUp, color: "text-amber-600" },
-  ];
+    { label: "Pedidos", value: validOrders.length.toString(), icon: ShoppingBag },
+    { label: "Faturamento", value: `R$ ${revenue.toFixed(2)}`, icon: DollarSign },
+    { label: "Clientes totais", value: customersCount.toString(), icon: Users },
+    { label: "Ticket médio", value: `R$ ${avgTicket.toFixed(2)}`, icon: TrendingUp },
+  ] as const;
+
 
   // Daily series
   const byDay = new Map<string, { date: string; pedidos: number; receita: number }>();
@@ -89,51 +94,39 @@ function Dashboard() {
 
   return (
     <div className="p-4 md:p-8">
-      <div className="flex items-end justify-between mb-8 flex-wrap gap-4">
-        <div>
-          <div className="inline-flex items-center gap-2 mb-3">
-            <span className="h-2 w-2 rounded-full bg-brand-magenta animate-pulse" />
-            <span className="text-[11px] uppercase tracking-[0.18em] font-bold text-ink/70">Visão geral</span>
-          </div>
-          <h1 className="font-display text-5xl text-ink leading-[0.92] tracking-tight">
-            Painel<span className="inline-block w-3 h-3 ml-1 -mb-0.5 bg-brand-magenta align-baseline" />
-          </h1>
-          <p className="mt-2 text-sm text-ink/60">Suas métricas em tempo real</p>
-        </div>
-        <Tabs value={range} onValueChange={(v) => setRange(v as typeof range)}>
-          <TabsList className="bg-ink p-1 h-auto rounded-xl border-2 border-ink shadow-[3px_3px_0_0_oklch(0.69_0.22_38)]">
-            <TabsTrigger value="today" className="data-[state=active]:bg-brand-orange data-[state=active]:text-ink data-[state=active]:shadow-none rounded-lg font-bold uppercase tracking-wide text-background text-xs px-3">Hoje</TabsTrigger>
-            <TabsTrigger value="7d" className="data-[state=active]:bg-brand-orange data-[state=active]:text-ink data-[state=active]:shadow-none rounded-lg font-bold uppercase tracking-wide text-background text-xs px-3">7 dias</TabsTrigger>
-            <TabsTrigger value="30d" className="data-[state=active]:bg-brand-orange data-[state=active]:text-ink data-[state=active]:shadow-none rounded-lg font-bold uppercase tracking-wide text-background text-xs px-3">30 dias</TabsTrigger>
-          </TabsList>
-        </Tabs>
-      </div>
+      <PageHeader
+        kicker="Visão geral"
+        title="Painel"
+        subtitle="Suas métricas em tempo real"
+        accent="magenta"
+        actions={
+          <Tabs value={range} onValueChange={(v) => setRange(v as typeof range)}>
+            <TabsList className="bg-ink p-1 h-auto rounded-xl border-2 border-ink shadow-[3px_3px_0_0_oklch(0.69_0.22_38)]">
+              <TabsTrigger value="today" className="data-[state=active]:bg-brand-orange data-[state=active]:text-ink data-[state=active]:shadow-none rounded-lg font-bold uppercase tracking-wide text-background text-xs px-3">Hoje</TabsTrigger>
+              <TabsTrigger value="7d" className="data-[state=active]:bg-brand-orange data-[state=active]:text-ink data-[state=active]:shadow-none rounded-lg font-bold uppercase tracking-wide text-background text-xs px-3">7 dias</TabsTrigger>
+              <TabsTrigger value="30d" className="data-[state=active]:bg-brand-orange data-[state=active]:text-ink data-[state=active]:shadow-none rounded-lg font-bold uppercase tracking-wide text-background text-xs px-3">30 dias</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        }
+      />
 
       <div className="mb-6">
         <PlanUsageBanner restaurantId={restaurantId} />
       </div>
 
-      {/* Bento KPI grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {cards.map((c, i) => {
-          const accent = ACCENTS[i % ACCENTS.length];
-          return (
-            <div
-              key={c.label}
-              className="relative bg-card border-2 border-ink rounded-2xl p-6 shadow-[5px_5px_0_0_oklch(0.15_0.02_30)] hover:shadow-[7px_7px_0_0_oklch(0.69_0.22_38)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all overflow-hidden"
-            >
-              <div className={`absolute top-0 left-0 right-0 h-1.5 ${accent}`} />
-              <div className="flex items-center justify-between mb-3 mt-1">
-                <span className="text-[10px] uppercase tracking-[0.18em] font-bold text-ink/60">{c.label}</span>
-                <div className={`h-9 w-9 grid place-items-center rounded-lg ${accent} border-2 border-ink`}>
-                  <c.icon className="h-4 w-4 text-ink" />
-                </div>
-              </div>
-              <div className="font-display text-4xl text-ink leading-none tracking-tight">{c.value}</div>
-            </div>
-          );
-        })}
+      {/* KPI grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {cards.map((c, i) => (
+          <StatCard
+            key={c.label}
+            label={c.label}
+            value={c.value}
+            icon={c.icon}
+            accent={ACCENTS[i % ACCENTS.length]}
+          />
+        ))}
       </div>
+
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
         <div className="bg-card border-2 border-ink rounded-2xl p-6 shadow-[5px_5px_0_0_oklch(0.15_0.02_30)] lg:col-span-2">
