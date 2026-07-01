@@ -7,6 +7,9 @@ import { ShoppingBag, DollarSign, Users, TrendingUp } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, BarChart, Bar, PieChart, Pie, Cell, Legend } from "recharts";
 import { PlanUsageBanner } from "@/components/PlanUsageBanner";
+import { PageHeader } from "@/components/PageHeader";
+import { StatCard } from "@/components/app/StatCard";
+
 
 export const Route = createFileRoute("/_authenticated/admin/")({
   component: Dashboard,
