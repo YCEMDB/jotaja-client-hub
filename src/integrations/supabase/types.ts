@@ -1601,6 +1601,20 @@ export type Database = {
         Args: { payload: Json; queue_name: string }
         Returns: number
       }
+      get_order_history: {
+        Args: { p_order_id: string }
+        Returns: {
+          actor_email: string
+          actor_name: string
+          changed_by: string
+          created_at: string
+          from_status: Database["public"]["Enums"]["order_status"]
+          id: string
+          reason: string
+          source: string
+          to_status: Database["public"]["Enums"]["order_status"]
+        }[]
+      }
       get_public_categories: {
         Args: { p_slug: string }
         Returns: {
