@@ -658,6 +658,54 @@ export type Database = {
         }
         Relationships: []
       }
+      mp_webhook_events: {
+        Row: {
+          attempts: number
+          created_at: string
+          event_id: string
+          id: number
+          last_error: string | null
+          next_retry_at: string | null
+          order_id: string | null
+          payload: Json
+          processed_at: string | null
+          restaurant_id: string | null
+          status: string
+          topic: string | null
+          updated_at: string
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          event_id: string
+          id?: number
+          last_error?: string | null
+          next_retry_at?: string | null
+          order_id?: string | null
+          payload: Json
+          processed_at?: string | null
+          restaurant_id?: string | null
+          status?: string
+          topic?: string | null
+          updated_at?: string
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          event_id?: string
+          id?: number
+          last_error?: string | null
+          next_retry_at?: string | null
+          order_id?: string | null
+          payload?: Json
+          processed_at?: string | null
+          restaurant_id?: string | null
+          status?: string
+          topic?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           id: string
@@ -1085,6 +1133,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      rate_limit_events: {
+        Row: {
+          bucket_key: string
+          created_at: string
+          endpoint: string
+          id: number
+          ip: string | null
+          restaurant_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          bucket_key: string
+          created_at?: string
+          endpoint: string
+          id?: number
+          ip?: string | null
+          restaurant_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          bucket_key?: string
+          created_at?: string
+          endpoint?: string
+          id?: number
+          ip?: string | null
+          restaurant_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
       }
       restaurant_invites: {
         Row: {
@@ -1666,6 +1744,17 @@ export type Database = {
           source_queue: string
         }
         Returns: number
+      }
+      rate_limit_check: {
+        Args: {
+          p_bucket_key: string
+          p_endpoint: string
+          p_ip?: string
+          p_max_hits: number
+          p_restaurant_id?: string
+          p_window_seconds: number
+        }
+        Returns: boolean
       }
       read_email_batch: {
         Args: { batch_size: number; queue_name: string; vt: number }
