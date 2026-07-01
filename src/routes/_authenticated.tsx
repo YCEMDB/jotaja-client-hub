@@ -58,6 +58,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: "Sistema",
     items: [
+      { to: "/admin/comunicacao", label: "Comunicação", icon: MessageSquare },
       { to: "/admin/operacoes", label: "Operações", icon: Cog },
       { to: "/admin/configuracoes", label: "Configurações", icon: Settings },
     ],
