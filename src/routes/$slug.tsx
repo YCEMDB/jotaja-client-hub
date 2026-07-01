@@ -501,13 +501,15 @@ function CheckoutDialog({
       p_restaurant_id: restaurant.id,
       p_code: code,
       p_subtotal: subtotal,
-    });
+    } as never);
     setValidatingCoupon(false);
     const result = data as any;
     if (!result?.ok) {
       const err = result?.error;
+      if (err === "not_started") return toast.error("Cupom ainda não está válido");
       if (err === "expired") return toast.error("Cupom expirado");
       if (err === "exhausted") return toast.error("Cupom esgotado");
+      if (err === "customer_limit") return toast.error("Você já usou este cupom o máximo de vezes");
       if (err === "min_order") return toast.error(`Cupom requer pedido mínimo de R$ ${Number(result.min_order).toFixed(2)}`);
       return toast.error("Cupom inválido");
     }
