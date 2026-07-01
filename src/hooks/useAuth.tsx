@@ -73,10 +73,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const loadMeta = async (uid: string, { silent = false }: { silent?: boolean } = {}) => {
     if (!silent) setMetaLoading(true);
     try {
-      const rolesRes = await supabase.from("user_roles").select("role").eq("user_id", uid);
-      const r = (rolesRes.data?.map((x) => x.role) as AppRole[]) ?? [];
+      const rolesRes = await supabase.from("user_roles").select("role,restaurant_id").eq("user_id", uid);
+      const rows = rolesRes.data ?? [];
+      const r = rows.map((x: any) => x.role) as AppRole[];
       setRoles(r);
       const isSA = r.includes("super_admin");
+      const roleRestaurantIds = rows
+        .map((x: any) => x.restaurant_id)
+        .filter((v: string | null): v is string => !!v);
 
       let list: RestaurantBrief[] = [];
       if (isSA) {
@@ -86,11 +90,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           .order("created_at", { ascending: false });
         list = (data ?? []) as RestaurantBrief[];
       } else {
-        const { data } = await supabase
-          .from("restaurants")
-          .select("id,name,slug,is_active,plan,trial_ends_at,subscription_ends_at")
-          .eq("owner_id", uid);
-        list = (data ?? []) as RestaurantBrief[];
+        // Restaurantes onde é dono OU tem role via user_roles
+        const [ownedRes, memberRes] = await Promise.all([
+          supabase
+            .from("restaurants")
+            .select("id,name,slug,is_active,plan,trial_ends_at,subscription_ends_at")
+            .eq("owner_id", uid),
+          roleRestaurantIds.length
+            ? supabase
+                .from("restaurants")
+                .select("id,name,slug,is_active,plan,trial_ends_at,subscription_ends_at")
+                .in("id", roleRestaurantIds)
+            : Promise.resolve({ data: [] as RestaurantBrief[] } as any),
+        ]);
+        const merged = new Map<string, RestaurantBrief>();
+        [...(ownedRes.data ?? []), ...((memberRes as any).data ?? [])].forEach((x: RestaurantBrief) =>
+          merged.set(x.id, x),
+        );
+        list = Array.from(merged.values());
       }
       setRestaurants(list);
 
@@ -103,6 +120,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!silent) setMetaLoading(false);
     }
   };
+
 
   useEffect(() => {
     let currentUid: string | null = cached?.uid ?? null;
