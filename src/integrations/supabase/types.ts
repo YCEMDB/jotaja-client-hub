@@ -166,6 +166,7 @@ export type Database = {
           name: string
           position: number | null
           restaurant_id: string
+          station_id: string | null
         }
         Insert: {
           created_at?: string
@@ -175,6 +176,7 @@ export type Database = {
           name: string
           position?: number | null
           restaurant_id: string
+          station_id?: string | null
         }
         Update: {
           created_at?: string
@@ -184,6 +186,7 @@ export type Database = {
           name?: string
           position?: number | null
           restaurant_id?: string
+          station_id?: string | null
         }
         Relationships: [
           {
@@ -198,6 +201,13 @@ export type Database = {
             columns: ["restaurant_id"]
             isOneToOne: false
             referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "categories_station_id_fkey"
+            columns: ["station_id"]
+            isOneToOne: false
+            referencedRelation: "kitchen_stations"
             referencedColumns: ["id"]
           },
         ]
@@ -658,6 +668,54 @@ export type Database = {
         }
         Relationships: []
       }
+      kitchen_stations: {
+        Row: {
+          color: string
+          created_at: string
+          id: string
+          is_active: boolean
+          name: string
+          position: number
+          restaurant_id: string
+          updated_at: string
+        }
+        Insert: {
+          color?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          position?: number
+          restaurant_id: string
+          updated_at?: string
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          position?: number
+          restaurant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kitchen_stations_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kitchen_stations_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mp_webhook_events: {
         Row: {
           attempts: number
@@ -705,6 +763,66 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      operations_settings: {
+        Row: {
+          auto_print_on_confirmed: boolean
+          auto_print_on_preparing: boolean
+          auto_print_on_ready: boolean
+          created_at: string
+          default_driver: string
+          printer_name: string | null
+          restaurant_id: string
+          sla_green_minutes: number
+          sla_red_minutes: number
+          sla_yellow_minutes: number
+          sound_enabled: boolean
+          updated_at: string
+        }
+        Insert: {
+          auto_print_on_confirmed?: boolean
+          auto_print_on_preparing?: boolean
+          auto_print_on_ready?: boolean
+          created_at?: string
+          default_driver?: string
+          printer_name?: string | null
+          restaurant_id: string
+          sla_green_minutes?: number
+          sla_red_minutes?: number
+          sla_yellow_minutes?: number
+          sound_enabled?: boolean
+          updated_at?: string
+        }
+        Update: {
+          auto_print_on_confirmed?: boolean
+          auto_print_on_preparing?: boolean
+          auto_print_on_ready?: boolean
+          created_at?: string
+          default_driver?: string
+          printer_name?: string | null
+          restaurant_id?: string
+          sla_green_minutes?: number
+          sla_red_minutes?: number
+          sla_yellow_minutes?: number
+          sound_enabled?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "operations_settings_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: true
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "operations_settings_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: true
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       order_items: {
         Row: {
@@ -940,6 +1058,86 @@ export type Database = {
           },
         ]
       }
+      print_jobs: {
+        Row: {
+          attempts: number
+          created_at: string
+          driver: string
+          event: string
+          id: string
+          last_error: string | null
+          order_id: string | null
+          payload: Json
+          printed_at: string | null
+          requested_by: string | null
+          restaurant_id: string
+          station_id: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          driver?: string
+          event: string
+          id?: string
+          last_error?: string | null
+          order_id?: string | null
+          payload?: Json
+          printed_at?: string | null
+          requested_by?: string | null
+          restaurant_id: string
+          station_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          driver?: string
+          event?: string
+          id?: string
+          last_error?: string | null
+          order_id?: string | null
+          payload?: Json
+          printed_at?: string | null
+          requested_by?: string | null
+          restaurant_id?: string
+          station_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "print_jobs_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "print_jobs_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "print_jobs_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "print_jobs_station_id_fkey"
+            columns: ["station_id"]
+            isOneToOne: false
+            referencedRelation: "kitchen_stations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_option_groups: {
         Row: {
           id: string
@@ -1026,6 +1224,7 @@ export type Database = {
           price: number
           promo_price: number | null
           restaurant_id: string
+          station_id: string | null
           updated_at: string
         }
         Insert: {
@@ -1040,6 +1239,7 @@ export type Database = {
           price: number
           promo_price?: number | null
           restaurant_id: string
+          station_id?: string | null
           updated_at?: string
         }
         Update: {
@@ -1054,6 +1254,7 @@ export type Database = {
           price?: number
           promo_price?: number | null
           restaurant_id?: string
+          station_id?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -1076,6 +1277,13 @@ export type Database = {
             columns: ["restaurant_id"]
             isOneToOne: false
             referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_station_id_fkey"
+            columns: ["station_id"]
+            isOneToOne: false
+            referencedRelation: "kitchen_stations"
             referencedColumns: ["id"]
           },
         ]
@@ -1678,6 +1886,19 @@ export type Database = {
       enqueue_email: {
         Args: { payload: Json; queue_name: string }
         Returns: number
+      }
+      enqueue_print_job: {
+        Args: {
+          p_driver?: string
+          p_event?: string
+          p_order_id: string
+          p_station_id?: string
+        }
+        Returns: Json
+      }
+      get_kds_orders: {
+        Args: { p_restaurant_id: string; p_station_id?: string }
+        Returns: Json
       }
       get_order_history: {
         Args: { p_order_id: string }
