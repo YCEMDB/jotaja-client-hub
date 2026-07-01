@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Clock, MapPin, Phone, CreditCard, ChevronRight, MessageCircle, Truck, Printer, Bell, BellOff, PrinterCheck, Package, XCircle, CheckCircle2, User } from "lucide-react";
+import { Clock, MapPin, Phone, CreditCard, ChevronRight, MessageCircle, Truck, Printer, Bell, BellOff, PrinterCheck, Package, XCircle, CheckCircle2, User, History } from "lucide-react";
 import { toast } from "sonner";
 import { printReceipt } from "@/lib/print-receipt";
 import { ensureNotificationPermission, playOrderBeep, showOrderNotification } from "@/lib/order-notifications";
@@ -50,6 +50,36 @@ type OrderItem = {
   subtotal: number;
   notes: string | null;
   options: any;
+};
+
+type HistoryEntry = {
+  id: string;
+  from_status: OrderStatus | null;
+  to_status: OrderStatus;
+  source: string;
+  reason: string | null;
+  changed_by: string | null;
+  actor_name: string | null;
+  actor_email: string | null;
+  created_at: string;
+};
+
+const STATUS_LABEL: Record<OrderStatus, string> = {
+  pending: "Aguardando",
+  confirmed: "Confirmado",
+  preparing: "Em preparo",
+  ready: "Pronto",
+  out_for_delivery: "Saiu p/ entrega",
+  delivered: "Entregue",
+  cancelled: "Cancelado",
+};
+
+const SOURCE_LABEL: Record<string, string> = {
+  panel: "Painel",
+  pdv: "PDV",
+  system: "Sistema",
+  webhook: "Webhook",
+  customer: "Cliente",
 };
 
 type ColKey = "new" | "preparing" | "ready_delivery" | "ready_pickup" | "out" | "delivered" | "cancelled";
@@ -139,6 +169,7 @@ function PedidosPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [selected, setSelected] = useState<Order | null>(null);
   const [items, setItems] = useState<OrderItem[]>([]);
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [restaurant, setRestaurant] = useState<{ name: string; phone: string | null } | null>(null);
   const [notifEnabled, setNotifEnabled] = useState(false);
@@ -222,9 +253,19 @@ function PedidosPage() {
     }
   };
 
+  const loadHistory = async (orderId: string) => {
+    const { data, error } = await supabase.rpc("get_order_history", { p_order_id: orderId });
+    if (error) { setHistory([]); return; }
+    setHistory((data ?? []) as HistoryEntry[]);
+  };
+
   const openOrder = async (o: Order) => {
     setSelected(o);
-    const { data } = await supabase.from("order_items").select("*").eq("order_id", o.id);
+    setHistory([]);
+    const [{ data }] = await Promise.all([
+      supabase.from("order_items").select("*").eq("order_id", o.id),
+      loadHistory(o.id),
+    ]);
     setItems((data ?? []) as OrderItem[]);
   };
 
@@ -252,7 +293,7 @@ function PedidosPage() {
     });
     if (error) return toast.error(error.message);
     toast.success(`Pedido #${o.order_number} avançado`);
-    if (selected?.id === o.id) setSelected({ ...o, status: next });
+    if (selected?.id === o.id) { setSelected({ ...o, status: next }); loadHistory(o.id); }
   };
 
   const cancel = async (o: Order) => {
@@ -458,7 +499,7 @@ function PedidosPage() {
       </div>
 
       <Dialog open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           {selected && (
             <>
               <DialogHeader>
@@ -529,6 +570,50 @@ function PedidosPage() {
                     </Select>
                   </div>
                 )}
+
+                <div className="border-t pt-3">
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <History className="h-3.5 w-3.5 text-ink/60" />
+                    <span className="text-xs font-bold uppercase tracking-wide text-ink/70">Linha do tempo</span>
+                  </div>
+                  {history.length === 0 ? (
+                    <p className="text-xs text-muted-foreground">Sem histórico registrado.</p>
+                  ) : (
+                    <ol className="relative border-l-2 border-ink/15 pl-4 space-y-3">
+                      {history.map((h, idx) => {
+                        const isLast = idx === history.length - 1;
+                        const cancelled = h.to_status === "cancelled";
+                        return (
+                          <li key={h.id} className="relative">
+                            <span className={`absolute -left-[21px] top-1 h-3 w-3 rounded-full border-2 border-background ${cancelled ? "bg-destructive" : isLast ? "bg-brand-orange" : "bg-ink/40"}`} />
+                            <div className="flex flex-wrap items-center gap-1.5 text-xs">
+                              {h.from_status ? (
+                                <>
+                                  <span className="text-ink/50 line-through">{STATUS_LABEL[h.from_status]}</span>
+                                  <ChevronRight className="h-3 w-3 text-ink/40" />
+                                </>
+                              ) : (
+                                <span className="text-ink/50">Criado</span>
+                              )}
+                              <span className={`font-bold ${cancelled ? "text-destructive" : "text-ink"}`}>{STATUS_LABEL[h.to_status]}</span>
+                              <span className="ml-auto text-[10px] uppercase tracking-wide text-ink/50 font-bold">
+                                {new Date(h.created_at).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}
+                              </span>
+                            </div>
+                            <div className="mt-0.5 text-[11px] text-muted-foreground flex flex-wrap gap-x-2">
+                              <span>{SOURCE_LABEL[h.source] ?? h.source}</span>
+                              {(h.actor_name || h.actor_email) && (
+                                <span>· por {h.actor_name || h.actor_email}</span>
+                              )}
+                              {h.reason && <span>· {h.reason}</span>}
+                            </div>
+                          </li>
+                        );
+                      })}
+                    </ol>
+                  )}
+                </div>
+
 
                 <div className="flex flex-wrap gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => printOrder(selected)}>
