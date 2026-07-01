@@ -4,7 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import {
   LayoutDashboard, ShoppingBag, UtensilsCrossed, Users, Settings, LogOut,
   Tags, Truck, BarChart3, ShieldCheck, ShoppingCart, Wallet, Monitor, Cog,
-  PanelLeftClose, PanelLeftOpen, Menu, ChevronRight, User as UserIcon,
+  PanelLeftClose, PanelLeftOpen, Menu, ChevronRight, User as UserIcon, MessageSquare,
 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
@@ -58,6 +58,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: "Sistema",
     items: [
+      { to: "/admin/comunicacao", label: "Comunicação", icon: MessageSquare },
       { to: "/admin/operacoes", label: "Operações", icon: Cog },
       { to: "/admin/configuracoes", label: "Configurações", icon: Settings },
     ],
