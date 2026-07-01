@@ -501,13 +501,15 @@ function CheckoutDialog({
       p_restaurant_id: restaurant.id,
       p_code: code,
       p_subtotal: subtotal,
-    });
+    } as never);
     setValidatingCoupon(false);
     const result = data as any;
     if (!result?.ok) {
       const err = result?.error;
+      if (err === "not_started") return toast.error("Cupom ainda não está válido");
       if (err === "expired") return toast.error("Cupom expirado");
       if (err === "exhausted") return toast.error("Cupom esgotado");
+      if (err === "customer_limit") return toast.error("Você já usou este cupom o máximo de vezes");
       if (err === "min_order") return toast.error(`Cupom requer pedido mínimo de R$ ${Number(result.min_order).toFixed(2)}`);
       return toast.error("Cupom inválido");
     }
@@ -575,17 +577,22 @@ function CheckoutDialog({
 
     if (oErr || !rpcData) {
       setSubmitting(false);
-      if (oErr?.message?.includes("plan_limit_reached")) {
+      const msg = oErr?.message ?? "";
+      if (msg.includes("plan_limit_reached")) {
         return toast.error("Esta loja atingiu o limite de pedidos do mês. Tente novamente em breve.");
       }
-      return toast.error(oErr?.message ?? "Erro ao criar pedido");
+      if (msg.includes("restaurant_closed")) return toast.error("A loja está fechada no momento.");
+      if (msg.includes("coupon_not_started")) return toast.error("Cupom ainda não está válido.");
+      if (msg.includes("coupon_expired")) return toast.error("Cupom expirado.");
+      if (msg.includes("coupon_exhausted")) return toast.error("Cupom esgotado.");
+      if (msg.includes("coupon_customer_limit")) return toast.error("Você já usou este cupom o máximo de vezes.");
+      if (msg.includes("coupon_min_order")) return toast.error("Pedido não atinge o mínimo para este cupom.");
+      if (msg.includes("coupon_invalid")) return toast.error("Cupom inválido.");
+      return toast.error(msg || "Erro ao criar pedido");
     }
     const order = rpcData as { id: string; order_number: number };
 
 
-    if (coupon) {
-      await supabase.from("coupons").update({ uses_count: (coupon.uses_count ?? 0) + 1 }).eq("id", coupon.id);
-    }
 
     setSubmitting(false);
     toast.success("Pedido enviado!");

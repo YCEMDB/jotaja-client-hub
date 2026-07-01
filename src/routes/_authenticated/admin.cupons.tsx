@@ -35,7 +35,8 @@ type CouponType = "percentage" | "fixed" | "free_shipping";
 type Coupon = {
   id: string; code: string; type: CouponType; value: number;
   min_order: number | null; max_uses: number | null; uses_count: number | null;
-  expires_at: string | null; is_active: boolean | null;
+  expires_at: string | null; starts_at: string | null;
+  max_uses_per_customer: number | null; is_active: boolean | null;
 };
 
 function CuponsPage() {
@@ -131,6 +132,8 @@ function CouponDialog({ open, onOpenChange, editing, restaurantId, onSaved }: {
   const [value, setValue] = useState("");
   const [minOrder, setMinOrder] = useState("");
   const [maxUses, setMaxUses] = useState("");
+  const [maxUsesPerCustomer, setMaxUsesPerCustomer] = useState("");
+  const [startsAt, setStartsAt] = useState("");
   const [expiresAt, setExpiresAt] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -141,12 +144,22 @@ function CouponDialog({ open, onOpenChange, editing, restaurantId, onSaved }: {
       setValue(editing?.value != null ? String(editing.value) : "");
       setMinOrder(editing?.min_order != null ? String(editing.min_order) : "");
       setMaxUses(editing?.max_uses != null ? String(editing.max_uses) : "");
+      setMaxUsesPerCustomer(editing?.max_uses_per_customer != null ? String(editing.max_uses_per_customer) : "");
+      setStartsAt(editing?.starts_at ? editing.starts_at.slice(0, 16) : "");
       setExpiresAt(editing?.expires_at ? editing.expires_at.slice(0, 16) : "");
     }
   }, [open, editing]);
 
   const save = async () => {
     if (!code.trim()) return toast.error("Código obrigatório");
+    if (type === "percentage") {
+      const n = Number(value);
+      if (!(n > 0 && n <= 100)) return toast.error("Percentual entre 1 e 100");
+    }
+    if (type === "fixed" && !(Number(value) > 0)) return toast.error("Valor de desconto inválido");
+    if (startsAt && expiresAt && new Date(startsAt) >= new Date(expiresAt)) {
+      return toast.error("Data de início deve ser antes da expiração");
+    }
     setSaving(true);
     const payload = {
       restaurant_id: restaurantId,
@@ -155,6 +168,8 @@ function CouponDialog({ open, onOpenChange, editing, restaurantId, onSaved }: {
       value: type === "free_shipping" ? 0 : Number(value) || 0,
       min_order: Number(minOrder) || 0,
       max_uses: maxUses ? Number(maxUses) : null,
+      max_uses_per_customer: maxUsesPerCustomer ? Number(maxUsesPerCustomer) : null,
+      starts_at: startsAt ? new Date(startsAt).toISOString() : null,
       expires_at: expiresAt ? new Date(expiresAt).toISOString() : null,
     };
     const { error } = editing
@@ -195,11 +210,21 @@ function CouponDialog({ open, onOpenChange, editing, restaurantId, onSaved }: {
           )}
           <div className="grid grid-cols-2 gap-3">
             <div><Label>Pedido mín. (R$)</Label><Input type="number" step="0.01" value={minOrder} onChange={(e) => setMinOrder(e.target.value)} /></div>
-            <div><Label>Limite de usos</Label><Input type="number" value={maxUses} onChange={(e) => setMaxUses(e.target.value)} placeholder="Ilimitado" /></div>
+            <div><Label>Limite total de usos</Label><Input type="number" value={maxUses} onChange={(e) => setMaxUses(e.target.value)} placeholder="Ilimitado" /></div>
           </div>
           <div>
-            <Label>Expira em</Label>
-            <Input type="datetime-local" value={expiresAt} onChange={(e) => setExpiresAt(e.target.value)} />
+            <Label>Limite por cliente</Label>
+            <Input type="number" value={maxUsesPerCustomer} onChange={(e) => setMaxUsesPerCustomer(e.target.value)} placeholder="Ilimitado" />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label>Início da validade</Label>
+              <Input type="datetime-local" value={startsAt} onChange={(e) => setStartsAt(e.target.value)} />
+            </div>
+            <div>
+              <Label>Expira em</Label>
+              <Input type="datetime-local" value={expiresAt} onChange={(e) => setExpiresAt(e.target.value)} />
+            </div>
           </div>
         </div>
         <DialogFooter>
