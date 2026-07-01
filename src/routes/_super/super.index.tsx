@@ -4,16 +4,19 @@ import { useServerFn } from "@tanstack/react-start";
 import { getGlobalMetrics } from "@/lib/super-admin.functions";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { AlertTriangle, BarChart3 } from "lucide-react";
+import { AlertTriangle, Store, CheckCircle2, Clock, CreditCard, DollarSign, ShoppingBag, TrendingUp } from "lucide-react";
 import {
   LineChart, Line, ResponsiveContainer, XAxis, YAxis, Tooltip as ReTooltip, CartesianGrid,
 } from "recharts";
 import { toast } from "sonner";
+import { PageHeader } from "@/components/PageHeader";
+import { StatCard } from "@/components/app/StatCard";
 
 export const Route = createFileRoute("/_super/super/")({
   component: SuperOverview,
   head: () => ({ meta: [{ title: "Super-Admin — Visão geral" }] }),
 });
+
 
 function fmtMoney(v: number) { return `R$ ${Number(v).toFixed(2).replace(".", ",")}`; }
 function fmtDate(s: string | null) { return s ? new Date(s).toLocaleDateString("pt-BR") : "—"; }
