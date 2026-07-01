@@ -63,7 +63,7 @@ export function Bento() {
               </h3>
               <p className="text-background/85 mt-2 text-sm max-w-[28ch]">
                 Cores, logo, fotos. URL própria. QR Code pra mesa.
-                Funciona offline-first.
+                PWA instalável no celular.
               </p>
               <div className="relative flex-1 mt-4">
                 <img
@@ -97,7 +97,7 @@ export function Bento() {
                   Áreas + taxas por bairro
                 </h3>
                 <p className="text-xs text-ink/60 mt-1.5 leading-snug">
-                  Atribua entregadores, calcule frete por CEP e acompanhe rota.
+                  Atribua entregadores, calcule frete por CEP e acompanhe o status.
                 </p>
               </div>
             </div>

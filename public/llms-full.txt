@@ -127,7 +127,7 @@ Devolver autonomia aos restaurantes brasileiros: cada pedido, cada cliente e cad
 34. **Posso integrar com Google Analytics?** Sim, via Pixel/GA4.
 
 ### Painel e equipe
-35. **Quantos usuários posso ter?** Ilimitados no Pro.
+35. **Quantos usuários posso ter?** 1 no Starter, até 5 no Pro, ilimitados no Business.
 36. **Posso dar acessos diferentes (garçom, caixa, gerente)?** Sim, por perfil.
 37. **Tem PDV?** Sim, para vendas no salão sem QR.
 38. **Tem fechamento de caixa?** Sim, com relatório diário.
