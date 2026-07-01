@@ -63,11 +63,12 @@ function Dashboard() {
   const avgTicket = validOrders.length ? revenue / validOrders.length : 0;
 
   const cards = [
-    { label: "Pedidos", value: validOrders.length.toString(), icon: ShoppingBag, color: "text-blue-600" },
-    { label: "Faturamento", value: `R$ ${revenue.toFixed(2)}`, icon: DollarSign, color: "text-green-600" },
-    { label: "Clientes totais", value: customersCount.toString(), icon: Users, color: "text-purple-600" },
-    { label: "Ticket médio", value: `R$ ${avgTicket.toFixed(2)}`, icon: TrendingUp, color: "text-amber-600" },
-  ];
+    { label: "Pedidos", value: validOrders.length.toString(), icon: ShoppingBag },
+    { label: "Faturamento", value: `R$ ${revenue.toFixed(2)}`, icon: DollarSign },
+    { label: "Clientes totais", value: customersCount.toString(), icon: Users },
+    { label: "Ticket médio", value: `R$ ${avgTicket.toFixed(2)}`, icon: TrendingUp },
+  ] as const;
+
 
   // Daily series
   const byDay = new Map<string, { date: string; pedidos: number; receita: number }>();
