@@ -13,6 +13,7 @@ import { Plus, Trash2, Upload, Copy, Check, Printer, MapPin, Eye, EyeOff, Shield
 import { Badge } from "@/components/ui/badge";
 import { useServerFn } from "@tanstack/react-start";
 import { verifyMercadoPago } from "@/lib/payments.functions";
+import { FeatureGate } from "@/components/FeatureGate";
 import { toast } from "sonner";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
