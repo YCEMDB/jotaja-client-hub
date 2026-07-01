@@ -93,3 +93,15 @@ Registro cronológico de entregas.
 
 ## Próximas Entregas
 Ver [ROADMAP.md](./ROADMAP.md).
+
+## Sprint 3 — Centro de Operações (KDS + Impressão)
+- **KDS** em `/admin/kds`: layout dark, 5 colunas (state machine oficial), realtime, filtros (estação/tipo/pagamento), busca, SLA por cor (verde/amarelo/vermelho/piscante), som ao novo pedido, tela cheia.
+- **Estações** (`kitchen_stations`) + `station_id` em `categories`/`products`.
+- **Fila de impressão** (`print_jobs`) com drivers `browser` (implementado), `escpos`/`webusb`/`network`/`cloud` (arquitetura pronta).
+- **Configurações de operação** (`operations_settings`): SLA, som, auto-print por evento, driver padrão. UI em `/admin/operacoes`.
+- **RPCs**: `get_kds_orders(restaurant, station?)`, `enqueue_print_job(order, event, station?, driver?)`.
+- **Trigger** `auto_enqueue_print_on_status` — enfileira jobs automaticamente conforme config.
+- **Realtime** habilitado em `orders`, `order_status_history`, `print_jobs`.
+- **Hook** `usePrintQueueConsumer` — processa jobs `browser` em background com backlog inicial.
+- **Zero UPDATE direto**: KDS usa `update_order_status` RPC.
+- Ver [KDS.md](./KDS.md) e [PRINTING.md](./PRINTING.md).
