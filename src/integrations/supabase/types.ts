@@ -202,6 +202,72 @@ export type Database = {
           },
         ]
       }
+      coupon_uses: {
+        Row: {
+          coupon_id: string
+          customer_id: string | null
+          discount: number
+          id: string
+          order_id: string | null
+          restaurant_id: string
+          used_at: string
+        }
+        Insert: {
+          coupon_id: string
+          customer_id?: string | null
+          discount?: number
+          id?: string
+          order_id?: string | null
+          restaurant_id: string
+          used_at?: string
+        }
+        Update: {
+          coupon_id?: string
+          customer_id?: string | null
+          discount?: number
+          id?: string
+          order_id?: string | null
+          restaurant_id?: string
+          used_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coupon_uses_coupon_id_fkey"
+            columns: ["coupon_id"]
+            isOneToOne: false
+            referencedRelation: "coupons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "coupon_uses_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "coupon_uses_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "coupon_uses_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "coupon_uses_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       coupons: {
         Row: {
           code: string
@@ -210,8 +276,10 @@ export type Database = {
           id: string
           is_active: boolean | null
           max_uses: number | null
+          max_uses_per_customer: number | null
           min_order: number | null
           restaurant_id: string
+          starts_at: string | null
           type: Database["public"]["Enums"]["coupon_type"]
           uses_count: number | null
           value: number
@@ -223,8 +291,10 @@ export type Database = {
           id?: string
           is_active?: boolean | null
           max_uses?: number | null
+          max_uses_per_customer?: number | null
           min_order?: number | null
           restaurant_id: string
+          starts_at?: string | null
           type?: Database["public"]["Enums"]["coupon_type"]
           uses_count?: number | null
           value?: number
@@ -236,8 +306,10 @@ export type Database = {
           id?: string
           is_active?: boolean | null
           max_uses?: number | null
+          max_uses_per_customer?: number | null
           min_order?: number | null
           restaurant_id?: string
+          starts_at?: string | null
           type?: Database["public"]["Enums"]["coupon_type"]
           uses_count?: number | null
           value?: number
@@ -1507,10 +1579,24 @@ export type Database = {
         }
         Returns: string
       }
-      validate_public_coupon: {
-        Args: { p_code: string; p_restaurant_id: string; p_subtotal?: number }
-        Returns: Json
-      }
+      validate_public_coupon:
+        | {
+            Args: {
+              p_code: string
+              p_restaurant_id: string
+              p_subtotal?: number
+            }
+            Returns: Json
+          }
+        | {
+            Args: {
+              p_code: string
+              p_customer_id?: string
+              p_restaurant_id: string
+              p_subtotal?: number
+            }
+            Returns: Json
+          }
     }
     Enums: {
       app_role: "super_admin" | "owner" | "employee" | "manager"
