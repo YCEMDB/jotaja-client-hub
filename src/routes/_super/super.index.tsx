@@ -36,27 +36,26 @@ function SuperOverview() {
   }, [storeFilter]);
 
   return (
-    <div className="p-4 md:p-6 space-y-6">
-      <PageHeader
-        kicker="Super-admin"
-        title="Visão geral"
-        subtitle="Métricas globais da plataforma"
-        accent="violet"
-        actions={
-          <div className="min-w-[220px]">
-            <Select value={storeFilter} onValueChange={setStoreFilter}>
-              <SelectTrigger><SelectValue placeholder="Filtrar por loja" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todas as lojas</SelectItem>
-                {(data?.restaurants ?? []).map((r) => (
-                  <SelectItem key={r.id} value={r.id}>{r.name}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        }
-      />
-
+    <AdminPageLayout
+      kicker="Super-admin"
+      title="Visão geral"
+      subtitle="Métricas globais da plataforma"
+      accent="violet"
+      icon={LayoutDashboard}
+      actions={
+        <div className="min-w-[220px]">
+          <Select value={storeFilter} onValueChange={setStoreFilter}>
+            <SelectTrigger><SelectValue placeholder="Filtrar por loja" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todas as lojas</SelectItem>
+              {(data?.restaurants ?? []).map((r) => (
+                <SelectItem key={r.id} value={r.id}>{r.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      }
+    >
       {loading ? (
         <div className="p-4 md:p-8 text-center text-muted-foreground">Carregando métricas…</div>
       ) : !data ? (
@@ -73,7 +72,6 @@ function SuperOverview() {
             <StatCard label="Pedidos 7d" value={data.totals.ordersWeek} icon={TrendingUp} accent="blue" />
             <StatCard label="GMV mês" value={fmtMoney(data.totals.revenueMonth)} icon={DollarSign} accent="violet" />
           </div>
-
 
           <Card className="p-4">
             <p className="font-semibold mb-3">Pedidos por dia (últimos 30 dias)</p>
@@ -125,6 +123,7 @@ function SuperOverview() {
           </div>
         </>
       )}
-    </div>
+    </AdminPageLayout>
   );
 }
+
