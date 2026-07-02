@@ -154,6 +154,7 @@ function LeadsPage() {
         prefill={createPrefill}
         onCreated={() => load()}
       />
-    </div>
+    </AdminPageLayout>
   );
 }
+
