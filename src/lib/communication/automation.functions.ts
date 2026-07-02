@@ -59,7 +59,8 @@ export const upsertAutomationRule = createServerFn({ method: "POST" })
       .from("restaurants").select("plan_id").eq("id", data.restaurant_id).maybeSingle();
     const { data: plan } = await supabase
       .from("app_plans").select("features").eq("id", rest?.plan_id ?? "starter").maybeSingle();
-    const maxAllowed = plan?.features?.automations_max ?? 0;
+    const features = (plan?.features ?? {}) as Record<string, unknown>;
+    const maxAllowed = (features.automations_max as number | null | undefined) ?? 0;
 
     if (!data.id) {
       const { count } = await supabase
