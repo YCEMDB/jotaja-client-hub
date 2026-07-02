@@ -29,6 +29,8 @@ import {
   deleteCommunicationTemplate, previewCommunicationTemplate,
 } from "@/lib/communication/templates.functions";
 import { ConversasTab } from "@/components/comunicacao/ConversasTab";
+import { AutomacoesTab } from "@/components/comunicacao/AutomacoesTab";
+import { PainelTab } from "@/components/comunicacao/PainelTab";
 
 export const Route = createFileRoute("/_authenticated/admin/comunicacao")({
   component: ComunicacaoPage,
