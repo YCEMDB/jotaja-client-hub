@@ -303,11 +303,25 @@ export function ConversasTab({ restaurantId }: { restaurantId: string }) {
                 return (
                   <div key={m.id} className={`flex ${outbound ? "justify-end" : "justify-start"}`}>
                     <div className={`max-w-[75%] rounded-2xl px-3 py-2 border-2 border-ink shadow-brutal ${outbound ? "bg-brand-orange text-ink" : "bg-background"}`}>
-                      <div className="whitespace-pre-wrap text-sm break-words">{m.body}</div>
+                      {m.media_type === "image" && m.media_url && (
+                        <img src={m.media_url} alt={m.caption ?? ""} className="rounded-lg mb-1 max-h-56 object-cover" />
+                      )}
+                      {m.media_type === "audio" && m.media_url && (
+                        <audio controls src={m.media_url} className="mb-1 w-full" />
+                      )}
+                      {m.media_type === "video" && m.media_url && (
+                        <video controls src={m.media_url} className="rounded-lg mb-1 max-h-56 w-full" />
+                      )}
+                      {m.media_type === "document" && m.media_url && (
+                        <a href={m.media_url} target="_blank" rel="noreferrer" className="underline text-xs block mb-1">
+                          📄 {m.caption ?? "Documento"}
+                        </a>
+                      )}
+                      {m.body && <div className="whitespace-pre-wrap text-sm break-words">{m.body}</div>}
                       <div className={`flex items-center gap-1 text-[10px] mt-1 ${outbound ? "text-ink/70 justify-end" : "text-muted-foreground"}`}>
                         <span>{new Date(m.created_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}</span>
                         {outbound && <StatusIcon status={m.status} />}
-                        {m.source === "automated" && <span className="italic">auto</span>}
+                        {m.source === "automated" && <span className="italic font-bold">🤖 auto</span>}
                       </div>
                     </div>
                   </div>
