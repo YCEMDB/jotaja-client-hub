@@ -28,6 +28,7 @@ import {
   listCommunicationTemplates, upsertCommunicationTemplate,
   deleteCommunicationTemplate, previewCommunicationTemplate,
 } from "@/lib/communication/templates.functions";
+import { ConversasTab } from "@/components/comunicacao/ConversasTab";
 
 export const Route = createFileRoute("/_authenticated/admin/comunicacao")({
   component: ComunicacaoPage,
@@ -48,16 +49,18 @@ function ComunicacaoInner() {
   return (
     <div className="p-4 md:p-8 space-y-6">
       <PageHeader
-        kicker="Sprint 4.1"
+        kicker="Sprint 4.2"
         title="Central de Comunicação"
-        subtitle="Configure canais, templates e acompanhe a fila de mensagens"
+        subtitle="Converse, envie mensagens e acompanhe canais em tempo real"
       />
-      <Tabs defaultValue="channels" className="w-full">
-        <TabsList className="grid grid-cols-3 w-full md:w-auto">
+      <Tabs defaultValue="conversas" className="w-full">
+        <TabsList className="grid grid-cols-4 w-full md:w-auto">
+          <TabsTrigger value="conversas">Conversas</TabsTrigger>
           <TabsTrigger value="channels">Canais</TabsTrigger>
           <TabsTrigger value="templates">Templates</TabsTrigger>
           <TabsTrigger value="queue">Fila</TabsTrigger>
         </TabsList>
+        <TabsContent value="conversas" className="mt-6"><ConversasTab restaurantId={restaurantId} /></TabsContent>
         <TabsContent value="channels" className="mt-6"><ChannelsTab restaurantId={restaurantId} /></TabsContent>
         <TabsContent value="templates" className="mt-6"><TemplatesTab restaurantId={restaurantId} /></TabsContent>
         <TabsContent value="queue" className="mt-6"><QueueTab restaurantId={restaurantId} /></TabsContent>

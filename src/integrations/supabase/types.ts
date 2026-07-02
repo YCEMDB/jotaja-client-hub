@@ -681,6 +681,189 @@ export type Database = {
           },
         ]
       }
+      conversation_messages: {
+        Row: {
+          author_user_id: string | null
+          body: string
+          conversation_id: string
+          created_at: string
+          direction: string
+          id: string
+          order_id: string | null
+          payload_normalized: Json | null
+          payload_raw: Json | null
+          provider_message_id: string | null
+          queue_id: string | null
+          received_at: string
+          restaurant_id: string
+          source: string
+          status: string
+        }
+        Insert: {
+          author_user_id?: string | null
+          body: string
+          conversation_id: string
+          created_at?: string
+          direction: string
+          id?: string
+          order_id?: string | null
+          payload_normalized?: Json | null
+          payload_raw?: Json | null
+          provider_message_id?: string | null
+          queue_id?: string | null
+          received_at?: string
+          restaurant_id: string
+          source?: string
+          status?: string
+        }
+        Update: {
+          author_user_id?: string | null
+          body?: string
+          conversation_id?: string
+          created_at?: string
+          direction?: string
+          id?: string
+          order_id?: string | null
+          payload_normalized?: Json | null
+          payload_raw?: Json | null
+          provider_message_id?: string | null
+          queue_id?: string | null
+          received_at?: string
+          restaurant_id?: string
+          source?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversation_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversation_messages_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversation_messages_queue_id_fkey"
+            columns: ["queue_id"]
+            isOneToOne: false
+            referencedRelation: "communication_queue"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversation_messages_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversation_messages_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conversations: {
+        Row: {
+          channel: Database["public"]["Enums"]["comm_channel"]
+          created_at: string
+          customer_id: string | null
+          id: string
+          last_direction: string | null
+          last_message_at: string | null
+          last_message_preview: string | null
+          order_id: string | null
+          peer_address: string
+          peer_name: string | null
+          provider_code: string
+          restaurant_id: string
+          settings_id: string | null
+          status: string
+          unread_count: number
+          updated_at: string
+        }
+        Insert: {
+          channel?: Database["public"]["Enums"]["comm_channel"]
+          created_at?: string
+          customer_id?: string | null
+          id?: string
+          last_direction?: string | null
+          last_message_at?: string | null
+          last_message_preview?: string | null
+          order_id?: string | null
+          peer_address: string
+          peer_name?: string | null
+          provider_code?: string
+          restaurant_id: string
+          settings_id?: string | null
+          status?: string
+          unread_count?: number
+          updated_at?: string
+        }
+        Update: {
+          channel?: Database["public"]["Enums"]["comm_channel"]
+          created_at?: string
+          customer_id?: string | null
+          id?: string
+          last_direction?: string | null
+          last_message_at?: string | null
+          last_message_preview?: string | null
+          order_id?: string | null
+          peer_address?: string
+          peer_name?: string | null
+          provider_code?: string
+          restaurant_id?: string
+          settings_id?: string | null
+          status?: string
+          unread_count?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversations_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversations_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversations_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversations_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversations_settings_id_fkey"
+            columns: ["settings_id"]
+            isOneToOne: false
+            referencedRelation: "communication_settings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       coupon_uses: {
         Row: {
           coupon_id: string
@@ -1811,6 +1994,57 @@ export type Database = {
           },
         ]
       }
+      quick_replies: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          is_active: boolean
+          position: number
+          restaurant_id: string
+          shortcut: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          position?: number
+          restaurant_id: string
+          shortcut?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          position?: number
+          restaurant_id?: string
+          shortcut?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quick_replies_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quick_replies_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rate_limit_events: {
         Row: {
           bucket_key: string
@@ -2412,6 +2646,17 @@ export type Database = {
         }
         Returns: Json
       }
+      find_or_create_conversation: {
+        Args: {
+          p_channel: Database["public"]["Enums"]["comm_channel"]
+          p_peer_address: string
+          p_peer_name?: string
+          p_provider_code?: string
+          p_restaurant_id: string
+          p_settings_id?: string
+        }
+        Returns: string
+      }
       get_kds_orders: {
         Args: { p_restaurant_id: string; p_station_id?: string }
         Returns: Json
@@ -2490,6 +2735,10 @@ export type Database = {
         }
         Returns: undefined
       }
+      mark_conversation_read: {
+        Args: { p_conversation_id: string }
+        Returns: undefined
+      }
       move_to_dlq: {
         Args: {
           dlq_name: string
@@ -2523,6 +2772,10 @@ export type Database = {
         Returns: undefined
       }
       resend_team_invite: { Args: { p_invite_id: string }; Returns: Json }
+      send_manual_conversation_message: {
+        Args: { p_body: string; p_conversation_id: string }
+        Returns: string
+      }
       set_settings_health: {
         Args: {
           p_error: string
