@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { getCustomerConversationTimeline } from "@/lib/communication/automation.functions";
+import { orderStatusLabel } from "@/lib/labels";
 import { Bot, Inbox, User, ShoppingBag } from "lucide-react";
 
 export function CustomerTimelineDialog({
@@ -67,7 +68,7 @@ export function CustomerTimelineDialog({
                   <div className="flex items-center gap-2">
                     <ShoppingBag className="w-4 h-4 text-brand-orange" />
                     <span className="font-bold">#{o.order_number}</span>
-                    <Badge variant="outline">{o.status}</Badge>
+                    <Badge variant="outline">{orderStatusLabel(o.status)}</Badge>
                   </div>
                   <div className="text-right">
                     <div className="font-bold">R$ {Number(o.total ?? 0).toFixed(2)}</div>

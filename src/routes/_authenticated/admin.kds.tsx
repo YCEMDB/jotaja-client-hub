@@ -14,6 +14,7 @@ import {
 import { toast } from "sonner";
 import { translateError } from "@/lib/error-messages";
 import { playOrderBeep } from "@/lib/order-notifications";
+import { paymentLabel, orderTypeLabel } from "@/lib/labels";
 
 export const Route = createFileRoute("/_authenticated/admin/kds")({
   component: KDSPage,
@@ -261,11 +262,11 @@ function KDSPage() {
                         <User className="w-3 h-3" />{o.customer_name}
                       </div>
                       <div className="flex items-center gap-2 text-xs text-neutral-500 mb-2">
-                        {o.type === "delivery" ? <><Truck className="w-3 h-3" />Delivery</>
-                          : o.type === "pickup" ? <><Package className="w-3 h-3" />Retirada</>
-                          : <><MapPin className="w-3 h-3" />Mesa</>}
+                        {o.type === "delivery" ? <><Truck className="w-3 h-3" />{orderTypeLabel(o.type)}</>
+                          : o.type === "pickup" ? <><Package className="w-3 h-3" />{orderTypeLabel(o.type)}</>
+                          : <><MapPin className="w-3 h-3" />{orderTypeLabel(o.type)}</>}
                         <span>·</span>
-                        <span className="uppercase">{o.payment}</span>
+                        <span>{paymentLabel(o.payment)}</span>
                         <span>·</span>
                         <span className="font-bold text-white">R$ {Number(o.total).toFixed(2)}</span>
                       </div>

@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { printReceipt } from "@/lib/print-receipt";
 import { ensureNotificationPermission, playOrderBeep, showOrderNotification } from "@/lib/order-notifications";
 import { OrderCommunicationTimeline } from "@/components/comunicacao/OrderCommunicationTimeline";
+import { paymentLabel } from "@/lib/labels";
 
 export const Route = createFileRoute("/_authenticated/admin/pedidos")({
   component: PedidosPage,
@@ -426,7 +427,7 @@ function PedidosPage() {
                         </div>
                         <p className="text-sm font-bold text-ink truncate">{o.customer_name}</p>
                         <p className="text-[10px] text-ink/60 truncate uppercase tracking-wide font-bold mt-0.5">
-                          {typeLabel(o.type)} · {o.payment}
+                          {typeLabel(o.type)} · {paymentLabel(o.payment)}
                         </p>
 
                         {/* Bloco entregador: aparece em "Saiu" e "Entregue" */}
