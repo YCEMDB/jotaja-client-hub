@@ -92,3 +92,17 @@ implementar essas 4 funções — nada mais.
 - Dashboard: conversas abertas, tempo médio de resposta, não respondidas.
 - Encaminhamento entre operadores + atribuição.
 - Suporte a mídia (imagem/áudio) na UI.
+
+---
+
+## Sprint 4.3 — Mídia
+
+`conversation_messages` agora tem: `media_type` (`text|image|audio|document|video|sticker|location`), `media_url`, `media_mime`, `caption`. `payload_raw`/`payload_normalized` continuam armazenando o payload bruto do provider.
+
+Renderização:
+- image → `<img>` inline
+- audio → `<audio controls>` inline
+- video → `<video controls>` inline
+- document → link para download
+
+Sem processamento avançado (sem transcrição, sem OCR).
