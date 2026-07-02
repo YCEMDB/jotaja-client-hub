@@ -9,7 +9,8 @@ import {
   LineChart, Line, ResponsiveContainer, XAxis, YAxis, Tooltip as ReTooltip, CartesianGrid,
 } from "recharts";
 import { toast } from "sonner";
-import { PageHeader } from "@/components/PageHeader";
+import { AdminPageLayout } from "@/components/AdminPageLayout";
+import { LayoutDashboard } from "lucide-react";
 import { StatCard } from "@/components/app/StatCard";
 
 export const Route = createFileRoute("/_super/super/")({
