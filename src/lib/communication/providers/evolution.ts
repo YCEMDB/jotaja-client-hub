@@ -115,4 +115,48 @@ export const EvolutionProvider: CommunicationProvider = {
       return [];
     }
   },
+
+  // Sprint 4.2 — Interpreta mensagens recebidas do webhook Evolution API.
+  async parseInbound(_headers: Headers, rawBody: string): Promise<InboundMessage[]> {
+    try {
+      const body = JSON.parse(rawBody);
+      const events = Array.isArray(body?.data) ? body.data : (Array.isArray(body) ? body : [body]);
+      const out: InboundMessage[] = [];
+      for (const ev of events) {
+        // Evolution: eventos "messages.upsert" com key.fromMe = false
+        const fromMe = ev?.key?.fromMe === true;
+        if (fromMe) continue;
+        const remoteJid: string | undefined = ev?.key?.remoteJid || ev?.remoteJid;
+        if (!remoteJid) continue;
+        const from = String(remoteJid).replace(/@.*/, "").replace(/\D/g, "");
+        if (!from) continue;
+        const msg = ev?.message ?? {};
+        const text: string =
+          msg?.conversation ||
+          msg?.extendedTextMessage?.text ||
+          msg?.imageMessage?.caption ||
+          msg?.videoMessage?.caption ||
+          msg?.buttonsResponseMessage?.selectedDisplayText ||
+          msg?.listResponseMessage?.title ||
+          "";
+        if (!text || typeof text !== "string") continue;
+        const providerId = ev?.key?.id || ev?.messageId || ev?.id;
+        const ts = ev?.messageTimestamp
+          ? new Date(Number(ev.messageTimestamp) * 1000).toISOString()
+          : undefined;
+        out.push({
+          provider_message_id: providerId ? String(providerId) : undefined,
+          from,
+          from_name: ev?.pushName ?? null,
+          body: text.slice(0, 4000),
+          timestamp: ts,
+          raw: ev,
+          normalized: { source: "evolution", event: body?.event ?? null },
+        });
+      }
+      return out;
+    } catch {
+      return [];
+    }
+  },
 };
