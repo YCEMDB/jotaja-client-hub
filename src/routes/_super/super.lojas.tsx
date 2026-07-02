@@ -17,6 +17,7 @@ import { LogIn, Search, AlertTriangle, Plus, Building2, RotateCcw, Trash2, KeyRo
 import { toast } from "sonner";
 import { CreateTenantDialog } from "@/components/super/CreateTenantDialog";
 import { PaymentsSection } from "@/components/super/PaymentsSection";
+import { AdminPageLayout } from "@/components/AdminPageLayout";
 
 export const Route = createFileRoute("/_super/super/lojas")({
   component: LojasPage,
