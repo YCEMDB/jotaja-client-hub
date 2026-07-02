@@ -1,4 +1,5 @@
 // Sprint 4.1 — tipos genéricos, desacoplados de canal/provedor.
+// Sprint 4.2 — extensão: inbound bidirecional.
 export type CommChannel =
   | "whatsapp" | "sms" | "email" | "push"
   | "telegram" | "instagram" | "messenger" | "voice";
@@ -49,6 +50,17 @@ export interface InboundStatusUpdate {
   error?: string;
 }
 
+// Sprint 4.2 — Mensagem recebida (inbound bidirecional).
+export interface InboundMessage {
+  provider_message_id?: string;
+  from: string;             // telefone/identificador do remetente
+  from_name?: string | null;
+  body: string;
+  timestamp?: string;       // ISO
+  raw?: unknown;
+  normalized?: Record<string, unknown>;
+}
+
 export interface CommunicationProvider {
   code: string;
   channel: CommChannel;
@@ -62,4 +74,6 @@ export interface CommunicationProvider {
     creds: ProviderCredentials,
   ): Promise<HealthCheckResult>;
   parseWebhook?(headers: Headers, rawBody: string): Promise<InboundStatusUpdate[]>;
+  // Sprint 4.2 — retorna mensagens recebidas do webhook.
+  parseInbound?(headers: Headers, rawBody: string): Promise<InboundMessage[]>;
 }
