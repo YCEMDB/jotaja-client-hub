@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { getCustomerConversationTimeline } from "@/lib/communication/automation.functions";
+import { orderStatusLabel } from "@/lib/labels";
 import { Bot, Inbox, User, ShoppingBag } from "lucide-react";
 
 export function CustomerTimelineDialog({
