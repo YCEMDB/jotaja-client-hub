@@ -145,6 +145,7 @@ function PlanosPage() {
           {!plans.length && <p className="text-muted-foreground col-span-3">Nenhum plano cadastrado.</p>}
         </div>
       )}
-    </div>
+    </AdminPageLayout>
   );
 }
+
