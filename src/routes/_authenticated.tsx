@@ -185,7 +185,7 @@ function TopBar({
   const initial = (userEmail?.[0] ?? "U").toUpperCase();
 
   return (
-    <header className="sticky top-0 z-30 flex items-center gap-3 px-4 md:px-6 h-14 md:h-16 bg-background/95 backdrop-blur-md border-b-2 border-ink/10">
+    <header className="sticky top-0 z-30 flex items-center gap-3 px-4 sm:px-6 lg:px-8 xl:px-10 h-14 md:h-16 bg-background/95 backdrop-blur-md border-b-2 border-ink/10">
       <button
         onClick={onOpenMobile}
         aria-label="Abrir menu"

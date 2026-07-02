@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Badge } from "@/components/ui/badge";
 import { ShieldCheck, Plus, Trash2, Copy } from "lucide-react";
 import { toast } from "sonner";
+import { AdminPageLayout } from "@/components/AdminPageLayout";
 
 export const Route = createFileRoute("/_super/super/equipe")({
   component: EquipePage,
@@ -67,19 +68,19 @@ function EquipePage() {
   };
 
   return (
-    <div className="p-4 md:p-6 space-y-6">
-      <div className="flex items-center justify-between gap-4 flex-wrap">
-        <div className="flex items-center gap-3">
-          <ShieldCheck className="h-8 w-8 text-brand-violet" />
-          <div>
-            <h1 className="font-display text-4xl text-ink tracking-tight">Equipe</h1>
-            <p className="text-muted-foreground">Gerencie outros super-administradores da plataforma</p>
-          </div>
-        </div>
+    <AdminPageLayout
+      kicker="Super-admin"
+      title="Equipe"
+      subtitle="Gerencie outros super-administradores da plataforma"
+      accent="violet"
+      icon={ShieldCheck}
+      actions={
         <Button onClick={() => { setOpen(true); setCreated(null); }}>
           <Plus className="h-4 w-4 mr-2" /> Adicionar Super-Admin
         </Button>
-      </div>
+      }
+    >
+
 
       <Card className="overflow-x-auto">
         <table className="w-full text-sm min-w-[640px]">
@@ -143,6 +144,7 @@ function EquipePage() {
           )}
         </DialogContent>
       </Dialog>
-    </div>
+    </AdminPageLayout>
   );
 }
+

@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Inbox } from "lucide-react";
 import { toast } from "sonner";
 import { CreateTenantDialog } from "@/components/super/CreateTenantDialog";
+import { AdminPageLayout } from "@/components/AdminPageLayout";
 
 export const Route = createFileRoute("/_super/super/leads")({
   component: LeadsPage,
@@ -67,14 +68,14 @@ function LeadsPage() {
   };
 
   return (
-    <div className="p-4 md:p-6 space-y-6">
-      <div className="flex items-center gap-3">
-        <Inbox className="h-8 w-8 text-brand-violet" />
-        <div>
-          <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight leading-[0.95]">Leads</h1>
-          <p className="text-muted-foreground">Solicitações recebidas pelo formulário do site</p>
-        </div>
-      </div>
+    <AdminPageLayout
+      kicker="Super-admin"
+      title="Leads"
+      subtitle="Solicitações recebidas pelo formulário do site"
+      accent="violet"
+      icon={Inbox}
+    >
+
 
       <div className="flex items-center gap-2 flex-wrap">
         {(["all", "new", "contacted", "approved", "rejected"] as const).map((s) => (
@@ -153,6 +154,7 @@ function LeadsPage() {
         prefill={createPrefill}
         onCreated={() => load()}
       />
-    </div>
+    </AdminPageLayout>
   );
 }
+

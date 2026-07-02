@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Layers, Trash2, Plus } from "lucide-react";
 import { toast } from "sonner";
+import { AdminPageLayout } from "@/components/AdminPageLayout";
 
 export const Route = createFileRoute("/_super/super/planos")({
   component: PlanosPage,
@@ -84,17 +85,15 @@ function PlanosPage() {
   };
 
   return (
-    <div className="p-4 md:p-6 space-y-6">
-      <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div className="flex items-center gap-3">
-          <Layers className="h-8 w-8 text-brand-violet" />
-          <div>
-            <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight leading-[0.95]">Planos & Preços</h1>
-            <p className="text-muted-foreground">Catálogo público mostrado na landing page</p>
-          </div>
-        </div>
-        <Button onClick={create}><Plus className="h-4 w-4 mr-2" />Novo plano</Button>
-      </div>
+    <AdminPageLayout
+      kicker="Super-admin"
+      title="Planos & Preços"
+      subtitle="Catálogo público mostrado na landing page"
+      accent="violet"
+      icon={Layers}
+      actions={<Button onClick={create}><Plus className="h-4 w-4 mr-2" />Novo plano</Button>}
+    >
+
 
       {loading ? (
         <p className="text-muted-foreground">Carregando…</p>
@@ -146,6 +145,7 @@ function PlanosPage() {
           {!plans.length && <p className="text-muted-foreground col-span-3">Nenhum plano cadastrado.</p>}
         </div>
       )}
-    </div>
+    </AdminPageLayout>
   );
 }
+
