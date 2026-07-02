@@ -101,7 +101,8 @@ export const Route = createFileRoute("/api/public/hooks/communication/$provider/
             .in("status", ["pending","confirmed","preparing","ready","out_for_delivery"])
             .order("created_at", { ascending: false }).limit(1).maybeSingle();
 
-          const { error: insErr } = await supabaseAdmin.from("conversation_messages").insert({
+          const norm = (m.normalized ?? {}) as Record<string, unknown>;
+          const { data: inserted, error: insErr } = await supabaseAdmin.from("conversation_messages").insert({
             conversation_id: convId as string,
             restaurant_id: settings.restaurant_id,
             direction: "inbound",
@@ -110,10 +111,21 @@ export const Route = createFileRoute("/api/public/hooks/communication/$provider/
             provider_message_id: m.provider_message_id ?? null,
             order_id: recentOrder?.id ?? null,
             status: "received",
+            media_type: (norm.media_type as string) ?? "text",
+            media_url:  (norm.media_url  as string) ?? null,
+            media_mime: (norm.media_mime as string) ?? null,
+            caption:    (norm.caption    as string) ?? null,
             payload_raw: (m.raw ?? null) as any,
             payload_normalized: (m.normalized ?? null) as any,
-          });
-          if (!insErr) insertedMessages++;
+          }).select("id").maybeSingle();
+          if (!insErr && inserted) {
+            insertedMessages++;
+            // Sprint 4.3 — dispara automação
+            await supabaseAdmin.rpc("process_inbound_automation", {
+              p_conversation_id: convId as string,
+              p_inbound_body: m.body,
+            });
+          }
 
           // Log de auditoria
           await supabaseAdmin.from("communication_logs").insert({
