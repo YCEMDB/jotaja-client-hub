@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Badge } from "@/components/ui/badge";
 import { ShieldCheck, Plus, Trash2, Copy } from "lucide-react";
 import { toast } from "sonner";
+import { AdminPageLayout } from "@/components/AdminPageLayout";
 
 export const Route = createFileRoute("/_super/super/equipe")({
   component: EquipePage,
