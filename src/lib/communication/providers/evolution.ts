@@ -131,6 +131,18 @@ export const EvolutionProvider: CommunicationProvider = {
         const from = String(remoteJid).replace(/@.*/, "").replace(/\D/g, "");
         if (!from) continue;
         const msg = ev?.message ?? {};
+        // Sprint 4.3 — extrai mídia
+        let mediaType: "text" | "image" | "audio" | "document" | "video" | "sticker" | "location" = "text";
+        let mediaUrl: string | null = null;
+        let mediaMime: string | null = null;
+        let caption: string | null = null;
+        if (msg?.imageMessage)      { mediaType = "image";    mediaUrl = msg.imageMessage.url ?? null;    mediaMime = msg.imageMessage.mimetype ?? null;    caption = msg.imageMessage.caption ?? null; }
+        else if (msg?.audioMessage) { mediaType = "audio";    mediaUrl = msg.audioMessage.url ?? null;    mediaMime = msg.audioMessage.mimetype ?? null; }
+        else if (msg?.videoMessage) { mediaType = "video";    mediaUrl = msg.videoMessage.url ?? null;    mediaMime = msg.videoMessage.mimetype ?? null;    caption = msg.videoMessage.caption ?? null; }
+        else if (msg?.documentMessage) { mediaType = "document"; mediaUrl = msg.documentMessage.url ?? null; mediaMime = msg.documentMessage.mimetype ?? null; caption = msg.documentMessage.fileName ?? null; }
+        else if (msg?.stickerMessage)  { mediaType = "sticker";  mediaUrl = msg.stickerMessage.url ?? null; }
+        else if (msg?.locationMessage) { mediaType = "location"; }
+
         const text: string =
           msg?.conversation ||
           msg?.extendedTextMessage?.text ||
@@ -138,8 +150,9 @@ export const EvolutionProvider: CommunicationProvider = {
           msg?.videoMessage?.caption ||
           msg?.buttonsResponseMessage?.selectedDisplayText ||
           msg?.listResponseMessage?.title ||
-          "";
-        if (!text || typeof text !== "string") continue;
+          (mediaType !== "text" ? `[${mediaType}]` : "");
+        if (!text && mediaType === "text") continue;
+
         const providerId = ev?.key?.id || ev?.messageId || ev?.id;
         const ts = ev?.messageTimestamp
           ? new Date(Number(ev.messageTimestamp) * 1000).toISOString()
@@ -148,10 +161,17 @@ export const EvolutionProvider: CommunicationProvider = {
           provider_message_id: providerId ? String(providerId) : undefined,
           from,
           from_name: ev?.pushName ?? null,
-          body: text.slice(0, 4000),
+          body: String(text).slice(0, 4000),
           timestamp: ts,
           raw: ev,
-          normalized: { source: "evolution", event: body?.event ?? null },
+          normalized: {
+            source: "evolution",
+            event: body?.event ?? null,
+            media_type: mediaType,
+            media_url: mediaUrl,
+            media_mime: mediaMime,
+            caption,
+          },
         });
       }
       return out;
