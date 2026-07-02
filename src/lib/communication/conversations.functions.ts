@@ -51,7 +51,7 @@ export const listConversationMessages = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { data: rows, error } = await context.supabase
       .from("conversation_messages")
-      .select("id, conversation_id, direction, source, author_user_id, body, status, provider_message_id, order_id, created_at")
+      .select("id, conversation_id, direction, source, author_user_id, body, status, provider_message_id, order_id, media_type, media_url, media_mime, caption, created_at")
       .eq("conversation_id", data.conversation_id)
       .order("created_at", { ascending: true })
       .limit(500);

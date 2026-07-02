@@ -12,6 +12,7 @@ import { Clock, MapPin, Phone, CreditCard, ChevronRight, MessageCircle, Truck, P
 import { toast } from "sonner";
 import { printReceipt } from "@/lib/print-receipt";
 import { ensureNotificationPermission, playOrderBeep, showOrderNotification } from "@/lib/order-notifications";
+import { OrderCommunicationTimeline } from "@/components/comunicacao/OrderCommunicationTimeline";
 
 export const Route = createFileRoute("/_authenticated/admin/pedidos")({
   component: PedidosPage,
@@ -623,6 +624,13 @@ function PedidosPage() {
                   )}
                 </div>
 
+
+                <div className="pt-2">
+                  <h4 className="text-sm font-bold mb-2 flex items-center gap-2">
+                    <MessageCircle className="w-4 h-4" /> Comunicação
+                  </h4>
+                  <OrderCommunicationTimeline orderId={selected.id} />
+                </div>
 
                 <div className="flex flex-wrap gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => printOrder(selected)}>

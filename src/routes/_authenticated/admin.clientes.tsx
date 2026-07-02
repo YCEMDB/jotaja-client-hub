@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Users, Search, Phone, Mail, ShoppingBag } from "lucide-react";
+import { CustomerTimelineDialog } from "@/components/comunicacao/CustomerTimelineDialog";
 
 export const Route = createFileRoute("/_authenticated/admin/clientes")({
   component: Clientes,
@@ -26,6 +27,7 @@ function Clientes() {
   const { restaurantId } = useAuth();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [q, setQ] = useState("");
+  const [openId, setOpenId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!restaurantId) return;
@@ -87,7 +89,12 @@ function Clientes() {
       ) : (
         <Card className="divide-y">
           {filtered.map((c) => (
-            <div key={c.id} className="p-4 flex items-center justify-between hover:bg-muted/50">
+            <button
+              type="button"
+              key={c.id}
+              onClick={() => setOpenId(c.id)}
+              className="w-full text-left p-4 flex items-center justify-between hover:bg-muted/50"
+            >
               <div className="flex-1">
                 <div className="font-semibold">{c.name}</div>
                 <div className="text-sm text-muted-foreground flex flex-wrap gap-3 mt-1">
@@ -100,10 +107,11 @@ function Clientes() {
                 <div className="text-sm text-muted-foreground flex items-center gap-1 justify-end"><ShoppingBag className="h-3 w-3" />{c.total_orders ?? 0} pedidos</div>
                 <div className="font-bold text-lg">R$ {Number(c.total_spent ?? 0).toFixed(2)}</div>
               </div>
-            </div>
+            </button>
           ))}
         </Card>
       )}
+      <CustomerTimelineDialog customerId={openId} open={!!openId} onOpenChange={(v) => !v && setOpenId(null)} />
     </div>
   );
 }
