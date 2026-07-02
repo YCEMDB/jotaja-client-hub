@@ -1,6 +1,6 @@
 import type {
   CommunicationProvider, ChannelMessage, ProviderConfig,
-  ProviderCredentials, SendResult, HealthCheckResult, InboundStatusUpdate,
+  ProviderCredentials, SendResult, HealthCheckResult, InboundStatusUpdate, InboundMessage,
 } from "../types";
 
 // Evolution API — Adapter.
