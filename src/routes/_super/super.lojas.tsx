@@ -164,19 +164,19 @@ function LojasPage() {
   };
 
   return (
-    <div className="p-4 md:p-6 space-y-6">
-      <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div className="flex items-center gap-3">
-          <Building2 className="h-8 w-8 text-brand-violet" />
-          <div>
-            <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight leading-[0.95]">Lojas</h1>
-            <p className="text-muted-foreground">Gerencie planos, status e pagamentos de cada restaurante</p>
-          </div>
-        </div>
+    <AdminPageLayout
+      kicker="Super-admin"
+      title="Lojas"
+      subtitle="Gerencie planos, status e pagamentos de cada restaurante"
+      accent="violet"
+      icon={Building2}
+      actions={
         <Button onClick={() => setCreateOpen(true)}>
           <Plus className="h-4 w-4 mr-2" /> Nova loja
         </Button>
-      </div>
+      }
+    >
+
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <Card className="p-4"><p className="text-xs text-muted-foreground">Restaurantes</p><p className="text-2xl font-bold">{stats.total}</p></Card>
