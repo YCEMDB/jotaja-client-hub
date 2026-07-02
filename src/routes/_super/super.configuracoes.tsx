@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Settings2 } from "lucide-react";
 import { toast } from "sonner";
+import { AdminPageLayout } from "@/components/AdminPageLayout";
 
 export const Route = createFileRoute("/_super/super/configuracoes")({
   component: ConfiguracoesPage,
