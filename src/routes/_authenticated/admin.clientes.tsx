@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Users, Search, Phone, Mail, ShoppingBag } from "lucide-react";
+import { CustomerTimelineDialog } from "@/components/comunicacao/CustomerTimelineDialog";
 
 export const Route = createFileRoute("/_authenticated/admin/clientes")({
   component: Clientes,
