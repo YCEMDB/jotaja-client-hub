@@ -144,6 +144,7 @@ function EquipePage() {
           )}
         </DialogContent>
       </Dialog>
-    </div>
+    </AdminPageLayout>
   );
 }
+
