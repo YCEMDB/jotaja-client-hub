@@ -12,6 +12,7 @@ import { Clock, MapPin, Phone, CreditCard, ChevronRight, MessageCircle, Truck, P
 import { toast } from "sonner";
 import { printReceipt } from "@/lib/print-receipt";
 import { ensureNotificationPermission, playOrderBeep, showOrderNotification } from "@/lib/order-notifications";
+import { OrderCommunicationTimeline } from "@/components/comunicacao/OrderCommunicationTimeline";
 
 export const Route = createFileRoute("/_authenticated/admin/pedidos")({
   component: PedidosPage,
