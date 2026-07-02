@@ -140,6 +140,7 @@ function AvisosPage() {
         ))}
         {!items.length && <p className="text-muted-foreground">Nenhum aviso publicado.</p>}
       </div>
-    </div>
+    </AdminPageLayout>
   );
 }
+
