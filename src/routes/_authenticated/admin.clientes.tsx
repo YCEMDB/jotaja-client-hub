@@ -27,6 +27,7 @@ function Clientes() {
   const { restaurantId } = useAuth();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [q, setQ] = useState("");
+  const [openId, setOpenId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!restaurantId) return;
