@@ -55,14 +55,18 @@ function ComunicacaoInner() {
         title="Central de Comunicação"
         subtitle="Converse, envie mensagens e acompanhe canais em tempo real"
       />
-      <Tabs defaultValue="conversas" className="w-full">
-        <TabsList className="grid grid-cols-4 w-full md:w-auto">
+      <Tabs defaultValue="painel" className="w-full">
+        <TabsList className="grid grid-cols-3 md:grid-cols-6 w-full md:w-auto">
+          <TabsTrigger value="painel">Painel</TabsTrigger>
           <TabsTrigger value="conversas">Conversas</TabsTrigger>
+          <TabsTrigger value="automacoes">Automações</TabsTrigger>
           <TabsTrigger value="channels">Canais</TabsTrigger>
           <TabsTrigger value="templates">Templates</TabsTrigger>
           <TabsTrigger value="queue">Fila</TabsTrigger>
         </TabsList>
+        <TabsContent value="painel" className="mt-6"><PainelTab restaurantId={restaurantId} /></TabsContent>
         <TabsContent value="conversas" className="mt-6"><ConversasTab restaurantId={restaurantId} /></TabsContent>
+        <TabsContent value="automacoes" className="mt-6"><AutomacoesTab restaurantId={restaurantId} /></TabsContent>
         <TabsContent value="channels" className="mt-6"><ChannelsTab restaurantId={restaurantId} /></TabsContent>
         <TabsContent value="templates" className="mt-6"><TemplatesTab restaurantId={restaurantId} /></TabsContent>
         <TabsContent value="queue" className="mt-6"><QueueTab restaurantId={restaurantId} /></TabsContent>
