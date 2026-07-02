@@ -624,6 +624,13 @@ function PedidosPage() {
                 </div>
 
 
+                <div className="pt-2">
+                  <h4 className="text-sm font-bold mb-2 flex items-center gap-2">
+                    <MessageCircle className="w-4 h-4" /> Comunicação
+                  </h4>
+                  <OrderCommunicationTimeline orderId={selected.id} />
+                </div>
+
                 <div className="flex flex-wrap gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => printOrder(selected)}>
                     <Printer className="h-4 w-4 mr-1" />Imprimir
