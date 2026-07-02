@@ -88,7 +88,7 @@ export const Route = createFileRoute("/api/public/hooks/communication/$provider/
             p_peer_address: m.from,
             p_provider_code: settings.provider_code,
             p_settings_id: settings.id,
-            p_peer_name: m.from_name ?? null,
+            p_peer_name: m.from_name ?? undefined,
           });
           if (convErr || !convId) continue;
 
