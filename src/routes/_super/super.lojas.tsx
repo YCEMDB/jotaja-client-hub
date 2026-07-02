@@ -410,6 +410,7 @@ function LojasPage() {
         prefill={null}
         onCreated={() => load()}
       />
-    </div>
+    </AdminPageLayout>
   );
 }
+
