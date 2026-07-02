@@ -14,6 +14,7 @@ import {
 import { toast } from "sonner";
 import { translateError } from "@/lib/error-messages";
 import { playOrderBeep } from "@/lib/order-notifications";
+import { paymentLabel, orderTypeLabel } from "@/lib/labels";
 
 export const Route = createFileRoute("/_authenticated/admin/kds")({
   component: KDSPage,
