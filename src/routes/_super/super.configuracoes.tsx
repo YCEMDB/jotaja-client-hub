@@ -52,14 +52,15 @@ function ConfiguracoesPage() {
   };
 
   return (
-    <div className="p-4 md:p-6 space-y-6 max-w-3xl">
-      <div className="flex items-center gap-3">
-        <Settings2 className="h-8 w-8 text-brand-violet" />
-        <div>
-          <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight leading-[0.95]">Configurações</h1>
-          <p className="text-muted-foreground">Valores globais usados pela landing e pelo painel</p>
-        </div>
-      </div>
+    <AdminPageLayout
+      kicker="Super-admin"
+      title="Configurações"
+      subtitle="Valores globais usados pela landing e pelo painel"
+      accent="violet"
+      icon={Settings2}
+      maxWidth="3xl"
+    >
+
 
       {loading ? (
         <p className="text-muted-foreground">Carregando…</p>
