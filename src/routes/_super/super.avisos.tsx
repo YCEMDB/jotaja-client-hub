@@ -79,14 +79,15 @@ function AvisosPage() {
   };
 
   return (
-    <div className="p-4 md:p-6 space-y-6 max-w-4xl">
-      <div className="flex items-center gap-3">
-        <Megaphone className="h-8 w-8 text-brand-violet" />
-        <div>
-          <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight leading-[0.95]">Avisos globais</h1>
-          <p className="text-muted-foreground">Mensagens exibidas no topo do painel de todas as lojas</p>
-        </div>
-      </div>
+    <AdminPageLayout
+      kicker="Super-admin"
+      title="Avisos globais"
+      subtitle="Mensagens exibidas no topo do painel de todas as lojas"
+      accent="violet"
+      icon={Megaphone}
+      maxWidth="4xl"
+    >
+
 
       <Card className="p-5 space-y-3">
         <h2 className="font-bold text-lg">Novo aviso</h2>
