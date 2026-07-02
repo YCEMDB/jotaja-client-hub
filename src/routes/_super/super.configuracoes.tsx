@@ -85,6 +85,7 @@ function ConfiguracoesPage() {
           ))}
         </div>
       )}
-    </div>
+    </AdminPageLayout>
   );
 }
+
