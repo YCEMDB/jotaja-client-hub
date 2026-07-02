@@ -285,15 +285,24 @@ function PedidosPage() {
     if (o.status === "ready" && (o.type === "pickup" || o.type === "dine_in")) {
       next = "delivered";
     }
-    const { error } = await supabase.rpc("update_order_status", {
-      p_order_id: o.id,
-      p_new_status: next,
-      p_source: "panel",
-      p_reason: undefined,
-    });
-    if (error) return toast.error(error.message);
+    // Máquina de estados exige pending → confirmed antes de preparing.
+    // Encadeamos automaticamente para preservar o UX de 1 clique.
+    const steps: OrderStatus[] =
+      o.status === "pending" && next === "preparing"
+        ? ["confirmed", "preparing"]
+        : [next];
+    for (const step of steps) {
+      const { error } = await supabase.rpc("update_order_status", {
+        p_order_id: o.id,
+        p_new_status: step,
+        p_source: "panel",
+        p_reason: undefined,
+      });
+      if (error) return toast.error(error.message);
+    }
+    const finalStatus = steps[steps.length - 1];
     toast.success(`Pedido #${o.order_number} avançado`);
-    if (selected?.id === o.id) { setSelected({ ...o, status: next }); loadHistory(o.id); }
+    if (selected?.id === o.id) { setSelected({ ...o, status: finalStatus }); loadHistory(o.id); }
   };
 
   const cancel = async (o: Order) => {
