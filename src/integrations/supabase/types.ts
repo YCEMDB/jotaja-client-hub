@@ -4034,8 +4034,21 @@ export type Database = {
         Args: { p_restaurant_id: string }
         Returns: Json
       }
+      get_finance_cashflow: {
+        Args: { p_from?: string; p_restaurant_id: string; p_to?: string }
+        Returns: Json
+      }
       get_finance_dashboard: {
         Args: { p_from?: string; p_restaurant_id: string; p_to?: string }
+        Returns: Json
+      }
+      get_finance_dre: {
+        Args: {
+          p_cost_center_id?: string
+          p_from?: string
+          p_restaurant_id: string
+          p_to?: string
+        }
         Returns: Json
       }
       get_kds_orders: {
