@@ -76,16 +76,17 @@ function CardapioPage() {
     load();
   };
 
-  if (!restaurantId) return <div className="p-4 md:p-8">Configure seu restaurante primeiro.</div>;
+  if (!restaurantId) return <AdminPageLayout title="Cardápio"><p className="text-ink/60">Configure seu restaurante primeiro.</p></AdminPageLayout>;
 
   return (
-    <div className="p-4 md:p-8">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight leading-[0.95]">Cardápio</h1>
-          <p className="text-muted-foreground">Gerencie categorias e produtos</p>
-        </div>
-        <div className="flex gap-2">
+    <AdminPageLayout
+      title="Cardápio"
+      subtitle="Gerencie categorias e produtos"
+      kicker="Operação"
+      icon={UtensilsCrossed}
+      accent="orange"
+      actions={
+        <>
           <AISuggestButton restaurantId={restaurantId} />
           <Button variant="outline" onClick={() => { setEditCat(null); setCatOpen(true); }}>
             <Plus className="h-4 w-4 mr-2" /> Categoria
@@ -93,8 +94,9 @@ function CardapioPage() {
           <Button onClick={() => { setEditProd(null); setProdOpen(true); }} disabled={categories.length === 0}>
             <Plus className="h-4 w-4 mr-2" /> Produto
           </Button>
-        </div>
-      </div>
+        </>
+      }
+    >
 
       {loading ? (
         <p className="text-muted-foreground">Carregando…</p>
