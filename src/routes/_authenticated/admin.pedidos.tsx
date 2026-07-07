@@ -355,12 +355,12 @@ function PedidosPage() {
     window.open(`https://wa.me/${fullPhone}?text=${encodeURIComponent(text)}`, "_blank");
   };
 
-  if (!restaurantId) return <div className="p-4 md:p-8">Configure seu restaurante primeiro.</div>;
+  if (!restaurantId) return <PageContainer><p className="text-ink/60">Configure seu restaurante primeiro.</p></PageContainer>;
 
   return (
-    <div className="p-4 md:p-8 h-[calc(100vh-3.5rem)] md:h-screen flex flex-col">
-      <div className="mb-6 shrink-0 flex items-start justify-between gap-4 flex-wrap">
-        <div>
+    <PageContainer padded={false} className="pt-6 md:pt-8 pb-6 h-[calc(100vh-3.5rem)] md:h-[calc(100vh-4rem)] flex flex-col">
+      <header className="mb-6 shrink-0 flex items-end justify-between gap-6 flex-wrap">
+        <div className="min-w-0">
           <div className="inline-flex items-center gap-2 mb-3">
             <span className="h-2 w-2 rounded-full bg-brand-orange animate-pulse" />
             <span className="text-[11px] uppercase tracking-[0.18em] font-bold text-ink/70">Ao vivo · Últimas 24h</span>
