@@ -269,7 +269,29 @@ function Financeiro() {
           ) : null}
         </TabsContent>
 
+        {/* RECONCILIATION */}
+        <TabsContent value="reconciliation" className="space-y-4">
+          {!canReconcile ? (
+            <EmptyState
+              icon={Lock}
+              title="Conciliação disponível no plano Business"
+              description="Faça upgrade para conciliar dinheiro, PIX e cartão e registrar snapshots de auditoria."
+            />
+          ) : restaurantId ? (
+            <ReconciliationTab restaurantId={restaurantId} from={from} to={to} />
+          ) : null}
+        </TabsContent>
+
+        {/* REPORTS */}
+        <TabsContent value="reports" className="space-y-4">
+          {restaurantId ? (
+            <FinancialReportsTab restaurantId={restaurantId} from={from} to={to} showAdvanced={canDre} />
+          ) : null}
+        </TabsContent>
+
         {/* PAYABLE */}
+
+
 
         <TabsContent value="payable" className="space-y-4">
           <EntriesTab
