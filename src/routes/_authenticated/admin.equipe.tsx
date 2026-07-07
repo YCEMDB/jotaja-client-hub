@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Users, Copy, Trash2, Mail, ShieldAlert, RefreshCw } from "lucide-react";
+import { AdminPageLayout } from "@/components/ds";
 
 function translateInviteError(msg: string): string {
   if (msg.includes("plan_limit_reached")) return "Limite de usuários do plano atingido. Faça upgrade.";
