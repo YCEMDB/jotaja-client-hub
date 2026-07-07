@@ -21,6 +21,10 @@ export type PlanFeatures = {
   stock?: boolean;
   stock_recipes?: boolean;
   max_ingredients?: number | null;
+  finance_basic?: boolean;
+  finance_advanced?: boolean;
+  finance_dre?: boolean;
+  finance_reconcile?: boolean;
 };
 
 export type PlanInfo = {
