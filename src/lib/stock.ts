@@ -248,7 +248,58 @@ export async function registerMovement(input: {
   return data as string;
 }
 
+// -------------------- Recipes / Ficha Técnica --------------------
+export interface RecipeItem {
+  ingredient_id: string;
+  ingredient_name: string;
+  unit_symbol: string | null;
+  quantity: number;
+  avg_cost: number;
+  line_cost: number;
+  notes?: string | null;
+}
+
+export interface ProductRecipe {
+  items: RecipeItem[];
+  total_cost: number;
+}
+
+export interface ProductRecipeStatus {
+  product_id: string;
+  product_name: string;
+  price: number;
+  promo_price: number | null;
+  has_recipe: boolean;
+  item_count: number;
+  total_cost: number;
+  margin_value: number;
+  margin_percent: number | null;
+}
+
+export async function getProductRecipe(productId: string): Promise<ProductRecipe> {
+  const { data, error } = await supabase.rpc("get_product_recipe", { p_product_id: productId });
+  if (error) throw error;
+  const d = (data ?? {}) as any;
+  return { items: (d.items ?? []) as RecipeItem[], total_cost: Number(d.total_cost ?? 0) };
+}
+
+export async function listProductsRecipeStatus(restaurantId: string): Promise<ProductRecipeStatus[]> {
+  const { data, error } = await supabase.rpc("list_products_recipe_status", { p_restaurant_id: restaurantId });
+  if (error) throw error;
+  return ((data as unknown) ?? []) as ProductRecipeStatus[];
+}
+
+export async function setProductRecipe(productId: string, items: Array<{ ingredient_id: string; quantity: number; notes?: string | null }>): Promise<number> {
+  const { data, error } = await supabase.rpc("set_product_recipe", {
+    p_product_id: productId,
+    p_items: items as any,
+  });
+  if (error) throw error;
+  return (data as number) ?? 0;
+}
+
 // -------------------- Labels --------------------
+
 export const MOVEMENT_LABEL: Record<StockMovementType, string> = {
   entry: "Entrada",
   exit: "Saída",

@@ -2,6 +2,18 @@
 
 Registro cronológico de entregas.
 
+## Sprint 8 — Estoque Inteligente ✅ (Fase C — Ficha Técnica + Baixa Automática)
+- Nova aba **Ficha Técnica** em `/admin/estoque`, gated por `stock_recipes` (Business). Pro vê card de upgrade.
+- `RecipeDialog`: edita a ficha com custo total e margem (R$ e %) ao vivo. Salva via `set_product_recipe`.
+- RPCs novas: `get_product_recipe`, `list_products_recipe_status` (ambas team_owner, SECURITY DEFINER).
+- Trigger `orders_auto_stock_debit` em `orders`: quando o pedido atinge `restaurants.stock_auto_debit_status` (padrão `preparing`) gera `stock_movements.movement_type='sale'`; ao cancelar gera `reversal` (respeitando `stock_reverse_on_cancel`).
+- Guard-rails de idempotência: nunca duplica `sale`/`reversal` por pedido.
+- Zero UPDATE direto em `current_qty`: toda mutação passa por RPC/trigger oficial.
+- Nenhum novo status de pedido, nenhuma alteração no fluxo de pedidos, nenhuma state machine nova.
+- Realtime existente cobre a nova movimentação — dashboard e listagens atualizam sozinhos.
+- Docs: `docs/STOCK.md` atualizado.
+
+
 ## Sprint 8 — Estoque Inteligente ✅ (Fase B — UI Admin)
 - Nova rota `/admin/estoque` com abas Dashboard, Ingredientes, Fornecedores, Unidades, Movimentações e Alertas.
 - Dashboard reutiliza `get_stock_overview` (valor em estoque, ativos, abaixo do mínimo, movimentações do dia, perdas 30d).

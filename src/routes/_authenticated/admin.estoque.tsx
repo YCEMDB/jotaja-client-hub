@@ -28,16 +28,19 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Boxes, Package, AlertTriangle, TrendingDown, Activity, Plus, Pencil, Trash2,
-  ArrowDownUp, RefreshCw, Truck, Ruler, Search,
+  ArrowDownUp, RefreshCw, Truck, Ruler, Search, ChefHat, Sparkles, Lock,
 } from "lucide-react";
 import {
   getStockOverview, listIngredients, listMovements, listSuppliers, listUnits,
   createIngredient, updateIngredient, upsertSupplier, deleteSupplier, upsertUnit, deleteUnit,
-  formatBRL, MOVEMENT_LABEL, MOVEMENT_ACCENT,
+  formatBRL, MOVEMENT_LABEL, MOVEMENT_ACCENT, listProductsRecipeStatus,
   type StockIngredient, type StockMovement, type StockOverview, type StockSupplier, type StockUnit,
-  type StockMovementType,
+  type StockMovementType, type ProductRecipeStatus,
 } from "@/lib/stock";
 import { MovementDialog } from "@/components/stock/MovementDialog";
+import { RecipeDialog } from "@/components/stock/RecipeDialog";
+import { usePlanFeatures } from "@/hooks/usePlanFeatures";
+import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/admin/estoque")({
   component: EstoqueGated,
@@ -87,6 +90,16 @@ function Estoque() {
   const [movTarget, setMovTarget] = useState<StockIngredient | null>(null);
   const [movDefaultType, setMovDefaultType] = useState<StockMovementType>("entry");
 
+  // Recipes / Ficha técnica
+  const { has: hasFeature } = usePlanFeatures();
+  const canRecipes = hasFeature("stock_recipes");
+  const [recipeStatus, setRecipeStatus] = useState<ProductRecipeStatus[]>([]);
+  const [recipeSearch, setRecipeSearch] = useState("");
+  const [recipeFilter, setRecipeFilter] = useState<"all" | "missing" | "configured">("all");
+  const [recipeSort, setRecipeSort] = useState<"name" | "margin_percent" | "margin_value" | "cost">("name");
+  const [recipeDialogOpen, setRecipeDialogOpen] = useState(false);
+  const [recipeTarget, setRecipeTarget] = useState<ProductRecipeStatus | null>(null);
+
   const load = useCallback(async () => {
     if (!restaurantId) return;
     setError(null);
@@ -110,7 +123,14 @@ function Estoque() {
     }
   }, [restaurantId]);
 
+  const loadRecipes = useCallback(async () => {
+    if (!restaurantId || !canRecipes) return;
+    try { setRecipeStatus(await listProductsRecipeStatus(restaurantId)); }
+    catch (e: any) { toast.error(e?.message ?? "Erro ao carregar fichas"); }
+  }, [restaurantId, canRecipes]);
+
   useEffect(() => { load(); }, [load]);
+  useEffect(() => { loadRecipes(); }, [loadRecipes]);
 
   // Realtime
   useEffect(() => {
@@ -208,6 +228,7 @@ function Estoque() {
           <TabsTrigger value="suppliers">Fornecedores</TabsTrigger>
           <TabsTrigger value="units">Unidades</TabsTrigger>
           <TabsTrigger value="movements">Movimentações</TabsTrigger>
+          <TabsTrigger value="recipes">Ficha Técnica</TabsTrigger>
           <TabsTrigger value="alerts">
             Alertas {overview && overview.ingredients_low > 0 && (
               <span className="ml-2 bg-brand-magenta text-background text-[10px] px-1.5 rounded font-bold">{overview.ingredients_low}</span>
@@ -510,6 +531,22 @@ function Estoque() {
           )}
         </TabsContent>
 
+        {/* FICHA TÉCNICA */}
+        <TabsContent value="recipes" className="space-y-4">
+          <RecipesTab
+            enabled={canRecipes}
+            products={recipeStatus}
+            ingredients={ingredients}
+            search={recipeSearch}
+            onSearch={setRecipeSearch}
+            filter={recipeFilter}
+            onFilter={setRecipeFilter}
+            sort={recipeSort}
+            onSort={setRecipeSort}
+            onEdit={(p) => { setRecipeTarget(p); setRecipeDialogOpen(true); }}
+          />
+        </TabsContent>
+
         {/* ALERTAS */}
         <TabsContent value="alerts" className="space-y-4">
           <Section>
@@ -578,9 +615,168 @@ function Estoque() {
         defaultType={movDefaultType}
         onSuccess={load}
       />
+
+      {/* Recipe dialog */}
+      <RecipeDialog
+        open={recipeDialogOpen}
+        onOpenChange={setRecipeDialogOpen}
+        product={recipeTarget ? {
+          id: recipeTarget.product_id,
+          name: recipeTarget.product_name,
+          price: Number(recipeTarget.price),
+          promo_price: recipeTarget.promo_price != null ? Number(recipeTarget.promo_price) : null,
+        } : null}
+        ingredients={ingredients}
+        onSaved={() => { loadRecipes(); load(); }}
+      />
     </AdminPageLayout>
   );
 }
+
+// ---------- Recipes tab ----------
+function RecipesTab({ enabled, products, ingredients, search, onSearch, filter, onFilter, sort, onSort, onEdit }: {
+  enabled: boolean;
+  products: ProductRecipeStatus[];
+  ingredients: StockIngredient[];
+  search: string; onSearch: (v: string) => void;
+  filter: "all" | "missing" | "configured"; onFilter: (v: "all" | "missing" | "configured") => void;
+  sort: "name" | "margin_percent" | "margin_value" | "cost"; onSort: (v: "name" | "margin_percent" | "margin_value" | "cost") => void;
+  onEdit: (p: ProductRecipeStatus) => void;
+}) {
+  if (!enabled) {
+    return (
+      <Section>
+        <div className="grid place-items-center text-center py-10">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-sunset text-background mb-4 border-2 border-ink shadow-brutal">
+            <Lock className="h-6 w-6" />
+          </div>
+          <p className="text-xs uppercase tracking-wider text-ink/60 font-bold">Disponível no plano Business</p>
+          <h3 className="font-display text-2xl md:text-3xl text-ink mt-1 mb-2">Ficha Técnica e Custos</h3>
+          <p className="text-sm text-ink/60 max-w-md mb-4">
+            Cadastre a receita de cada produto, veja custo automático, margem em R$ e %, e ative a baixa automática de estoque a cada venda.
+          </p>
+          <Button asChild variant="gradient">
+            <Link to="/admin/configuracoes"><Sparkles className="h-4 w-4 mr-2" /> Ver planos</Link>
+          </Button>
+        </div>
+      </Section>
+    );
+  }
+
+  const missing = products.filter((p) => !p.has_recipe).length;
+
+  const filtered = (() => {
+    let list = products.slice();
+    const q = search.trim().toLowerCase();
+    if (q) list = list.filter((p) => p.product_name.toLowerCase().includes(q));
+    if (filter === "missing") list = list.filter((p) => !p.has_recipe);
+    else if (filter === "configured") list = list.filter((p) => p.has_recipe);
+    list.sort((a, b) => {
+      switch (sort) {
+        case "margin_percent": return (Number(b.margin_percent ?? -Infinity)) - (Number(a.margin_percent ?? -Infinity));
+        case "margin_value":   return Number(b.margin_value) - Number(a.margin_value);
+        case "cost":           return Number(b.total_cost) - Number(a.total_cost);
+        default:               return a.product_name.localeCompare(b.product_name, "pt-BR");
+      }
+    });
+    return list;
+  })();
+
+  const noIngredients = ingredients.filter((i) => i.is_active).length === 0;
+
+  return (
+    <>
+      <DashboardGrid cols={3}>
+        <StatCard label="Produtos" value={products.length} icon={ChefHat} accent="violet" />
+        <StatCard label="Com ficha" value={products.length - missing} icon={ChefHat} accent="green" />
+        <StatCard label="Sem ficha" value={missing} icon={AlertTriangle} accent="magenta" />
+      </DashboardGrid>
+
+      {noIngredients && (
+        <Section>
+          <p className="text-sm text-ink/70">Cadastre ingredientes ativos antes de montar fichas técnicas.</p>
+        </Section>
+      )}
+
+      <FilterBar>
+        <SearchBar value={search} onChange={onSearch} placeholder="Buscar produto…" />
+        <Select value={filter} onValueChange={(v) => onFilter(v as any)}>
+          <SelectTrigger className="w-[160px]"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todos</SelectItem>
+            <SelectItem value="missing">Sem ficha</SelectItem>
+            <SelectItem value="configured">Configuradas</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select value={sort} onValueChange={(v) => onSort(v as any)}>
+          <SelectTrigger className="w-[200px]"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="name">Ordenar: nome</SelectItem>
+            <SelectItem value="margin_percent">Ordenar: margem %</SelectItem>
+            <SelectItem value="margin_value">Ordenar: margem R$</SelectItem>
+            <SelectItem value="cost">Ordenar: custo</SelectItem>
+          </SelectContent>
+        </Select>
+      </FilterBar>
+
+      {filtered.length === 0 ? (
+        <EmptyState icon={ChefHat} title="Nenhum produto" description="Cadastre produtos no cardápio para montar suas fichas técnicas." />
+      ) : (
+        <Section chrome={false} className="overflow-hidden border-2 border-ink rounded-2xl bg-card shadow-[5px_5px_0_0_oklch(0.15_0.02_30)]">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/40 text-left text-[11px] uppercase tracking-wider text-ink/60">
+                <tr>
+                  <th className="px-4 py-3">Produto</th>
+                  <th className="px-4 py-3">Preço</th>
+                  <th className="px-4 py-3">Custo</th>
+                  <th className="px-4 py-3">Margem R$</th>
+                  <th className="px-4 py-3">Margem %</th>
+                  <th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-3 text-right">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map((p) => {
+                  const sell = Number(p.promo_price ?? p.price);
+                  const marginNeg = Number(p.margin_value) < 0;
+                  return (
+                    <tr key={p.product_id} className="border-t border-ink/10 hover:bg-muted/20">
+                      <td className="px-4 py-3 font-bold text-ink">{p.product_name}</td>
+                      <td className="px-4 py-3">{formatBRL(sell)}</td>
+                      <td className="px-4 py-3">{p.has_recipe ? formatBRL(p.total_cost) : "—"}</td>
+                      <td className={`px-4 py-3 font-bold ${marginNeg ? "text-brand-magenta" : "text-emerald-600"}`}>
+                        {p.has_recipe ? formatBRL(p.margin_value) : "—"}
+                      </td>
+                      <td className={`px-4 py-3 font-bold ${marginNeg ? "text-brand-magenta" : ""}`}>
+                        {p.has_recipe && p.margin_percent != null ? `${Number(p.margin_percent).toFixed(1)}%` : "—"}
+                      </td>
+                      <td className="px-4 py-3">
+                        {p.has_recipe ? (
+                          <Badge className="bg-emerald-500/15 text-emerald-700 border-emerald-500/40" variant="outline">
+                            {p.item_count} ingrediente{p.item_count === 1 ? "" : "s"}
+                          </Badge>
+                        ) : (
+                          <Badge className="bg-brand-magenta text-background border-brand-magenta">Sem ficha</Badge>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <Button size="sm" variant="outline" onClick={() => onEdit(p)}>
+                          <Pencil className="h-3.5 w-3.5 mr-1" /> Editar ficha
+                        </Button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </Section>
+      )}
+    </>
+  );
+}
+
 
 // ---------- Ingredient dialog ----------
 function IngredientDialog({ open, onOpenChange, editing, units, suppliers, restaurantId, onSuccess }: {
