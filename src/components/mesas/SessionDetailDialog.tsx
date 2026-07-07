@@ -378,6 +378,32 @@ export function SessionDetailDialog({
           </Tabs>
         )}
       </DialogContent>
+
+      {detail?.session && sessionId && table && (
+        <>
+          <TransferOrdersDialog
+            open={transferOpen}
+            onOpenChange={setTransferOpen}
+            onDone={() => { onChanged(); reload(); }}
+            source={{
+              sessionId, tableId: table.id, tableNumber: table.number,
+              commands: detail.commands, orders: detail.orders,
+            }}
+          />
+          <MergeSessionsDialog
+            open={mergeSessionsOpen}
+            onOpenChange={setMergeSessionsOpen}
+            onDone={() => { onChanged(); onOpenChange(false); }}
+            source={{ sessionId, tableNumber: table.number }}
+          />
+          <MergeCommandsDialog
+            open={mergeCmdsOpen}
+            onOpenChange={setMergeCmdsOpen}
+            onDone={() => { onChanged(); reload(); }}
+            commands={detail.commands}
+          />
+        </>
+      )}
     </Dialog>
   );
 }
