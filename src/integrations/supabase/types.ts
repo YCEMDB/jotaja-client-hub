@@ -3478,6 +3478,10 @@ export type Database = {
       }
     }
     Functions: {
+      _apply_stock_sale: {
+        Args: { p_order_id: string; p_reverse: boolean }
+        Returns: undefined
+      }
       _log_order_event: {
         Args: { p_event: string; p_meta?: Json; p_order_id: string }
         Returns: undefined
@@ -3752,6 +3756,7 @@ export type Database = {
           to_status: Database["public"]["Enums"]["order_status"]
         }[]
       }
+      get_product_recipe: { Args: { p_product_id: string }; Returns: Json }
       get_public_categories: {
         Args: { p_slug: string }
         Returns: {
@@ -3796,6 +3801,10 @@ export type Database = {
       link_driver_user: {
         Args: { p_driver_id: string; p_user_id: string }
         Returns: undefined
+      }
+      list_products_recipe_status: {
+        Args: { p_restaurant_id: string }
+        Returns: Json
       }
       list_team_members: {
         Args: { p_restaurant_id: string }
