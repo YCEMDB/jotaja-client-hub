@@ -1764,6 +1764,9 @@ export type Database = {
           source: string
           status: Database["public"]["Enums"]["order_status"]
           subtotal: number
+          table_command_id: string | null
+          table_number: number | null
+          table_session_id: string | null
           total: number
           type: Database["public"]["Enums"]["order_type"]
           updated_at: string
@@ -1795,6 +1798,9 @@ export type Database = {
           source?: string
           status?: Database["public"]["Enums"]["order_status"]
           subtotal?: number
+          table_command_id?: string | null
+          table_number?: number | null
+          table_session_id?: string | null
           total?: number
           type?: Database["public"]["Enums"]["order_type"]
           updated_at?: string
@@ -1826,6 +1832,9 @@ export type Database = {
           source?: string
           status?: Database["public"]["Enums"]["order_status"]
           subtotal?: number
+          table_command_id?: string | null
+          table_number?: number | null
+          table_session_id?: string | null
           total?: number
           type?: Database["public"]["Enums"]["order_type"]
           updated_at?: string
@@ -1857,6 +1866,20 @@ export type Database = {
             columns: ["restaurant_id"]
             isOneToOne: false
             referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_table_command_id_fkey"
+            columns: ["table_command_id"]
+            isOneToOne: false
+            referencedRelation: "table_commands"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_table_session_id_fkey"
+            columns: ["table_session_id"]
+            isOneToOne: false
+            referencedRelation: "table_sessions"
             referencedColumns: ["id"]
           },
         ]
@@ -2352,6 +2375,69 @@ export type Database = {
           },
         ]
       }
+      restaurant_tables: {
+        Row: {
+          area: string | null
+          capacity: number
+          created_at: string
+          id: string
+          is_active: boolean
+          name: string | null
+          notes: string | null
+          number: number
+          position_x: number | null
+          position_y: number | null
+          qr_token: string
+          restaurant_id: string
+          updated_at: string
+        }
+        Insert: {
+          area?: string | null
+          capacity?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string | null
+          notes?: string | null
+          number: number
+          position_x?: number | null
+          position_y?: number | null
+          qr_token?: string
+          restaurant_id: string
+          updated_at?: string
+        }
+        Update: {
+          area?: string | null
+          capacity?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string | null
+          notes?: string | null
+          number?: number
+          position_x?: number | null
+          position_y?: number | null
+          qr_token?: string
+          restaurant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "restaurant_tables_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "restaurant_tables_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       restaurants: {
         Row: {
           accent_color: string | null
@@ -2578,6 +2664,242 @@ export type Database = {
           reason?: string
         }
         Relationships: []
+      }
+      table_commands: {
+        Row: {
+          closed_at: string | null
+          created_at: string
+          holder_name: string | null
+          id: string
+          label: string
+          restaurant_id: string
+          session_id: string
+        }
+        Insert: {
+          closed_at?: string | null
+          created_at?: string
+          holder_name?: string | null
+          id?: string
+          label: string
+          restaurant_id: string
+          session_id: string
+        }
+        Update: {
+          closed_at?: string | null
+          created_at?: string
+          holder_name?: string | null
+          id?: string
+          label?: string
+          restaurant_id?: string
+          session_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "table_commands_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "table_commands_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "table_commands_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "table_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      table_session_events: {
+        Row: {
+          actor_user_id: string | null
+          created_at: string
+          id: string
+          kind: string
+          payload: Json
+          restaurant_id: string
+          session_id: string
+        }
+        Insert: {
+          actor_user_id?: string | null
+          created_at?: string
+          id?: string
+          kind: string
+          payload?: Json
+          restaurant_id: string
+          session_id: string
+        }
+        Update: {
+          actor_user_id?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          payload?: Json
+          restaurant_id?: string
+          session_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "table_session_events_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "table_session_events_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "table_session_events_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "table_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      table_sessions: {
+        Row: {
+          closed_at: string | null
+          closed_by: string | null
+          created_at: string
+          customer_name: string | null
+          id: string
+          merged_into_session_id: string | null
+          notes: string | null
+          opened_at: string
+          opened_by: string | null
+          party_size: number | null
+          restaurant_id: string
+          status: Database["public"]["Enums"]["table_session_status"]
+          table_id: string
+          updated_at: string
+        }
+        Insert: {
+          closed_at?: string | null
+          closed_by?: string | null
+          created_at?: string
+          customer_name?: string | null
+          id?: string
+          merged_into_session_id?: string | null
+          notes?: string | null
+          opened_at?: string
+          opened_by?: string | null
+          party_size?: number | null
+          restaurant_id: string
+          status?: Database["public"]["Enums"]["table_session_status"]
+          table_id: string
+          updated_at?: string
+        }
+        Update: {
+          closed_at?: string | null
+          closed_by?: string | null
+          created_at?: string
+          customer_name?: string | null
+          id?: string
+          merged_into_session_id?: string | null
+          notes?: string | null
+          opened_at?: string
+          opened_by?: string | null
+          party_size?: number | null
+          restaurant_id?: string
+          status?: Database["public"]["Enums"]["table_session_status"]
+          table_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "table_sessions_merged_into_session_id_fkey"
+            columns: ["merged_into_session_id"]
+            isOneToOne: false
+            referencedRelation: "table_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "table_sessions_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "table_sessions_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "table_sessions_table_id_fkey"
+            columns: ["table_id"]
+            isOneToOne: false
+            referencedRelation: "restaurant_tables"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      table_split_payments: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          method: string
+          payer_label: string | null
+          restaurant_id: string
+          session_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          method: string
+          payer_label?: string | null
+          restaurant_id: string
+          session_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          method?: string
+          payer_label?: string | null
+          restaurant_id?: string
+          session_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "table_split_payments_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "table_split_payments_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "table_split_payments_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "table_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
@@ -3042,6 +3364,12 @@ export type Database = {
       payment_method: "cash" | "pix" | "credit_card" | "debit_card" | "online"
       payment_status: "pending" | "paid" | "failed" | "refunded" | "expired"
       restaurant_plan: "trial" | "essential" | "professional"
+      table_session_status:
+        | "open"
+        | "closing"
+        | "closed"
+        | "cancelled"
+        | "blocked"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -3216,6 +3544,13 @@ export const Constants = {
       payment_method: ["cash", "pix", "credit_card", "debit_card", "online"],
       payment_status: ["pending", "paid", "failed", "refunded", "expired"],
       restaurant_plan: ["trial", "essential", "professional"],
+      table_session_status: [
+        "open",
+        "closing",
+        "closed",
+        "cancelled",
+        "blocked",
+      ],
     },
   },
 } as const
