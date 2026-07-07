@@ -3489,6 +3489,14 @@ export type Database = {
       _tables_can_manage: { Args: { _rid: string }; Returns: boolean }
       _tables_max_for: { Args: { _rid: string }; Returns: number }
       accept_team_invite: { Args: { p_token: string }; Returns: Json }
+      apply_inventory_adjustment: {
+        Args: {
+          p_ingredient_id: string
+          p_physical_qty: number
+          p_reason?: string
+        }
+        Returns: string
+      }
       assign_driver: {
         Args: { p_driver_id: string; p_order_id: string }
         Returns: undefined
@@ -3757,6 +3765,10 @@ export type Database = {
         }[]
       }
       get_product_recipe: { Args: { p_product_id: string }; Returns: Json }
+      get_products_profitability_report: {
+        Args: { p_from: string; p_restaurant_id: string; p_to: string }
+        Returns: Json
+      }
       get_public_categories: {
         Args: { p_slug: string }
         Returns: {
@@ -3783,7 +3795,19 @@ export type Database = {
       get_public_restaurant: { Args: { p_slug: string }; Returns: Json }
       get_public_table_by_qr: { Args: { p_token: string }; Returns: Json }
       get_public_table_session: { Args: { p_token: string }; Returns: Json }
+      get_purchase_suggestions: {
+        Args: { p_restaurant_id: string }
+        Returns: Json
+      }
       get_session_detail: { Args: { p_session_id: string }; Returns: Json }
+      get_stock_consumption_report: {
+        Args: { p_from: string; p_restaurant_id: string; p_to: string }
+        Returns: Json
+      }
+      get_stock_losses_report: {
+        Args: { p_from: string; p_restaurant_id: string; p_to: string }
+        Returns: Json
+      }
       get_stock_overview: { Args: { p_restaurant_id: string }; Returns: Json }
       get_table_map: { Args: { p_restaurant_id: string }; Returns: Json }
       is_restaurant_driver: {
