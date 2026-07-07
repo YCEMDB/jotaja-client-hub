@@ -3352,7 +3352,24 @@ export type Database = {
         Args: { p_restaurant_id: string }
         Returns: Json
       }
+      get_delivery_financial_summary: {
+        Args: {
+          p_driver_id?: string
+          p_from: string
+          p_restaurant_id: string
+          p_to: string
+        }
+        Returns: Json
+      }
+      get_delivery_metrics: {
+        Args: { p_from: string; p_restaurant_id: string; p_to: string }
+        Returns: Json
+      }
       get_driver_assigned_orders: { Args: never; Returns: Json }
+      get_driver_last_locations: {
+        Args: { p_restaurant_id: string }
+        Returns: Json
+      }
       get_kds_orders: {
         Args: { p_restaurant_id: string; p_station_id?: string }
         Returns: Json
