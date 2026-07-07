@@ -28,16 +28,19 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Boxes, Package, AlertTriangle, TrendingDown, Activity, Plus, Pencil, Trash2,
-  ArrowDownUp, RefreshCw, Truck, Ruler, Search,
+  ArrowDownUp, RefreshCw, Truck, Ruler, Search, ChefHat, Sparkles, Lock,
 } from "lucide-react";
 import {
   getStockOverview, listIngredients, listMovements, listSuppliers, listUnits,
   createIngredient, updateIngredient, upsertSupplier, deleteSupplier, upsertUnit, deleteUnit,
-  formatBRL, MOVEMENT_LABEL, MOVEMENT_ACCENT,
+  formatBRL, MOVEMENT_LABEL, MOVEMENT_ACCENT, listProductsRecipeStatus,
   type StockIngredient, type StockMovement, type StockOverview, type StockSupplier, type StockUnit,
-  type StockMovementType,
+  type StockMovementType, type ProductRecipeStatus,
 } from "@/lib/stock";
 import { MovementDialog } from "@/components/stock/MovementDialog";
+import { RecipeDialog } from "@/components/stock/RecipeDialog";
+import { usePlanFeatures } from "@/hooks/usePlanFeatures";
+import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/admin/estoque")({
   component: EstoqueGated,
