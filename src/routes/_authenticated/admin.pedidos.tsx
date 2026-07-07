@@ -391,7 +391,7 @@ function PedidosPage() {
             {notifEnabled ? <><Bell className="h-4 w-4 mr-1" />Alertas ON</> : <><BellOff className="h-4 w-4 mr-1" />Ativar alertas</>}
           </Button>
         </div>
-      </div>
+      </header>
 
       <div className="flex-1 overflow-x-auto pb-2">
         <div className="flex gap-4 h-full min-w-min">
