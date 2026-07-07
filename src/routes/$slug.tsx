@@ -898,7 +898,7 @@ function TrackOrderDialog({
                     key={o.id}
                     onClick={() => {
                       onOpenChange(false);
-                      navigate({ to: "/pedido/$id", params: { id: o.id } });
+                      navigate({ to: "/pedido/$orderId", params: { orderId: o.id } });
                     }}
                     className="w-full text-left border rounded-lg p-3 hover:bg-muted/50 transition"
                   >
