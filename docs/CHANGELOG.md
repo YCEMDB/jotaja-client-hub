@@ -2,6 +2,17 @@
 
 Registro cronológico de entregas.
 
+## Sprint 8 — Estoque Inteligente ✅ (Fase B — UI Admin)
+- Nova rota `/admin/estoque` com abas Dashboard, Ingredientes, Fornecedores, Unidades, Movimentações e Alertas.
+- Dashboard reutiliza `get_stock_overview` (valor em estoque, ativos, abaixo do mínimo, movimentações do dia, perdas 30d).
+- CRUD completo de ingredientes, fornecedores e unidades via RPCs `SECURITY DEFINER` da Fase A.
+- Dialog único de movimentação (`entry | exit | loss | adjust`) — sempre por `register_stock_movement`, nunca `UPDATE` direto em `current_qty`.
+- Realtime em `stock_ingredients` e `stock_movements` → dashboard e listas atualizam sem refresh.
+- Feature Gate `stock` (Starter bloqueado, Pro até 100, Business ilimitado). Enforcement em `check_ingredient_limit`.
+- Sidebar: novo item "Estoque" em Operação.
+- Design System: `AdminPageLayout`, `DashboardGrid`, `Section`, `StatCard`, `FilterBar`, `SearchBar`, `LoadingState`, `ErrorState`, `EmptyState`.
+- Docs: `docs/STOCK.md`.
+
 ## Sprint 6 — Mesas & Comandas ✅ (Fase 1 — schema + RPCs)
 - Novas tabelas: `restaurant_tables`, `table_sessions`, `table_commands`, `table_session_events`, `table_split_payments`.
 - Extensão aditiva em `orders`: `table_session_id`, `table_command_id`, `table_number`.
