@@ -653,7 +653,7 @@ function PedidosPage() {
           )}
         </DialogContent>
       </Dialog>
-    </div>
+    </PageContainer>
   );
 }
 
