@@ -228,6 +228,7 @@ function Estoque() {
           <TabsTrigger value="suppliers">Fornecedores</TabsTrigger>
           <TabsTrigger value="units">Unidades</TabsTrigger>
           <TabsTrigger value="movements">Movimentações</TabsTrigger>
+          <TabsTrigger value="recipes">Ficha Técnica</TabsTrigger>
           <TabsTrigger value="alerts">
             Alertas {overview && overview.ingredients_low > 0 && (
               <span className="ml-2 bg-brand-magenta text-background text-[10px] px-1.5 rounded font-bold">{overview.ingredients_low}</span>
