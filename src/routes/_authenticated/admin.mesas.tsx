@@ -15,6 +15,7 @@ import { OpenSessionDialog } from "@/components/mesas/OpenSessionDialog";
 import { CloseSessionDialog } from "@/components/mesas/CloseSessionDialog";
 import { QrCodeDialog } from "@/components/mesas/QrCodeDialog";
 import { TableActionsSheet } from "@/components/mesas/TableActionsSheet";
+import { SessionDetailDialog } from "@/components/mesas/SessionDetailDialog";
 
 export const Route = createFileRoute("/_authenticated/admin/mesas")({
   component: MesasPage,
@@ -38,6 +39,7 @@ function MesasContent() {
   const [openDialog, setOpenDialog] = useState<TableMapRow | null>(null);
   const [closeDialog, setCloseDialog] = useState<TableMapRow | null>(null);
   const [qrDialog, setQrDialog] = useState<TableMapRow | null>(null);
+  const [detailDialog, setDetailDialog] = useState<TableMapRow | null>(null);
   const [tick, setTick] = useState(0);
 
   const reload = useCallback(async () => {
@@ -129,6 +131,14 @@ function MesasContent() {
         onOpenSession={(t) => { setActionsOpen(false); setOpenDialog(t); }}
         onCloseSession={(t) => { setActionsOpen(false); setCloseDialog(t); }}
         onShowQr={(t) => { setActionsOpen(false); setQrDialog(t); }}
+        onShowDetail={(t) => { setActionsOpen(false); setDetailDialog(t); }}
+        onChanged={() => setTick((t) => t + 1)}
+      />
+
+      <SessionDetailDialog
+        table={detailDialog}
+        open={!!detailDialog}
+        onOpenChange={(v) => { if (!v) setDetailDialog(null); }}
         onChanged={() => setTick((t) => t + 1)}
       />
 

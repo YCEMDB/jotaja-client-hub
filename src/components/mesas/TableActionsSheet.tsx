@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { DoorOpen, DoorClosed, Ban, Unlock, QrCode, Users, Clock, DollarSign, X } from "lucide-react";
+import { DoorOpen, DoorClosed, Ban, Unlock, QrCode, Users, Clock, DollarSign, X, ListChecks } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { blockTable, unblockTable, cancelTableSession, translateTableError, type TableMapRow } from "@/lib/tables";
@@ -20,6 +20,7 @@ export function TableActionsSheet({
   onOpenSession,
   onCloseSession,
   onShowQr,
+  onShowDetail,
   onChanged,
 }: {
   table: TableMapRow | null;
@@ -28,6 +29,7 @@ export function TableActionsSheet({
   onOpenSession: (t: TableMapRow) => void;
   onCloseSession: (t: TableMapRow) => void;
   onShowQr: (t: TableMapRow) => void;
+  onShowDetail: (t: TableMapRow) => void;
   onChanged: () => void;
 }) {
   if (!table) return null;
@@ -115,7 +117,10 @@ export function TableActionsSheet({
           )}
           {(status === "open" || status === "closing") && (
             <>
-              <Button className="col-span-2" onClick={() => onCloseSession(table)}>
+              <Button className="col-span-2" onClick={() => onShowDetail(table)}>
+                <ListChecks className="h-4 w-4 mr-2" /> Ver comandas e pedidos
+              </Button>
+              <Button variant="outline" onClick={() => onCloseSession(table)}>
                 <DoorClosed className="h-4 w-4 mr-2" /> Fechar mesa
               </Button>
               <Button variant="outline" onClick={doCancel}>

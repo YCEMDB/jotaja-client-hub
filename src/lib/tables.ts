@@ -4,6 +4,87 @@
  * Nada de lógica de negócio no cliente — apenas typing + wrappers.
  */
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
+
+export type OrderStatus = Database["public"]["Enums"]["order_status"];
+
+/** Próximo status oficial da state machine (espelha admin.pedidos). */
+export const NEXT_ORDER_STATUS: Partial<Record<OrderStatus, OrderStatus>> = {
+  pending: "preparing",
+  confirmed: "preparing",
+  preparing: "ready",
+  ready: "delivered", // mesa/pickup — no salão nunca vai para out_for_delivery
+  out_for_delivery: "delivered",
+};
+
+export const NEXT_ORDER_LABEL: Partial<Record<OrderStatus, string>> = {
+  pending: "Iniciar preparo",
+  confirmed: "Iniciar preparo",
+  preparing: "Marcar pronto",
+  ready: "Entregar na mesa",
+};
+
+export type SessionDetail = {
+  session: {
+    id: string;
+    status: "open" | "closing" | "closed" | "cancelled" | "blocked";
+    customer_name: string | null;
+    party_size: number | null;
+    opened_at: string;
+    closed_at: string | null;
+    notes: string | null;
+    restaurant_id: string;
+    table_id: string;
+  } | null;
+  table: { id: string; number: number; name: string | null; area: string | null; capacity: number } | null;
+  commands: Array<{
+    id: string; label: string; holder_name: string | null;
+    closed_at: string | null; created_at: string;
+  }>;
+  orders: Array<{
+    id: string; order_number: number; status: OrderStatus;
+    total: number; payment: string | null; command_id: string | null;
+    created_at: string;
+    items: Array<{ id: string; name: string; quantity: number; unit_price: number; subtotal: number }>;
+  }>;
+  splits: Array<{ id: string; method: string; amount: number; payer_label: string | null; created_at: string }>;
+  events: Array<{
+    id: string; event_type: string; payload: any;
+    created_at: string; actor_user_id: string | null;
+  }>;
+  totals: { orders_total: number; orders_count: number; paid: number };
+};
+
+export async function getSessionDetail(sessionId: string): Promise<SessionDetail> {
+  const { data, error } = await supabase.rpc("get_session_detail", { p_session_id: sessionId });
+  if (error) throw error;
+  return data as unknown as SessionDetail;
+}
+
+export async function openCommand(sessionId: string, label: string, holderName?: string | null): Promise<string> {
+  const { data, error } = await supabase.rpc("open_command", {
+    p_session_id: sessionId,
+    p_label: label,
+    p_holder_name: holderName ?? undefined,
+  });
+  if (error) throw error;
+  return data as unknown as string;
+}
+
+export async function closeCommand(commandId: string): Promise<void> {
+  const { error } = await supabase.rpc("close_command", { p_command_id: commandId });
+  if (error) throw error;
+}
+
+export async function updateOrderStatus(orderId: string, next: OrderStatus, reason?: string): Promise<void> {
+  const { error } = await supabase.rpc("update_order_status", {
+    p_order_id: orderId,
+    p_new_status: next,
+    p_source: "panel",
+    p_reason: reason ?? undefined,
+  });
+  if (error) throw error;
+}
 
 export type TableUiStatus = "free" | "open" | "closing" | "blocked" | "inactive";
 
