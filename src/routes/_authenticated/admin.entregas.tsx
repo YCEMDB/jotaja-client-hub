@@ -15,10 +15,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { paymentLabel, orderStatusLabel } from "@/lib/labels";
 import {
-  getDeliveryDashboard, listDeliveryDrivers, listDeliveryOrders,
+  getDeliveryDashboard, listDeliveryDrivers, listDeliveryOrders, getDriverLastLocations,
   bucketOf, type DeliveryDashboard, type DeliveryDriver, type DeliveryOrder, type DeliveryBucket,
+  type DriverLastLocation,
 } from "@/lib/delivery";
 import { DispatchDialog } from "@/components/delivery/DispatchDialog";
+import { DeliveryReports } from "@/components/delivery/DeliveryReports";
 
 export const Route = createFileRoute("/_authenticated/admin/entregas")({
   component: EntregasGated,
