@@ -54,11 +54,11 @@ export function CashflowTab({ restaurantId, from, to, compareFrom, compareTo }: 
   const totals = data.totals ?? { total_inflow: 0, total_outflow: 0, net: 0, final_balance: 0 };
   const cash = data.cash_operational ?? { sales: 0, reinforcements: 0, withdrawals: 0, expenses: 0 };
 
-  const deltaPct = (cur: number, base: number) => {
-    if (!base) return null;
-    return ((cur - base) / Math.abs(base)) * 100;
+  const deltaObj = (cur: number, base: number): { value: string; positive?: boolean } | undefined => {
+    if (!base) return undefined;
+    const pct = ((cur - base) / Math.abs(base)) * 100;
+    return { value: `${pct >= 0 ? "+" : ""}${pct.toFixed(1)}%`, positive: pct >= 0 };
   };
-  const fmtDelta = (v: number | null) => v == null ? "—" : `${v >= 0 ? "+" : ""}${v.toFixed(1)}%`;
 
   return (
     <div className="space-y-6">
@@ -68,14 +68,14 @@ export function CashflowTab({ restaurantId, from, to, compareFrom, compareTo }: 
           value={formatBRL(totals.total_inflow)}
           icon={ArrowDownLeft}
           accent="violet"
-          delta={prev ? fmtDelta(deltaPct(totals.total_inflow, prev.totals?.total_inflow ?? 0)) : undefined}
+          delta={prev ? deltaObj(totals.total_inflow, prev.totals?.total_inflow ?? 0) : undefined}
         />
         <StatCard
           label="Saídas no período"
           value={formatBRL(totals.total_outflow)}
           icon={ArrowUpRight}
           accent="magenta"
-          delta={prev ? fmtDelta(deltaPct(totals.total_outflow, prev.totals?.total_outflow ?? 0)) : undefined}
+          delta={prev ? deltaObj(totals.total_outflow, prev.totals?.total_outflow ?? 0) : undefined}
         />
         <StatCard
           label="Resultado líquido"
@@ -90,6 +90,7 @@ export function CashflowTab({ restaurantId, from, to, compareFrom, compareTo }: 
           accent="orange"
         />
       </DashboardGrid>
+
 
       <Section>
         <SectionHeader
