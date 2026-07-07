@@ -14,6 +14,7 @@ import { printReceipt } from "@/lib/print-receipt";
 import { ensureNotificationPermission, playOrderBeep, showOrderNotification } from "@/lib/order-notifications";
 import { OrderCommunicationTimeline } from "@/components/comunicacao/OrderCommunicationTimeline";
 import { paymentLabel } from "@/lib/labels";
+import { PageContainer } from "@/components/ds";
 
 export const Route = createFileRoute("/_authenticated/admin/pedidos")({
   component: PedidosPage,
