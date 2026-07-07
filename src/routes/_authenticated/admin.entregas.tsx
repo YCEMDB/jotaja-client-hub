@@ -253,6 +253,7 @@ function EntregasPage() {
               <TabsTrigger value="kanban">Kanban</TabsTrigger>
               <TabsTrigger value="list">Lista</TabsTrigger>
               <TabsTrigger value="map">Mapa</TabsTrigger>
+              <TabsTrigger value="reports">Relatórios</TabsTrigger>
             </TabsList>
           </Tabs>
         }
