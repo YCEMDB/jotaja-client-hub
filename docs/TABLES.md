@@ -7,7 +7,8 @@ zero segunda state machine.
 ## Modelo
 
 ```text
-restaurant_tables         mesa física (número, QR, capacidade, área, posição)
+restaurant_tables         mesa física (número, QR, capacidade, área, position_x/y,
+                          width, height, rotation, shape — usados pelo editor visual)
    ↓ 1..N
 table_sessions            "abriu a mesa" — período aberto (status: open/closing/closed/cancelled/blocked)
    ↓ 1..N
