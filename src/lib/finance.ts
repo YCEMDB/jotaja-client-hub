@@ -353,4 +353,138 @@ export async function getDre(restaurantId: string, from?: string, to?: string, c
   return (data ?? {}) as unknown as DreResult;
 }
 
+// ---------- Reconciliation ----------
+export type ReconciliationMethod = "cash" | "pix" | "credit_card" | "debit_card" | "online" | "other";
+
+export const RECON_METHOD_LABEL: Record<string, string> = {
+  cash: "Dinheiro",
+  pix: "PIX",
+  credit_card: "Cartão de crédito",
+  debit_card: "Cartão de débito",
+  online: "Online",
+  other: "Outro",
+};
+
+export interface ReconciliationItem {
+  method: ReconciliationMethod;
+  orders_count: number;
+  expected_amount: number;
+  received_amount: number;
+  difference: number;
+  status: "ok" | "divergent";
+}
+export interface ReconciliationSummary {
+  from: string;
+  to: string;
+  items: ReconciliationItem[];
+  totals: { expected_amount: number; received_amount: number; difference: number };
+}
+
+export async function getReconciliationSummary(restaurantId: string, from?: string, to?: string): Promise<ReconciliationSummary> {
+  const { data, error } = await (supabase.rpc as any)("get_reconciliation_summary", {
+    p_restaurant_id: restaurantId,
+    p_from: from ?? undefined,
+    p_to: to ?? undefined,
+  });
+  if (error) throw error;
+  return (data ?? {}) as unknown as ReconciliationSummary;
+}
+
+export interface ReconciliationRow {
+  id: string;
+  restaurant_id: string;
+  period_from: string;
+  period_to: string;
+  method: ReconciliationMethod;
+  expected_amount: number;
+  received_amount: number;
+  difference: number;
+  status: "ok" | "divergent";
+  notes: string | null;
+  reconciled_by: string | null;
+  reconciled_at: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export async function createReconciliation(input: {
+  restaurant_id: string;
+  from: string;
+  to: string;
+  method: ReconciliationMethod;
+  expected_amount: number;
+  received_amount: number;
+  notes?: string | null;
+}): Promise<ReconciliationRow> {
+  const { data, error } = await (supabase.rpc as any)("create_reconciliation", {
+    p_restaurant_id: input.restaurant_id,
+    p_from: input.from,
+    p_to: input.to,
+    p_method: input.method,
+    p_expected_amount: input.expected_amount,
+    p_received_amount: input.received_amount,
+    p_notes: input.notes ?? undefined,
+  });
+  if (error) throw error;
+  return data as unknown as ReconciliationRow;
+}
+
+export async function listReconciliations(restaurantId: string, from?: string, to?: string): Promise<ReconciliationRow[]> {
+  let q = (supabase.from as any)("finance_reconciliations")
+    .select("*")
+    .eq("restaurant_id", restaurantId)
+    .order("reconciled_at", { ascending: false })
+    .limit(200);
+  if (from) q = q.gte("period_from", from);
+  if (to) q = q.lte("period_to", to);
+  const { data, error } = await q;
+  if (error) throw error;
+  return (data ?? []) as ReconciliationRow[];
+}
+
+// ---------- Payment method report ----------
+export interface PaymentMethodItem {
+  method: ReconciliationMethod;
+  orders_count: number;
+  gross_total: number;
+  discounts: number;
+  net_total: number;
+  avg_ticket: number;
+}
+export interface PaymentMethodReport {
+  from: string; to: string;
+  items: PaymentMethodItem[];
+  total_net: number;
+}
+
+export async function getPaymentMethodReport(restaurantId: string, from?: string, to?: string): Promise<PaymentMethodReport> {
+  const { data, error } = await (supabase.rpc as any)("get_finance_by_payment_method", {
+    p_restaurant_id: restaurantId,
+    p_from: from ?? undefined,
+    p_to: to ?? undefined,
+  });
+  if (error) throw error;
+  return (data ?? {}) as unknown as PaymentMethodReport;
+}
+
+// ---------- Final consolidated report ----------
+export interface FinalReport {
+  from: string; to: string;
+  dre: DreResult;
+  cashflow: CashflowResult;
+  payment_methods: PaymentMethodReport;
+  reconciliation: ReconciliationSummary;
+}
+
+export async function getFinalReport(restaurantId: string, from?: string, to?: string): Promise<FinalReport> {
+  const { data, error } = await (supabase.rpc as any)("get_finance_final_report", {
+    p_restaurant_id: restaurantId,
+    p_from: from ?? undefined,
+    p_to: to ?? undefined,
+  });
+  if (error) throw error;
+  return (data ?? {}) as unknown as FinalReport;
+}
+
+
 
