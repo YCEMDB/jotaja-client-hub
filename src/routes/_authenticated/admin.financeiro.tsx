@@ -174,11 +174,14 @@ function Financeiro() {
       <Tabs defaultValue="overview" className="space-y-6">
         <TabsList className="h-auto p-1 flex flex-wrap gap-1 bg-card border-2 border-ink rounded-xl">
           <TabsTrigger value="overview">Visão geral</TabsTrigger>
+          <TabsTrigger value="cashflow">Fluxo de caixa</TabsTrigger>
+          <TabsTrigger value="dre">DRE</TabsTrigger>
           <TabsTrigger value="payable">Contas a pagar</TabsTrigger>
           <TabsTrigger value="receivable">Contas a receber</TabsTrigger>
           <TabsTrigger value="categories">Categorias</TabsTrigger>
           <TabsTrigger value="cost_centers">Centros de custo</TabsTrigger>
         </TabsList>
+
 
         {/* OVERVIEW */}
         <TabsContent value="overview" className="space-y-6">
