@@ -7,7 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import {
   Clock, Users, DollarSign, Plus, Check, X, ChevronRight,
-  Receipt, ClipboardList, Activity, Loader2,
+  Receipt, ClipboardList, Activity, Loader2, ArrowRightLeft, Combine, Merge,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -18,6 +18,9 @@ import {
   type SessionDetail, type TableMapRow, type OrderStatus,
 } from "@/lib/tables";
 import { orderStatusLabel } from "@/lib/labels";
+import { TransferOrdersDialog } from "./TransferOrdersDialog";
+import { MergeSessionsDialog } from "./MergeSessionsDialog";
+import { MergeCommandsDialog } from "./MergeCommandsDialog";
 
 function fmtBRL(v: number) {
   return Number(v ?? 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -42,17 +45,20 @@ const STATUS_TONE: Record<string, string> = {
 };
 
 const EVENT_LABEL: Record<string, string> = {
-  session_opened: "Mesa aberta",
-  session_closed: "Mesa fechada",
-  session_cancelled: "Sessão cancelada",
-  session_blocked: "Mesa bloqueada",
-  session_unblocked: "Mesa desbloqueada",
+  opened: "Mesa aberta",
+  closed: "Mesa fechada",
+  cancelled: "Sessão cancelada",
+  blocked: "Mesa bloqueada",
+  unblocked: "Mesa desbloqueada",
   command_opened: "Comanda criada",
   command_closed: "Comanda fechada",
-  order_attached: "Pedido vinculado",
-  order_transferred: "Pedido transferido",
-  session_merged: "Sessão mesclada",
-  session_force_closed: "Fechamento forçado",
+  command_merged: "Comandas mescladas",
+  order_added: "Pedido adicionado",
+  order_removed: "Pedido removido",
+  transferred: "Pedido transferido",
+  merged: "Sessão mesclada",
+  split: "Divisão registrada",
+  forced_close: "Fechamento forçado",
 };
 
 export function SessionDetailDialog({
@@ -72,6 +78,9 @@ export function SessionDetailDialog({
   const [busy, setBusy] = useState<string | null>(null);
   const [newLabel, setNewLabel] = useState("");
   const [newHolder, setNewHolder] = useState("");
+  const [transferOpen, setTransferOpen] = useState(false);
+  const [mergeSessionsOpen, setMergeSessionsOpen] = useState(false);
+  const [mergeCmdsOpen, setMergeCmdsOpen] = useState(false);
 
   const reload = useCallback(async () => {
     if (!sessionId) return;
@@ -202,17 +211,30 @@ export function SessionDetailDialog({
           </div>
         ) : (
           <Tabs defaultValue="orders" className="flex-1 flex flex-col overflow-hidden">
-            <TabsList className="mx-5 mt-4 w-fit">
-              <TabsTrigger value="orders" className="gap-2">
-                <Receipt className="h-4 w-4" /> Pedidos ({detail.orders.length})
-              </TabsTrigger>
-              <TabsTrigger value="commands" className="gap-2">
-                <ClipboardList className="h-4 w-4" /> Comandas ({detail.commands.filter(c => !c.closed_at).length})
-              </TabsTrigger>
-              <TabsTrigger value="timeline" className="gap-2">
-                <Activity className="h-4 w-4" /> Linha do tempo
-              </TabsTrigger>
-            </TabsList>
+            <div className="mx-5 mt-4 flex items-center justify-between gap-2 flex-wrap">
+              <TabsList className="w-fit">
+                <TabsTrigger value="orders" className="gap-2">
+                  <Receipt className="h-4 w-4" /> Pedidos ({detail.orders.length})
+                </TabsTrigger>
+                <TabsTrigger value="commands" className="gap-2">
+                  <ClipboardList className="h-4 w-4" /> Comandas ({detail.commands.filter(c => !c.closed_at).length})
+                </TabsTrigger>
+                <TabsTrigger value="timeline" className="gap-2">
+                  <Activity className="h-4 w-4" /> Linha do tempo
+                </TabsTrigger>
+              </TabsList>
+              <div className="flex flex-wrap gap-2">
+                <Button size="sm" variant="outline" onClick={() => setTransferOpen(true)} disabled={detail.orders.filter(o => o.status !== "cancelled").length === 0}>
+                  <ArrowRightLeft className="h-3.5 w-3.5 mr-1" /> Transferir
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => setMergeCmdsOpen(true)} disabled={detail.commands.filter(c => !c.closed_at).length < 2}>
+                  <Merge className="h-3.5 w-3.5 mr-1" /> Juntar comandas
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => setMergeSessionsOpen(true)}>
+                  <Combine className="h-3.5 w-3.5 mr-1" /> Juntar mesas
+                </Button>
+              </div>
+            </div>
 
             {/* PEDIDOS */}
             <TabsContent value="orders" className="flex-1 overflow-hidden mt-0">
@@ -338,7 +360,7 @@ export function SessionDetailDialog({
                         <li key={ev.id} className="pl-4 relative">
                           <span className="absolute -left-[7px] top-1.5 h-3 w-3 rounded-full bg-brand-orange border-2 border-background" />
                           <div className="text-sm font-bold text-ink">
-                            {EVENT_LABEL[ev.event_type] ?? ev.event_type}
+                            {EVENT_LABEL[ev.kind] ?? ev.kind}
                           </div>
                           <div className="text-xs text-ink/60">{fmtDateTime(ev.created_at)}</div>
                           {ev.payload && Object.keys(ev.payload).length > 0 && (
@@ -356,6 +378,32 @@ export function SessionDetailDialog({
           </Tabs>
         )}
       </DialogContent>
+
+      {detail?.session && sessionId && table && (
+        <>
+          <TransferOrdersDialog
+            open={transferOpen}
+            onOpenChange={setTransferOpen}
+            onDone={() => { onChanged(); reload(); }}
+            source={{
+              sessionId, tableId: table.id, tableNumber: table.number,
+              commands: detail.commands, orders: detail.orders,
+            }}
+          />
+          <MergeSessionsDialog
+            open={mergeSessionsOpen}
+            onOpenChange={setMergeSessionsOpen}
+            onDone={() => { onChanged(); onOpenChange(false); }}
+            source={{ sessionId, tableNumber: table.number }}
+          />
+          <MergeCommandsDialog
+            open={mergeCmdsOpen}
+            onOpenChange={setMergeCmdsOpen}
+            onDone={() => { onChanged(); reload(); }}
+            commands={detail.commands}
+          />
+        </>
+      )}
     </Dialog>
   );
 }
