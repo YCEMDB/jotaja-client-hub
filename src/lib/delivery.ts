@@ -96,7 +96,7 @@ export async function assignDriver(orderId: string, driverId: string) {
 }
 
 export async function unassignDriver(orderId: string, reason?: string) {
-  const { error } = await supabase.rpc("unassign_driver", { p_order_id: orderId, p_reason: reason ?? null });
+  const { error } = await supabase.rpc("unassign_driver", { p_order_id: orderId, p_reason: reason ?? undefined });
   if (error) throw error;
 }
 
