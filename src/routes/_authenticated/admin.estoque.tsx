@@ -554,6 +554,65 @@ function Estoque() {
           />
         </TabsContent>
 
+        {/* RELATÓRIOS */}
+        <TabsContent value="reports" className="space-y-4">
+          <ReportsTab restaurantId={restaurantId ?? ""} canProfitability={canRecipes} />
+        </TabsContent>
+
+        {/* COMPRAS */}
+        <TabsContent value="purchases" className="space-y-4">
+          <PurchaseSuggestionsTab restaurantId={restaurantId ?? ""} enabled={canRecipes} />
+        </TabsContent>
+
+        {/* INVENTÁRIO */}
+        <TabsContent value="inventory" className="space-y-4">
+          <Section>
+            <SectionHeader
+              title="Inventário físico vs sistema"
+              description="Contagem manual dos ingredientes ativos. A diferença é registrada como um ajuste."
+            />
+            <SectionContent>
+              {ingredients.filter((i) => i.is_active).length === 0 ? (
+                <EmptyState icon={ClipboardCheck} title="Sem ingredientes" description="Cadastre ingredientes para iniciar o inventário." />
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead className="text-left text-[11px] uppercase tracking-wider text-ink/60">
+                      <tr>
+                        <th className="py-2">Ingrediente</th>
+                        <th className="py-2 text-right">Sistema</th>
+                        <th className="py-2 text-right">Custo médio</th>
+                        <th className="py-2 text-right">Valor</th>
+                        <th className="py-2 text-right">Ações</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {ingredients.filter((i) => i.is_active).map((i) => {
+                        const unit = i.unit_id ? unitById[i.unit_id]?.symbol ?? "" : "";
+                        return (
+                          <tr key={i.id} className="border-t border-ink/10">
+                            <td className="py-2 font-bold">{i.name}</td>
+                            <td className="py-2 text-right">{Number(i.current_qty).toLocaleString("pt-BR")} {unit}</td>
+                            <td className="py-2 text-right">{formatBRL(i.avg_cost)}</td>
+                            <td className="py-2 text-right font-bold">{formatBRL(Number(i.current_qty) * Number(i.avg_cost))}</td>
+                            <td className="py-2 text-right">
+                              <Button size="sm" variant="outline" onClick={() => { setInvTarget(i); setInvDialogOpen(true); }}>
+                                <ClipboardCheck className="h-3.5 w-3.5 mr-1" /> Contar
+                              </Button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </SectionContent>
+          </Section>
+        </TabsContent>
+
+
+
         {/* ALERTAS */}
         <TabsContent value="alerts" className="space-y-4">
           <Section>
