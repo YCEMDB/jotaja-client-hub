@@ -205,3 +205,35 @@ Ver [ROADMAP.md](./ROADMAP.md).
 - Docs: nova `docs/DELIVERY.md` e atualização de `RPCS.md`.
 
 **Status:** módulo de Delivery pronto para produção. Reutiliza 100% da state machine (`update_order_status`), da fila de comunicação, do KDS, do CRM e da timeline. Comissão é congelada em `orders.driver_commission_amount` na retirada e **não gera movimentação no caixa** — o pagamento aos motoboys é conciliado com base no relatório financeiro.
+
+## Estoque — Fase D (Relatórios, Alertas, Inventário)
+
+Novo em `/admin/estoque`:
+
+- **Aba Relatórios** — presets de período (padrão 30d) com:
+  - Consumo por ingrediente (entradas, vendas, saídas, perdas, ajustes) + custo.
+  - Perdas: total financeiro, ranking e eventos.
+  - Lucratividade por produto (Business): unidades vendidas, receita, custo, margem un. e margem total.
+  - Exportação CSV em cada aba.
+- **Aba Compras** (Business) — sugestão de reposição agrupada por fornecedor: sugerido = déficit × 1,2, custo estimado, CSV por fornecedor.
+- **Aba Inventário** — contagem física por ingrediente; a diferença vira uma movimentação `adjust` via `apply_inventory_adjustment`.
+- **Alerta automático** — trigger `stock_ingredients_low_alert` enfileira um e-mail em `communication_queue` (`template_code=stock_low_alert`, idempotente por dia) para o dono quando um ingrediente cruza o mínimo.
+
+### RPCs adicionadas
+- `get_stock_consumption_report(restaurant_id, from, to)`
+- `get_stock_losses_report(restaurant_id, from, to)`
+- `get_products_profitability_report(restaurant_id, from, to)`
+- `get_purchase_suggestions(restaurant_id)`
+- `apply_inventory_adjustment(ingredient_id, physical_qty, reason)`
+
+### Frontend
+- `src/components/stock/ReportsTab.tsx`
+- `src/components/stock/PurchaseSuggestionsTab.tsx`
+- `src/components/stock/InventoryDialog.tsx`
+- Extensões em `src/lib/stock.ts`
+
+### Feature Gates
+- Pro: relatórios de consumo e perdas + exportação; inventário.
+- Business: adiciona lucratividade, sugestão de compra e alertas com ficha técnica.
+
+**Status:** módulo de Estoque pronto para produção. Zero UPDATE direto, zero duplicidade financeira, zero novo status de pedido.
