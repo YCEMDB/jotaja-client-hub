@@ -3105,6 +3105,21 @@ export type Database = {
         }
         Returns: Json
       }
+      create_public_table_command: {
+        Args: { p_holder_name?: string; p_label: string; p_token: string }
+        Returns: string
+      }
+      create_public_table_order: {
+        Args: {
+          p_command_id: string
+          p_customer_name: string
+          p_customer_phone: string
+          p_items: Json
+          p_notes: string
+          p_token: string
+        }
+        Returns: Json
+      }
       create_table: {
         Args: {
           p_area?: string
@@ -3231,6 +3246,7 @@ export type Database = {
       }
       get_public_restaurant: { Args: { p_slug: string }; Returns: Json }
       get_public_table_by_qr: { Args: { p_token: string }; Returns: Json }
+      get_public_table_session: { Args: { p_token: string }; Returns: Json }
       get_session_detail: { Args: { p_session_id: string }; Returns: Json }
       get_table_map: { Args: { p_restaurant_id: string }; Returns: Json }
       is_restaurant_open_now: {

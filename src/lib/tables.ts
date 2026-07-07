@@ -138,3 +138,108 @@ export function translateTableError(msg: string): string {
   if (msg.includes("duplicate key") && msg.includes("number")) return "Já existe uma mesa com este número.";
   return msg;
 }
+
+// ============================================================================
+// Fluxo público (QR de mesa) — Sprint 6.3 Fase A
+// ============================================================================
+
+export type PublicTableInfo = {
+  id: string;
+  number: number;
+  name: string | null;
+  restaurant_id: string;
+  restaurant_slug: string;
+  restaurant_name: string;
+  logo_url: string | null;
+  primary_color: string | null;
+  accent_color: string | null;
+};
+
+export type PublicTableCommand = {
+  id: string;
+  label: string;
+  holder_name: string | null;
+  closed_at: string | null;
+  created_at: string;
+};
+
+export type PublicTableOrder = {
+  id: string;
+  order_number: number;
+  status: string;
+  total: number;
+  created_at: string;
+  table_command_id: string | null;
+  items: Array<{ product_name: string; quantity: number; subtotal: number }>;
+};
+
+export type PublicTableSession = {
+  table: PublicTableInfo;
+  session: {
+    id: string;
+    status: "open" | "closing";
+    customer_name: string | null;
+    party_size: number | null;
+    opened_at: string;
+  } | null;
+  commands: PublicTableCommand[];
+  orders: PublicTableOrder[];
+};
+
+export async function getPublicTableSession(token: string): Promise<PublicTableSession | null> {
+  const { data, error } = await supabase.rpc("get_public_table_session", { p_token: token });
+  if (error) throw error;
+  return (data as unknown as PublicTableSession | null) ?? null;
+}
+
+export async function createPublicTableCommand(
+  token: string, label: string, holderName?: string | null,
+): Promise<string> {
+  const { data, error } = await supabase.rpc("create_public_table_command", {
+    p_token: token,
+    p_label: label,
+    p_holder_name: holderName ?? undefined,
+  });
+  if (error) throw error;
+  return data as unknown as string;
+}
+
+export type PublicTableOrderItem = {
+  product_id: string;
+  product_name: string;
+  quantity: number;
+  notes?: string | null;
+};
+
+export async function createPublicTableOrder(params: {
+  token: string;
+  customerName: string;
+  customerPhone: string;
+  commandId?: string | null;
+  notes?: string | null;
+  items: PublicTableOrderItem[];
+}): Promise<{ id: string; order_number: number; total: number }> {
+  const { data, error } = await supabase.rpc("create_public_table_order", {
+    p_token: params.token,
+    p_customer_name: params.customerName,
+    p_customer_phone: params.customerPhone,
+    p_command_id: params.commandId ?? (null as any),
+    p_notes: params.notes ?? (null as any),
+    p_items: params.items as any,
+  } as any);
+  if (error) throw error;
+  return data as unknown as { id: string; order_number: number; total: number };
+}
+
+export function translatePublicTableError(msg: string): string {
+  if (msg.includes("session_not_open")) return "Aguarde um garçom abrir a mesa antes de fazer o pedido.";
+  if (msg.includes("table_not_found")) return "Mesa não encontrada ou desativada.";
+  if (msg.includes("invalid_name")) return "Informe seu nome (mínimo 2 caracteres).";
+  if (msg.includes("invalid_phone")) return "Informe um telefone válido.";
+  if (msg.includes("invalid_label")) return "Nome da comanda inválido.";
+  if (msg.includes("invalid_product")) return "Um dos produtos não está mais disponível.";
+  if (msg.includes("invalid_command")) return "Comanda inválida.";
+  if (msg.includes("empty_cart")) return "Adicione ao menos um item.";
+  if (msg.includes("customer_blocked")) return "Não foi possível registrar o pedido com este contato.";
+  return msg;
+}

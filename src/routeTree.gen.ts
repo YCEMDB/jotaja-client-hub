@@ -42,6 +42,7 @@ import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as SegmentosPizzariaRouteImport } from './routes/segmentos.pizzaria'
 import { Route as SegmentosHamburgueriaRouteImport } from './routes/segmentos.hamburgueria'
 import { Route as PedidoOrderIdRouteImport } from './routes/pedido.$orderId'
+import { Route as MesaTokenRouteImport } from './routes/mesa.$token'
 import { Route as LojaSlugRouteImport } from './routes/loja.$slug'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
 import { Route as ComparativoComandahubVsSaiposRouteImport } from './routes/comparativo.comandahub-vs-saipos'
@@ -256,6 +257,11 @@ const SegmentosHamburgueriaRoute = SegmentosHamburgueriaRouteImport.update({
 const PedidoOrderIdRoute = PedidoOrderIdRouteImport.update({
   id: '/pedido/$orderId',
   path: '/pedido/$orderId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MesaTokenRoute = MesaTokenRouteImport.update({
+  id: '/mesa/$token',
+  path: '/mesa/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LojaSlugRoute = LojaSlugRouteImport.update({
@@ -582,6 +588,7 @@ export interface FileRoutesByFullPath {
   '/comparativo/comandahub-vs-saipos': typeof ComparativoComandahubVsSaiposRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/loja/$slug': typeof LojaSlugRoute
+  '/mesa/$token': typeof MesaTokenRoute
   '/pedido/$orderId': typeof PedidoOrderIdRoute
   '/segmentos/hamburgueria': typeof SegmentosHamburgueriaRoute
   '/segmentos/pizzaria': typeof SegmentosPizzariaRoute
@@ -665,6 +672,7 @@ export interface FileRoutesByTo {
   '/comparativo/comandahub-vs-saipos': typeof ComparativoComandahubVsSaiposRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/loja/$slug': typeof LojaSlugRoute
+  '/mesa/$token': typeof MesaTokenRoute
   '/pedido/$orderId': typeof PedidoOrderIdRoute
   '/segmentos/hamburgueria': typeof SegmentosHamburgueriaRoute
   '/segmentos/pizzaria': typeof SegmentosPizzariaRoute
@@ -751,6 +759,7 @@ export interface FileRoutesById {
   '/comparativo/comandahub-vs-saipos': typeof ComparativoComandahubVsSaiposRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/loja/$slug': typeof LojaSlugRoute
+  '/mesa/$token': typeof MesaTokenRoute
   '/pedido/$orderId': typeof PedidoOrderIdRoute
   '/segmentos/hamburgueria': typeof SegmentosHamburgueriaRoute
   '/segmentos/pizzaria': typeof SegmentosPizzariaRoute
@@ -836,6 +845,7 @@ export interface FileRouteTypes {
     | '/comparativo/comandahub-vs-saipos'
     | '/email/unsubscribe'
     | '/loja/$slug'
+    | '/mesa/$token'
     | '/pedido/$orderId'
     | '/segmentos/hamburgueria'
     | '/segmentos/pizzaria'
@@ -919,6 +929,7 @@ export interface FileRouteTypes {
     | '/comparativo/comandahub-vs-saipos'
     | '/email/unsubscribe'
     | '/loja/$slug'
+    | '/mesa/$token'
     | '/pedido/$orderId'
     | '/segmentos/hamburgueria'
     | '/segmentos/pizzaria'
@@ -1004,6 +1015,7 @@ export interface FileRouteTypes {
     | '/comparativo/comandahub-vs-saipos'
     | '/email/unsubscribe'
     | '/loja/$slug'
+    | '/mesa/$token'
     | '/pedido/$orderId'
     | '/segmentos/hamburgueria'
     | '/segmentos/pizzaria'
@@ -1090,6 +1102,7 @@ export interface RootRouteChildren {
   ComparativoComandahubVsSaiposRoute: typeof ComparativoComandahubVsSaiposRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
   LojaSlugRoute: typeof LojaSlugRoute
+  MesaTokenRoute: typeof MesaTokenRoute
   PedidoOrderIdRoute: typeof PedidoOrderIdRoute
   SegmentosHamburgueriaRoute: typeof SegmentosHamburgueriaRoute
   SegmentosPizzariaRoute: typeof SegmentosPizzariaRoute
@@ -1337,6 +1350,13 @@ declare module '@tanstack/react-router' {
       path: '/pedido/$orderId'
       fullPath: '/pedido/$orderId'
       preLoaderRoute: typeof PedidoOrderIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mesa/$token': {
+      id: '/mesa/$token'
+      path: '/mesa/$token'
+      fullPath: '/mesa/$token'
+      preLoaderRoute: typeof MesaTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/loja/$slug': {
@@ -1824,6 +1844,7 @@ const rootRouteChildren: RootRouteChildren = {
   ComparativoComandahubVsSaiposRoute: ComparativoComandahubVsSaiposRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
   LojaSlugRoute: LojaSlugRoute,
+  MesaTokenRoute: MesaTokenRoute,
   PedidoOrderIdRoute: PedidoOrderIdRoute,
   SegmentosHamburgueriaRoute: SegmentosHamburgueriaRoute,
   SegmentosPizzariaRoute: SegmentosPizzariaRoute,
