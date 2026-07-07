@@ -17,6 +17,7 @@ export type PlanFeatures = {
   priority_support?: boolean;
   max_orders_per_month?: number | null;
   communication_channels_max?: number | null;
+  tables_max?: number | null;
 };
 
 export type PlanInfo = {

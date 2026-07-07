@@ -15,6 +15,7 @@ const FEATURE_LABEL: Record<string, { title: string; need: string }> = {
   api_access:      { title: "Acesso à API", need: "Business" },
   multi_location:  { title: "Multi-unidades", need: "Business" },
   communication_channels_max: { title: "Central de Comunicação (WhatsApp)", need: "Pro" },
+  tables_max:      { title: "Controle de Mesas e Comandas", need: "Pro" },
 };
 
 export function FeatureGate({
