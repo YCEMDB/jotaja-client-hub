@@ -74,6 +74,7 @@ import { Route as AuthenticatedAdminPedidosRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminPdvRouteImport } from './routes/_authenticated/admin.pdv'
 import { Route as AuthenticatedAdminOperacoesRouteImport } from './routes/_authenticated/admin.operacoes'
 import { Route as AuthenticatedAdminOnboardingRouteImport } from './routes/_authenticated/admin.onboarding'
+import { Route as AuthenticatedAdminMesasRouteImport } from './routes/_authenticated/admin.mesas'
 import { Route as AuthenticatedAdminKdsRouteImport } from './routes/_authenticated/admin.kds'
 import { Route as AuthenticatedAdminEquipeRouteImport } from './routes/_authenticated/admin.equipe'
 import { Route as AuthenticatedAdminEntregadoresRouteImport } from './routes/_authenticated/admin.entregadores'
@@ -89,6 +90,7 @@ import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/e
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
 import { Route as ApiPublicHooksCommunicationWorkerRouteImport } from './routes/api/public/hooks/communication-worker'
+import { Route as AuthenticatedAdminMesasCadastroRouteImport } from './routes/_authenticated/admin.mesas.cadastro'
 import { Route as ApiPublicHooksCommunicationProviderSettingsIdRouteImport } from './routes/api/public/hooks/communication.$provider.$settingsId'
 
 const TermosRoute = TermosRouteImport.update({
@@ -433,6 +435,11 @@ const AuthenticatedAdminOnboardingRoute =
     path: '/admin/onboarding',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedAdminMesasRoute = AuthenticatedAdminMesasRouteImport.update({
+  id: '/admin/mesas',
+  path: '/admin/mesas',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedAdminKdsRoute = AuthenticatedAdminKdsRouteImport.update({
   id: '/admin/kds',
   path: '/admin/kds',
@@ -519,6 +526,12 @@ const ApiPublicHooksCommunicationWorkerRoute =
     path: '/api/public/hooks/communication-worker',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AuthenticatedAdminMesasCadastroRoute =
+  AuthenticatedAdminMesasCadastroRouteImport.update({
+    id: '/cadastro',
+    path: '/cadastro',
+    getParentRoute: () => AuthenticatedAdminMesasRoute,
+  } as any)
 const ApiPublicHooksCommunicationProviderSettingsIdRoute =
   ApiPublicHooksCommunicationProviderSettingsIdRouteImport.update({
     id: '/api/public/hooks/communication/$provider/$settingsId',
@@ -582,6 +595,7 @@ export interface FileRoutesByFullPath {
   '/admin/entregadores': typeof AuthenticatedAdminEntregadoresRoute
   '/admin/equipe': typeof AuthenticatedAdminEquipeRoute
   '/admin/kds': typeof AuthenticatedAdminKdsRoute
+  '/admin/mesas': typeof AuthenticatedAdminMesasRouteWithChildren
   '/admin/onboarding': typeof AuthenticatedAdminOnboardingRoute
   '/admin/operacoes': typeof AuthenticatedAdminOperacoesRoute
   '/admin/pdv': typeof AuthenticatedAdminPdvRoute
@@ -599,6 +613,7 @@ export interface FileRoutesByFullPath {
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/super/': typeof SuperSuperIndexRoute
+  '/admin/mesas/cadastro': typeof AuthenticatedAdminMesasCadastroRoute
   '/api/public/hooks/communication-worker': typeof ApiPublicHooksCommunicationWorkerRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -663,6 +678,7 @@ export interface FileRoutesByTo {
   '/admin/entregadores': typeof AuthenticatedAdminEntregadoresRoute
   '/admin/equipe': typeof AuthenticatedAdminEquipeRoute
   '/admin/kds': typeof AuthenticatedAdminKdsRoute
+  '/admin/mesas': typeof AuthenticatedAdminMesasRouteWithChildren
   '/admin/onboarding': typeof AuthenticatedAdminOnboardingRoute
   '/admin/operacoes': typeof AuthenticatedAdminOperacoesRoute
   '/admin/pdv': typeof AuthenticatedAdminPdvRoute
@@ -680,6 +696,7 @@ export interface FileRoutesByTo {
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/super': typeof SuperSuperIndexRoute
+  '/admin/mesas/cadastro': typeof AuthenticatedAdminMesasCadastroRoute
   '/api/public/hooks/communication-worker': typeof ApiPublicHooksCommunicationWorkerRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -747,6 +764,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/entregadores': typeof AuthenticatedAdminEntregadoresRoute
   '/_authenticated/admin/equipe': typeof AuthenticatedAdminEquipeRoute
   '/_authenticated/admin/kds': typeof AuthenticatedAdminKdsRoute
+  '/_authenticated/admin/mesas': typeof AuthenticatedAdminMesasRouteWithChildren
   '/_authenticated/admin/onboarding': typeof AuthenticatedAdminOnboardingRoute
   '/_authenticated/admin/operacoes': typeof AuthenticatedAdminOperacoesRoute
   '/_authenticated/admin/pdv': typeof AuthenticatedAdminPdvRoute
@@ -764,6 +782,7 @@ export interface FileRoutesById {
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_super/super/': typeof SuperSuperIndexRoute
+  '/_authenticated/admin/mesas/cadastro': typeof AuthenticatedAdminMesasCadastroRoute
   '/api/public/hooks/communication-worker': typeof ApiPublicHooksCommunicationWorkerRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -830,6 +849,7 @@ export interface FileRouteTypes {
     | '/admin/entregadores'
     | '/admin/equipe'
     | '/admin/kds'
+    | '/admin/mesas'
     | '/admin/onboarding'
     | '/admin/operacoes'
     | '/admin/pdv'
@@ -847,6 +867,7 @@ export interface FileRouteTypes {
     | '/lovable/email/suppression'
     | '/admin/'
     | '/super/'
+    | '/admin/mesas/cadastro'
     | '/api/public/hooks/communication-worker'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -911,6 +932,7 @@ export interface FileRouteTypes {
     | '/admin/entregadores'
     | '/admin/equipe'
     | '/admin/kds'
+    | '/admin/mesas'
     | '/admin/onboarding'
     | '/admin/operacoes'
     | '/admin/pdv'
@@ -928,6 +950,7 @@ export interface FileRouteTypes {
     | '/lovable/email/suppression'
     | '/admin'
     | '/super'
+    | '/admin/mesas/cadastro'
     | '/api/public/hooks/communication-worker'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -994,6 +1017,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/entregadores'
     | '/_authenticated/admin/equipe'
     | '/_authenticated/admin/kds'
+    | '/_authenticated/admin/mesas'
     | '/_authenticated/admin/onboarding'
     | '/_authenticated/admin/operacoes'
     | '/_authenticated/admin/pdv'
@@ -1011,6 +1035,7 @@ export interface FileRouteTypes {
     | '/lovable/email/suppression'
     | '/_authenticated/admin/'
     | '/_super/super/'
+    | '/_authenticated/admin/mesas/cadastro'
     | '/api/public/hooks/communication-worker'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -1538,6 +1563,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminOnboardingRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/admin/mesas': {
+      id: '/_authenticated/admin/mesas'
+      path: '/admin/mesas'
+      fullPath: '/admin/mesas'
+      preLoaderRoute: typeof AuthenticatedAdminMesasRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/admin/kds': {
       id: '/_authenticated/admin/kds'
       path: '/admin/kds'
@@ -1643,6 +1675,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksCommunicationWorkerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin/mesas/cadastro': {
+      id: '/_authenticated/admin/mesas/cadastro'
+      path: '/cadastro'
+      fullPath: '/admin/mesas/cadastro'
+      preLoaderRoute: typeof AuthenticatedAdminMesasCadastroRouteImport
+      parentRoute: typeof AuthenticatedAdminMesasRoute
+    }
     '/api/public/hooks/communication/$provider/$settingsId': {
       id: '/api/public/hooks/communication/$provider/$settingsId'
       path: '/api/public/hooks/communication/$provider/$settingsId'
@@ -1652,6 +1691,20 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AuthenticatedAdminMesasRouteChildren {
+  AuthenticatedAdminMesasCadastroRoute: typeof AuthenticatedAdminMesasCadastroRoute
+}
+
+const AuthenticatedAdminMesasRouteChildren: AuthenticatedAdminMesasRouteChildren =
+  {
+    AuthenticatedAdminMesasCadastroRoute: AuthenticatedAdminMesasCadastroRoute,
+  }
+
+const AuthenticatedAdminMesasRouteWithChildren =
+  AuthenticatedAdminMesasRoute._addFileChildren(
+    AuthenticatedAdminMesasRouteChildren,
+  )
 
 interface AuthenticatedRouteChildren {
   AuthenticatedAdminCaixaRoute: typeof AuthenticatedAdminCaixaRoute
@@ -1663,6 +1716,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedAdminEntregadoresRoute: typeof AuthenticatedAdminEntregadoresRoute
   AuthenticatedAdminEquipeRoute: typeof AuthenticatedAdminEquipeRoute
   AuthenticatedAdminKdsRoute: typeof AuthenticatedAdminKdsRoute
+  AuthenticatedAdminMesasRoute: typeof AuthenticatedAdminMesasRouteWithChildren
   AuthenticatedAdminOnboardingRoute: typeof AuthenticatedAdminOnboardingRoute
   AuthenticatedAdminOperacoesRoute: typeof AuthenticatedAdminOperacoesRoute
   AuthenticatedAdminPdvRoute: typeof AuthenticatedAdminPdvRoute
@@ -1682,6 +1736,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAdminEntregadoresRoute: AuthenticatedAdminEntregadoresRoute,
   AuthenticatedAdminEquipeRoute: AuthenticatedAdminEquipeRoute,
   AuthenticatedAdminKdsRoute: AuthenticatedAdminKdsRoute,
+  AuthenticatedAdminMesasRoute: AuthenticatedAdminMesasRouteWithChildren,
   AuthenticatedAdminOnboardingRoute: AuthenticatedAdminOnboardingRoute,
   AuthenticatedAdminOperacoesRoute: AuthenticatedAdminOperacoesRoute,
   AuthenticatedAdminPdvRoute: AuthenticatedAdminPdvRoute,
