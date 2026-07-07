@@ -111,3 +111,122 @@ export function bucketOf(o: DeliveryOrder): DeliveryBucket {
   if (!o.driver_id && ["pending", "confirmed", "preparing", "ready"].includes(o.status)) return "awaiting";
   return "assigned";
 }
+
+// ============================================================
+// Sprint 7 — Fase D: Financeiro, métricas e monitoramento
+// ============================================================
+
+export interface DeliveryFinancialDriverRow {
+  driver_id: string;
+  driver_name: string;
+  delivered_count: number;
+  cancelled_count: number;
+  gross_total: number;
+  delivery_fees: number;
+  commissions_total: number;
+  avg_delivery_min: number;
+}
+
+export interface DeliveryFinancialSummary {
+  from: string;
+  to: string;
+  totals: {
+    delivered_count: number;
+    cancelled_count: number;
+    gross_total: number;
+    delivery_fees: number;
+    commissions_total: number;
+    avg_ticket: number;
+  };
+  drivers: DeliveryFinancialDriverRow[];
+}
+
+export async function getDeliveryFinancialSummary(
+  restaurantId: string,
+  from: Date,
+  to: Date,
+  driverId?: string | null,
+): Promise<DeliveryFinancialSummary> {
+  const { data, error } = await supabase.rpc("get_delivery_financial_summary", {
+    p_restaurant_id: restaurantId,
+    p_from: from.toISOString(),
+    p_to: to.toISOString(),
+    p_driver_id: driverId ?? undefined,
+  });
+  if (error) throw error;
+  return data as unknown as DeliveryFinancialSummary;
+}
+
+export interface DeliveryMetricsPerDriver {
+  driver_id: string;
+  driver_name: string;
+  delivered_count: number;
+  cancelled_count: number;
+  avg_total_min: number | null;
+}
+
+export interface DeliveryMetrics {
+  total_orders: number;
+  delivered_count: number;
+  cancelled_count: number;
+  awaiting_now: number;
+  in_route_now: number;
+  delivered_today: number;
+  avg_accept_min: number | null;
+  avg_pickup_min: number | null;
+  avg_in_route_min: number | null;
+  avg_total_min: number | null;
+  accept_events: number;
+  reject_events: number;
+  acceptance_rate: number | null;
+  per_driver: DeliveryMetricsPerDriver[];
+}
+
+export async function getDeliveryMetrics(
+  restaurantId: string,
+  from: Date,
+  to: Date,
+): Promise<DeliveryMetrics> {
+  const { data, error } = await supabase.rpc("get_delivery_metrics", {
+    p_restaurant_id: restaurantId,
+    p_from: from.toISOString(),
+    p_to: to.toISOString(),
+  });
+  if (error) throw error;
+  return data as unknown as DeliveryMetrics;
+}
+
+export interface DriverLastLocation {
+  id: string;
+  name: string;
+  status: DriverStatus;
+  vehicle: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  last_location_at: string | null;
+  active_orders: number;
+}
+
+export async function getDriverLastLocations(restaurantId: string): Promise<DriverLastLocation[]> {
+  const { data, error } = await supabase.rpc("get_driver_last_locations", {
+    p_restaurant_id: restaurantId,
+  });
+  if (error) throw error;
+  return (data ?? []) as unknown as DriverLastLocation[];
+}
+
+/** Retorna { from, to } para presets comuns. */
+export function periodPreset(preset: "today" | "7d" | "30d" | "month"): { from: Date; to: Date } {
+  const to = new Date();
+  const from = new Date();
+  if (preset === "today") from.setHours(0, 0, 0, 0);
+  else if (preset === "7d") from.setDate(from.getDate() - 7);
+  else if (preset === "30d") from.setDate(from.getDate() - 30);
+  else if (preset === "month") { from.setDate(1); from.setHours(0, 0, 0, 0); }
+  return { from, to };
+}
+
+export function formatBRL(v: number | null | undefined): string {
+  return `R$ ${(v ?? 0).toFixed(2).replace(".", ",")}`;
+}
+
