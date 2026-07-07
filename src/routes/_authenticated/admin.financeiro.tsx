@@ -31,6 +31,9 @@ import {
 } from "@/lib/finance";
 import { EntryDialog } from "@/components/finance/EntryDialog";
 import { PayEntryDialog } from "@/components/finance/PayEntryDialog";
+import { CashflowTab } from "@/components/finance/CashflowTab";
+import { DreTab } from "@/components/finance/DreTab";
+
 
 export const Route = createFileRoute("/_authenticated/admin/financeiro")({
   component: FinanceiroGated,
