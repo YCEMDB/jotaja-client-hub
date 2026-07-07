@@ -78,6 +78,9 @@ export function SessionDetailDialog({
   const [busy, setBusy] = useState<string | null>(null);
   const [newLabel, setNewLabel] = useState("");
   const [newHolder, setNewHolder] = useState("");
+  const [transferOpen, setTransferOpen] = useState(false);
+  const [mergeSessionsOpen, setMergeSessionsOpen] = useState(false);
+  const [mergeCmdsOpen, setMergeCmdsOpen] = useState(false);
 
   const reload = useCallback(async () => {
     if (!sessionId) return;
