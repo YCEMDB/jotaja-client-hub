@@ -73,13 +73,6 @@ export function PurchaseSuggestionsTab({ restaurantId, enabled }: { restaurantId
                   </div>
                 }
               />
-                actions={
-                  <div className="flex items-center gap-3">
-                    <span className="font-display text-2xl text-ink">{formatBRL(g.estimated_cost)}</span>
-                    <Button size="sm" variant="outline" onClick={() => exportCSV(g)}><Download className="h-4 w-4 mr-2" />CSV</Button>
-                  </div>
-                }
-              />
               <SectionContent>
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
