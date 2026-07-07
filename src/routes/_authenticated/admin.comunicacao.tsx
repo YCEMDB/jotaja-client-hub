@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { FeatureGate } from "@/components/FeatureGate";
-import { PageHeader } from "@/components/PageHeader";
+import { AdminPageLayout } from "@/components/ds";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -49,12 +49,13 @@ function ComunicacaoInner() {
   if (!restaurantId) return null;
 
   return (
-    <div className="p-4 md:p-8 space-y-6">
-      <PageHeader
-        kicker="Sprint 4.2"
-        title="Central de Comunicação"
-        subtitle="Converse, envie mensagens e acompanhe canais em tempo real"
-      />
+    <AdminPageLayout
+      title="Central de Comunicação"
+      subtitle="Converse, envie mensagens e acompanhe canais em tempo real"
+      kicker="Comunicação"
+      icon={MessageSquare}
+      accent="magenta"
+    >
       <Tabs defaultValue="painel" className="w-full">
         <TabsList className="grid grid-cols-3 md:grid-cols-6 w-full md:w-auto">
           <TabsTrigger value="painel">Painel</TabsTrigger>
@@ -71,7 +72,7 @@ function ComunicacaoInner() {
         <TabsContent value="templates" className="mt-6"><TemplatesTab restaurantId={restaurantId} /></TabsContent>
         <TabsContent value="queue" className="mt-6"><QueueTab restaurantId={restaurantId} /></TabsContent>
       </Tabs>
-    </div>
+    </AdminPageLayout>
   );
 }
 

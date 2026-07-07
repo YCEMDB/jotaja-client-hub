@@ -194,7 +194,7 @@ function KDSPage() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-white p-4">
+    <div className="min-h-screen bg-neutral-950 text-white px-4 sm:px-6 lg:px-8 xl:px-10 py-6">
       <header className="flex flex-wrap items-center gap-3 mb-4">
         <h1 className="text-2xl font-black tracking-tight mr-auto">CENTRO DE OPERAÇÕES</h1>
         <div className="relative">

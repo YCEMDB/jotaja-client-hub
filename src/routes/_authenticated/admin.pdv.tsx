@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { Plus, Minus, Trash2, ShoppingCart, Search } from "lucide-react";
 import { FeatureGate } from "@/components/FeatureGate";
+import { PageContainer } from "@/components/ds";
 
 export const Route = createFileRoute("/_authenticated/admin/pdv")({
   component: PdvGated,
@@ -162,7 +163,7 @@ function PdvPage() {
   };
 
   return (
-    <div className="p-4 md:p-6 grid lg:grid-cols-[1fr_400px] gap-4 max-w-[1600px] mx-auto">
+    <PageContainer padded={false} className="pt-6 md:pt-8 pb-8 grid lg:grid-cols-[1fr_400px] gap-4">
       {/* Produtos */}
       <div>
         <div className="flex items-center gap-3 mb-4">
@@ -285,6 +286,6 @@ function PdvPage() {
           {saving ? "Salvando..." : "Criar pedido manual"}
         </Button>
       </aside>
-    </div>
+    </PageContainer>
   );
 }
