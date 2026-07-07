@@ -106,7 +106,7 @@ function MesasContent() {
       {loading ? (
         <LoadingState label="Carregando mesas..." />
       ) : error ? (
-        <ErrorState message={error} onRetry={() => { setLoading(true); reload(); }} />
+        <ErrorState description={error} onRetry={() => { setLoading(true); reload(); }} />
       ) : tables.length === 0 ? (
         <div className="rounded-xl border-2 border-dashed border-ink/15 p-10 text-center space-y-3">
           <div className="text-sm text-ink/60">Você ainda não cadastrou nenhuma mesa.</div>

@@ -125,7 +125,7 @@ function CadastroContent() {
       {loading ? (
         <LoadingState label="Carregando mesas..." />
       ) : error ? (
-        <ErrorState message={error} onRetry={() => { setLoading(true); reload(); }} />
+        <ErrorState description={error} onRetry={() => { setLoading(true); reload(); }} />
       ) : rows.length === 0 ? (
         <div className="rounded-xl border-2 border-dashed border-ink/15 p-10 text-center space-y-3">
           <div className="text-sm text-ink/60">Nenhuma mesa cadastrada ainda.</div>
