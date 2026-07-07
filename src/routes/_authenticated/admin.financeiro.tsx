@@ -61,6 +61,8 @@ function Financeiro() {
   const { has } = usePlanFeatures();
   const canCostCenters = has("finance_advanced");
   const canDre = has("finance_dre");
+  const canReconcile = has("finance_reconcile");
+
 
 
   const [loading, setLoading] = useState(true);
