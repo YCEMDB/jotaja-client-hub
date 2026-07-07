@@ -3289,6 +3289,10 @@ export type Database = {
         Args: { p_conversation_id: string }
         Returns: undefined
       }
+      merge_commands: {
+        Args: { p_source_command_id: string; p_target_command_id: string }
+        Returns: undefined
+      }
       merge_sessions: {
         Args: { p_source_session_id: string; p_target_session_id: string }
         Returns: undefined
