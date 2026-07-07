@@ -225,7 +225,7 @@ export function SessionDetailDialog({
                     </div>
                   ) : detail.orders.map((o) => {
                     const cmd = detail.commands.find(c => c.id === o.command_id);
-                    const isTerminal = o.status === "delivered" || o.status === "completed" || o.status === "cancelled";
+                    const isTerminal = o.status === "delivered" || o.status === "cancelled";
                     const nextLabel = NEXT_ORDER_LABEL[o.status] ?? (o.status === "pending" ? "Iniciar preparo" : null);
                     const advKey = `adv-${o.id}`;
                     const cancelKey = `cancel-${o.id}`;
