@@ -5,7 +5,7 @@ import {
   LayoutDashboard, ShoppingBag, UtensilsCrossed, Users, Settings, LogOut,
   Tags, Truck, BarChart3, ShieldCheck, ShoppingCart, Wallet, Monitor, Cog,
   PanelLeftClose, PanelLeftOpen, Menu, ChevronRight, User as UserIcon, MessageSquare,
-  LayoutGrid,
+  LayoutGrid, Boxes,
 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
@@ -35,6 +35,7 @@ const NAV_GROUPS: NavGroup[] = [
       { to: "/admin/pdv", label: "PDV Manual", icon: ShoppingCart },
       { to: "/admin/caixa", label: "Caixa", icon: Wallet },
       { to: "/admin/entregas", label: "Entregas", icon: Truck },
+      { to: "/admin/estoque", label: "Estoque", icon: Boxes },
     ],
   },
   {

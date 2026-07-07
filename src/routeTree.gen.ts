@@ -78,6 +78,7 @@ import { Route as AuthenticatedAdminOperacoesRouteImport } from './routes/_authe
 import { Route as AuthenticatedAdminOnboardingRouteImport } from './routes/_authenticated/admin.onboarding'
 import { Route as AuthenticatedAdminMesasRouteImport } from './routes/_authenticated/admin.mesas'
 import { Route as AuthenticatedAdminKdsRouteImport } from './routes/_authenticated/admin.kds'
+import { Route as AuthenticatedAdminEstoqueRouteImport } from './routes/_authenticated/admin.estoque'
 import { Route as AuthenticatedAdminEquipeRouteImport } from './routes/_authenticated/admin.equipe'
 import { Route as AuthenticatedAdminEntregasRouteImport } from './routes/_authenticated/admin.entregas'
 import { Route as AuthenticatedAdminEntregadoresRouteImport } from './routes/_authenticated/admin.entregadores'
@@ -459,6 +460,12 @@ const AuthenticatedAdminKdsRoute = AuthenticatedAdminKdsRouteImport.update({
   path: '/admin/kds',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedAdminEstoqueRoute =
+  AuthenticatedAdminEstoqueRouteImport.update({
+    id: '/admin/estoque',
+    path: '/admin/estoque',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedAdminEquipeRoute =
   AuthenticatedAdminEquipeRouteImport.update({
     id: '/admin/equipe',
@@ -623,6 +630,7 @@ export interface FileRoutesByFullPath {
   '/admin/entregadores': typeof AuthenticatedAdminEntregadoresRoute
   '/admin/entregas': typeof AuthenticatedAdminEntregasRoute
   '/admin/equipe': typeof AuthenticatedAdminEquipeRoute
+  '/admin/estoque': typeof AuthenticatedAdminEstoqueRoute
   '/admin/kds': typeof AuthenticatedAdminKdsRoute
   '/admin/mesas': typeof AuthenticatedAdminMesasRouteWithChildren
   '/admin/onboarding': typeof AuthenticatedAdminOnboardingRoute
@@ -710,6 +718,7 @@ export interface FileRoutesByTo {
   '/admin/entregadores': typeof AuthenticatedAdminEntregadoresRoute
   '/admin/entregas': typeof AuthenticatedAdminEntregasRoute
   '/admin/equipe': typeof AuthenticatedAdminEquipeRoute
+  '/admin/estoque': typeof AuthenticatedAdminEstoqueRoute
   '/admin/kds': typeof AuthenticatedAdminKdsRoute
   '/admin/mesas': typeof AuthenticatedAdminMesasRouteWithChildren
   '/admin/onboarding': typeof AuthenticatedAdminOnboardingRoute
@@ -800,6 +809,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/entregadores': typeof AuthenticatedAdminEntregadoresRoute
   '/_authenticated/admin/entregas': typeof AuthenticatedAdminEntregasRoute
   '/_authenticated/admin/equipe': typeof AuthenticatedAdminEquipeRoute
+  '/_authenticated/admin/estoque': typeof AuthenticatedAdminEstoqueRoute
   '/_authenticated/admin/kds': typeof AuthenticatedAdminKdsRoute
   '/_authenticated/admin/mesas': typeof AuthenticatedAdminMesasRouteWithChildren
   '/_authenticated/admin/onboarding': typeof AuthenticatedAdminOnboardingRoute
@@ -889,6 +899,7 @@ export interface FileRouteTypes {
     | '/admin/entregadores'
     | '/admin/entregas'
     | '/admin/equipe'
+    | '/admin/estoque'
     | '/admin/kds'
     | '/admin/mesas'
     | '/admin/onboarding'
@@ -976,6 +987,7 @@ export interface FileRouteTypes {
     | '/admin/entregadores'
     | '/admin/entregas'
     | '/admin/equipe'
+    | '/admin/estoque'
     | '/admin/kds'
     | '/admin/mesas'
     | '/admin/onboarding'
@@ -1065,6 +1077,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/entregadores'
     | '/_authenticated/admin/entregas'
     | '/_authenticated/admin/equipe'
+    | '/_authenticated/admin/estoque'
     | '/_authenticated/admin/kds'
     | '/_authenticated/admin/mesas'
     | '/_authenticated/admin/onboarding'
@@ -1643,6 +1656,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminKdsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/admin/estoque': {
+      id: '/_authenticated/admin/estoque'
+      path: '/admin/estoque'
+      fullPath: '/admin/estoque'
+      preLoaderRoute: typeof AuthenticatedAdminEstoqueRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/admin/equipe': {
       id: '/_authenticated/admin/equipe'
       path: '/admin/equipe'
@@ -1798,6 +1818,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedAdminEntregadoresRoute: typeof AuthenticatedAdminEntregadoresRoute
   AuthenticatedAdminEntregasRoute: typeof AuthenticatedAdminEntregasRoute
   AuthenticatedAdminEquipeRoute: typeof AuthenticatedAdminEquipeRoute
+  AuthenticatedAdminEstoqueRoute: typeof AuthenticatedAdminEstoqueRoute
   AuthenticatedAdminKdsRoute: typeof AuthenticatedAdminKdsRoute
   AuthenticatedAdminMesasRoute: typeof AuthenticatedAdminMesasRouteWithChildren
   AuthenticatedAdminOnboardingRoute: typeof AuthenticatedAdminOnboardingRoute
@@ -1819,6 +1840,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAdminEntregadoresRoute: AuthenticatedAdminEntregadoresRoute,
   AuthenticatedAdminEntregasRoute: AuthenticatedAdminEntregasRoute,
   AuthenticatedAdminEquipeRoute: AuthenticatedAdminEquipeRoute,
+  AuthenticatedAdminEstoqueRoute: AuthenticatedAdminEstoqueRoute,
   AuthenticatedAdminKdsRoute: AuthenticatedAdminKdsRoute,
   AuthenticatedAdminMesasRoute: AuthenticatedAdminMesasRouteWithChildren,
   AuthenticatedAdminOnboardingRoute: AuthenticatedAdminOnboardingRoute,
