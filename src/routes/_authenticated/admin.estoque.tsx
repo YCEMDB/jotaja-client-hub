@@ -226,19 +226,22 @@ function Estoque() {
       }
     >
       <Tabs defaultValue="dashboard" className="space-y-6">
-        <TabsList className="h-auto p-1 flex flex-wrap gap-1 bg-card border-2 border-ink rounded-xl">
-          <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-          <TabsTrigger value="ingredients">Ingredientes</TabsTrigger>
-          <TabsTrigger value="suppliers">Fornecedores</TabsTrigger>
-          <TabsTrigger value="units">Unidades</TabsTrigger>
-          <TabsTrigger value="movements">Movimentações</TabsTrigger>
-          <TabsTrigger value="recipes">Ficha Técnica</TabsTrigger>
-          <TabsTrigger value="alerts">
-            Alertas {overview && overview.ingredients_low > 0 && (
-              <span className="ml-2 bg-brand-magenta text-background text-[10px] px-1.5 rounded font-bold">{overview.ingredients_low}</span>
-            )}
-          </TabsTrigger>
-        </TabsList>
+          <TabsList className="h-auto p-1 flex flex-wrap gap-1 bg-card border-2 border-ink rounded-xl">
+            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+            <TabsTrigger value="ingredients">Ingredientes</TabsTrigger>
+            <TabsTrigger value="suppliers">Fornecedores</TabsTrigger>
+            <TabsTrigger value="units">Unidades</TabsTrigger>
+            <TabsTrigger value="movements">Movimentações</TabsTrigger>
+            <TabsTrigger value="recipes">Ficha Técnica</TabsTrigger>
+            <TabsTrigger value="reports">Relatórios</TabsTrigger>
+            <TabsTrigger value="purchases">Compras</TabsTrigger>
+            <TabsTrigger value="inventory">Inventário</TabsTrigger>
+            <TabsTrigger value="alerts">
+              Alertas {overview && overview.ingredients_low > 0 && (
+                <span className="ml-2 bg-brand-magenta text-background text-[10px] px-1.5 rounded font-bold">{overview.ingredients_low}</span>
+              )}
+            </TabsTrigger>
+          </TabsList>
 
         {/* DASHBOARD */}
         <TabsContent value="dashboard" className="space-y-6">
