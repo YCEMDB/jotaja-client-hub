@@ -33,6 +33,9 @@ import { EntryDialog } from "@/components/finance/EntryDialog";
 import { PayEntryDialog } from "@/components/finance/PayEntryDialog";
 import { CashflowTab } from "@/components/finance/CashflowTab";
 import { DreTab } from "@/components/finance/DreTab";
+import { ReconciliationTab } from "@/components/finance/ReconciliationTab";
+import { FinancialReportsTab } from "@/components/finance/FinancialReportsTab";
+
 
 
 export const Route = createFileRoute("/_authenticated/admin/financeiro")({
