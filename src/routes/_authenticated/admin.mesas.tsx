@@ -39,6 +39,7 @@ function MesasContent() {
   const [openDialog, setOpenDialog] = useState<TableMapRow | null>(null);
   const [closeDialog, setCloseDialog] = useState<TableMapRow | null>(null);
   const [qrDialog, setQrDialog] = useState<TableMapRow | null>(null);
+  const [detailDialog, setDetailDialog] = useState<TableMapRow | null>(null);
   const [tick, setTick] = useState(0);
 
   const reload = useCallback(async () => {
