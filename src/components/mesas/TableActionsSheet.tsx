@@ -4,9 +4,6 @@ import { DoorOpen, DoorClosed, Ban, Unlock, QrCode, Users, Clock, DollarSign, X,
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { blockTable, unblockTable, cancelTableSession, translateTableError, type TableMapRow } from "@/lib/tables";
-import { cn } from "@/lib/utils";
-import { toast } from "sonner";
-import { blockTable, unblockTable, cancelTableSession, translateTableError, type TableMapRow } from "@/lib/tables";
 
 function fmtBRL(v: number) {
   return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
