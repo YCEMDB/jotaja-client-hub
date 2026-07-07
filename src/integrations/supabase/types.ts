@@ -3022,7 +3022,25 @@ export type Database = {
       }
     }
     Functions: {
+      _tables_can_manage: { Args: { _rid: string }; Returns: boolean }
+      _tables_max_for: { Args: { _rid: string }; Returns: number }
       accept_team_invite: { Args: { p_token: string }; Returns: Json }
+      attach_order_to_session: {
+        Args: {
+          p_command_id?: string
+          p_order_id: string
+          p_session_id: string
+        }
+        Returns: undefined
+      }
+      block_table: {
+        Args: { p_reason?: string; p_table_id: string }
+        Returns: undefined
+      }
+      cancel_table_session: {
+        Args: { p_reason?: string; p_session_id: string }
+        Returns: undefined
+      }
       cancel_team_invite: { Args: { p_invite_id: string }; Returns: undefined }
       claim_communication_batch: {
         Args: { p_lock_seconds?: number; p_size?: number; p_worker_id: string }
@@ -3061,6 +3079,11 @@ export type Database = {
         }
       }
       cleanup_expired_invites: { Args: never; Returns: number }
+      close_command: { Args: { p_command_id: string }; Returns: undefined }
+      close_table_session: {
+        Args: { p_force?: boolean; p_session_id: string; p_splits?: Json }
+        Returns: Json
+      }
       create_public_order: {
         Args: {
           p_change_for: number
@@ -3082,6 +3105,17 @@ export type Database = {
         }
         Returns: Json
       }
+      create_table: {
+        Args: {
+          p_area?: string
+          p_capacity?: number
+          p_name?: string
+          p_notes?: string
+          p_number: number
+          p_restaurant_id: string
+        }
+        Returns: string
+      }
       create_team_invite: {
         Args: {
           p_email: string
@@ -3094,6 +3128,7 @@ export type Database = {
         Args: { message_id: number; queue_name: string }
         Returns: boolean
       }
+      delete_table: { Args: { p_table_id: string }; Returns: undefined }
       email_queue_dispatch: { Args: never; Returns: undefined }
       enqueue_communication: {
         Args: {
@@ -3195,6 +3230,9 @@ export type Database = {
         }[]
       }
       get_public_restaurant: { Args: { p_slug: string }; Returns: Json }
+      get_public_table_by_qr: { Args: { p_token: string }; Returns: Json }
+      get_session_detail: { Args: { p_session_id: string }; Returns: Json }
+      get_table_map: { Args: { p_restaurant_id: string }; Returns: Json }
       is_restaurant_open_now: {
         Args: { p_restaurant_id: string }
         Returns: boolean
@@ -3235,6 +3273,10 @@ export type Database = {
         Args: { p_conversation_id: string }
         Returns: undefined
       }
+      merge_sessions: {
+        Args: { p_source_session_id: string; p_target_session_id: string }
+        Returns: undefined
+      }
       move_to_dlq: {
         Args: {
           dlq_name: string
@@ -3243,6 +3285,19 @@ export type Database = {
           source_queue: string
         }
         Returns: number
+      }
+      open_command: {
+        Args: { p_holder_name?: string; p_label: string; p_session_id: string }
+        Returns: string
+      }
+      open_table_session: {
+        Args: {
+          p_customer_name?: string
+          p_notes?: string
+          p_party_size?: number
+          p_table_id: string
+        }
+        Returns: string
       }
       process_inbound_automation: {
         Args: { p_conversation_id: string; p_inbound_body: string }
@@ -3267,6 +3322,7 @@ export type Database = {
           read_ct: number
         }[]
       }
+      regen_table_qr: { Args: { p_table_id: string }; Returns: string }
       remove_team_member: {
         Args: { p_restaurant_id: string; p_user_id: string }
         Returns: undefined
@@ -3289,7 +3345,16 @@ export type Database = {
         }
         Returns: undefined
       }
+      transfer_orders: {
+        Args: {
+          p_order_ids: string[]
+          p_target_command_id?: string
+          p_target_session_id: string
+        }
+        Returns: number
+      }
       unaccent_safe: { Args: { t: string }; Returns: string }
+      unblock_table: { Args: { p_table_id: string }; Returns: undefined }
       update_order_status: {
         Args: {
           p_new_status: Database["public"]["Enums"]["order_status"]
@@ -3298,6 +3363,10 @@ export type Database = {
           p_source?: string
         }
         Returns: Json
+      }
+      update_table: {
+        Args: { p_patch: Json; p_table_id: string }
+        Returns: undefined
       }
       upsert_public_customer: {
         Args: {
