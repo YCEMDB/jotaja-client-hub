@@ -697,6 +697,25 @@ function Estoque() {
         } : null}
         ingredients={ingredients}
         onSaved={() => { loadRecipes(); load(); }}
+      <RecipeDialog
+        open={recipeDialogOpen}
+        onOpenChange={setRecipeDialogOpen}
+        product={recipeTarget ? {
+          id: recipeTarget.product_id,
+          name: recipeTarget.product_name,
+          price: Number(recipeTarget.price),
+          promo_price: recipeTarget.promo_price != null ? Number(recipeTarget.promo_price) : null,
+        } : null}
+        ingredients={ingredients}
+        onSaved={() => { loadRecipes(); load(); }}
+      />
+
+      {/* Inventory dialog */}
+      <InventoryDialog
+        open={invDialogOpen}
+        onOpenChange={setInvDialogOpen}
+        ingredient={invTarget}
+        onSuccess={load}
       />
     </AdminPageLayout>
   );
