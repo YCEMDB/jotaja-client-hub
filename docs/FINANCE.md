@@ -22,7 +22,15 @@ Todas RLS via `private.has_restaurant_access`.
 ## Integração com Caixa
 O caixa continua sendo a fonte operacional de vendas. O financeiro só grava em `cash_movements` quando o usuário registra manualmente um pagamento em dinheiro vinculado a uma sessão aberta. Vendas de pedidos continuam via `cash_movements_unique_order_sale` (não duplicadas).
 
+## UI (Fase B)
+Rota `/admin/financeiro` (gate `finance_basic`, Pro+):
+- **Visão geral**: KPIs do `get_finance_dashboard` + lista de próximos vencimentos.
+- **Contas a pagar** e **Contas a receber**: tabela com filtros (busca, status, período no header), criar/editar (`EntryDialog`), registrar pagamento/recebimento (`PayEntryDialog`) e cancelar. `PayEntryDialog` detecta caixa aberto e lança automaticamente `cash_movements` quando o método é dinheiro.
+- **Categorias**: CRUD com separação `payable`/`receivable` e ativar/desativar.
+- **Centros de custo** (gate `finance_advanced`, Business): CRUD com ativar/desativar. Pro vê upgrade card.
+- Realtime em `finance_entries` mantém a interface sincronizada.
+
 ## Próximas fases
-- **B**: UI de contas a pagar/receber + categorias.
 - **C**: fluxo de caixa consolidado + DRE.
 - **D**: conciliação PIX/cartão + relatórios + exportação CSV.
+
