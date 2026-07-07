@@ -210,3 +210,9 @@ Ver `DELIVERY.md` para o fluxo completo.
 | `accept_team_invite` | `src/routes/invite.$token.tsx` |
 | `list_team_members` | `src/routes/admin/team.tsx` |
 | `is_restaurant_open_now` | Badge no cardápio + checkout |
+
+## Estoque — Fase C
+- `public.get_product_recipe(p_product_id uuid) → jsonb` — team_owner. Retorna `{ items[], total_cost }`.
+- `public.list_products_recipe_status(p_restaurant_id uuid) → jsonb` — team_owner. Um item por produto: `has_recipe`, `item_count`, `total_cost`, `margin_value`, `margin_percent`.
+- `public._apply_stock_sale(p_order_id uuid, p_reverse boolean)` — **interno**, chamado apenas pela trigger `orders_auto_stock_debit`. Idempotente por `order_id + movement_type`. Sem GRANT público.
+- Trigger `orders_auto_stock_debit AFTER INSERT OR UPDATE OF status ON public.orders` — ativo apenas para restaurantes em plano com `stock_recipes=true`.
