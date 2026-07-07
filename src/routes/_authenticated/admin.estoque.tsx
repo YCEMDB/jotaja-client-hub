@@ -29,6 +29,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import {
   Boxes, Package, AlertTriangle, TrendingDown, Activity, Plus, Pencil, Trash2,
   ArrowDownUp, RefreshCw, Truck, Ruler, Search, ChefHat, Sparkles, Lock,
+  BarChart3, ShoppingCart, ClipboardCheck,
 } from "lucide-react";
 import {
   getStockOverview, listIngredients, listMovements, listSuppliers, listUnits,
@@ -39,6 +40,9 @@ import {
 } from "@/lib/stock";
 import { MovementDialog } from "@/components/stock/MovementDialog";
 import { RecipeDialog } from "@/components/stock/RecipeDialog";
+import { ReportsTab } from "@/components/stock/ReportsTab";
+import { PurchaseSuggestionsTab } from "@/components/stock/PurchaseSuggestionsTab";
+import { InventoryDialog } from "@/components/stock/InventoryDialog";
 import { usePlanFeatures } from "@/hooks/usePlanFeatures";
 import { Link } from "@tanstack/react-router";
 
