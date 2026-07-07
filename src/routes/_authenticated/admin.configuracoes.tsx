@@ -61,14 +61,18 @@ function ConfigPage() {
 
   useEffect(() => { load(); }, [restaurantId]);
 
-  if (!restaurantId) return <div className="p-4 md:p-8">Configure seu restaurante primeiro.</div>;
-  if (loading || !r) return <div className="p-4 md:p-8 text-muted-foreground">Carregando…</div>;
+  if (!restaurantId) return <AdminPageLayout title="Configurações"><p className="text-ink/60">Configure seu restaurante primeiro.</p></AdminPageLayout>;
+  if (loading || !r) return <AdminPageLayout title="Configurações"><p className="text-ink/60">Carregando…</p></AdminPageLayout>;
 
   return (
-    <div className="p-4 md:p-8 max-w-4xl">
-      <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight leading-[0.95] mb-2">Configurações</h1>
-      <p className="text-muted-foreground mb-6">Personalize sua loja e regras de entrega</p>
-
+    <AdminPageLayout
+      title="Configurações"
+      subtitle="Personalize sua loja e regras de entrega"
+      kicker="Ajustes"
+      icon={Settings2}
+      accent="violet"
+      maxWidth="4xl"
+    >
       <StoreLinkCard slug={r.slug} />
 
       <Tabs defaultValue="geral">
@@ -91,7 +95,7 @@ function ConfigPage() {
         <TabsContent value="impressao"><FeatureGate feature="auto_print"><ImpressaoTab r={r} onSaved={load} /></FeatureGate></TabsContent>
         <TabsContent value="pagamentos"><FeatureGate feature="online_payment"><PagamentosTab r={r} onSaved={load} /></FeatureGate></TabsContent>
       </Tabs>
-    </div>
+    </AdminPageLayout>
   );
 }
 
