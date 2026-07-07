@@ -136,20 +136,22 @@ function CaixaPage() {
 
   if (loading) {
     return (
-      <div className="p-8 grid place-items-center">
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-      </div>
+      <AdminPageLayout title="Caixa" kicker="Operação" icon={Wallet} accent="amber">
+        <div className="grid place-items-center py-12">
+          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        </div>
+      </AdminPageLayout>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <PageHeader
-        title="Caixa"
-        subtitle="Controle de abertura, movimentações e fechamento."
-        kicker="Operação"
-      />
-
+    <AdminPageLayout
+      title="Caixa"
+      subtitle="Controle de abertura, movimentações e fechamento."
+      kicker="Operação"
+      icon={Wallet}
+      accent="amber"
+    >
       <Tabs value={tab} onValueChange={setTab}>
         <TabsList>
           <TabsTrigger value="atual">Caixa atual</TabsTrigger>
@@ -179,7 +181,7 @@ function CaixaPage() {
           <HistoryView history={history} />
         </TabsContent>
       </Tabs>
-    </div>
+    </AdminPageLayout>
   );
 }
 
