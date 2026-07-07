@@ -30,7 +30,33 @@ Rota `/admin/financeiro` (gate `finance_basic`, Pro+):
 - **Centros de custo** (gate `finance_advanced`, Business): CRUD com ativar/desativar. Pro vê upgrade card.
 - Realtime em `finance_entries` mantém a interface sincronizada.
 
+## Fase C — Fluxo de caixa + DRE
+
+### RPCs
+- `get_finance_cashflow(restaurant_id, from?, to?)` — série diária de entradas/saídas consolidando `finance_entries` pagos e `cash_movements`. Evita dupla contagem: paga em dinheiro + sessão de caixa já vira `cash_movements`, então essas linhas de `finance_entries` são ignoradas na soma consolidada. Retorna `series[]`, `totals` (`total_inflow`, `total_outflow`, `net`, `final_balance`) e `cash_operational` (vendas, reforços, sangrias, despesas do caixa).
+- `get_finance_dre(restaurant_id, from?, to?, cost_center_id?)` — DRE simplificada: `revenue.total`, `expense.total`, agrupamento `by_category` e `by_cost_center`, `operating_profit` e `margin` (%). Filtro opcional por centro de custo.
+
+### UI (aba Fluxo de caixa)
+- KPIs: entradas, saídas, resultado líquido, saldo final acumulado (com Δ vs período anterior).
+- Gráfico de barras receitas × despesas por dia.
+- Área de saldo acumulado.
+- KPIs do caixa operacional (vendas / reforços / sangrias / despesas).
+- Comparativo com o período anterior (mesmo tamanho de janela).
+
+### UI (aba DRE — gate `finance_dre`, Business)
+- Filtro por centro de custo (quando `finance_advanced` liberado).
+- KPIs: receitas, despesas, lucro operacional, margem %.
+- Barras receitas × despesas × lucro.
+- Pizzas de receitas e despesas por categoria.
+- Tabela receitas / despesas / resultado por centro de custo.
+
+### Regras de não-duplicação
+- `cash_movements` continua sendo fonte operacional do caixa.
+- `finance_entries` continua sendo fonte gerencial.
+- Vendas de pedidos só aparecem no fluxo via `cash_movements(sale)`.
+- Pagamentos em dinheiro vinculados a caixa (`finance_entry_pay` com sessão) geram `cash_movements` — a linha correspondente em `finance_entries` é filtrada da soma consolidada para não contar duas vezes.
+
 ## Próximas fases
-- **C**: fluxo de caixa consolidado + DRE.
 - **D**: conciliação PIX/cartão + relatórios + exportação CSV.
+
 
