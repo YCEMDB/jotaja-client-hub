@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { Plus, Minus, Trash2, ShoppingCart, Search } from "lucide-react";
 import { FeatureGate } from "@/components/FeatureGate";
+import { PageContainer } from "@/components/ds";
 
 export const Route = createFileRoute("/_authenticated/admin/pdv")({
   component: PdvGated,
