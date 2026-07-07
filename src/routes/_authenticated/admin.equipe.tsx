@@ -145,16 +145,15 @@ function EquipePage() {
   };
 
   return (
-    <div className="p-4 md:p-6 max-w-5xl mx-auto space-y-6">
-      <div className="flex items-center gap-3">
-        <Users className="h-7 w-7" />
-        <div>
-          <h1 className="text-2xl md:text-3xl font-display">Equipe</h1>
-          <p className="text-sm text-ink/60">
-            {isUnlimited ? "Usuários ilimitados no seu plano" : `${totalUsed} de ${maxUsers} usuários usados`}
-          </p>
-        </div>
-      </div>
+    <AdminPageLayout
+      title="Equipe"
+      subtitle={isUnlimited ? "Usuários ilimitados no seu plano" : `${totalUsed} de ${maxUsers} usuários usados`}
+      kicker="Time"
+      icon={Users}
+      accent="violet"
+      maxWidth="5xl"
+    >
+
 
       {atLimit && (
         <div className="flex items-start gap-3 p-4 border-2 border-brand-orange/50 bg-brand-orange/10 rounded-lg">
