@@ -119,6 +119,8 @@ export async function mergeCommands(sourceCommandId: string, targetCommandId: st
 
 export type TableUiStatus = "free" | "open" | "closing" | "blocked" | "inactive";
 
+export type TableShape = "rect" | "circle";
+
 export type TableMapRow = {
   id: string;
   number: number;
@@ -129,6 +131,10 @@ export type TableMapRow = {
   is_active: boolean;
   position_x: number | null;
   position_y: number | null;
+  width: number;
+  height: number;
+  rotation: number;
+  shape: TableShape;
   session_id: string | null;
   session_status: "open" | "closing" | "blocked" | "closed" | "cancelled" | null;
   opened_at: string | null;
@@ -145,6 +151,17 @@ export type TableInput = {
   area?: string | null;
   capacity?: number;
   notes?: string | null;
+};
+
+export type TableLayoutPatch = {
+  id: string;
+  position_x?: number | null;
+  position_y?: number | null;
+  width?: number;
+  height?: number;
+  rotation?: number;
+  shape?: TableShape;
+  area?: string | null;
 };
 
 export async function getTableMap(restaurantId: string): Promise<TableMapRow[]> {
@@ -174,6 +191,16 @@ export async function updateTable(tableId: string, patch: Partial<TableInput> & 
     p_patch: patch as any,
   });
   if (error) throw error;
+}
+
+export async function updateTableLayout(restaurantId: string, updates: TableLayoutPatch[]): Promise<number> {
+  if (!updates.length) return 0;
+  const { data, error } = await supabase.rpc("update_table_layout", {
+    p_restaurant_id: restaurantId,
+    p_updates: updates as any,
+  });
+  if (error) throw error;
+  return (data as unknown as number) ?? 0;
 }
 
 export async function deleteTable(tableId: string): Promise<void> {
