@@ -151,3 +151,34 @@ Ver [ROADMAP.md](./ROADMAP.md).
 - Docs atualizadas: `RPCS.md`, `TABLES.md`, `COMMANDS.md`, `TODO.md`.
 
 **Status:** módulo de Mesas pronto para produção. KDS, Caixa, CRM, Comunicação, Timeline e Feature Gates intocados — reutilização 100%.
+
+## Sprint 7 — Delivery Profissional
+
+### Fase A — Fundação
+- Enum `driver_status`, role `driver`, extensões em `delivery_drivers` e `orders`, tabela `driver_locations` com histórico GPS + RLS.
+- RPCs `create_driver / update_driver / link_driver_user / set_driver_status / assign_driver / unassign_driver / driver_accept_order / driver_reject_order / driver_pickup_order / driver_complete_delivery / update_driver_location`.
+- Enforce de plano via `check_driver_limit()` + `app_plans.features.max_drivers` (0 / 5 / ilimitado).
+- Timeline dedicada em `order_status_history` com `source='delivery'`.
+
+### Fase B — Painel Admin
+- Nova rota `/admin/entregas` com Kanban (Aguardando/Atribuído/Em rota/Entregues), Lista, placeholder de Mapa e filtros.
+- `DispatchDialog` para atribuir/trocar/cancelar motoboy.
+- Realtime canal `delivery-panel-{restaurantId}` (orders + drivers + locations).
+
+### Fase C — App do Motoboy
+- Rota `/motoboy` mobile-first, PWA-ready, com login Supabase Auth.
+- Painel de pedidos atribuídos, aceite/recusa/retirada/entrega, histórico e ganhos.
+- Status manual (disponível/ocupado/offline) + envio automático de GPS a cada 30 s em rota (opt-in).
+- Realtime canal `driver-{driverId}`.
+
+### Fase D — Financeiro, Métricas, Monitoramento
+- Novas RPCs `get_delivery_financial_summary`, `get_delivery_metrics`, `get_driver_last_locations`.
+- Tab **Relatórios** em `/admin/entregas` — presets Hoje / 7d / 30d / Mês + filtro por motoboy.
+  - Cartões: valor entregue, taxas, comissões, ticket médio.
+  - SLA: aceite / retirada / rota / total, taxa de aceitação, aceites × recusas.
+  - Ranking de produtividade por motoboy.
+- Tab **Mapa** enriquecida com lista de últimas posições GPS (lat/lng + carimbo de tempo) por motoboy ativo.
+- Componente `DeliveryReports` em `src/components/delivery/`.
+- Docs: nova `docs/DELIVERY.md` e atualização de `RPCS.md`.
+
+**Status:** módulo de Delivery pronto para produção. Reutiliza 100% da state machine (`update_order_status`), da fila de comunicação, do KDS, do CRM e da timeline. Comissão é congelada em `orders.driver_commission_amount` na retirada e **não gera movimentação no caixa** — o pagamento aos motoboys é conciliado com base no relatório financeiro.

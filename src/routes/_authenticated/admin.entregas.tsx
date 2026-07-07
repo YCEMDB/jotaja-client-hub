@@ -15,10 +15,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { paymentLabel, orderStatusLabel } from "@/lib/labels";
 import {
-  getDeliveryDashboard, listDeliveryDrivers, listDeliveryOrders,
+  getDeliveryDashboard, listDeliveryDrivers, listDeliveryOrders, getDriverLastLocations,
   bucketOf, type DeliveryDashboard, type DeliveryDriver, type DeliveryOrder, type DeliveryBucket,
+  type DriverLastLocation,
 } from "@/lib/delivery";
 import { DispatchDialog } from "@/components/delivery/DispatchDialog";
+import { DeliveryReports } from "@/components/delivery/DeliveryReports";
 
 export const Route = createFileRoute("/_authenticated/admin/entregas")({
   component: EntregasGated,
@@ -83,7 +85,7 @@ function EntregasPage() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [driverFilter, setDriverFilter] = useState<string>("all");
   const [paymentFilter, setPaymentFilter] = useState<string>("all");
-  const [view, setView] = useState<"kanban" | "list" | "map">("kanban");
+  const [view, setView] = useState<"kanban" | "list" | "map" | "reports">("kanban");
 
   const reload = useCallback(async () => {
     if (!restaurantId) return;
@@ -251,6 +253,7 @@ function EntregasPage() {
               <TabsTrigger value="kanban">Kanban</TabsTrigger>
               <TabsTrigger value="list">Lista</TabsTrigger>
               <TabsTrigger value="map">Mapa</TabsTrigger>
+              <TabsTrigger value="reports">Relatórios</TabsTrigger>
             </TabsList>
           </Tabs>
         }
@@ -351,21 +354,11 @@ function EntregasPage() {
       )}
 
       {view === "map" && (
-        <Section>
-          <div className="min-h-[420px] grid place-items-center border-2 border-dashed border-ink/20 rounded-xl bg-gradient-to-br from-brand-orange/5 to-brand-violet/5">
-            <div className="text-center max-w-md p-6">
-              <MapPin className="h-12 w-12 mx-auto mb-3 text-brand-orange" />
-              <h3 className="font-display text-2xl mb-2">Mapa de rotas</h3>
-              <p className="text-sm text-ink/60 mb-4">
-                Em breve: visualização em tempo real das posições GPS dos motoboys em rota.
-                A infraestrutura já está pronta ({d.drivers_online} motoboys online).
-              </p>
-              <p className="text-xs text-ink/40">
-                Motoboys em rota: <strong>{d.in_route}</strong>
-              </p>
-            </div>
-          </div>
-        </Section>
+        <DeliveryMapPanel restaurantId={restaurantId ?? ""} tick={tick} />
+      )}
+
+      {view === "reports" && restaurantId && (
+        <DeliveryReports restaurantId={restaurantId} drivers={drivers} />
       )}
 
       <DispatchDialog
@@ -421,3 +414,89 @@ function OrderCard({ o, driver, onDispatch }: OrderCardProps) {
     </div>
   );
 }
+
+function DeliveryMapPanel({ restaurantId, tick }: { restaurantId: string; tick: number }) {
+  const [locations, setLocations] = useState<DriverLastLocation[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!restaurantId) return;
+    let alive = true;
+    (async () => {
+      try {
+        setErr(null);
+        const rows = await getDriverLastLocations(restaurantId);
+        if (alive) setLocations(rows);
+      } catch (e: any) {
+        if (alive) setErr(e?.message ?? "Erro ao carregar posições.");
+      } finally {
+        if (alive) setLoading(false);
+      }
+    })();
+    return () => { alive = false; };
+  }, [restaurantId, tick]);
+
+  const withGps = locations.filter((l) => l.latitude != null && l.longitude != null);
+
+  return (
+    <Section>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="font-display text-lg">Mapa de motoboys</h3>
+        <span className="text-xs text-ink/50">
+          {withGps.length}/{locations.length} com localização registrada
+        </span>
+      </div>
+
+      <div className="grid md:grid-cols-[1fr_320px] gap-4">
+        <div className="min-h-[420px] grid place-items-center border-2 border-dashed border-ink/20 rounded-xl bg-gradient-to-br from-brand-orange/5 to-brand-violet/5 p-6 text-center">
+          <div className="max-w-md">
+            <MapPin className="h-12 w-12 mx-auto mb-3 text-brand-orange" />
+            <h4 className="font-display text-xl mb-2">Visualização em mapa</h4>
+            <p className="text-sm text-ink/60">
+              Integração com Google Maps / Mapbox será plugada nesta área.
+              A infraestrutura de GPS já grava a última posição a cada 30 segundos
+              enquanto o motoboy está em rota.
+            </p>
+          </div>
+        </div>
+
+        <div className="border-2 border-ink rounded-xl bg-card p-3 space-y-2 max-h-[520px] overflow-y-auto">
+          <div className="font-display text-sm uppercase tracking-wider mb-1">Últimas posições</div>
+          {loading && <p className="text-xs text-ink/60">Carregando…</p>}
+          {err && <p className="text-xs text-destructive">{err}</p>}
+          {!loading && !err && locations.length === 0 && (
+            <p className="text-xs text-ink/50">Nenhum motoboy ativo.</p>
+          )}
+          {locations.map((l) => (
+            <div key={l.id} className="border-2 border-ink/10 rounded-lg p-2 bg-background">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <Circle className={cn("h-2.5 w-2.5", DRIVER_DOT[l.status])} />
+                  <span className="font-bold text-sm truncate">{l.name}</span>
+                </div>
+                {l.active_orders > 0 && (
+                  <Badge variant="outline" className="border-ink text-[10px]">
+                    {l.active_orders} em rota
+                  </Badge>
+                )}
+              </div>
+              <div className="text-[11px] text-ink/60 mt-1">
+                {l.latitude != null && l.longitude != null ? (
+                  <>
+                    <MapPin className="inline h-3 w-3 mr-0.5" />
+                    {Number(l.latitude).toFixed(5)}, {Number(l.longitude).toFixed(5)}
+                    <span className="text-ink/40"> · atualizado {formatTimeAgo(l.last_location_at)}</span>
+                  </>
+                ) : (
+                  <span className="text-ink/40">Sem GPS registrado</span>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </Section>
+  );
+}
+

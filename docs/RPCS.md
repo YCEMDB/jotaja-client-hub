@@ -167,6 +167,32 @@ servidor contra `products`.
 
 ---
 
+## 🛵 Delivery Profissional (Sprint 7)
+
+Ver `DELIVERY.md` para o fluxo completo.
+
+### Cadastro & vínculo
+- `create_driver / update_driver / link_driver_user / set_driver_status`
+- `check_driver_limit(p_restaurant_id)` — enforce `max_drivers` do plano.
+
+### Despacho e operação
+- `assign_driver(p_order_id, p_driver_id)` / `unassign_driver(p_order_id, p_reason?)`
+- `driver_accept_order(p_order_id)` / `driver_reject_order(p_order_id, p_reason?)`
+- `driver_pickup_order(p_order_id)` → transiciona pedido para `out_for_delivery` via `update_order_status` e congela a comissão.
+- `driver_complete_delivery(p_order_id)` → transiciona para `delivered`.
+- `update_driver_location(lat, lng, ...)` — GPS a cada 30 s pelo app do motoboy.
+
+### Consultas (Fase D)
+- `get_delivery_dashboard(p_restaurant_id) → jsonb` — KPIs operacionais.
+- `get_driver_assigned_orders() → jsonb` — usada por `/motoboy`.
+- `get_delivery_financial_summary(p_restaurant_id, p_from, p_to, p_driver_id?) → jsonb` — totais e ranking por motoboy no período.
+- `get_delivery_metrics(p_restaurant_id, p_from, p_to) → jsonb` — SLA (aceite / retirada / rota / total), taxa de aceitação e produtividade.
+- `get_driver_last_locations(p_restaurant_id) → jsonb` — última posição por motoboy ativo (mapa).
+
+---
+
+
+
 
 
 ## Chamadas do Frontend (mapa rápido)
