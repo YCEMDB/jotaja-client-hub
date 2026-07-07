@@ -191,7 +191,7 @@ function CardapioPage() {
         categories={categories}
         onSaved={load}
       />
-    </div>
+    </AdminPageLayout>
   );
 }
 
