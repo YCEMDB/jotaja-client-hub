@@ -722,7 +722,7 @@ function QueueTab({ restaurantId }: { restaurantId: string }) {
                 ) : filtered.map((r) => (
                   <TableRow key={r.id}>
                     <TableCell>
-                      <Badge variant="outline" className={STATUS_STYLES[r.status]}>{r.status}</Badge>
+                      <Badge variant="outline" className={STATUS_STYLES[r.status]}>{STATUS_LABEL_PT[r.status] ?? r.status}</Badge>
                     </TableCell>
                     <TableCell className="text-xs">{r.event_name}</TableCell>
                     <TableCell className="text-xs">{r.to_address}</TableCell>
