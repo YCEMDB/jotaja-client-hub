@@ -123,7 +123,14 @@ function Estoque() {
     }
   }, [restaurantId]);
 
+  const loadRecipes = useCallback(async () => {
+    if (!restaurantId || !canRecipes) return;
+    try { setRecipeStatus(await listProductsRecipeStatus(restaurantId)); }
+    catch (e: any) { toast.error(e?.message ?? "Erro ao carregar fichas"); }
+  }, [restaurantId, canRecipes]);
+
   useEffect(() => { load(); }, [load]);
+  useEffect(() => { loadRecipes(); }, [loadRecipes]);
 
   // Realtime
   useEffect(() => {
