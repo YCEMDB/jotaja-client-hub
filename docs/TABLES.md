@@ -7,7 +7,8 @@ zero segunda state machine.
 ## Modelo
 
 ```text
-restaurant_tables         mesa física (número, QR, capacidade, área, posição)
+restaurant_tables         mesa física (número, QR, capacidade, área, position_x/y,
+                          width, height, rotation, shape — usados pelo editor visual)
    ↓ 1..N
 table_sessions            "abriu a mesa" — período aberto (status: open/closing/closed/cancelled/blocked)
    ↓ 1..N
@@ -75,6 +76,9 @@ Todas `SECURITY DEFINER`, `search_path=public`, autenticadas via
 
 - `open_command(session_id, label, holder_name?)`
 - `close_command(command_id)`
+- `merge_commands(source_command_id, target_command_id)` — **Sprint 6.3 Fase C**.
+  Une duas comandas da mesma sessão; move pedidos, fecha a origem (mantém dados)
+  e registra evento `command_merged`.
 
 ### Movimentação
 
@@ -82,6 +86,12 @@ Todas `SECURITY DEFINER`, `search_path=public`, autenticadas via
   → vincula pedido existente à mesa (usado pelo PDV e checkout público).
 - `transfer_orders(order_ids[], target_session_id, target_command_id?)`
 - `merge_sessions(source_session_id, target_session_id)`
+
+### Layout (editor visual) — **Sprint 6.3 Fase D**
+
+- `update_table_layout(restaurant_id, updates jsonb)` — batch de posição,
+  tamanho (`width`/`height`), `rotation`, `shape` (`rect|circle`) e `area`.
+  Aplica só linhas do restaurante e retorna o total atualizado.
 
 ### Leitura
 

@@ -47,3 +47,12 @@ Rate limit ─┬─► Testes E2E (para validar limites)
 Audit log ──► Compliance LGPD (Sprint 5)
 Product limit ──► Não bloqueia mas evita abuso do starter
 ```
+
+## 🟡 Débito técnico — Módulo Mesas (Sprint 6.3)
+
+- [ ] **Split/transferência item-a-item** — hoje só por pedido/comanda.
+      Requer refatoração de `transfer_orders` + `close_table_session` para
+      operar sobre `order_items` (novo `transfer_items(order_id, item_ids[], target_command_id)`).
+- [ ] **Impressão do resumo de fechamento** (recibo da mesa) — reutilizar
+      `enqueue_print_job` com evento `session_closed`.
+- [ ] **Reservas** (data/hora com bloqueio parcial de sessão).

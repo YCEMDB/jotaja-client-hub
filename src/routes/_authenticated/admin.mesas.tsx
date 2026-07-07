@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { Link } from "@tanstack/react-router";
-import { LayoutGrid, Plus, RefreshCw, Settings } from "lucide-react";
+import { LayoutGrid, Plus, RefreshCw, Settings, Move } from "lucide-react";
 
 import { AdminPageLayout } from "@/components/ds";
 import { LoadingState, ErrorState } from "@/components/ds";
@@ -96,6 +96,11 @@ function MesasContent() {
         <>
           <Button variant="outline" size="sm" onClick={() => setTick((t) => t + 1)}>
             <RefreshCw className="h-4 w-4 mr-1" /> Atualizar
+          </Button>
+          <Button asChild size="sm" variant="outline">
+            <Link to="/admin/mesas/editor">
+              <Move className="h-4 w-4 mr-1" /> Editor visual
+            </Link>
           </Button>
           <Button asChild size="sm">
             <Link to="/admin/mesas/cadastro">

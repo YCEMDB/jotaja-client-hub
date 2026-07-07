@@ -86,3 +86,21 @@ Todo evento (`opened`, `command_opened`, `order_added`, `transferred`, `merged`,
 `table_session_events` com `actor_user_id` e `payload jsonb`. A timeline da
 sessão consome essa tabela; a timeline de cada pedido continua vindo de
 `order_status_history`.
+
+## Editor visual (Sprint 6.3 Fase D)
+
+Rota `/admin/mesas/editor` (feature `tables_max`). Arraste para posicionar,
+use a alça inferior direita para redimensionar, o slider do inspetor para
+rotacionar (-180°..180°) e alterne entre `rect` / `circle`. Snap de 10px.
+
+Salvar aciona `update_table_layout(restaurant_id, updates jsonb[])` — batch,
+`SECURITY DEFINER`, validado por `is_team_owner`. Retorna o número de mesas
+atualizadas. Realtime propaga mudanças para outras abas via canal
+`tables-editor-{restaurant_id}` (`postgres_changes` em `restaurant_tables`).
+
+## Débito técnico registrado
+
+- **Split e transferência item-a-item** (arrastar item entre comandas / dividir
+  quantidades): fora do escopo da v1. Split atual cobre valor / percentual /
+  pessoas / conjunto de itens; transferência atual cobre pedido inteiro e
+  comanda inteira.

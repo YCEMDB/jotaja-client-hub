@@ -119,6 +119,56 @@ Consumidos por rota `/api/public/email/queue/process` autorizada por bearer do v
 
 ---
 
+## 🍽️ Mesas & Comandas (Sprint 6)
+
+### `get_table_map(p_restaurant_id) → jsonb`
+Mapa de mesas com sessão ativa, totais em aberto, contagem de pedidos, layout
+(`position_x/y`, `width`, `height`, `rotation`, `shape`) e `ui_status`
+(`free|open|closing|blocked|inactive`). Somente team_owner.
+
+### `create_table / update_table / delete_table / regen_table_qr`
+CRUD e regeneração de QR. Só team_owner.
+
+### `update_table_layout(p_restaurant_id, p_updates jsonb) → int` **(Sprint 6.3 Fase D)**
+Batch de layout do editor visual. `p_updates` é array
+`[{ id, position_x, position_y, width, height, rotation, shape, area }]`.
+Só aplica linhas do restaurante informado; erro `forbidden` se não for team_owner.
+Retorna quantidade de mesas efetivamente atualizadas.
+
+### `open_table_session / close_table_session`
+Abre/fecha sessão. `close_table_session` aceita splits (`amount`, `percent`,
+`people`, `items`) e exige justificativa quando total pago ≠ total pedidos.
+
+### `open_command / close_command`
+Comandas dentro da sessão. Fechamento é lógico (`closed_at`).
+
+### `merge_commands(p_source_id, p_target_id) → void` **(Sprint 6.3 Fase C)**
+Une duas comandas da mesma sessão. Move todos os pedidos da origem para o
+destino, fecha a origem (mantendo os dados) e registra `command_merged` na
+timeline. Erro se sessões diferentes ou destino já fechado.
+
+### `merge_sessions(p_source_id, p_target_id) → void`
+Une duas sessões. Move pedidos e comandas, fecha a origem como merged,
+grava evento `merged`.
+
+### `transfer_orders(p_order_ids uuid[], p_target_session_id, p_target_command_id?) → void`
+Transferência em lote de pedidos entre sessões/comandas. Evento `transferred`.
+
+### `attach_order_to_session(p_order_id, p_session_id, p_command_id?) → void`
+Vincula um pedido criado fora do fluxo QR a uma sessão/comanda.
+
+### `get_session_detail(p_session_id) → jsonb`
+Retorna sessão, mesa, comandas, pedidos com itens, splits e eventos —
+uma única chamada usada pelo `SessionDetailDialog`.
+
+### `get_public_table_by_qr / get_public_table_session / create_public_table_command / create_public_table_order`
+Rotas anônimas para a página `/mesa/:token`. Validação de preços feita no
+servidor contra `products`.
+
+---
+
+
+
 ## Chamadas do Frontend (mapa rápido)
 
 | RPC | Componente/Rota |

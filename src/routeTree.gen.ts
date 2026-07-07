@@ -91,6 +91,7 @@ import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/e
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
 import { Route as ApiPublicHooksCommunicationWorkerRouteImport } from './routes/api/public/hooks/communication-worker'
+import { Route as AuthenticatedAdminMesasEditorRouteImport } from './routes/_authenticated/admin.mesas.editor'
 import { Route as AuthenticatedAdminMesasCadastroRouteImport } from './routes/_authenticated/admin.mesas.cadastro'
 import { Route as ApiPublicHooksCommunicationProviderSettingsIdRouteImport } from './routes/api/public/hooks/communication.$provider.$settingsId'
 
@@ -532,6 +533,12 @@ const ApiPublicHooksCommunicationWorkerRoute =
     path: '/api/public/hooks/communication-worker',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AuthenticatedAdminMesasEditorRoute =
+  AuthenticatedAdminMesasEditorRouteImport.update({
+    id: '/editor',
+    path: '/editor',
+    getParentRoute: () => AuthenticatedAdminMesasRoute,
+  } as any)
 const AuthenticatedAdminMesasCadastroRoute =
   AuthenticatedAdminMesasCadastroRouteImport.update({
     id: '/cadastro',
@@ -621,6 +628,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/super/': typeof SuperSuperIndexRoute
   '/admin/mesas/cadastro': typeof AuthenticatedAdminMesasCadastroRoute
+  '/admin/mesas/editor': typeof AuthenticatedAdminMesasEditorRoute
   '/api/public/hooks/communication-worker': typeof ApiPublicHooksCommunicationWorkerRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -705,6 +713,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/super': typeof SuperSuperIndexRoute
   '/admin/mesas/cadastro': typeof AuthenticatedAdminMesasCadastroRoute
+  '/admin/mesas/editor': typeof AuthenticatedAdminMesasEditorRoute
   '/api/public/hooks/communication-worker': typeof ApiPublicHooksCommunicationWorkerRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -792,6 +801,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_super/super/': typeof SuperSuperIndexRoute
   '/_authenticated/admin/mesas/cadastro': typeof AuthenticatedAdminMesasCadastroRoute
+  '/_authenticated/admin/mesas/editor': typeof AuthenticatedAdminMesasEditorRoute
   '/api/public/hooks/communication-worker': typeof ApiPublicHooksCommunicationWorkerRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -878,6 +888,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/super/'
     | '/admin/mesas/cadastro'
+    | '/admin/mesas/editor'
     | '/api/public/hooks/communication-worker'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -962,6 +973,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/super'
     | '/admin/mesas/cadastro'
+    | '/admin/mesas/editor'
     | '/api/public/hooks/communication-worker'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -1048,6 +1060,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/'
     | '/_super/super/'
     | '/_authenticated/admin/mesas/cadastro'
+    | '/_authenticated/admin/mesas/editor'
     | '/api/public/hooks/communication-worker'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -1695,6 +1708,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksCommunicationWorkerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin/mesas/editor': {
+      id: '/_authenticated/admin/mesas/editor'
+      path: '/editor'
+      fullPath: '/admin/mesas/editor'
+      preLoaderRoute: typeof AuthenticatedAdminMesasEditorRouteImport
+      parentRoute: typeof AuthenticatedAdminMesasRoute
+    }
     '/_authenticated/admin/mesas/cadastro': {
       id: '/_authenticated/admin/mesas/cadastro'
       path: '/cadastro'
@@ -1714,11 +1734,13 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminMesasRouteChildren {
   AuthenticatedAdminMesasCadastroRoute: typeof AuthenticatedAdminMesasCadastroRoute
+  AuthenticatedAdminMesasEditorRoute: typeof AuthenticatedAdminMesasEditorRoute
 }
 
 const AuthenticatedAdminMesasRouteChildren: AuthenticatedAdminMesasRouteChildren =
   {
     AuthenticatedAdminMesasCadastroRoute: AuthenticatedAdminMesasCadastroRoute,
+    AuthenticatedAdminMesasEditorRoute: AuthenticatedAdminMesasEditorRoute,
   }
 
 const AuthenticatedAdminMesasRouteWithChildren =
