@@ -343,7 +343,7 @@ export interface DreResult {
 }
 
 export async function getDre(restaurantId: string, from?: string, to?: string, costCenterId?: string | null): Promise<DreResult> {
-  const { data, error } = await supabase.rpc("get_finance_dre", {
+  const { data, error } = await (supabase.rpc as any)("get_finance_dre", {
     p_restaurant_id: restaurantId,
     p_from: from ?? undefined,
     p_to: to ?? undefined,
@@ -352,4 +352,5 @@ export async function getDre(restaurantId: string, from?: string, to?: string, c
   if (error) throw error;
   return (data ?? {}) as unknown as DreResult;
 }
+
 
