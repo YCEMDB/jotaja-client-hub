@@ -211,17 +211,30 @@ export function SessionDetailDialog({
           </div>
         ) : (
           <Tabs defaultValue="orders" className="flex-1 flex flex-col overflow-hidden">
-            <TabsList className="mx-5 mt-4 w-fit">
-              <TabsTrigger value="orders" className="gap-2">
-                <Receipt className="h-4 w-4" /> Pedidos ({detail.orders.length})
-              </TabsTrigger>
-              <TabsTrigger value="commands" className="gap-2">
-                <ClipboardList className="h-4 w-4" /> Comandas ({detail.commands.filter(c => !c.closed_at).length})
-              </TabsTrigger>
-              <TabsTrigger value="timeline" className="gap-2">
-                <Activity className="h-4 w-4" /> Linha do tempo
-              </TabsTrigger>
-            </TabsList>
+            <div className="mx-5 mt-4 flex items-center justify-between gap-2 flex-wrap">
+              <TabsList className="w-fit">
+                <TabsTrigger value="orders" className="gap-2">
+                  <Receipt className="h-4 w-4" /> Pedidos ({detail.orders.length})
+                </TabsTrigger>
+                <TabsTrigger value="commands" className="gap-2">
+                  <ClipboardList className="h-4 w-4" /> Comandas ({detail.commands.filter(c => !c.closed_at).length})
+                </TabsTrigger>
+                <TabsTrigger value="timeline" className="gap-2">
+                  <Activity className="h-4 w-4" /> Linha do tempo
+                </TabsTrigger>
+              </TabsList>
+              <div className="flex flex-wrap gap-2">
+                <Button size="sm" variant="outline" onClick={() => setTransferOpen(true)} disabled={detail.orders.filter(o => o.status !== "cancelled").length === 0}>
+                  <ArrowRightLeft className="h-3.5 w-3.5 mr-1" /> Transferir
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => setMergeCmdsOpen(true)} disabled={detail.commands.filter(c => !c.closed_at).length < 2}>
+                  <Merge className="h-3.5 w-3.5 mr-1" /> Juntar comandas
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => setMergeSessionsOpen(true)}>
+                  <Combine className="h-3.5 w-3.5 mr-1" /> Juntar mesas
+                </Button>
+              </div>
+            </div>
 
             {/* PEDIDOS */}
             <TabsContent value="orders" className="flex-1 overflow-hidden mt-0">
