@@ -38,7 +38,6 @@ const STATUS_TONE: Record<string, string> = {
   ready: "bg-emerald-500/15 text-emerald-600 border-emerald-500/40",
   out_for_delivery: "bg-sky-500/15 text-sky-600 border-sky-500/40",
   delivered: "bg-emerald-500/15 text-emerald-700 border-emerald-500/40",
-  completed: "bg-emerald-500/15 text-emerald-700 border-emerald-500/40",
   cancelled: "bg-destructive/15 text-destructive border-destructive/40",
 };
 
