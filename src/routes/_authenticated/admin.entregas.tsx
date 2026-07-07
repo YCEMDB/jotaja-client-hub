@@ -354,21 +354,11 @@ function EntregasPage() {
       )}
 
       {view === "map" && (
-        <Section>
-          <div className="min-h-[420px] grid place-items-center border-2 border-dashed border-ink/20 rounded-xl bg-gradient-to-br from-brand-orange/5 to-brand-violet/5">
-            <div className="text-center max-w-md p-6">
-              <MapPin className="h-12 w-12 mx-auto mb-3 text-brand-orange" />
-              <h3 className="font-display text-2xl mb-2">Mapa de rotas</h3>
-              <p className="text-sm text-ink/60 mb-4">
-                Em breve: visualização em tempo real das posições GPS dos motoboys em rota.
-                A infraestrutura já está pronta ({d.drivers_online} motoboys online).
-              </p>
-              <p className="text-xs text-ink/40">
-                Motoboys em rota: <strong>{d.in_route}</strong>
-              </p>
-            </div>
-          </div>
-        </Section>
+        <DeliveryMapPanel restaurantId={restaurantId ?? ""} tick={tick} />
+      )}
+
+      {view === "reports" && restaurantId && (
+        <DeliveryReports restaurantId={restaurantId} drivers={drivers} />
       )}
 
       <DispatchDialog
