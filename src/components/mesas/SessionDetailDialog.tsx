@@ -42,17 +42,20 @@ const STATUS_TONE: Record<string, string> = {
 };
 
 const EVENT_LABEL: Record<string, string> = {
-  session_opened: "Mesa aberta",
-  session_closed: "Mesa fechada",
-  session_cancelled: "Sessão cancelada",
-  session_blocked: "Mesa bloqueada",
-  session_unblocked: "Mesa desbloqueada",
+  opened: "Mesa aberta",
+  closed: "Mesa fechada",
+  cancelled: "Sessão cancelada",
+  blocked: "Mesa bloqueada",
+  unblocked: "Mesa desbloqueada",
   command_opened: "Comanda criada",
   command_closed: "Comanda fechada",
-  order_attached: "Pedido vinculado",
-  order_transferred: "Pedido transferido",
-  session_merged: "Sessão mesclada",
-  session_force_closed: "Fechamento forçado",
+  command_merged: "Comandas mescladas",
+  order_added: "Pedido adicionado",
+  order_removed: "Pedido removido",
+  transferred: "Pedido transferido",
+  merged: "Sessão mesclada",
+  split: "Divisão registrada",
+  forced_close: "Fechamento forçado",
 };
 
 export function SessionDetailDialog({
