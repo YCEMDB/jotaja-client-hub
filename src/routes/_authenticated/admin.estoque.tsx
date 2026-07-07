@@ -90,6 +90,16 @@ function Estoque() {
   const [movTarget, setMovTarget] = useState<StockIngredient | null>(null);
   const [movDefaultType, setMovDefaultType] = useState<StockMovementType>("entry");
 
+  // Recipes / Ficha técnica
+  const { has: hasFeature } = usePlanFeatures();
+  const canRecipes = hasFeature("stock_recipes");
+  const [recipeStatus, setRecipeStatus] = useState<ProductRecipeStatus[]>([]);
+  const [recipeSearch, setRecipeSearch] = useState("");
+  const [recipeFilter, setRecipeFilter] = useState<"all" | "missing" | "configured">("all");
+  const [recipeSort, setRecipeSort] = useState<"name" | "margin_percent" | "margin_value" | "cost">("name");
+  const [recipeDialogOpen, setRecipeDialogOpen] = useState(false);
+  const [recipeTarget, setRecipeTarget] = useState<ProductRecipeStatus | null>(null);
+
   const load = useCallback(async () => {
     if (!restaurantId) return;
     setError(null);
