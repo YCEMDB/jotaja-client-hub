@@ -118,3 +118,36 @@ Ver [ROADMAP.md](./ROADMAP.md).
 - **Hook** `usePrintQueueConsumer` — processa jobs `browser` em background com backlog inicial.
 - **Zero UPDATE direto**: KDS usa `update_order_status` RPC.
 - Ver [KDS.md](./KDS.md) e [PRINTING.md](./PRINTING.md).
+
+## Sprint 6.3 — Operação de Salão (completa)
+
+### Fase A — Página pública `/mesa/:token`
+- Rota `src/routes/mesa.$token.tsx` (SSR-off, tema do restaurante).
+- Mesa livre → tela "aguarde o garçom". Mesa ocupada → cardápio + identificação (nome/telefone).
+- CRM: upsert automático de cliente (`source='qr_table'`).
+- RPCs `SECURITY DEFINER`: `get_public_table_session`, `create_public_table_command`, `create_public_table_order` (validação de preços no servidor).
+- Realtime canal `mesa-{id}` para pedidos/comandas.
+
+### Fase B — Comandas e Timeline no Admin
+- `SessionDetailDialog` com abas Pedidos / Comandas / Timeline.
+- Ações rápidas de status via RPC oficial `update_order_status` (state machine única).
+- Abrir/fechar comanda, cálculo de totais.
+- Realtime canal `session-{id}` (orders + table_commands + table_session_events).
+
+### Fase C — Split, Transferência e Merge
+- `CloseSessionDialog` com modos Único / Valor / Percentual / Pessoas / Itens + saldo em tempo real e justificativa quando houver diferença.
+- `TransferOrdersDialog` para mover pedidos entre mesas/comandas.
+- `MergeSessionsDialog` e `MergeCommandsDialog`.
+- Nova RPC `merge_commands` — une comandas da mesma sessão, mantém dados e grava `command_merged`.
+- Débito técnico documentado: **split/transferência item-a-item** fica para v2.
+
+### Fase D — Editor visual e polimento
+- Migração: colunas `width`, `height`, `rotation`, `shape` em `restaurant_tables` (defaults seguros, CHECKs de faixa).
+- Nova RPC `update_table_layout(restaurant_id, updates jsonb)` — batch, validada por `is_team_owner`.
+- `get_table_map` estendida para retornar os novos campos.
+- Rota `/admin/mesas/editor` + componente `TableLayoutEditor` (drag-and-drop, resize, rotação, forma, área, snap 10px, zoom).
+- Botão "Editor visual" adicionado ao painel `/admin/mesas`.
+- Realtime canal `tables-editor-{restaurantId}` para sincronizar layout entre abas.
+- Docs atualizadas: `RPCS.md`, `TABLES.md`, `COMMANDS.md`, `TODO.md`.
+
+**Status:** módulo de Mesas pronto para produção. KDS, Caixa, CRM, Comunicação, Timeline e Feature Gates intocados — reutilização 100%.
