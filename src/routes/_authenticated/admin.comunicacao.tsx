@@ -605,6 +605,16 @@ const STATUS_STYLES: Record<string, string> = {
   cancelled: "bg-muted text-muted-foreground",
 };
 
+const STATUS_LABEL_PT: Record<string, string> = {
+  pending: "Pendente",
+  processing: "Processando",
+  sent: "Enviada",
+  failed: "Falhou",
+  retrying: "Tentando novamente",
+  dead_letter: "Descartada",
+  cancelled: "Cancelada",
+};
+
 function QueueTab({ restaurantId }: { restaurantId: string }) {
   const [rows, setRows] = useState<QueueRow[]>([]);
   const [loading, setLoading] = useState(true);
