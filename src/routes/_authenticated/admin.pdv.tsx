@@ -286,6 +286,6 @@ function PdvPage() {
           {saving ? "Salvando..." : "Criar pedido manual"}
         </Button>
       </aside>
-    </div>
+    </PageContainer>
   );
 }
