@@ -167,7 +167,7 @@ function EntregasPage() {
   if (error) {
     return (
       <AdminPageLayout kicker="Logística" title="Entregas" icon={Truck} accent="orange">
-        <ErrorState message={error} onRetry={() => setTick((t) => t + 1)} />
+        <ErrorState description={error} onRetry={() => setTick((t) => t + 1)} />
       </AdminPageLayout>
     );
   }
