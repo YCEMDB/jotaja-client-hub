@@ -18,6 +18,9 @@ export type PlanFeatures = {
   max_orders_per_month?: number | null;
   communication_channels_max?: number | null;
   tables_max?: number | null;
+  stock?: boolean;
+  stock_recipes?: boolean;
+  max_ingredients?: number | null;
 };
 
 export type PlanInfo = {
