@@ -45,10 +45,10 @@ export async function createTable(restaurantId: string, input: TableInput): Prom
   const { data, error } = await supabase.rpc("create_table", {
     p_restaurant_id: restaurantId,
     p_number: input.number,
-    p_name: input.name ?? null,
-    p_area: input.area ?? null,
+    p_name: input.name ?? undefined,
+    p_area: input.area ?? undefined,
     p_capacity: input.capacity ?? 2,
-    p_notes: input.notes ?? null,
+    p_notes: input.notes ?? undefined,
   });
   if (error) throw error;
   return data as unknown as string;
@@ -83,9 +83,9 @@ export async function openTableSession(params: {
 }): Promise<string> {
   const { data, error } = await supabase.rpc("open_table_session", {
     p_table_id: params.tableId,
-    p_party_size: params.partySize ?? null,
-    p_customer_name: params.customerName ?? null,
-    p_notes: params.notes ?? null,
+    p_party_size: params.partySize ?? undefined,
+    p_customer_name: params.customerName ?? undefined,
+    p_notes: params.notes ?? undefined,
   });
   if (error) throw error;
   return data as unknown as string;
@@ -106,7 +106,7 @@ export async function closeTableSession(sessionId: string, splits: CloseSplit[] 
 export async function cancelTableSession(sessionId: string, reason?: string): Promise<void> {
   const { error } = await supabase.rpc("cancel_table_session", {
     p_session_id: sessionId,
-    p_reason: reason ?? null,
+    p_reason: reason ?? undefined,
   });
   if (error) throw error;
 }
@@ -114,7 +114,7 @@ export async function cancelTableSession(sessionId: string, reason?: string): Pr
 export async function blockTable(tableId: string, reason?: string): Promise<void> {
   const { error } = await supabase.rpc("block_table", {
     p_table_id: tableId,
-    p_reason: reason ?? null,
+    p_reason: reason ?? undefined,
   });
   if (error) throw error;
 }
