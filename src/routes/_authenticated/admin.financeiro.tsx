@@ -31,6 +31,9 @@ import {
 } from "@/lib/finance";
 import { EntryDialog } from "@/components/finance/EntryDialog";
 import { PayEntryDialog } from "@/components/finance/PayEntryDialog";
+import { CashflowTab } from "@/components/finance/CashflowTab";
+import { DreTab } from "@/components/finance/DreTab";
+
 
 export const Route = createFileRoute("/_authenticated/admin/financeiro")({
   component: FinanceiroGated,
@@ -54,6 +57,8 @@ function Financeiro() {
   const { restaurantId } = useAuth();
   const { has } = usePlanFeatures();
   const canCostCenters = has("finance_advanced");
+  const canDre = has("finance_dre");
+
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -169,11 +174,14 @@ function Financeiro() {
       <Tabs defaultValue="overview" className="space-y-6">
         <TabsList className="h-auto p-1 flex flex-wrap gap-1 bg-card border-2 border-ink rounded-xl">
           <TabsTrigger value="overview">Visão geral</TabsTrigger>
+          <TabsTrigger value="cashflow">Fluxo de caixa</TabsTrigger>
+          <TabsTrigger value="dre">DRE</TabsTrigger>
           <TabsTrigger value="payable">Contas a pagar</TabsTrigger>
           <TabsTrigger value="receivable">Contas a receber</TabsTrigger>
           <TabsTrigger value="categories">Categorias</TabsTrigger>
           <TabsTrigger value="cost_centers">Centros de custo</TabsTrigger>
         </TabsList>
+
 
         {/* OVERVIEW */}
         <TabsContent value="overview" className="space-y-6">
@@ -227,7 +235,34 @@ function Financeiro() {
           </Section>
         </TabsContent>
 
+        {/* CASHFLOW */}
+        <TabsContent value="cashflow" className="space-y-4">
+          {(() => {
+            const ms = new Date(to + "T12:00").getTime() - new Date(from + "T12:00").getTime();
+            const days = Math.max(1, Math.round(ms / 86400000) + 1);
+            const prevTo = new Date(new Date(from + "T12:00").getTime() - 86400000).toISOString().slice(0, 10);
+            const prevFrom = new Date(new Date(prevTo + "T12:00").getTime() - (days - 1) * 86400000).toISOString().slice(0, 10);
+            return restaurantId ? (
+              <CashflowTab restaurantId={restaurantId} from={from} to={to} compareFrom={prevFrom} compareTo={prevTo} />
+            ) : null;
+          })()}
+        </TabsContent>
+
+        {/* DRE */}
+        <TabsContent value="dre" className="space-y-4">
+          {!canDre ? (
+            <EmptyState
+              icon={Lock}
+              title="DRE disponível no plano Business"
+              description="Faça upgrade para acessar a DRE simplificada com agrupamento por categoria e centro de custo."
+            />
+          ) : restaurantId ? (
+            <DreTab restaurantId={restaurantId} from={from} to={to} costCenters={costCenters} showCostCenter={canCostCenters} />
+          ) : null}
+        </TabsContent>
+
         {/* PAYABLE */}
+
         <TabsContent value="payable" className="space-y-4">
           <EntriesTab
             direction="payable"

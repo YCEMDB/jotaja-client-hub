@@ -302,3 +302,55 @@ export async function getOpenCashSession(restaurantId: string): Promise<{ id: st
   if (error) return null;
   return (data as any) ?? null;
 }
+
+// ---------- Cashflow ----------
+export interface CashflowSeriesPoint {
+  date: string;
+  inflow: number;
+  outflow: number;
+  net: number;
+  balance: number;
+}
+export interface CashflowResult {
+  from: string;
+  to: string;
+  series: CashflowSeriesPoint[];
+  totals: { total_inflow: number; total_outflow: number; net: number; final_balance: number };
+  cash_operational: { sales: number; reinforcements: number; withdrawals: number; expenses: number };
+}
+
+export async function getCashflow(restaurantId: string, from?: string, to?: string): Promise<CashflowResult> {
+  const { data, error } = await (supabase.rpc as any)("get_finance_cashflow", {
+    p_restaurant_id: restaurantId,
+    p_from: from ?? undefined,
+    p_to: to ?? undefined,
+  });
+  if (error) throw error;
+  return (data ?? {}) as unknown as CashflowResult;
+}
+
+
+// ---------- DRE ----------
+export interface DreCategoryBreakdown { category_id: string | null; name: string; color: string | null; total: number; }
+export interface DreCostCenterBreakdown { cost_center_id: string | null; name: string; total: number; }
+export interface DreResult {
+  from: string;
+  to: string;
+  revenue: { total: number; by_category: DreCategoryBreakdown[]; by_cost_center: DreCostCenterBreakdown[] };
+  expense: { total: number; by_category: DreCategoryBreakdown[]; by_cost_center: DreCostCenterBreakdown[] };
+  operating_profit: number;
+  margin: number;
+}
+
+export async function getDre(restaurantId: string, from?: string, to?: string, costCenterId?: string | null): Promise<DreResult> {
+  const { data, error } = await (supabase.rpc as any)("get_finance_dre", {
+    p_restaurant_id: restaurantId,
+    p_from: from ?? undefined,
+    p_to: to ?? undefined,
+    p_cost_center_id: costCenterId ?? undefined,
+  });
+  if (error) throw error;
+  return (data ?? {}) as unknown as DreResult;
+}
+
+
