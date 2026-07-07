@@ -97,6 +97,11 @@ function MesasContent() {
           <Button variant="outline" size="sm" onClick={() => setTick((t) => t + 1)}>
             <RefreshCw className="h-4 w-4 mr-1" /> Atualizar
           </Button>
+          <Button asChild size="sm" variant="outline">
+            <Link to="/admin/mesas/editor">
+              <Move className="h-4 w-4 mr-1" /> Editor visual
+            </Link>
+          </Button>
           <Button asChild size="sm">
             <Link to="/admin/mesas/cadastro">
               <Settings className="h-4 w-4 mr-1" /> Cadastro
