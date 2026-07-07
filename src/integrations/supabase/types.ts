@@ -1759,6 +1759,72 @@ export type Database = {
           },
         ]
       }
+      finance_reconciliations: {
+        Row: {
+          created_at: string
+          difference: number | null
+          expected_amount: number
+          id: string
+          method: Database["public"]["Enums"]["payment_method"]
+          notes: string | null
+          period_from: string
+          period_to: string
+          received_amount: number
+          reconciled_at: string
+          reconciled_by: string | null
+          restaurant_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          difference?: number | null
+          expected_amount?: number
+          id?: string
+          method: Database["public"]["Enums"]["payment_method"]
+          notes?: string | null
+          period_from: string
+          period_to: string
+          received_amount?: number
+          reconciled_at?: string
+          reconciled_by?: string | null
+          restaurant_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          difference?: number | null
+          expected_amount?: number
+          id?: string
+          method?: Database["public"]["Enums"]["payment_method"]
+          notes?: string | null
+          period_from?: string
+          period_to?: string
+          received_amount?: number
+          reconciled_at?: string
+          reconciled_by?: string | null
+          restaurant_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "finance_reconciliations_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "finance_reconciliations_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       global_announcements: {
         Row: {
           created_at: string
@@ -3840,6 +3906,39 @@ export type Database = {
         }
         Returns: Json
       }
+      create_reconciliation: {
+        Args: {
+          p_expected_amount: number
+          p_from: string
+          p_method: Database["public"]["Enums"]["payment_method"]
+          p_notes?: string
+          p_received_amount: number
+          p_restaurant_id: string
+          p_to: string
+        }
+        Returns: {
+          created_at: string
+          difference: number | null
+          expected_amount: number
+          id: string
+          method: Database["public"]["Enums"]["payment_method"]
+          notes: string | null
+          period_from: string
+          period_to: string
+          received_amount: number
+          reconciled_at: string
+          reconciled_by: string | null
+          restaurant_id: string
+          status: string
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "finance_reconciliations"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       create_stock_ingredient: {
         Args: {
           p_initial_cost?: number
@@ -4034,6 +4133,10 @@ export type Database = {
         Args: { p_restaurant_id: string }
         Returns: Json
       }
+      get_finance_by_payment_method: {
+        Args: { p_from?: string; p_restaurant_id: string; p_to?: string }
+        Returns: Json
+      }
       get_finance_cashflow: {
         Args: { p_from?: string; p_restaurant_id: string; p_to?: string }
         Returns: Json
@@ -4049,6 +4152,10 @@ export type Database = {
           p_restaurant_id: string
           p_to?: string
         }
+        Returns: Json
+      }
+      get_finance_final_report: {
+        Args: { p_from?: string; p_restaurant_id: string; p_to?: string }
         Returns: Json
       }
       get_kds_orders: {
@@ -4117,6 +4224,10 @@ export type Database = {
       get_public_table_session: { Args: { p_token: string }; Returns: Json }
       get_purchase_suggestions: {
         Args: { p_restaurant_id: string }
+        Returns: Json
+      }
+      get_reconciliation_summary: {
+        Args: { p_from?: string; p_restaurant_id: string; p_to?: string }
         Returns: Json
       }
       get_session_detail: { Args: { p_session_id: string }; Returns: Json }

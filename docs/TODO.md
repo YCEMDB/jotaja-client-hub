@@ -65,3 +65,9 @@ Product limit ──► Não bloqueia mas evita abuso do starter
 - [ ] **manifest.webmanifest** + install prompt para `/motoboy`.
 - [ ] **Roteirização multi-drop** — atribuir vários pedidos em uma única rota otimizada.
 - [ ] **Zoning por bairro** — sugerir motoboy conforme `delivery_neighborhoods`.
+
+## 🟡 Financeiro (Sprint 9) — pendências
+- [ ] Exportação **XLSX** dos relatórios (hoje só CSV) — evitar impacto no bundle usando dynamic import (`xlsx`/`exceljs` sob demanda).
+- [ ] Conciliação **automática de cartão físico** — depende de integração com adquirente (Cielo/Stone/etc.); hoje o operador informa o "recebido" manualmente.
+- [ ] Importação de **extrato bancário** (OFX/CSV) para conciliação PIX além do MP.
+- [ ] Recorrência real de `finance_entries.is_fixed` — hoje o campo existe mas não há job que crie as próximas parcelas automaticamente.

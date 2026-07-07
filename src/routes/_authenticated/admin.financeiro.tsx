@@ -33,6 +33,9 @@ import { EntryDialog } from "@/components/finance/EntryDialog";
 import { PayEntryDialog } from "@/components/finance/PayEntryDialog";
 import { CashflowTab } from "@/components/finance/CashflowTab";
 import { DreTab } from "@/components/finance/DreTab";
+import { ReconciliationTab } from "@/components/finance/ReconciliationTab";
+import { FinancialReportsTab } from "@/components/finance/FinancialReportsTab";
+
 
 
 export const Route = createFileRoute("/_authenticated/admin/financeiro")({
@@ -58,6 +61,8 @@ function Financeiro() {
   const { has } = usePlanFeatures();
   const canCostCenters = has("finance_advanced");
   const canDre = has("finance_dre");
+  const canReconcile = has("finance_reconcile");
+
 
 
   const [loading, setLoading] = useState(true);
@@ -176,11 +181,14 @@ function Financeiro() {
           <TabsTrigger value="overview">Visão geral</TabsTrigger>
           <TabsTrigger value="cashflow">Fluxo de caixa</TabsTrigger>
           <TabsTrigger value="dre">DRE</TabsTrigger>
+          <TabsTrigger value="reconciliation">Conciliação</TabsTrigger>
+          <TabsTrigger value="reports">Relatórios</TabsTrigger>
           <TabsTrigger value="payable">Contas a pagar</TabsTrigger>
           <TabsTrigger value="receivable">Contas a receber</TabsTrigger>
           <TabsTrigger value="categories">Categorias</TabsTrigger>
           <TabsTrigger value="cost_centers">Centros de custo</TabsTrigger>
         </TabsList>
+
 
 
         {/* OVERVIEW */}
@@ -261,7 +269,29 @@ function Financeiro() {
           ) : null}
         </TabsContent>
 
+        {/* RECONCILIATION */}
+        <TabsContent value="reconciliation" className="space-y-4">
+          {!canReconcile ? (
+            <EmptyState
+              icon={Lock}
+              title="Conciliação disponível no plano Business"
+              description="Faça upgrade para conciliar dinheiro, PIX e cartão e registrar snapshots de auditoria."
+            />
+          ) : restaurantId ? (
+            <ReconciliationTab restaurantId={restaurantId} from={from} to={to} />
+          ) : null}
+        </TabsContent>
+
+        {/* REPORTS */}
+        <TabsContent value="reports" className="space-y-4">
+          {restaurantId ? (
+            <FinancialReportsTab restaurantId={restaurantId} from={from} to={to} showAdvanced={canDre} />
+          ) : null}
+        </TabsContent>
+
         {/* PAYABLE */}
+
+
 
         <TabsContent value="payable" className="space-y-4">
           <EntriesTab

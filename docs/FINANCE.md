@@ -56,7 +56,28 @@ Rota `/admin/financeiro` (gate `finance_basic`, Pro+):
 - Vendas de pedidos só aparecem no fluxo via `cash_movements(sale)`.
 - Pagamentos em dinheiro vinculados a caixa (`finance_entry_pay` com sessão) geram `cash_movements` — a linha correspondente em `finance_entries` é filtrada da soma consolidada para não contar duas vezes.
 
-## Próximas fases
-- **D**: conciliação PIX/cartão + relatórios + exportação CSV.
+## Fase D — Conciliação + Relatórios finais + Exportação
+
+### Tabela
+- `finance_reconciliations` — snapshot de conciliação (auditoria). Colunas: `period_from`, `period_to`, `method` (enum `payment_method`), `expected_amount`, `received_amount`, `difference` (gerada), `status` (`ok`/`divergent`), `reconciled_by`, `reconciled_at`, `notes`. RLS via `private.has_restaurant_access`.
+
+### RPCs
+- `get_reconciliation_summary(restaurant_id, from?, to?)` — para cada forma de pagamento retorna `expected_amount` (pedidos com `payment_status='paid'`), `received_amount` (dinheiro → `cash_movements(sale)`; PIX/cartão/online → pedidos pagos com `mp_payment_id` presente), `difference` e `status`.
+- `create_reconciliation(restaurant_id, from, to, method, expected, received, notes?)` — persiste snapshot.
+- `get_finance_by_payment_method(restaurant_id, from?, to?)` — pedidos, bruto, descontos, líquido e ticket médio por método.
+- `get_finance_final_report(restaurant_id, from?, to?)` — junta DRE + fluxo de caixa + pagamentos + conciliação em um único payload.
+
+### UI
+- Aba **Conciliação** (gate `finance_reconcile`, Business): tabela por método com esperado × recebido × diferença, botão "Registrar" (com notas) e "Registrar tudo", histórico de snapshots, exportação CSV. Pro vê upgrade card.
+- Aba **Relatórios** (todos os planos): KPIs (receitas, despesas, lucro, margem), tabela por forma de pagamento e três exportações CSV (resumo completo, pagamentos, fluxo de caixa diário). Business também vê breakdown por categoria e centro de custo.
+
+### Não-duplicação
+- `cash_movements` continua sendo fonte operacional; `finance_entries` continua sendo fonte gerencial; MP continua sendo fonte de pagamento online.
+- Conciliação lê `orders` + `cash_movements` + presença de `mp_payment_id` — não altera nenhum deles; grava apenas em `finance_reconciliations`.
+
+### Pendências
+- Exportação XLSX (planejada — mantida como CSV para não pesar o bundle).
+- Cartão físico (POS) continua fora da conciliação automática enquanto não houver integração de adquirente; hoje aparece na coluna "esperado" quando registrado no pedido, e o operador registra o "recebido" manualmente ao criar o snapshot.
+
 
 

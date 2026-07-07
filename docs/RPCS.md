@@ -226,3 +226,15 @@ Ver `DELIVERY.md` para o fluxo completo.
 - `public.apply_inventory_adjustment(p_ingredient_id uuid, p_physical_qty numeric, p_reason text) → uuid` — team_owner. Registra a diferença como `adjust` via `register_stock_movement`. Retorna o id do movimento (ou NULL se delta = 0).
 
 Trigger: `stock_ingredients_low_alert` (AFTER INSERT OR UPDATE de `current_qty/min_qty/is_active`) enfileira e-mail em `communication_queue` (`template_code='stock_low_alert'`, idempotente por dia).
+
+## 💰 Financeiro (Sprint 9)
+
+- `public.finance_entry_pay(p_entry_id, p_amount, p_payment_method?, p_cash_session_id?, p_notes?) → finance_entries` — membro do restaurante. Registra pagamento parcial/total; se `p_cash_session_id` informado e método = `cash`, cria movimentação no caixa (`reinforcement` para receivable, `expense` para payable).
+- `public.finance_entry_cancel(p_entry_id) → finance_entries` — membro. Cancela lançamento preservando histórico.
+- `public.get_finance_dashboard(p_restaurant_id, p_from?, p_to?) → jsonb` — membro. KPIs de contas em aberto, vencidas, pagas/recebidas e vencendo hoje.
+- `public.get_finance_cashflow(p_restaurant_id, p_from?, p_to?) → jsonb` — membro. Série diária + totais + `cash_operational`. Combina `finance_entries` pagos com `cash_movements` sem duplicar (pagamentos em dinheiro vinculados a caixa entram só via `cash_movements`).
+- `public.get_finance_dre(p_restaurant_id, p_from?, p_to?, p_cost_center_id?) → jsonb` — membro. Receitas e despesas agregadas por categoria e centro de custo, `operating_profit` e `margin`.
+- `public.get_reconciliation_summary(p_restaurant_id, p_from?, p_to?) → jsonb` — membro. Para cada forma de pagamento retorna esperado (pedidos pagos) × recebido (dinheiro → caixa; PIX/cartão/online → pedido com `mp_payment_id`).
+- `public.create_reconciliation(p_restaurant_id, p_from, p_to, p_method, p_expected, p_received, p_notes?) → finance_reconciliations` — membro. Persiste snapshot de conciliação para auditoria.
+- `public.get_finance_by_payment_method(p_restaurant_id, p_from?, p_to?) → jsonb` — membro. Pedidos, bruto, descontos, líquido e ticket médio por forma de pagamento.
+- `public.get_finance_final_report(p_restaurant_id, p_from?, p_to?) → jsonb` — membro. Consolida DRE + fluxo de caixa + pagamentos + conciliação num único payload (usado pela aba Relatórios e pelas exportações CSV).

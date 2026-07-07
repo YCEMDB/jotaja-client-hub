@@ -2,6 +2,22 @@
 
 Registro cronológico de entregas.
 
+## Sprint 9 — Financeiro (Fase D — Conciliação + Relatórios finais + Exportação CSV) ✅
+- Nova tabela `finance_reconciliations` (snapshot para auditoria) com RLS por restaurante.
+- Novas RPCs: `get_reconciliation_summary`, `create_reconciliation`, `get_finance_by_payment_method`, `get_finance_final_report`.
+- Nova aba **Conciliação** (gate `finance_reconcile`, Business): compara pedidos pagos vs. movimentações confirmadas por forma de pagamento (dinheiro via caixa, PIX/cartão/online via Mercado Pago), destaca divergências e persiste snapshots com notas.
+- Nova aba **Relatórios**: KPIs consolidados, receita por forma de pagamento, breakdown por categoria/centro de custo (Business), exportações CSV (resumo completo, pagamentos, fluxo de caixa diário).
+- Correção do bug pré-existente em `finance_entry_pay`: agora usa `reinforcement`/`expense` em vez do inexistente `supply`.
+- Docs: `docs/FINANCE.md` atualizado.
+
+## Sprint 9 — Financeiro (Fase C — Fluxo de caixa + DRE) ✅
+- Novas RPCs: `get_finance_cashflow` (série diária consolidada + totais + caixa operacional) e `get_finance_dre` (receitas/despesas por categoria e centro de custo, lucro operacional e margem).
+- Abas **Fluxo de caixa** (todos os planos) e **DRE** (gate `finance_dre`, Business) com gráficos (barras, área, pizzas) e comparativo com período anterior.
+- Regra de não-duplicação: pagamentos em dinheiro vinculados a caixa entram só via `cash_movements`.
+- Docs: `docs/FINANCE.md` atualizado.
+
+
+
 ## Sprint 9 — Financeiro (Fase B — UI de Contas + Categorias + Centros de Custo) ✅
 - Nova rota `/admin/financeiro` (gate `finance_basic`) com abas: Visão geral, Contas a pagar, Contas a receber, Categorias, Centros de custo.
 - Dashboard consome `get_finance_dashboard`, com seletor de período no header e lista de próximos vencimentos.

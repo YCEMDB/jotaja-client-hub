@@ -18,9 +18,16 @@ Impacto: alto (diferencial competitivo vs iFood).
 | Módulo | Descrição | Dependências |
 |---|---|---|
 | **Fechamento de caixa avançado** | Relatório por método de pagamento, sangrias, suprimentos, diferença esperado vs contado. Email do fechamento. | ✅ `cash_sessions/movements` |
-| **Relatórios gerenciais** | DRE simplificado, ticket médio, produtos mais vendidos, horários de pico, funil de conversão. | Denormalização de `orders` |
-| **Gestão de estoque básica** | Baixa automática no venda, alerta low_stock. | Trigger nova em `order_items` |
+| **Relatórios gerenciais** | ✅ DRE simplificado, ticket médio, receita por forma de pagamento, fluxo de caixa. | Sprint 9 (Financeiro) |
+| **Gestão de estoque básica** | ✅ Baixa automática na venda, alerta `low_stock`. | Sprint 8 (Estoque) |
 | **Multi-impressora** | Roteamento por categoria (bebidas → bar, comida → cozinha). | Impressão (Sprint 3) |
+
+## Sprint 9 — Financeiro completo ✅
+Contas a pagar/receber, categorias, centros de custo, fluxo de caixa consolidado, DRE simplificada, conciliação (dinheiro/PIX/cartão via MP), relatórios e exportação CSV. Detalhes em `docs/FINANCE.md`.
+
+Pendências: exportação XLSX, conciliação automática de cartão físico (adquirente), importação de extrato bancário.
+
+
 
 ## Sprint 5 — CRM & Retenção
 
