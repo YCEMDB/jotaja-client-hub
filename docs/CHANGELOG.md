@@ -2,6 +2,18 @@
 
 Registro cronológico de entregas.
 
+## Sprint 9 — Financeiro (Fase B — UI de Contas + Categorias + Centros de Custo) ✅
+- Nova rota `/admin/financeiro` (gate `finance_basic`) com abas: Visão geral, Contas a pagar, Contas a receber, Categorias, Centros de custo.
+- Dashboard consome `get_finance_dashboard`, com seletor de período no header e lista de próximos vencimentos.
+- `EntryDialog`: criar/editar contas a pagar/receber (descrição, valor, emissão/vencimento, categoria, centro de custo, forma de pagamento, fornecedor/cliente, documento, notas, despesa fixa).
+- `PayEntryDialog`: chama RPC `finance_entry_pay`; detecta caixa aberto e, se método = dinheiro, lança automaticamente `supply`/`withdrawal` em `cash_movements` (nunca duplica vendas de pedido).
+- Ação **Cancelar** usa RPC `finance_entry_cancel` (preserva histórico).
+- Categorias com CRUD e separação `payable`/`receivable`. Centros de custo com gate `finance_advanced` (Business); Pro vê upgrade card.
+- Realtime em `finance_entries` reflete alterações em todas as sessões abertas.
+- Menu: item "Financeiro" adicionado em Insights.
+- Docs: `docs/FINANCE.md` atualizado.
+
+
 ## Sprint 9 — Financeiro (Fase A — schema + RPCs + gates) ✅
 - Novas tabelas: `finance_categories`, `finance_cost_centers`, `finance_entries` (RLS por restaurante).
 - Enums: `finance_direction`, `finance_status`, `finance_pay_method`.
