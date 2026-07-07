@@ -57,6 +57,8 @@ function Financeiro() {
   const { restaurantId } = useAuth();
   const { has } = usePlanFeatures();
   const canCostCenters = has("finance_advanced");
+  const canDre = has("finance_dre");
+
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
