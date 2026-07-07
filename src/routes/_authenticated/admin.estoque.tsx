@@ -531,6 +531,22 @@ function Estoque() {
           )}
         </TabsContent>
 
+        {/* FICHA TÉCNICA */}
+        <TabsContent value="recipes" className="space-y-4">
+          <RecipesTab
+            enabled={canRecipes}
+            products={recipeStatus}
+            ingredients={ingredients}
+            search={recipeSearch}
+            onSearch={setRecipeSearch}
+            filter={recipeFilter}
+            onFilter={setRecipeFilter}
+            sort={recipeSort}
+            onSort={setRecipeSort}
+            onEdit={(p) => { setRecipeTarget(p); setRecipeDialogOpen(true); }}
+          />
+        </TabsContent>
+
         {/* ALERTAS */}
         <TabsContent value="alerts" className="space-y-4">
           <Section>
