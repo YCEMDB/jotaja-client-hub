@@ -49,7 +49,7 @@ export type SessionDetail = {
   }>;
   splits: Array<{ id: string; method: string; amount: number; payer_label: string | null; created_at: string }>;
   events: Array<{
-    id: string; event_type: string; payload: any;
+    id: string; kind: string; payload: any;
     created_at: string; actor_user_id: string | null;
   }>;
   totals: { orders_total: number; orders_count: number; paid: number };
@@ -82,6 +82,37 @@ export async function updateOrderStatus(orderId: string, next: OrderStatus, reas
     p_new_status: next,
     p_source: "panel",
     p_reason: reason ?? undefined,
+  });
+  if (error) throw error;
+}
+
+/** Transfere pedidos INTEIROS para outra sessão (opcionalmente para uma comanda). */
+export async function transferOrders(
+  orderIds: string[], targetSessionId: string, targetCommandId?: string | null,
+): Promise<number> {
+  const { data, error } = await supabase.rpc("transfer_orders", {
+    p_order_ids: orderIds,
+    p_target_session_id: targetSessionId,
+    p_target_command_id: targetCommandId ?? undefined,
+  });
+  if (error) throw error;
+  return (data as unknown as number) ?? 0;
+}
+
+/** Junta sessão de origem à sessão de destino. Origem é fechada como merged. */
+export async function mergeSessions(sourceSessionId: string, targetSessionId: string): Promise<void> {
+  const { error } = await supabase.rpc("merge_sessions", {
+    p_source_session_id: sourceSessionId,
+    p_target_session_id: targetSessionId,
+  });
+  if (error) throw error;
+}
+
+/** Junta a comanda de origem à de destino (mesma sessão). Origem é fechada. */
+export async function mergeCommands(sourceCommandId: string, targetCommandId: string): Promise<void> {
+  const { error } = await (supabase.rpc as any)("merge_commands", {
+    p_source_command_id: sourceCommandId,
+    p_target_command_id: targetCommandId,
   });
   if (error) throw error;
 }
