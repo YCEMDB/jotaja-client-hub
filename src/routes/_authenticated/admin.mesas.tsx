@@ -15,6 +15,7 @@ import { OpenSessionDialog } from "@/components/mesas/OpenSessionDialog";
 import { CloseSessionDialog } from "@/components/mesas/CloseSessionDialog";
 import { QrCodeDialog } from "@/components/mesas/QrCodeDialog";
 import { TableActionsSheet } from "@/components/mesas/TableActionsSheet";
+import { SessionDetailDialog } from "@/components/mesas/SessionDetailDialog";
 
 export const Route = createFileRoute("/_authenticated/admin/mesas")({
   component: MesasPage,
