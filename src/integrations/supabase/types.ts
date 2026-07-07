@@ -1284,35 +1284,59 @@ export type Database = {
       }
       delivery_drivers: {
         Row: {
+          commission_percent: number
           created_at: string
+          current_latitude: number | null
+          current_longitude: number | null
+          email: string | null
+          fee_per_delivery: number
           id: string
           is_active: boolean | null
+          last_location_at: string | null
           license_plate: string | null
           name: string
           phone: string | null
           restaurant_id: string
+          status: Database["public"]["Enums"]["driver_status"]
+          updated_at: string
           user_id: string | null
           vehicle: string | null
         }
         Insert: {
+          commission_percent?: number
           created_at?: string
+          current_latitude?: number | null
+          current_longitude?: number | null
+          email?: string | null
+          fee_per_delivery?: number
           id?: string
           is_active?: boolean | null
+          last_location_at?: string | null
           license_plate?: string | null
           name: string
           phone?: string | null
           restaurant_id: string
+          status?: Database["public"]["Enums"]["driver_status"]
+          updated_at?: string
           user_id?: string | null
           vehicle?: string | null
         }
         Update: {
+          commission_percent?: number
           created_at?: string
+          current_latitude?: number | null
+          current_longitude?: number | null
+          email?: string | null
+          fee_per_delivery?: number
           id?: string
           is_active?: boolean | null
+          last_location_at?: string | null
           license_plate?: string | null
           name?: string
           phone?: string | null
           restaurant_id?: string
+          status?: Database["public"]["Enums"]["driver_status"]
+          updated_at?: string
           user_id?: string | null
           vehicle?: string | null
         }
@@ -1356,6 +1380,74 @@ export type Database = {
           state?: string
         }
         Relationships: []
+      }
+      driver_locations: {
+        Row: {
+          accuracy: number | null
+          driver_id: string
+          heading: number | null
+          id: string
+          latitude: number
+          longitude: number
+          order_id: string | null
+          recorded_at: string
+          restaurant_id: string
+          speed: number | null
+        }
+        Insert: {
+          accuracy?: number | null
+          driver_id: string
+          heading?: number | null
+          id?: string
+          latitude: number
+          longitude: number
+          order_id?: string | null
+          recorded_at?: string
+          restaurant_id: string
+          speed?: number | null
+        }
+        Update: {
+          accuracy?: number | null
+          driver_id?: string
+          heading?: number | null
+          id?: string
+          latitude?: number
+          longitude?: number
+          order_id?: string | null
+          recorded_at?: string
+          restaurant_id?: string
+          speed?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "driver_locations_driver_id_fkey"
+            columns: ["driver_id"]
+            isOneToOne: false
+            referencedRelation: "delivery_drivers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "driver_locations_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "driver_locations_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "driver_locations_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       email_send_log: {
         Row: {
@@ -1747,7 +1839,14 @@ export type Database = {
           delivery_address: Json | null
           delivery_fee: number
           discount: number
+          driver_accepted_at: string | null
+          driver_assigned_at: string | null
+          driver_commission_amount: number | null
+          driver_delivered_at: string | null
           driver_id: string | null
+          driver_picked_up_at: string | null
+          driver_reject_reason: string | null
+          driver_rejected_at: string | null
           estimated_minutes: number | null
           id: string
           mp_payment_id: string | null
@@ -1781,7 +1880,14 @@ export type Database = {
           delivery_address?: Json | null
           delivery_fee?: number
           discount?: number
+          driver_accepted_at?: string | null
+          driver_assigned_at?: string | null
+          driver_commission_amount?: number | null
+          driver_delivered_at?: string | null
           driver_id?: string | null
+          driver_picked_up_at?: string | null
+          driver_reject_reason?: string | null
+          driver_rejected_at?: string | null
           estimated_minutes?: number | null
           id?: string
           mp_payment_id?: string | null
@@ -1815,7 +1921,14 @@ export type Database = {
           delivery_address?: Json | null
           delivery_fee?: number
           discount?: number
+          driver_accepted_at?: string | null
+          driver_assigned_at?: string | null
+          driver_commission_amount?: number | null
+          driver_delivered_at?: string | null
           driver_id?: string | null
+          driver_picked_up_at?: string | null
+          driver_reject_reason?: string | null
+          driver_rejected_at?: string | null
           estimated_minutes?: number | null
           id?: string
           mp_payment_id?: string | null
@@ -3034,9 +3147,17 @@ export type Database = {
       }
     }
     Functions: {
+      _log_order_event: {
+        Args: { p_event: string; p_meta?: Json; p_order_id: string }
+        Returns: undefined
+      }
       _tables_can_manage: { Args: { _rid: string }; Returns: boolean }
       _tables_max_for: { Args: { _rid: string }; Returns: number }
       accept_team_invite: { Args: { p_token: string }; Returns: Json }
+      assign_driver: {
+        Args: { p_driver_id: string; p_order_id: string }
+        Returns: undefined
+      }
       attach_order_to_session: {
         Args: {
           p_command_id?: string
@@ -3054,6 +3175,10 @@ export type Database = {
         Returns: undefined
       }
       cancel_team_invite: { Args: { p_invite_id: string }; Returns: undefined }
+      check_driver_limit: {
+        Args: { _restaurant_id: string }
+        Returns: undefined
+      }
       claim_communication_batch: {
         Args: { p_lock_seconds?: number; p_size?: number; p_worker_id: string }
         Returns: {
@@ -3095,6 +3220,19 @@ export type Database = {
       close_table_session: {
         Args: { p_force?: boolean; p_session_id: string; p_splits?: Json }
         Returns: Json
+      }
+      create_driver: {
+        Args: {
+          p_commission_percent?: number
+          p_email?: string
+          p_fee_per_delivery?: number
+          p_license_plate?: string
+          p_name: string
+          p_phone?: string
+          p_restaurant_id: string
+          p_vehicle?: string
+        }
+        Returns: string
       }
       create_public_order: {
         Args: {
@@ -3156,6 +3294,16 @@ export type Database = {
         Returns: boolean
       }
       delete_table: { Args: { p_table_id: string }; Returns: undefined }
+      driver_accept_order: { Args: { p_order_id: string }; Returns: undefined }
+      driver_complete_delivery: {
+        Args: { p_order_id: string }
+        Returns: undefined
+      }
+      driver_pickup_order: { Args: { p_order_id: string }; Returns: undefined }
+      driver_reject_order: {
+        Args: { p_order_id: string; p_reason?: string }
+        Returns: undefined
+      }
       email_queue_dispatch: { Args: never; Returns: undefined }
       enqueue_communication: {
         Args: {
@@ -3200,6 +3348,11 @@ export type Database = {
         Args: { p_customer_id: string }
         Returns: Json
       }
+      get_delivery_dashboard: {
+        Args: { p_restaurant_id: string }
+        Returns: Json
+      }
+      get_driver_assigned_orders: { Args: never; Returns: Json }
       get_kds_orders: {
         Args: { p_restaurant_id: string; p_station_id?: string }
         Returns: Json
@@ -3261,6 +3414,10 @@ export type Database = {
       get_public_table_session: { Args: { p_token: string }; Returns: Json }
       get_session_detail: { Args: { p_session_id: string }; Returns: Json }
       get_table_map: { Args: { p_restaurant_id: string }; Returns: Json }
+      is_restaurant_driver: {
+        Args: { _restaurant_id: string; _uid: string }
+        Returns: boolean
+      }
       is_restaurant_open_now: {
         Args: { p_restaurant_id: string }
         Returns: boolean
@@ -3268,6 +3425,10 @@ export type Database = {
       is_team_owner: {
         Args: { _restaurant_id: string; _uid: string }
         Returns: boolean
+      }
+      link_driver_user: {
+        Args: { p_driver_id: string; p_user_id: string }
+        Returns: undefined
       }
       list_team_members: {
         Args: { p_restaurant_id: string }
@@ -3368,6 +3529,13 @@ export type Database = {
         Args: { p_body: string; p_conversation_id: string }
         Returns: string
       }
+      set_driver_status: {
+        Args: {
+          p_driver_id: string
+          p_status: Database["public"]["Enums"]["driver_status"]
+        }
+        Returns: undefined
+      }
       set_settings_health: {
         Args: {
           p_error: string
@@ -3386,7 +3554,36 @@ export type Database = {
         Returns: number
       }
       unaccent_safe: { Args: { t: string }; Returns: string }
+      unassign_driver: {
+        Args: { p_order_id: string; p_reason?: string }
+        Returns: undefined
+      }
       unblock_table: { Args: { p_table_id: string }; Returns: undefined }
+      update_driver: {
+        Args: {
+          p_commission_percent?: number
+          p_driver_id: string
+          p_email?: string
+          p_fee_per_delivery?: number
+          p_is_active?: boolean
+          p_license_plate?: string
+          p_name?: string
+          p_phone?: string
+          p_vehicle?: string
+        }
+        Returns: undefined
+      }
+      update_driver_location: {
+        Args: {
+          p_accuracy?: number
+          p_heading?: number
+          p_latitude: number
+          p_longitude: number
+          p_order_id?: string
+          p_speed?: number
+        }
+        Returns: undefined
+      }
       update_order_status: {
         Args: {
           p_new_status: Database["public"]["Enums"]["order_status"]
@@ -3426,7 +3623,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "super_admin" | "owner" | "employee" | "manager"
+      app_role: "super_admin" | "owner" | "employee" | "manager" | "driver"
       cash_movement_type: "sale" | "reinforcement" | "withdrawal" | "expense"
       cash_session_status: "open" | "closed"
       comm_category:
@@ -3456,6 +3653,7 @@ export type Database = {
         | "dead_letter"
         | "cancelled"
       coupon_type: "percentage" | "fixed" | "free_shipping"
+      driver_status: "offline" | "available" | "busy"
       lead_status: "new" | "contacted" | "approved" | "rejected"
       order_status:
         | "pending"
@@ -3602,7 +3800,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["super_admin", "owner", "employee", "manager"],
+      app_role: ["super_admin", "owner", "employee", "manager", "driver"],
       cash_movement_type: ["sale", "reinforcement", "withdrawal", "expense"],
       cash_session_status: ["open", "closed"],
       comm_category: [
@@ -3635,6 +3833,7 @@ export const Constants = {
         "cancelled",
       ],
       coupon_type: ["percentage", "fixed", "free_shipping"],
+      driver_status: ["offline", "available", "busy"],
       lead_status: ["new", "contacted", "approved", "rejected"],
       order_status: [
         "pending",
