@@ -12,7 +12,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
-import { PageHeader } from "@/components/PageHeader";
+import { AdminPageLayout } from "@/components/ds";
 import { toast } from "sonner";
 import {
   Wallet, ArrowDownCircle, ArrowUpCircle, Receipt, Lock, Unlock,
