@@ -251,6 +251,6 @@ function EquipePage() {
           </CardContent>
         </Card>
       )}
-    </div>
+    </AdminPageLayout>
   );
 }
