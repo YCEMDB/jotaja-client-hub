@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { CheckCircle2, XCircle, LogIn } from "lucide-react";
+import { AuthShell } from "@/components/ds";
 
 export const Route = createFileRoute("/aceitar-convite/$token")({
   component: AcceptInvitePage,
@@ -22,7 +22,6 @@ function AcceptInvitePage() {
   useEffect(() => {
     if (loading) return;
     if (!user) {
-      // guarda o token e manda pro auth
       try { sessionStorage.setItem("pending_invite_token", token); } catch {}
       return;
     }
@@ -49,39 +48,34 @@ function AcceptInvitePage() {
   }, [user, loading, token, state, nav, refreshProfile]);
 
   return (
-    <div className="min-h-screen grid place-items-center bg-gradient-mesh p-6">
-      <Card className="w-full max-w-md">
-        <CardHeader><CardTitle>Convite de equipe</CardTitle></CardHeader>
-        <CardContent className="space-y-4">
-          {!user && !loading && (
-            <>
-              <p className="text-sm text-ink/70">
-                Faça login (ou crie sua conta) com o e-mail que recebeu o convite para aceitar.
-              </p>
-              <Button asChild className="w-full">
-                <Link to="/auth"><LogIn className="h-4 w-4 mr-2" /> Fazer login</Link>
-              </Button>
-            </>
-          )}
-          {state === "accepting" && <p className="text-sm">Aceitando convite…</p>}
-          {state === "ok" && (
-            <div className="flex items-center gap-2 text-emerald-600">
-              <CheckCircle2 className="h-5 w-5" /> Convite aceito! Redirecionando…
-            </div>
-          )}
-          {state === "error" && (
-            <div className="space-y-3">
-              <div className="flex items-start gap-2 text-red-600">
-                <XCircle className="h-5 w-5 mt-0.5 shrink-0" />
-                <p className="text-sm">{msg}</p>
-              </div>
-              <Button asChild variant="outline" className="w-full">
-                <Link to="/">Voltar ao início</Link>
-              </Button>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+    <AuthShell kicker="Equipe" title="Convite" subtitle="Aceite para acessar o painel da loja.">
+      {!user && !loading && (
+        <div className="space-y-4">
+          <p className="text-sm text-ink/70">
+            Faça login (ou crie sua conta) com o e-mail que recebeu o convite para aceitar.
+          </p>
+          <Button asChild className="w-full">
+            <Link to="/auth"><LogIn className="h-4 w-4 mr-2" /> Fazer login</Link>
+          </Button>
+        </div>
+      )}
+      {state === "accepting" && <p className="text-sm text-ink/70">Aceitando convite…</p>}
+      {state === "ok" && (
+        <div className="flex items-center gap-2 text-emerald-600 font-semibold">
+          <CheckCircle2 className="h-5 w-5" /> Convite aceito! Redirecionando…
+        </div>
+      )}
+      {state === "error" && (
+        <div className="space-y-3">
+          <div className="flex items-start gap-2 text-destructive bg-destructive/10 border-2 border-destructive/30 rounded-lg p-3">
+            <XCircle className="h-5 w-5 mt-0.5 shrink-0" />
+            <p className="text-sm">{msg}</p>
+          </div>
+          <Button asChild variant="outline" className="w-full">
+            <Link to="/">Voltar ao início</Link>
+          </Button>
+        </div>
+      )}
+    </AuthShell>
   );
 }
