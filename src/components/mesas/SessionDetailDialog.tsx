@@ -341,7 +341,7 @@ export function SessionDetailDialog({
                         <li key={ev.id} className="pl-4 relative">
                           <span className="absolute -left-[7px] top-1.5 h-3 w-3 rounded-full bg-brand-orange border-2 border-background" />
                           <div className="text-sm font-bold text-ink">
-                            {EVENT_LABEL[ev.event_type] ?? ev.event_type}
+                            {EVENT_LABEL[ev.kind] ?? ev.kind}
                           </div>
                           <div className="text-xs text-ink/60">{fmtDateTime(ev.created_at)}</div>
                           {ev.payload && Object.keys(ev.payload).length > 0 && (
