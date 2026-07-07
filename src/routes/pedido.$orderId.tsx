@@ -84,8 +84,22 @@ function OrderTrackPage() {
     return () => clearInterval(t);
   }, [order?.payment_status, order?.payment]);
 
-  if (loading) return <div className="p-8 text-center">Carregando…</div>;
-  if (!order) return <div className="p-8 text-center">Pedido não encontrado.</div>;
+  if (loading) return <div className="min-h-dvh grid place-items-center text-muted-foreground">Carregando pedido…</div>;
+  if (!order) return (
+    <div className="min-h-dvh grid place-items-center p-6 text-center bg-muted/30">
+      <div className="max-w-sm">
+        <Clock className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+        <h1 className="text-2xl font-bold mb-2">Pedido não encontrado</h1>
+        <p className="text-muted-foreground mb-6">
+          Não localizamos este pedido. Verifique se o link está completo ou peça um novo comprovante ao restaurante.
+        </p>
+        <a href="/" className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent">
+          Ir para o início
+        </a>
+      </div>
+    </div>
+  );
+
 
   const paid = order.payment_status === "paid";
   const showPix = order.payment === "pix" && !paid;
