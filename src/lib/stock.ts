@@ -298,6 +298,102 @@ export async function setProductRecipe(productId: string, items: Array<{ ingredi
   return (data as number) ?? 0;
 }
 
+// -------------------- Reports / Fase D --------------------
+
+export interface ConsumptionRow {
+  ingredient_id: string;
+  name: string;
+  unit: string | null;
+  avg_cost: number;
+  qty_sale: number;
+  qty_exit: number;
+  qty_loss: number;
+  qty_entry: number;
+  qty_adjust: number;
+  qty_reversal: number;
+  cost_out: number;
+  cost_in: number;
+}
+
+export async function getConsumptionReport(restaurantId: string, from: string, to: string): Promise<ConsumptionRow[]> {
+  const { data, error } = await (supabase.rpc as any)("get_stock_consumption_report", {
+    p_restaurant_id: restaurantId, p_from: from, p_to: to,
+  });
+  if (error) throw error;
+  return ((data ?? []) as ConsumptionRow[]);
+}
+
+export interface LossReport {
+  total_value: number;
+  total_events: number;
+  by_ingredient: Array<{ ingredient_id: string; name: string; unit: string | null; quantity: number; total_cost: number; events: number }>;
+  events: Array<{ id: string; created_at: string; quantity: number; total_cost: number | null; reason: string | null; ingredient_name: string }>;
+}
+
+export async function getLossesReport(restaurantId: string, from: string, to: string): Promise<LossReport> {
+  const { data, error } = await (supabase.rpc as any)("get_stock_losses_report", {
+    p_restaurant_id: restaurantId, p_from: from, p_to: to,
+  });
+  if (error) throw error;
+  return (data ?? { total_value: 0, total_events: 0, by_ingredient: [], events: [] }) as LossReport;
+}
+
+export interface ProfitabilityRow {
+  product_id: string;
+  product_name: string;
+  price: number;
+  promo_price: number | null;
+  units_sold: number;
+  revenue: number;
+  unit_cost: number;
+  unit_margin: number;
+  total_margin: number;
+  has_recipe: boolean;
+}
+
+export async function getProfitabilityReport(restaurantId: string, from: string, to: string): Promise<ProfitabilityRow[]> {
+  const { data, error } = await (supabase.rpc as any)("get_products_profitability_report", {
+    p_restaurant_id: restaurantId, p_from: from, p_to: to,
+  });
+  if (error) throw error;
+  return ((data ?? []) as ProfitabilityRow[]);
+}
+
+export interface PurchaseSuggestionGroup {
+  supplier_key: string;
+  supplier_id: string | null;
+  supplier_name: string;
+  phone: string | null;
+  email: string | null;
+  estimated_cost: number;
+  items: Array<{
+    ingredient_id: string;
+    name: string;
+    unit: string | null;
+    current_qty: number;
+    min_qty: number;
+    suggested_qty: number;
+    avg_cost: number;
+    line_cost: number;
+  }>;
+}
+
+export async function getPurchaseSuggestions(restaurantId: string): Promise<PurchaseSuggestionGroup[]> {
+  const { data, error } = await (supabase.rpc as any)("get_purchase_suggestions", { p_restaurant_id: restaurantId });
+  if (error) throw error;
+  return ((data ?? []) as PurchaseSuggestionGroup[]);
+}
+
+export async function applyInventoryAdjustment(ingredientId: string, physicalQty: number, reason?: string | null): Promise<string | null> {
+  const { data, error } = await (supabase.rpc as any)("apply_inventory_adjustment", {
+    p_ingredient_id: ingredientId,
+    p_physical_qty: physicalQty,
+    p_reason: reason ?? null,
+  });
+  if (error) throw error;
+  return (data as string) ?? null;
+}
+
 // -------------------- Labels --------------------
 
 export const MOVEMENT_LABEL: Record<StockMovementType, string> = {
