@@ -14,7 +14,8 @@ import {
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { Pencil, Trash2, Plus, Upload, ImageIcon, Sparkles, Loader2 } from "lucide-react";
+import { Pencil, Trash2, Plus, Upload, ImageIcon, Sparkles, Loader2, UtensilsCrossed } from "lucide-react";
+import { AdminPageLayout } from "@/components/ds";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/admin/cardapio")({
