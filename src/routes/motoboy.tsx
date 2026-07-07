@@ -733,7 +733,3 @@ function useGeolocation(enabled: boolean, activeOrderId: string | null) {
   }, [enabled, activeOrderId]);
 }
 
-// Icons referenced above but not imported at top
-import { Clock as _clock_placeholder } from "lucide-react"; // no-op to satisfy tree-shakers
-void _clock_placeholder;
-void Clock;
