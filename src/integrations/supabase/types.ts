@@ -2380,6 +2380,7 @@ export type Database = {
           area: string | null
           capacity: number
           created_at: string
+          height: number
           id: string
           is_active: boolean
           name: string | null
@@ -2389,12 +2390,16 @@ export type Database = {
           position_y: number | null
           qr_token: string
           restaurant_id: string
+          rotation: number
+          shape: string
           updated_at: string
+          width: number
         }
         Insert: {
           area?: string | null
           capacity?: number
           created_at?: string
+          height?: number
           id?: string
           is_active?: boolean
           name?: string | null
@@ -2404,12 +2409,16 @@ export type Database = {
           position_y?: number | null
           qr_token?: string
           restaurant_id: string
+          rotation?: number
+          shape?: string
           updated_at?: string
+          width?: number
         }
         Update: {
           area?: string | null
           capacity?: number
           created_at?: string
+          height?: number
           id?: string
           is_active?: boolean
           name?: string | null
@@ -2419,7 +2428,10 @@ export type Database = {
           position_y?: number | null
           qr_token?: string
           restaurant_id?: string
+          rotation?: number
+          shape?: string
           updated_at?: string
+          width?: number
         }
         Relationships: [
           {
@@ -3387,6 +3399,10 @@ export type Database = {
       update_table: {
         Args: { p_patch: Json; p_table_id: string }
         Returns: undefined
+      }
+      update_table_layout: {
+        Args: { p_restaurant_id: string; p_updates: Json }
+        Returns: number
       }
       upsert_public_customer: {
         Args: {
