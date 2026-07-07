@@ -2,13 +2,14 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Download, Printer, FileText } from "lucide-react";
+import { Download, Printer, FileText, BarChart3 } from "lucide-react";
 import { downloadCSV, printReportHTML } from "@/lib/export-csv";
 import { FeatureGate } from "@/components/FeatureGate";
+import { AdminPageLayout, StatCard, DashboardGrid, Section, FilterBar, EmptyState, LoadingState } from "@/components/ds";
+import { orderStatusLabel, orderTypeLabel, paymentLabel } from "@/lib/labels";
 
 export const Route = createFileRoute("/_authenticated/admin/relatorios")({
   component: RelatoriosPageGated,
@@ -36,18 +37,6 @@ type OrderRow = {
   delivery_fee: number;
   total: number;
   created_at: string;
-};
-
-const STATUS_LABEL: Record<string, string> = {
-  pending: "Pendente", confirmed: "Confirmado", preparing: "Em preparo",
-  ready: "Pronto", out_for_delivery: "Saiu p/ entrega",
-  delivered: "Entregue", cancelled: "Cancelado",
-};
-const TYPE_LABEL: Record<string, string> = {
-  delivery: "Entrega", pickup: "Retirada", dine_in: "No local",
-};
-const PAYMENT_LABEL: Record<string, string> = {
-  cash: "Dinheiro", pix: "Pix", credit_card: "Crédito", debit_card: "Débito",
 };
 
 function fmtMoney(v: number) { return `R$ ${Number(v).toFixed(2).replace(".", ",")}`; }
@@ -97,9 +86,9 @@ function RelatoriosPage() {
       new Date(o.created_at).toLocaleString("pt-BR"),
       o.customer_name,
       o.customer_phone,
-      TYPE_LABEL[o.type] ?? o.type,
-      PAYMENT_LABEL[o.payment] ?? o.payment,
-      STATUS_LABEL[o.status] ?? o.status,
+      orderTypeLabel(o.type),
+      paymentLabel(o.payment),
+      orderStatusLabel(o.status),
       Number(o.subtotal).toFixed(2),
       Number(o.delivery_fee).toFixed(2),
       Number(o.discount).toFixed(2),
@@ -114,9 +103,9 @@ function RelatoriosPage() {
         <td>#${o.order_number}</td>
         <td>${new Date(o.created_at).toLocaleString("pt-BR")}</td>
         <td>${o.customer_name}</td>
-        <td>${STATUS_LABEL[o.status] ?? o.status}</td>
-        <td>${TYPE_LABEL[o.type] ?? o.type}</td>
-        <td>${PAYMENT_LABEL[o.payment] ?? o.payment}</td>
+        <td>${orderStatusLabel(o.status)}</td>
+        <td>${orderTypeLabel(o.type)}</td>
+        <td>${paymentLabel(o.payment)}</td>
         <td class="right">${fmtMoney(o.total)}</td>
       </tr>`).join("");
     const html = `
@@ -129,26 +118,39 @@ function RelatoriosPage() {
     printReportHTML(`Relatório de Pedidos — ${from} a ${to}`, html);
   };
 
-  if (!restaurantId) return <div className="p-4 md:p-8">Configure seu restaurante primeiro.</div>;
+  if (!restaurantId) {
+    return (
+      <AdminPageLayout kicker="Análise" title="Relatórios" accent="violet" icon={BarChart3}>
+        <EmptyState icon={BarChart3} title="Configure seu restaurante primeiro" />
+      </AdminPageLayout>
+    );
+  }
 
   return (
-    <div className="p-4 md:p-6 space-y-6">
-      <div className="flex items-end justify-between flex-wrap gap-4">
-        <div>
-          <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight leading-[0.95]">Relatórios</h1>
-          <p className="text-muted-foreground">Exporte e analise seus pedidos por período</p>
-        </div>
-        <div className="flex gap-2">
+    <AdminPageLayout
+      kicker="Análise"
+      title="Relatórios"
+      subtitle="Exporte e analise seus pedidos por período"
+      accent="violet"
+      icon={BarChart3}
+      actions={
+        <>
           <Button variant="outline" onClick={exportCSV} disabled={!orders.length}>
             <Download className="h-4 w-4 mr-2" />CSV
           </Button>
           <Button variant="outline" onClick={exportPDF} disabled={!orders.length}>
             <Printer className="h-4 w-4 mr-2" />PDF
           </Button>
-        </div>
-      </div>
-
-      <Card className="p-4 flex flex-wrap items-end gap-4">
+        </>
+      }
+    >
+      <FilterBar
+        actions={
+          <Button onClick={load} disabled={loading}>
+            <FileText className="h-4 w-4 mr-2" />{loading ? "Carregando..." : "Atualizar"}
+          </Button>
+        }
+      >
         <div>
           <Label className="text-xs">De</Label>
           <Input type="date" value={from} onChange={(e) => setFrom(e.target.value)} />
@@ -157,51 +159,51 @@ function RelatoriosPage() {
           <Label className="text-xs">Até</Label>
           <Input type="date" value={to} onChange={(e) => setTo(e.target.value)} />
         </div>
-        <Button onClick={load} disabled={loading}>
-          <FileText className="h-4 w-4 mr-2" />{loading ? "Carregando..." : "Atualizar"}
-        </Button>
-      </Card>
+      </FilterBar>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="p-4"><p className="text-xs text-muted-foreground">Faturamento</p><p className="text-2xl font-bold">{fmtMoney(stats.total)}</p></Card>
-        <Card className="p-4"><p className="text-xs text-muted-foreground">Pedidos válidos</p><p className="text-2xl font-bold">{stats.tickets}</p></Card>
-        <Card className="p-4"><p className="text-xs text-muted-foreground">Ticket médio</p><p className="text-2xl font-bold">{fmtMoney(stats.ticketAvg)}</p></Card>
-        <Card className="p-4"><p className="text-xs text-muted-foreground">Cancelados</p><p className="text-2xl font-bold">{stats.cancelled}</p></Card>
-      </div>
+      <DashboardGrid cols={4}>
+        <StatCard label="Faturamento" value={fmtMoney(stats.total)} accent="green" />
+        <StatCard label="Pedidos válidos" value={stats.tickets} accent="orange" />
+        <StatCard label="Ticket médio" value={fmtMoney(stats.ticketAvg)} accent="violet" />
+        <StatCard label="Cancelados" value={stats.cancelled} accent="magenta" />
+      </DashboardGrid>
 
-      <Card className="overflow-x-auto">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm min-w-[640px]">
-            <thead className="bg-muted">
-              <tr className="text-left">
-                <th className="p-3">#</th>
-                <th className="p-3">Data</th>
-                <th className="p-3">Cliente</th>
-                <th className="p-3">Status</th>
-                <th className="p-3">Tipo</th>
-                <th className="p-3">Pgto</th>
-                <th className="p-3 text-right">Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((o) => (
-                <tr key={o.id} className="border-t hover:bg-muted/50">
-                  <td className="p-3 font-medium">#{o.order_number}</td>
-                  <td className="p-3 text-muted-foreground">{new Date(o.created_at).toLocaleString("pt-BR")}</td>
-                  <td className="p-3">{o.customer_name}</td>
-                  <td className="p-3">{STATUS_LABEL[o.status] ?? o.status}</td>
-                  <td className="p-3">{TYPE_LABEL[o.type] ?? o.type}</td>
-                  <td className="p-3">{PAYMENT_LABEL[o.payment] ?? o.payment}</td>
-                  <td className="p-3 text-right font-medium">{fmtMoney(Number(o.total))}</td>
+      {loading ? (
+        <LoadingState />
+      ) : orders.length === 0 ? (
+        <EmptyState icon={FileText} title="Nenhum pedido no período" description="Ajuste as datas e clique em Atualizar." />
+      ) : (
+        <Section className="p-0 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm min-w-[640px]">
+              <thead className="bg-muted">
+                <tr className="text-left">
+                  <th className="p-3">#</th>
+                  <th className="p-3">Data</th>
+                  <th className="p-3">Cliente</th>
+                  <th className="p-3">Status</th>
+                  <th className="p-3">Tipo</th>
+                  <th className="p-3">Pgto</th>
+                  <th className="p-3 text-right">Total</th>
                 </tr>
-              ))}
-              {!orders.length && !loading && (
-                <tr><td colSpan={7} className="p-4 md:p-8 text-center text-muted-foreground">Nenhum pedido no período</td></tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </Card>
-    </div>
+              </thead>
+              <tbody>
+                {orders.map((o) => (
+                  <tr key={o.id} className="border-t border-ink/10 hover:bg-muted/50">
+                    <td className="p-3 font-medium">#{o.order_number}</td>
+                    <td className="p-3 text-muted-foreground">{new Date(o.created_at).toLocaleString("pt-BR")}</td>
+                    <td className="p-3">{o.customer_name}</td>
+                    <td className="p-3">{orderStatusLabel(o.status)}</td>
+                    <td className="p-3">{orderTypeLabel(o.type)}</td>
+                    <td className="p-3">{paymentLabel(o.payment)}</td>
+                    <td className="p-3 text-right font-medium">{fmtMoney(Number(o.total))}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Section>
+      )}
+    </AdminPageLayout>
   );
 }

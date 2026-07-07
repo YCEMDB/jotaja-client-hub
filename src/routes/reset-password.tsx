@@ -5,9 +5,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Logo } from "@/components/jotaja/Logo";
+import { AuthShell } from "@/components/ds";
 
 export const Route = createFileRoute("/reset-password")({
   component: ResetPasswordPage,
@@ -28,15 +27,6 @@ function ResetPasswordPage() {
   const [errMsg, setErrMsg] = useState<string>("");
 
   useEffect(() => {
-    // O webhook do Comandex envia o link no formato:
-    // https://comandahub.online/reset-password?token_hash=xxx&type=recovery
-    // (PKCE/OTP — precisa de verifyOtp antes do updateUser)
-    //
-    // O fluxo antigo padrão Supabase usa hash:
-    // https://comandahub.online/reset-password#access_token=...&type=recovery
-    // (cria sessão automaticamente)
-    //
-    // Cobrimos os dois.
     const run = async () => {
       const url = new URL(window.location.href);
       const tokenHash = url.searchParams.get("token_hash");
@@ -50,7 +40,6 @@ function ResetPasswordPage() {
         return;
       }
 
-      // Fluxo PKCE (?code=...) — usado quando o webhook reescreve o link
       if (code) {
         const { error } = await supabase.auth.exchangeCodeForSession(code);
         if (error) { setErrMsg(error.message); setStatus("invalid"); return; }
@@ -58,7 +47,6 @@ function ResetPasswordPage() {
         return;
       }
 
-      // Fluxo OTP (?token_hash=...&type=recovery)
       if (tokenHash) {
         const { error } = await supabase.auth.verifyOtp({
           token_hash: tokenHash,
@@ -69,14 +57,12 @@ function ResetPasswordPage() {
         return;
       }
 
-      // Fluxo legado (#access_token=...) — Supabase já criou sessão
       const { data: sub } = supabase.auth.onAuthStateChange((event) => {
         if (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") setStatus("ready");
       });
       const { data } = await supabase.auth.getSession();
       if (data.session) setStatus("ready");
       else {
-        // espera 1.5s pelo evento; se não vier, link inválido
         setTimeout(() => {
           if (status === "validating") {
             setErrMsg("Link expirado ou inválido. Solicite um novo e-mail de recuperação.");
@@ -100,57 +86,47 @@ function ResetPasswordPage() {
     setSubmitting(false);
     if (error) { toast.error(error.message); return; }
     toast.success("Senha redefinida com sucesso!");
-    // desloga e manda para login com a nova senha
     await supabase.auth.signOut();
     nav({ to: "/auth" });
   };
 
+  const subtitle =
+    status === "validating" ? "Validando link de recuperação…" :
+    status === "ready" ? "Crie uma nova senha para sua conta." :
+    "Não foi possível validar o link.";
+
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-background">
-      <Card className="w-full max-w-md p-8">
-        <div className="flex justify-center mb-6">
-          <Link to="/" className="inline-flex group"><Logo size="md" /></Link>
+    <AuthShell
+      kicker="Segurança"
+      title="Nova senha"
+      subtitle={subtitle}
+      footer={<Link to="/auth" className="font-semibold text-brand-orange hover:underline">Voltar para o login</Link>}
+    >
+      {status === "ready" && (
+        <form onSubmit={onSubmit} className="space-y-4">
+          <div>
+            <Label htmlFor="password">Nova senha</Label>
+            <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} autoFocus />
+          </div>
+          <div>
+            <Label htmlFor="confirm">Confirmar senha</Label>
+            <Input id="confirm" type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} required minLength={6} />
+          </div>
+          <Button type="submit" className="w-full" disabled={submitting}>
+            {submitting ? "Salvando..." : "Salvar nova senha"}
+          </Button>
+        </form>
+      )}
+
+      {status === "validating" && (
+        <div className="text-center text-sm text-ink/60 py-8 animate-pulse">Validando…</div>
+      )}
+
+      {status === "invalid" && (
+        <div className="text-sm text-destructive bg-destructive/10 border-2 border-destructive/30 rounded-lg p-3">
+          {errMsg || "Link expirado ou inválido."}
         </div>
-        <h1 className="text-2xl font-bold mb-1">Nova senha</h1>
-        <p className="text-sm text-muted-foreground mb-6">
-          {status === "validating" && "Validando link de recuperação..."}
-          {status === "ready" && "Crie uma nova senha para sua conta."}
-          {status === "invalid" && "Não foi possível validar o link."}
-        </p>
-
-        {status === "ready" && (
-          <form onSubmit={onSubmit} className="space-y-4">
-            <div>
-              <Label htmlFor="password">Nova senha</Label>
-              <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} autoFocus />
-            </div>
-            <div>
-              <Label htmlFor="confirm">Confirmar senha</Label>
-              <Input id="confirm" type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} required minLength={6} />
-            </div>
-            <Button type="submit" className="w-full" disabled={submitting}>
-              {submitting ? "Salvando..." : "Salvar nova senha"}
-            </Button>
-          </form>
-        )}
-
-        {status === "validating" && (
-          <div className="text-center text-sm text-muted-foreground py-8 animate-pulse">
-            Validando…
-          </div>
-        )}
-
-        {status === "invalid" && (
-          <div className="space-y-3">
-            <div className="text-sm text-destructive bg-destructive/10 border border-destructive/30 rounded-md p-3">
-              {errMsg || "Link expirado ou inválido."}
-            </div>
-            <Link to="/auth" className="text-primary font-semibold underline text-sm block text-center">
-              Voltar para o login e solicitar novo link
-            </Link>
-          </div>
-        )}
-      </Card>
-    </div>
+      )}
+    </AuthShell>
   );
 }

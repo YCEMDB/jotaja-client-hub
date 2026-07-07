@@ -7,9 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Card } from "@/components/ui/card";
+import { Rocket } from "lucide-react";
 import { toast } from "sonner";
 import { isReservedSlug } from "@/lib/reserved-slugs";
+import { AdminPageLayout, Section } from "@/components/ds";
 
 export const Route = createFileRoute("/_authenticated/admin/onboarding")({
   component: Onboarding,
@@ -61,8 +62,6 @@ function Onboarding() {
       toast.error(error.message);
       return;
     }
-    // Owner role é sincronizado automaticamente via trigger sync_owner_role (Sprint 2.2.a).
-    // restaurants.owner_id é a fonte única de verdade.
     await supabase.from("profiles").update({ restaurant_id: data.id }).eq("id", user.id);
     await refreshProfile();
     toast.success("Restaurante criado!");
@@ -70,13 +69,15 @@ function Onboarding() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-8">
-      <div className="mb-8">
-        <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight leading-[0.95]">Vamos configurar seu restaurante</h1>
-        <p className="text-muted-foreground mt-2">Leva menos de 1 minuto. Você pode ajustar tudo depois.</p>
-      </div>
-
-      <Card className="p-4 md:p-8">
+    <AdminPageLayout
+      kicker="Primeiros passos"
+      title="Vamos configurar seu restaurante"
+      subtitle="Leva menos de 1 minuto. Você pode ajustar tudo depois."
+      accent="orange"
+      icon={Rocket}
+      maxWidth="3xl"
+    >
+      <Section>
         <form onSubmit={onSubmit} className="space-y-5">
           <div>
             <Label htmlFor="name">Nome do restaurante *</Label>
@@ -85,7 +86,6 @@ function Onboarding() {
               O link da sua loja será gerado automaticamente a partir do nome.
             </p>
           </div>
-
 
           <div>
             <Label htmlFor="whatsapp">WhatsApp para receber pedidos *</Label>
@@ -101,8 +101,8 @@ function Onboarding() {
             {submitting ? "Criando..." : "Criar restaurante"}
           </Button>
         </form>
-      </Card>
-    </div>
+      </Section>
+    </AdminPageLayout>
   );
 }
 

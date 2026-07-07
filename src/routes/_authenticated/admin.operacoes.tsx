@@ -6,10 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Card } from "@/components/ui/card";
-import { Trash2, Plus } from "lucide-react";
+import { Trash2, Plus, Settings2 } from "lucide-react";
 import { toast } from "sonner";
 import { translateError } from "@/lib/error-messages";
+import { AdminPageLayout, Section, SectionHeader } from "@/components/ds";
 
 export const Route = createFileRoute("/_authenticated/admin/operacoes")({
   component: OperacoesPage,
@@ -82,15 +82,22 @@ function OperacoesPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 md:p-8 space-y-6">
-      <div>
-        <h1 className="text-3xl font-black">Operações</h1>
-        <p className="text-muted-foreground">KDS, som, SLA, impressão e estações.</p>
-      </div>
-
-      <Card className="p-6 space-y-4">
-        <h2 className="text-xl font-black">SLA (cores por tempo no KDS)</h2>
-        <div className="grid grid-cols-3 gap-4">
+    <AdminPageLayout
+      kicker="Operações"
+      title="Operações"
+      subtitle="KDS, som, SLA, impressão e estações."
+      accent="violet"
+      icon={Settings2}
+      maxWidth="4xl"
+      actions={
+        <Button onClick={save} disabled={saving} className="bg-gradient-sunset text-white shadow-brutal">
+          {saving ? "Salvando…" : "Salvar configurações"}
+        </Button>
+      }
+    >
+      <Section>
+        <SectionHeader title="SLA (cores por tempo no KDS)" />
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <Label>Verde até (min)</Label>
             <Input type="number" min={1} value={ops.sla_green_minutes}
@@ -107,50 +114,49 @@ function OperacoesPage() {
               onChange={(e) => setOps({ ...ops, sla_red_minutes: Number(e.target.value) })} />
           </div>
         </div>
-      </Card>
+      </Section>
 
-      <Card className="p-6 space-y-4">
-        <h2 className="text-xl font-black">Som</h2>
+      <Section>
+        <SectionHeader title="Som" />
         <div className="flex items-center justify-between">
           <Label>Alertas sonoros no KDS</Label>
           <Switch checked={ops.sound_enabled} onCheckedChange={(v) => setOps({ ...ops, sound_enabled: v })} />
         </div>
-      </Card>
+      </Section>
 
-      <Card className="p-6 space-y-4">
-        <h2 className="text-xl font-black">Impressão automática</h2>
-        <div className="flex items-center justify-between">
-          <Label>Ao confirmar pedido</Label>
-          <Switch checked={ops.auto_print_on_confirmed}
-            onCheckedChange={(v) => setOps({ ...ops, auto_print_on_confirmed: v })} />
+      <Section>
+        <SectionHeader title="Impressão automática" />
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <Label>Ao confirmar pedido</Label>
+            <Switch checked={ops.auto_print_on_confirmed}
+              onCheckedChange={(v) => setOps({ ...ops, auto_print_on_confirmed: v })} />
+          </div>
+          <div className="flex items-center justify-between">
+            <Label>Ao iniciar preparo</Label>
+            <Switch checked={ops.auto_print_on_preparing}
+              onCheckedChange={(v) => setOps({ ...ops, auto_print_on_preparing: v })} />
+          </div>
+          <div className="flex items-center justify-between">
+            <Label>Ao ficar pronto</Label>
+            <Switch checked={ops.auto_print_on_ready}
+              onCheckedChange={(v) => setOps({ ...ops, auto_print_on_ready: v })} />
+          </div>
+          <div>
+            <Label>Nome da impressora (opcional, drivers futuros)</Label>
+            <Input value={ops.printer_name ?? ""} onChange={(e) => setOps({ ...ops, printer_name: e.target.value })} />
+          </div>
         </div>
-        <div className="flex items-center justify-between">
-          <Label>Ao iniciar preparo</Label>
-          <Switch checked={ops.auto_print_on_preparing}
-            onCheckedChange={(v) => setOps({ ...ops, auto_print_on_preparing: v })} />
-        </div>
-        <div className="flex items-center justify-between">
-          <Label>Ao ficar pronto</Label>
-          <Switch checked={ops.auto_print_on_ready}
-            onCheckedChange={(v) => setOps({ ...ops, auto_print_on_ready: v })} />
-        </div>
-        <div>
-          <Label>Nome da impressora (opcional, drivers futuros)</Label>
-          <Input value={ops.printer_name ?? ""} onChange={(e) => setOps({ ...ops, printer_name: e.target.value })} />
-        </div>
-      </Card>
+      </Section>
 
-      <Card className="p-6 space-y-4">
-        <h2 className="text-xl font-black">Estações</h2>
-        <p className="text-sm text-muted-foreground">
-          Cadastre estações (Cozinha, Bar, Pizzaria…) e associe produtos no cardápio.
-        </p>
-        <div className="flex gap-2">
+      <Section>
+        <SectionHeader title="Estações" description="Cadastre estações (Cozinha, Bar, Pizzaria…) e associe produtos no cardápio." />
+        <div className="flex gap-2 mb-3">
           <Input value={newStation} onChange={(e) => setNewStation(e.target.value)}
             placeholder="Ex.: Cozinha" onKeyDown={(e) => e.key === "Enter" && addStation()} />
           <Button onClick={addStation}><Plus className="w-4 h-4 mr-1" />Adicionar</Button>
         </div>
-        <ul className="divide-y">
+        <ul className="divide-y divide-ink/10">
           {stations.map((s) => (
             <li key={s.id} className="flex items-center justify-between py-2">
               <div className="flex items-center gap-2">
@@ -165,13 +171,7 @@ function OperacoesPage() {
           ))}
           {stations.length === 0 && <li className="text-sm text-muted-foreground py-4">Nenhuma estação.</li>}
         </ul>
-      </Card>
-
-      <div className="flex justify-end">
-        <Button onClick={save} disabled={saving} size="lg" className="bg-gradient-sunset text-white shadow-brutal">
-          {saving ? "Salvando…" : "Salvar configurações"}
-        </Button>
-      </div>
-    </div>
+      </Section>
+    </AdminPageLayout>
   );
 }

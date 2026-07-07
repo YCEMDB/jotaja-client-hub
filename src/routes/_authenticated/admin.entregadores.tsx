@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Plus, Pencil, Trash2, Truck } from "lucide-react";
 import { toast } from "sonner";
 import { FeatureGate } from "@/components/FeatureGate";
+import { AdminPageLayout, EmptyState } from "@/components/ds";
 
 export const Route = createFileRoute("/_authenticated/admin/entregadores")({
   component: EntregadoresGated,
@@ -80,30 +81,33 @@ function Entregadores() {
   };
 
   return (
-    <div className="p-4 md:p-8">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight leading-[0.95]">Entregadores</h1>
-          <p className="text-muted-foreground">Gerencie sua equipe de entregas</p>
-        </div>
+    <AdminPageLayout
+      kicker="Logística"
+      title="Entregadores"
+      subtitle="Gerencie sua equipe de entregas"
+      accent="orange"
+      icon={Truck}
+      actions={
         <Button onClick={openNew}><Plus className="h-4 w-4 mr-2" />Novo entregador</Button>
-      </div>
-
+      }
+    >
       {drivers.length === 0 ? (
-        <Card className="p-12 text-center">
-          <Truck className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
-          <p className="text-muted-foreground">Nenhum entregador cadastrado ainda.</p>
-        </Card>
+        <EmptyState
+          icon={Truck}
+          title="Nenhum entregador cadastrado"
+          description="Adicione sua equipe de entregas para atribuir pedidos."
+          action={<Button onClick={openNew}><Plus className="h-4 w-4 mr-2" />Novo entregador</Button>}
+        />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {drivers.map((d) => (
             <Card key={d.id} className="p-4">
               <div className="flex items-start justify-between mb-2">
-                <div>
-                  <h3 className="font-semibold">{d.name}</h3>
+                <div className="min-w-0">
+                  <h3 className="font-semibold truncate">{d.name}</h3>
                   <p className="text-sm text-muted-foreground">{d.phone ?? "Sem telefone"}</p>
                 </div>
-                <span className={`text-xs px-2 py-0.5 rounded ${d.is_active ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-600"}`}>
+                <span className={`text-xs px-2 py-0.5 rounded font-bold uppercase tracking-wide shrink-0 ${d.is_active ? "bg-emerald-500/15 text-emerald-700 border border-emerald-500/40" : "bg-muted text-muted-foreground border border-ink/10"}`}>
                   {d.is_active ? "Ativo" : "Inativo"}
                 </span>
               </div>
@@ -136,6 +140,6 @@ function Entregadores() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </AdminPageLayout>
   );
 }

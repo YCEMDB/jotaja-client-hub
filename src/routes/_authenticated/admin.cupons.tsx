@@ -17,6 +17,7 @@ import {
 import { Plus, Pencil, Trash2, Tag } from "lucide-react";
 import { toast } from "sonner";
 import { FeatureGate } from "@/components/FeatureGate";
+import { AdminPageLayout, EmptyState } from "@/components/ds";
 
 export const Route = createFileRoute("/_authenticated/admin/cupons")({
   component: CuponsGated,
@@ -64,26 +65,34 @@ function CuponsPage() {
     load();
   };
 
-  if (!restaurantId) return <div className="p-4 md:p-8">Configure seu restaurante primeiro.</div>;
+  if (!restaurantId) {
+    return (
+      <AdminPageLayout kicker="Marketing" title="Cupons" accent="amber" icon={Tag} maxWidth="4xl">
+        <EmptyState icon={Tag} title="Configure seu restaurante primeiro" description="Precisamos de uma loja ativa para gerenciar cupons." />
+      </AdminPageLayout>
+    );
+  }
 
   return (
-    <div className="p-4 md:p-8">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight leading-[0.95]">Cupons</h1>
-          <p className="text-muted-foreground">Crie descontos para seus clientes</p>
-        </div>
+    <AdminPageLayout
+      kicker="Marketing"
+      title="Cupons"
+      subtitle="Crie descontos para seus clientes"
+      accent="amber"
+      icon={Tag}
+      actions={
         <Button onClick={() => { setEditing(null); setOpen(true); }}>
           <Plus className="h-4 w-4 mr-2" /> Novo cupom
         </Button>
-      </div>
-
+      }
+    >
       {list.length === 0 ? (
-        <Card className="p-12 text-center">
-          <Tag className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
-          <h3 className="font-semibold">Nenhum cupom criado</h3>
-          <p className="text-sm text-muted-foreground mt-1">Crie cupons promocionais para atrair clientes.</p>
-        </Card>
+        <EmptyState
+          icon={Tag}
+          title="Nenhum cupom criado"
+          description="Crie cupons promocionais para atrair clientes."
+          action={<Button onClick={() => { setEditing(null); setOpen(true); }}><Plus className="h-4 w-4 mr-2" />Novo cupom</Button>}
+        />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {list.map((c) => {
@@ -119,7 +128,7 @@ function CuponsPage() {
       )}
 
       <CouponDialog open={open} onOpenChange={setOpen} editing={editing} restaurantId={restaurantId} onSaved={load} />
-    </div>
+    </AdminPageLayout>
   );
 }
 
