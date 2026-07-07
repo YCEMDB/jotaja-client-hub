@@ -56,3 +56,12 @@ Product limit ──► Não bloqueia mas evita abuso do starter
 - [ ] **Impressão do resumo de fechamento** (recibo da mesa) — reutilizar
       `enqueue_print_job` com evento `session_closed`.
 - [ ] **Reservas** (data/hora com bloqueio parcial de sessão).
+
+## 🟡 Débito técnico — Módulo Delivery (Sprint 7)
+
+- [ ] **Mapa interativo real** — hoje mostra lista de últimas posições; falta camada Google Maps ou Mapbox (definir provider e chave).
+- [ ] **Exportação CSV/XLSX** do relatório financeiro (dados já disponíveis via `get_delivery_financial_summary`).
+- [ ] **Push notifications** no app `/motoboy` (opcional — realtime já cobre 90 %).
+- [ ] **manifest.webmanifest** + install prompt para `/motoboy`.
+- [ ] **Roteirização multi-drop** — atribuir vários pedidos em uma única rota otimizada.
+- [ ] **Zoning por bairro** — sugerir motoboy conforme `delivery_neighborhoods`.
