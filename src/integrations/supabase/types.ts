@@ -2150,6 +2150,68 @@ export type Database = {
           },
         ]
       }
+      product_recipes: {
+        Row: {
+          created_at: string
+          id: string
+          ingredient_id: string
+          notes: string | null
+          product_id: string
+          quantity: number
+          restaurant_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ingredient_id: string
+          notes?: string | null
+          product_id: string
+          quantity: number
+          restaurant_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ingredient_id?: string
+          notes?: string | null
+          product_id?: string
+          quantity?: number
+          restaurant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_recipes_ingredient_id_fkey"
+            columns: ["ingredient_id"]
+            isOneToOne: false
+            referencedRelation: "stock_ingredients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_recipes_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_recipes_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_recipes_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       products: {
         Row: {
           category_id: string | null
@@ -2609,6 +2671,8 @@ export type Database = {
           plan_id: string | null
           primary_color: string | null
           slug: string
+          stock_auto_debit_status: string
+          stock_reverse_on_cancel: boolean
           subscription_ends_at: string | null
           timezone: string
           trial_ends_at: string | null
@@ -2660,6 +2724,8 @@ export type Database = {
           plan_id?: string | null
           primary_color?: string | null
           slug: string
+          stock_auto_debit_status?: string
+          stock_reverse_on_cancel?: boolean
           subscription_ends_at?: string | null
           timezone?: string
           trial_ends_at?: string | null
@@ -2711,6 +2777,8 @@ export type Database = {
           plan_id?: string | null
           primary_color?: string | null
           slug?: string
+          stock_auto_debit_status?: string
+          stock_reverse_on_cancel?: boolean
           subscription_ends_at?: string | null
           timezone?: string
           trial_ends_at?: string | null
@@ -2765,6 +2833,269 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      stock_ingredients: {
+        Row: {
+          avg_cost: number
+          created_at: string
+          current_qty: number
+          id: string
+          is_active: boolean
+          min_qty: number
+          name: string
+          notes: string | null
+          restaurant_id: string
+          sku: string | null
+          supplier_id: string | null
+          unit_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          avg_cost?: number
+          created_at?: string
+          current_qty?: number
+          id?: string
+          is_active?: boolean
+          min_qty?: number
+          name: string
+          notes?: string | null
+          restaurant_id: string
+          sku?: string | null
+          supplier_id?: string | null
+          unit_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          avg_cost?: number
+          created_at?: string
+          current_qty?: number
+          id?: string
+          is_active?: boolean
+          min_qty?: number
+          name?: string
+          notes?: string | null
+          restaurant_id?: string
+          sku?: string | null
+          supplier_id?: string | null
+          unit_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stock_ingredients_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stock_ingredients_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stock_ingredients_supplier_id_fkey"
+            columns: ["supplier_id"]
+            isOneToOne: false
+            referencedRelation: "stock_suppliers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stock_ingredients_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "stock_units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stock_movements: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          ingredient_id: string
+          metadata: Json
+          movement_type: Database["public"]["Enums"]["stock_movement_type"]
+          order_id: string | null
+          qty_after: number
+          qty_before: number
+          quantity: number
+          reason: string | null
+          restaurant_id: string
+          supplier_id: string | null
+          total_cost: number | null
+          unit_cost: number | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          ingredient_id: string
+          metadata?: Json
+          movement_type: Database["public"]["Enums"]["stock_movement_type"]
+          order_id?: string | null
+          qty_after: number
+          qty_before: number
+          quantity: number
+          reason?: string | null
+          restaurant_id: string
+          supplier_id?: string | null
+          total_cost?: number | null
+          unit_cost?: number | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          ingredient_id?: string
+          metadata?: Json
+          movement_type?: Database["public"]["Enums"]["stock_movement_type"]
+          order_id?: string | null
+          qty_after?: number
+          qty_before?: number
+          quantity?: number
+          reason?: string | null
+          restaurant_id?: string
+          supplier_id?: string | null
+          total_cost?: number | null
+          unit_cost?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stock_movements_ingredient_id_fkey"
+            columns: ["ingredient_id"]
+            isOneToOne: false
+            referencedRelation: "stock_ingredients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stock_movements_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stock_movements_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stock_movements_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stock_movements_supplier_id_fkey"
+            columns: ["supplier_id"]
+            isOneToOne: false
+            referencedRelation: "stock_suppliers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stock_suppliers: {
+        Row: {
+          contact: string | null
+          created_at: string
+          email: string | null
+          id: string
+          is_active: boolean
+          name: string
+          notes: string | null
+          phone: string | null
+          restaurant_id: string
+          updated_at: string
+        }
+        Insert: {
+          contact?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          notes?: string | null
+          phone?: string | null
+          restaurant_id: string
+          updated_at?: string
+        }
+        Update: {
+          contact?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          restaurant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stock_suppliers_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stock_suppliers_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stock_units: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          restaurant_id: string
+          symbol: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          restaurant_id: string
+          symbol: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          restaurant_id?: string
+          symbol?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stock_units_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stock_units_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       suppressed_emails: {
         Row: {
@@ -3179,6 +3510,10 @@ export type Database = {
         Args: { _restaurant_id: string }
         Returns: undefined
       }
+      check_ingredient_limit: {
+        Args: { _restaurant_id: string }
+        Returns: undefined
+      }
       claim_communication_batch: {
         Args: { p_lock_seconds?: number; p_size?: number; p_worker_id: string }
         Returns: {
@@ -3269,6 +3604,20 @@ export type Database = {
           p_token: string
         }
         Returns: Json
+      }
+      create_stock_ingredient: {
+        Args: {
+          p_initial_cost?: number
+          p_initial_qty?: number
+          p_min_qty?: number
+          p_name: string
+          p_notes?: string
+          p_restaurant_id: string
+          p_sku?: string
+          p_supplier_id?: string
+          p_unit_id?: string
+        }
+        Returns: string
       }
       create_table: {
         Args: {
@@ -3430,6 +3779,7 @@ export type Database = {
       get_public_table_by_qr: { Args: { p_token: string }; Returns: Json }
       get_public_table_session: { Args: { p_token: string }; Returns: Json }
       get_session_detail: { Args: { p_session_id: string }; Returns: Json }
+      get_stock_overview: { Args: { p_restaurant_id: string }; Returns: Json }
       get_table_map: { Args: { p_restaurant_id: string }; Returns: Json }
       is_restaurant_driver: {
         Args: { _restaurant_id: string; _uid: string }
@@ -3533,6 +3883,17 @@ export type Database = {
         }[]
       }
       regen_table_qr: { Args: { p_table_id: string }; Returns: string }
+      register_stock_movement: {
+        Args: {
+          p_ingredient_id: string
+          p_quantity: number
+          p_reason?: string
+          p_supplier_id?: string
+          p_type: Database["public"]["Enums"]["stock_movement_type"]
+          p_unit_cost?: number
+        }
+        Returns: string
+      }
       remove_team_member: {
         Args: { p_restaurant_id: string; p_user_id: string }
         Returns: undefined
@@ -3552,6 +3913,10 @@ export type Database = {
           p_status: Database["public"]["Enums"]["driver_status"]
         }
         Returns: undefined
+      }
+      set_product_recipe: {
+        Args: { p_items: Json; p_product_id: string }
+        Returns: number
       }
       set_settings_health: {
         Args: {
@@ -3610,6 +3975,19 @@ export type Database = {
         }
         Returns: Json
       }
+      update_stock_ingredient: {
+        Args: {
+          p_id: string
+          p_is_active?: boolean
+          p_min_qty?: number
+          p_name?: string
+          p_notes?: string
+          p_sku?: string
+          p_supplier_id?: string
+          p_unit_id?: string
+        }
+        Returns: undefined
+      }
       update_table: {
         Args: { p_patch: Json; p_table_id: string }
         Returns: undefined
@@ -3625,6 +4003,28 @@ export type Database = {
           p_phone: string
           p_restaurant_id: string
           p_source?: string
+        }
+        Returns: string
+      }
+      upsert_stock_supplier: {
+        Args: {
+          p_contact?: string
+          p_email?: string
+          p_id?: string
+          p_is_active?: boolean
+          p_name: string
+          p_notes?: string
+          p_phone?: string
+          p_restaurant_id: string
+        }
+        Returns: string
+      }
+      upsert_stock_unit: {
+        Args: {
+          p_id?: string
+          p_name: string
+          p_restaurant_id: string
+          p_symbol: string
         }
         Returns: string
       }
@@ -3684,6 +4084,13 @@ export type Database = {
       payment_method: "cash" | "pix" | "credit_card" | "debit_card" | "online"
       payment_status: "pending" | "paid" | "failed" | "refunded" | "expired"
       restaurant_plan: "trial" | "essential" | "professional"
+      stock_movement_type:
+        | "entry"
+        | "exit"
+        | "loss"
+        | "adjust"
+        | "sale"
+        | "reversal"
       table_session_status:
         | "open"
         | "closing"
@@ -3865,6 +4272,14 @@ export const Constants = {
       payment_method: ["cash", "pix", "credit_card", "debit_card", "online"],
       payment_status: ["pending", "paid", "failed", "refunded", "expired"],
       restaurant_plan: ["trial", "essential", "professional"],
+      stock_movement_type: [
+        "entry",
+        "exit",
+        "loss",
+        "adjust",
+        "sale",
+        "reversal",
+      ],
       table_session_status: [
         "open",
         "closing",
