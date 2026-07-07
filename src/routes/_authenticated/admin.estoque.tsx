@@ -29,6 +29,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import {
   Boxes, Package, AlertTriangle, TrendingDown, Activity, Plus, Pencil, Trash2,
   ArrowDownUp, RefreshCw, Truck, Ruler, Search, ChefHat, Sparkles, Lock,
+  BarChart3, ShoppingCart, ClipboardCheck,
 } from "lucide-react";
 import {
   getStockOverview, listIngredients, listMovements, listSuppliers, listUnits,
@@ -39,6 +40,9 @@ import {
 } from "@/lib/stock";
 import { MovementDialog } from "@/components/stock/MovementDialog";
 import { RecipeDialog } from "@/components/stock/RecipeDialog";
+import { ReportsTab } from "@/components/stock/ReportsTab";
+import { PurchaseSuggestionsTab } from "@/components/stock/PurchaseSuggestionsTab";
+import { InventoryDialog } from "@/components/stock/InventoryDialog";
 import { usePlanFeatures } from "@/hooks/usePlanFeatures";
 import { Link } from "@tanstack/react-router";
 
@@ -99,6 +103,9 @@ function Estoque() {
   const [recipeSort, setRecipeSort] = useState<"name" | "margin_percent" | "margin_value" | "cost">("name");
   const [recipeDialogOpen, setRecipeDialogOpen] = useState(false);
   const [recipeTarget, setRecipeTarget] = useState<ProductRecipeStatus | null>(null);
+
+  const [invDialogOpen, setInvDialogOpen] = useState(false);
+  const [invTarget, setInvTarget] = useState<StockIngredient | null>(null);
 
   const load = useCallback(async () => {
     if (!restaurantId) return;
@@ -222,19 +229,22 @@ function Estoque() {
       }
     >
       <Tabs defaultValue="dashboard" className="space-y-6">
-        <TabsList className="h-auto p-1 flex flex-wrap gap-1 bg-card border-2 border-ink rounded-xl">
-          <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-          <TabsTrigger value="ingredients">Ingredientes</TabsTrigger>
-          <TabsTrigger value="suppliers">Fornecedores</TabsTrigger>
-          <TabsTrigger value="units">Unidades</TabsTrigger>
-          <TabsTrigger value="movements">Movimentações</TabsTrigger>
-          <TabsTrigger value="recipes">Ficha Técnica</TabsTrigger>
-          <TabsTrigger value="alerts">
-            Alertas {overview && overview.ingredients_low > 0 && (
-              <span className="ml-2 bg-brand-magenta text-background text-[10px] px-1.5 rounded font-bold">{overview.ingredients_low}</span>
-            )}
-          </TabsTrigger>
-        </TabsList>
+          <TabsList className="h-auto p-1 flex flex-wrap gap-1 bg-card border-2 border-ink rounded-xl">
+            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+            <TabsTrigger value="ingredients">Ingredientes</TabsTrigger>
+            <TabsTrigger value="suppliers">Fornecedores</TabsTrigger>
+            <TabsTrigger value="units">Unidades</TabsTrigger>
+            <TabsTrigger value="movements">Movimentações</TabsTrigger>
+            <TabsTrigger value="recipes">Ficha Técnica</TabsTrigger>
+            <TabsTrigger value="reports">Relatórios</TabsTrigger>
+            <TabsTrigger value="purchases">Compras</TabsTrigger>
+            <TabsTrigger value="inventory">Inventário</TabsTrigger>
+            <TabsTrigger value="alerts">
+              Alertas {overview && overview.ingredients_low > 0 && (
+                <span className="ml-2 bg-brand-magenta text-background text-[10px] px-1.5 rounded font-bold">{overview.ingredients_low}</span>
+              )}
+            </TabsTrigger>
+          </TabsList>
 
         {/* DASHBOARD */}
         <TabsContent value="dashboard" className="space-y-6">
@@ -547,6 +557,65 @@ function Estoque() {
           />
         </TabsContent>
 
+        {/* RELATÓRIOS */}
+        <TabsContent value="reports" className="space-y-4">
+          <ReportsTab restaurantId={restaurantId ?? ""} canProfitability={canRecipes} />
+        </TabsContent>
+
+        {/* COMPRAS */}
+        <TabsContent value="purchases" className="space-y-4">
+          <PurchaseSuggestionsTab restaurantId={restaurantId ?? ""} enabled={canRecipes} />
+        </TabsContent>
+
+        {/* INVENTÁRIO */}
+        <TabsContent value="inventory" className="space-y-4">
+          <Section>
+            <SectionHeader
+              title="Inventário físico vs sistema"
+              description="Contagem manual dos ingredientes ativos. A diferença é registrada como um ajuste."
+            />
+            <SectionContent>
+              {ingredients.filter((i) => i.is_active).length === 0 ? (
+                <EmptyState icon={ClipboardCheck} title="Sem ingredientes" description="Cadastre ingredientes para iniciar o inventário." />
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead className="text-left text-[11px] uppercase tracking-wider text-ink/60">
+                      <tr>
+                        <th className="py-2">Ingrediente</th>
+                        <th className="py-2 text-right">Sistema</th>
+                        <th className="py-2 text-right">Custo médio</th>
+                        <th className="py-2 text-right">Valor</th>
+                        <th className="py-2 text-right">Ações</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {ingredients.filter((i) => i.is_active).map((i) => {
+                        const unit = i.unit_id ? unitById[i.unit_id]?.symbol ?? "" : "";
+                        return (
+                          <tr key={i.id} className="border-t border-ink/10">
+                            <td className="py-2 font-bold">{i.name}</td>
+                            <td className="py-2 text-right">{Number(i.current_qty).toLocaleString("pt-BR")} {unit}</td>
+                            <td className="py-2 text-right">{formatBRL(i.avg_cost)}</td>
+                            <td className="py-2 text-right font-bold">{formatBRL(Number(i.current_qty) * Number(i.avg_cost))}</td>
+                            <td className="py-2 text-right">
+                              <Button size="sm" variant="outline" onClick={() => { setInvTarget(i); setInvDialogOpen(true); }}>
+                                <ClipboardCheck className="h-3.5 w-3.5 mr-1" /> Contar
+                              </Button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </SectionContent>
+          </Section>
+        </TabsContent>
+
+
+
         {/* ALERTAS */}
         <TabsContent value="alerts" className="space-y-4">
           <Section>
@@ -628,6 +697,14 @@ function Estoque() {
         } : null}
         ingredients={ingredients}
         onSaved={() => { loadRecipes(); load(); }}
+      />
+
+      {/* Inventory dialog */}
+      <InventoryDialog
+        open={invDialogOpen}
+        onOpenChange={setInvDialogOpen}
+        ingredient={invTarget}
+        onSuccess={load}
       />
     </AdminPageLayout>
   );

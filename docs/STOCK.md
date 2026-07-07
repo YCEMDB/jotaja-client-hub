@@ -82,3 +82,41 @@ Nenhuma cor hex inline.
 5. Segundo cancelamento não duplica → OK.
 6. Produto sem ficha → nenhum movimento criado (loop vazio).
 7. Feature Gate: Pro/Starter — trigger sai cedo, aba mostra card de upgrade.
+
+## Fase D — Relatórios, Alertas e Inventário
+
+Nova barra de abas em `/admin/estoque`: **Relatórios**, **Compras**, **Inventário**, além das anteriores.
+
+### Relatórios (aba "Relatórios")
+Filtro `De`/`Até` (padrão últimos 30 dias). Três sub-abas:
+
+1. **Consumo** — RPC `get_stock_consumption_report(restaurant_id, from, to)`.
+   Colunas: entradas, vendas, saídas, perdas, ajustes, custo de saída. Exporta CSV.
+2. **Perdas** — RPC `get_stock_losses_report`. Retorna `{ total_value, total_events, by_ingredient[], events[] }`. Exporta CSV.
+3. **Lucratividade** (Business) — RPC `get_products_profitability_report`. Ranking por margem total, considerando `product_recipes` e `stock_ingredients.avg_cost`. Exporta CSV.
+
+### Compras (aba "Compras", Business)
+- RPC `get_purchase_suggestions(restaurant_id)` retorna grupos por fornecedor com itens abaixo do mínimo.
+- Sugestão de quantidade = `GREATEST(min_qty − current_qty, 0) × 1.2`.
+- Custo estimado por linha = sugerido × `avg_cost`.
+- CSV por fornecedor pronto para colar em pedido/WhatsApp.
+
+### Inventário (aba "Inventário")
+- Lista de ingredientes ativos com sistema + custo médio + valor.
+- `InventoryDialog` chama `apply_inventory_adjustment(ingredient_id, physical_qty, reason?)`.
+- Diferença vira uma movimentação `adjust` via `register_stock_movement`; `current_qty` passa a ser o valor contado. Zero UPDATE direto.
+
+### Alerta automático de estoque baixo
+- Trigger `stock_ingredients_low_alert` em `stock_ingredients AFTER INSERT OR UPDATE OF current_qty, min_qty, is_active`.
+- Dispara apenas na transição: linha ativa, `min_qty > 0`, `current_qty <= min_qty` e (INSERT ou linha estava acima do mínimo/inativa).
+- Enfileira em `communication_queue`:
+  - `channel='email'`, `template_code='stock_low_alert'`, `event_name='stock.low'`.
+  - `settings_id` = configuração `email` ativa do restaurante (se houver).
+  - `variables`: ingrediente, quantidade atual, mínimo, unidade, restaurante.
+  - `idempotency_key = 'stock-low-<ingredient_id>-YYYY-MM-DD'` → no máximo 1 alerta por dia por ingrediente.
+- Falhas no alerta nunca bloqueiam a atualização de estoque (`RAISE NOTICE`).
+
+### Feature Gates
+- Starter: sem estoque.
+- Pro: estoque básico + relatórios (consumo, perdas) + inventário + exportação.
+- Business: adiciona ficha técnica, lucratividade, sugestão de compra e alertas com margem.

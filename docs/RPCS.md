@@ -216,3 +216,13 @@ Ver `DELIVERY.md` para o fluxo completo.
 - `public.list_products_recipe_status(p_restaurant_id uuid) → jsonb` — team_owner. Um item por produto: `has_recipe`, `item_count`, `total_cost`, `margin_value`, `margin_percent`.
 - `public._apply_stock_sale(p_order_id uuid, p_reverse boolean)` — **interno**, chamado apenas pela trigger `orders_auto_stock_debit`. Idempotente por `order_id + movement_type`. Sem GRANT público.
 - Trigger `orders_auto_stock_debit AFTER INSERT OR UPDATE OF status ON public.orders` — ativo apenas para restaurantes em plano com `stock_recipes=true`.
+
+## Estoque — Fase D
+
+- `public.get_stock_consumption_report(p_restaurant_id uuid, p_from timestamptz, p_to timestamptz) → jsonb` — team_owner. Lista por ingrediente com totais de `entry/exit/sale/loss/adjust/reversal` + custo.
+- `public.get_stock_losses_report(p_restaurant_id, p_from, p_to) → jsonb` — team_owner. `{ total_value, total_events, by_ingredient[], events[] }`.
+- `public.get_products_profitability_report(p_restaurant_id, p_from, p_to) → jsonb` — team_owner. Ranking por margem total no período (usa `product_recipes` × `stock_ingredients.avg_cost`).
+- `public.get_purchase_suggestions(p_restaurant_id uuid) → jsonb` — team_owner. Agrupa por fornecedor os ingredientes abaixo do mínimo, com sugestão = déficit × 1,2.
+- `public.apply_inventory_adjustment(p_ingredient_id uuid, p_physical_qty numeric, p_reason text) → uuid` — team_owner. Registra a diferença como `adjust` via `register_stock_movement`. Retorna o id do movimento (ou NULL se delta = 0).
+
+Trigger: `stock_ingredients_low_alert` (AFTER INSERT OR UPDATE de `current_qty/min_qty/is_active`) enfileira e-mail em `communication_queue` (`template_code='stock_low_alert'`, idempotente por dia).
