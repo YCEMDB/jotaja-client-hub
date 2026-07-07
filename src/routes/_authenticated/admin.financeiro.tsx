@@ -181,11 +181,14 @@ function Financeiro() {
           <TabsTrigger value="overview">Visão geral</TabsTrigger>
           <TabsTrigger value="cashflow">Fluxo de caixa</TabsTrigger>
           <TabsTrigger value="dre">DRE</TabsTrigger>
+          <TabsTrigger value="reconciliation">Conciliação</TabsTrigger>
+          <TabsTrigger value="reports">Relatórios</TabsTrigger>
           <TabsTrigger value="payable">Contas a pagar</TabsTrigger>
           <TabsTrigger value="receivable">Contas a receber</TabsTrigger>
           <TabsTrigger value="categories">Categorias</TabsTrigger>
           <TabsTrigger value="cost_centers">Centros de custo</TabsTrigger>
         </TabsList>
+
 
 
         {/* OVERVIEW */}
