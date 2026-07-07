@@ -235,7 +235,34 @@ function Financeiro() {
           </Section>
         </TabsContent>
 
+        {/* CASHFLOW */}
+        <TabsContent value="cashflow" className="space-y-4">
+          {(() => {
+            const ms = new Date(to + "T12:00").getTime() - new Date(from + "T12:00").getTime();
+            const days = Math.max(1, Math.round(ms / 86400000) + 1);
+            const prevTo = new Date(new Date(from + "T12:00").getTime() - 86400000).toISOString().slice(0, 10);
+            const prevFrom = new Date(new Date(prevTo + "T12:00").getTime() - (days - 1) * 86400000).toISOString().slice(0, 10);
+            return restaurantId ? (
+              <CashflowTab restaurantId={restaurantId} from={from} to={to} compareFrom={prevFrom} compareTo={prevTo} />
+            ) : null;
+          })()}
+        </TabsContent>
+
+        {/* DRE */}
+        <TabsContent value="dre" className="space-y-4">
+          {!canDre ? (
+            <EmptyState
+              icon={Lock}
+              title="DRE disponível no plano Business"
+              description="Faça upgrade para acessar a DRE simplificada com agrupamento por categoria e centro de custo."
+            />
+          ) : restaurantId ? (
+            <DreTab restaurantId={restaurantId} from={from} to={to} costCenters={costCenters} showCostCenter={canCostCenters} />
+          ) : null}
+        </TabsContent>
+
         {/* PAYABLE */}
+
         <TabsContent value="payable" className="space-y-4">
           <EntriesTab
             direction="payable"
