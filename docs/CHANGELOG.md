@@ -2,6 +2,16 @@
 
 Registro cronológico de entregas.
 
+## Sprint 9 — Financeiro (Fase A — schema + RPCs + gates) ✅
+- Novas tabelas: `finance_categories`, `finance_cost_centers`, `finance_entries` (RLS por restaurante).
+- Enums: `finance_direction`, `finance_status`, `finance_pay_method`.
+- Trigger `_finance_entries_status_guard`: mantém status coerente (`paid`/`partial`/`overdue`/`pending`).
+- RPCs: `finance_entry_pay`, `finance_entry_cancel`, `get_finance_dashboard` (todas SECURITY DEFINER + `has_restaurant_access`).
+- Integração com caixa: pagamentos em dinheiro vinculados a sessão aberta geram `cash_movements` (`supply`/`withdrawal`). Vendas de pedidos continuam via caixa (sem duplicidade).
+- Feature gates adicionados a `app_plans`: `finance_basic` (Pro), `finance_advanced`/`finance_dre`/`finance_reconcile` (Business).
+- Docs: `docs/FINANCE.md`.
+
+
 ## Sprint 8 — Estoque Inteligente ✅ (Fase C — Ficha Técnica + Baixa Automática)
 - Nova aba **Ficha Técnica** em `/admin/estoque`, gated por `stock_recipes` (Business). Pro vê card de upgrade.
 - `RecipeDialog`: edita a ficha com custo total e margem (R$ e %) ao vivo. Salva via `set_product_recipe`.

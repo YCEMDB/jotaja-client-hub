@@ -1536,6 +1536,229 @@ export type Database = {
         }
         Relationships: []
       }
+      finance_categories: {
+        Row: {
+          color: string | null
+          created_at: string
+          direction: Database["public"]["Enums"]["finance_direction"]
+          id: string
+          is_active: boolean
+          name: string
+          restaurant_id: string
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          direction: Database["public"]["Enums"]["finance_direction"]
+          id?: string
+          is_active?: boolean
+          name: string
+          restaurant_id: string
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          direction?: Database["public"]["Enums"]["finance_direction"]
+          id?: string
+          is_active?: boolean
+          name?: string
+          restaurant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "finance_categories_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "finance_categories_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      finance_cost_centers: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          restaurant_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          restaurant_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          restaurant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "finance_cost_centers_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "finance_cost_centers_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      finance_entries: {
+        Row: {
+          amount: number
+          amount_paid: number
+          cash_session_id: string | null
+          category_id: string | null
+          cost_center_id: string | null
+          created_at: string
+          created_by: string | null
+          customer: string | null
+          description: string
+          direction: Database["public"]["Enums"]["finance_direction"]
+          document: string | null
+          due_date: string
+          id: string
+          is_fixed: boolean
+          issue_date: string
+          notes: string | null
+          order_id: string | null
+          paid_at: string | null
+          payment_method:
+            | Database["public"]["Enums"]["finance_pay_method"]
+            | null
+          recurrence: string | null
+          restaurant_id: string
+          status: Database["public"]["Enums"]["finance_status"]
+          supplier: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          amount_paid?: number
+          cash_session_id?: string | null
+          category_id?: string | null
+          cost_center_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          customer?: string | null
+          description: string
+          direction: Database["public"]["Enums"]["finance_direction"]
+          document?: string | null
+          due_date: string
+          id?: string
+          is_fixed?: boolean
+          issue_date?: string
+          notes?: string | null
+          order_id?: string | null
+          paid_at?: string | null
+          payment_method?:
+            | Database["public"]["Enums"]["finance_pay_method"]
+            | null
+          recurrence?: string | null
+          restaurant_id: string
+          status?: Database["public"]["Enums"]["finance_status"]
+          supplier?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          amount_paid?: number
+          cash_session_id?: string | null
+          category_id?: string | null
+          cost_center_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          customer?: string | null
+          description?: string
+          direction?: Database["public"]["Enums"]["finance_direction"]
+          document?: string | null
+          due_date?: string
+          id?: string
+          is_fixed?: boolean
+          issue_date?: string
+          notes?: string | null
+          order_id?: string | null
+          paid_at?: string | null
+          payment_method?:
+            | Database["public"]["Enums"]["finance_pay_method"]
+            | null
+          recurrence?: string | null
+          restaurant_id?: string
+          status?: Database["public"]["Enums"]["finance_status"]
+          supplier?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "finance_entries_cash_session_id_fkey"
+            columns: ["cash_session_id"]
+            isOneToOne: false
+            referencedRelation: "cash_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "finance_entries_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "finance_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "finance_entries_cost_center_id_fkey"
+            columns: ["cost_center_id"]
+            isOneToOne: false
+            referencedRelation: "finance_cost_centers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "finance_entries_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "finance_entries_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "finance_entries_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       global_announcements: {
         Row: {
           created_at: string
@@ -3690,6 +3913,86 @@ export type Database = {
         }
         Returns: Json
       }
+      finance_entry_cancel: {
+        Args: { p_entry_id: string }
+        Returns: {
+          amount: number
+          amount_paid: number
+          cash_session_id: string | null
+          category_id: string | null
+          cost_center_id: string | null
+          created_at: string
+          created_by: string | null
+          customer: string | null
+          description: string
+          direction: Database["public"]["Enums"]["finance_direction"]
+          document: string | null
+          due_date: string
+          id: string
+          is_fixed: boolean
+          issue_date: string
+          notes: string | null
+          order_id: string | null
+          paid_at: string | null
+          payment_method:
+            | Database["public"]["Enums"]["finance_pay_method"]
+            | null
+          recurrence: string | null
+          restaurant_id: string
+          status: Database["public"]["Enums"]["finance_status"]
+          supplier: string | null
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "finance_entries"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      finance_entry_pay: {
+        Args: {
+          p_amount: number
+          p_cash_session_id?: string
+          p_entry_id: string
+          p_notes?: string
+          p_payment_method?: Database["public"]["Enums"]["finance_pay_method"]
+        }
+        Returns: {
+          amount: number
+          amount_paid: number
+          cash_session_id: string | null
+          category_id: string | null
+          cost_center_id: string | null
+          created_at: string
+          created_by: string | null
+          customer: string | null
+          description: string
+          direction: Database["public"]["Enums"]["finance_direction"]
+          document: string | null
+          due_date: string
+          id: string
+          is_fixed: boolean
+          issue_date: string
+          notes: string | null
+          order_id: string | null
+          paid_at: string | null
+          payment_method:
+            | Database["public"]["Enums"]["finance_pay_method"]
+            | null
+          recurrence: string | null
+          restaurant_id: string
+          status: Database["public"]["Enums"]["finance_status"]
+          supplier: string | null
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "finance_entries"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       find_or_create_conversation: {
         Args: {
           p_channel: Database["public"]["Enums"]["comm_channel"]
@@ -3729,6 +4032,10 @@ export type Database = {
       get_driver_assigned_orders: { Args: never; Returns: Json }
       get_driver_last_locations: {
         Args: { p_restaurant_id: string }
+        Returns: Json
+      }
+      get_finance_dashboard: {
+        Args: { p_from?: string; p_restaurant_id: string; p_to?: string }
         Returns: Json
       }
       get_kds_orders: {
@@ -4104,6 +4411,16 @@ export type Database = {
         | "cancelled"
       coupon_type: "percentage" | "fixed" | "free_shipping"
       driver_status: "offline" | "available" | "busy"
+      finance_direction: "payable" | "receivable"
+      finance_pay_method:
+        | "cash"
+        | "pix"
+        | "credit"
+        | "debit"
+        | "transfer"
+        | "boleto"
+        | "other"
+      finance_status: "pending" | "paid" | "partial" | "overdue" | "cancelled"
       lead_status: "new" | "contacted" | "approved" | "rejected"
       order_status:
         | "pending"
@@ -4291,6 +4608,17 @@ export const Constants = {
       ],
       coupon_type: ["percentage", "fixed", "free_shipping"],
       driver_status: ["offline", "available", "busy"],
+      finance_direction: ["payable", "receivable"],
+      finance_pay_method: [
+        "cash",
+        "pix",
+        "credit",
+        "debit",
+        "transfer",
+        "boleto",
+        "other",
+      ],
+      finance_status: ["pending", "paid", "partial", "overdue", "cancelled"],
       lead_status: ["new", "contacted", "approved", "rejected"],
       order_status: [
         "pending",

@@ -18,6 +18,10 @@ const FEATURE_LABEL: Record<string, { title: string; need: string }> = {
   tables_max:      { title: "Controle de Mesas e Comandas", need: "Pro" },
   stock:           { title: "Controle de Estoque", need: "Pro" },
   stock_recipes:   { title: "Ficha Técnica e Custos", need: "Business" },
+  finance_basic:   { title: "Financeiro (fluxo de caixa e fechamento)", need: "Pro" },
+  finance_advanced:{ title: "Financeiro avançado (centros de custo, relatórios)", need: "Business" },
+  finance_dre:     { title: "DRE simplificada", need: "Business" },
+  finance_reconcile:{ title: "Conciliação PIX/Cartão", need: "Business" },
 };
 
 export function FeatureGate({
