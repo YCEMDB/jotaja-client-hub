@@ -131,6 +131,14 @@ function MesasContent() {
         onOpenSession={(t) => { setActionsOpen(false); setOpenDialog(t); }}
         onCloseSession={(t) => { setActionsOpen(false); setCloseDialog(t); }}
         onShowQr={(t) => { setActionsOpen(false); setQrDialog(t); }}
+        onShowDetail={(t) => { setActionsOpen(false); setDetailDialog(t); }}
+        onChanged={() => setTick((t) => t + 1)}
+      />
+
+      <SessionDetailDialog
+        table={detailDialog}
+        open={!!detailDialog}
+        onOpenChange={(v) => { if (!v) setDetailDialog(null); }}
         onChanged={() => setTick((t) => t + 1)}
       />
 
