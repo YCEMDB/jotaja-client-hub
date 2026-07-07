@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -19,13 +19,42 @@ import {
 import {
   RadioGroup, RadioGroupItem,
 } from "@/components/ui/radio-group";
-import { ShoppingBag, Plus, Minus, Trash2, MapPin, Clock, ImageIcon, Search, ClipboardList } from "lucide-react";
+import { ShoppingBag, Plus, Minus, Trash2, MapPin, Clock, ImageIcon, Search, ClipboardList, Store } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "@tanstack/react-router";
 import { isReservedSlug } from "@/lib/reserved-slugs";
 
 export const Route = createFileRoute("/$slug")({
   component: LojaPage,
+  loader: async ({ params }) => {
+    // Slugs reservados nunca correspondem a uma loja real → 404 real (evita
+    // indexação de rotas inexistentes e "envenenamento de SEO").
+    if (isReservedSlug(params.slug)) throw notFound();
+    const { data } = await supabase.rpc("get_public_restaurant", { p_slug: params.slug });
+    if (!data || !(data as { id?: string } | null)?.id) throw notFound();
+    return { slug: params.slug };
+  },
+  notFoundComponent: () => {
+    const { slug } = Route.useParams();
+    return (
+      <div className="min-h-screen grid place-items-center p-6 text-center bg-background">
+        <div className="max-w-md">
+          <Store className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+          <h1 className="font-display text-3xl text-ink mb-2">Loja não encontrada</h1>
+          <p className="text-muted-foreground mb-6">
+            Não existe nenhum restaurante com o link <code className="px-1.5 py-0.5 rounded bg-muted">/{slug}</code>.
+            Confira se o endereço está correto.
+          </p>
+          <Link
+            to="/"
+            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+          >
+            Ir para o início
+          </Link>
+        </div>
+      </div>
+    );
+  },
   head: ({ params }) => {
     const title = `${params.slug} — Cardápio digital | Comandex`;
     const description = `Faça seu pedido online no ${params.slug}. Cardápio digital, pagamento via Pix e entrega rápida pela Comandex.`;
@@ -42,6 +71,7 @@ export const Route = createFileRoute("/$slug")({
     };
   },
 });
+
 
 type Restaurant = {
   id: string; name: string; slug: string; description: string | null;
