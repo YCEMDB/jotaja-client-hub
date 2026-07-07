@@ -32,7 +32,15 @@ Impacto: alto (diferencial competitivo vs iFood).
 | **NPS automático** | Envio 24h após pedido `delivered`. Dashboard de satisfação. | Campanhas |
 | **Audit log** | Tabela genérica `audit_log`. RPC helpers. | — |
 
-## Sprint 6 — Delivery & Logística
+## Sprint 6 — Mesas & Comandas 🎯 (Fase 1 ✅)
+
+| Módulo | Descrição | Status |
+|---|---|---|
+| **Schema + RPCs** | Cadastro, sessões, comandas, split, transferência, merge, QR público. Reutiliza pedidos oficiais. | ✅ Fase 1 |
+| **UI Mapa + Cadastro + QR** | `admin.mesas`, `admin.mesas.cadastro`, realtime, componentes DS. | 🚧 Fase 2 |
+| **Split, transferência, merge, timeline** | UI completa de sessão + fluxo self-service via QR. | 🚧 Fase 3 |
+
+## Sprint 6.5 — Delivery & Logística
 
 | Módulo | Descrição | Dependências |
 |---|---|---|
@@ -40,6 +48,7 @@ Impacto: alto (diferencial competitivo vs iFood).
 | **Atribuição automática** | Algoritmo por proximidade + carga atual. | Geolocalização |
 | **Tracking em tempo real** | Cliente vê entregador no mapa. | Realtime + coords |
 | **Múltiplas entregas** | Entregador com N pedidos simultâneos. | App entregador |
+
 
 ## Sprint 7 — Escala & Multi-unidade
 

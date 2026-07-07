@@ -129,6 +129,28 @@ graph TB
   H --> I[cash_movements se caixa aberto]
 ```
 
+
+## Fluxo — Salão (Mesas & Comandas)
+
+```text
+restaurant_tables (mesa física + QR)
+    ↓ 1..N
+table_sessions (open → closing → closed/cancelled/blocked)
+    ↓ 1..N
+table_commands (subdivisão: João, Comanda 1, Casal)
+    ↓ 1..N
+orders (mesma tabela oficial; ganha table_session_id/table_command_id/table_number)
+    ↓
+KDS · Caixa · Timeline · Comunicação · CRM — tudo reutilizado
+```
+
+- Sessão: uma aberta por mesa (unique parcial). Fechamento aceita split de pagamento e alimenta caixa aberto.
+- Auditoria: `table_session_events` (linha do tempo da sessão) + `order_status_history` (linha do tempo do pedido).
+- Feature gate: `app_plans.features.tables_max` (starter=0 · pro=30 · business=∞), enforced em trigger.
+- QR público: `get_public_table_by_qr(token)` executável por `anon` (retorna só dados públicos).
+- Realtime: publicação ligada em `restaurant_tables`, `table_sessions`, `table_commands`, `table_session_events`.
+
+Detalhes: `docs/TABLES.md`, `docs/COMMANDS.md`.
 ## Fluxo — Autenticação
 
 ```mermaid

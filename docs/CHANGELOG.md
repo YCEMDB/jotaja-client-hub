@@ -2,6 +2,19 @@
 
 Registro cronológico de entregas.
 
+## Sprint 6 — Mesas & Comandas ✅ (Fase 1 — schema + RPCs)
+- Novas tabelas: `restaurant_tables`, `table_sessions`, `table_commands`, `table_session_events`, `table_split_payments`.
+- Extensão aditiva em `orders`: `table_session_id`, `table_command_id`, `table_number`.
+- Feature gate `tables_max` em `app_plans.features` (starter=0, pro=30, business=∞), enforced em trigger.
+- RPCs cadastro (`create_table`, `update_table`, `delete_table`, `regen_table_qr`).
+- RPCs sessão (`open_table_session`, `close_table_session` com split + cash + comunicação, `cancel_table_session`, `block_table`, `unblock_table`).
+- RPCs comanda (`open_command`, `close_command`).
+- RPCs movimentação (`attach_order_to_session`, `transfer_orders`, `merge_sessions`).
+- RPCs leitura (`get_table_map`, `get_session_detail`, `get_public_table_by_qr` anon).
+- Realtime habilitado em todas as tabelas novas.
+- Docs: `docs/TABLES.md`, `docs/COMMANDS.md`.
+- Reutiliza integralmente: state machine de pedidos, KDS, caixa, comunicação, CRM, timeline.
+
 ## Sprint 0 — Fundação
 - Rebranding completo `ComandaHub → Comandex` (66 arquivos).
 - Favicon profissional "C" monograma em todos os formatos.
