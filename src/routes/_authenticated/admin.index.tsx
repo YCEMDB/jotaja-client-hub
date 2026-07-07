@@ -3,12 +3,11 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
-import { ShoppingBag, DollarSign, Users, TrendingUp } from "lucide-react";
+import { ShoppingBag, DollarSign, Users, TrendingUp, LayoutDashboard } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, BarChart, Bar, PieChart, Pie, Cell, Legend } from "recharts";
 import { PlanUsageBanner } from "@/components/PlanUsageBanner";
-import { PageHeader } from "@/components/PageHeader";
-import { StatCard } from "@/components/app/StatCard";
+import { AdminPageLayout, StatCard, DashboardGrid, Section } from "@/components/ds";
 
 
 export const Route = createFileRoute("/_authenticated/admin/")({
@@ -93,29 +92,25 @@ function Dashboard() {
   const typeData = Array.from(byType.entries()).map(([name, value]) => ({ name, value }));
 
   return (
-    <div className="p-4 md:p-8">
-      <PageHeader
-        kicker="Visão geral"
-        title="Painel"
-        subtitle="Suas métricas em tempo real"
-        accent="magenta"
-        actions={
-          <Tabs value={range} onValueChange={(v) => setRange(v as typeof range)}>
-            <TabsList className="bg-ink p-1 h-auto rounded-xl border-2 border-ink shadow-[3px_3px_0_0_oklch(0.69_0.22_38)]">
-              <TabsTrigger value="today" className="data-[state=active]:bg-brand-orange data-[state=active]:text-ink data-[state=active]:shadow-none rounded-lg font-bold uppercase tracking-wide text-background text-xs px-3">Hoje</TabsTrigger>
-              <TabsTrigger value="7d" className="data-[state=active]:bg-brand-orange data-[state=active]:text-ink data-[state=active]:shadow-none rounded-lg font-bold uppercase tracking-wide text-background text-xs px-3">7 dias</TabsTrigger>
-              <TabsTrigger value="30d" className="data-[state=active]:bg-brand-orange data-[state=active]:text-ink data-[state=active]:shadow-none rounded-lg font-bold uppercase tracking-wide text-background text-xs px-3">30 dias</TabsTrigger>
-            </TabsList>
-          </Tabs>
-        }
-      />
+    <AdminPageLayout
+      kicker="Visão geral"
+      title="Painel"
+      subtitle="Suas métricas em tempo real"
+      accent="magenta"
+      icon={LayoutDashboard}
+      actions={
+        <Tabs value={range} onValueChange={(v) => setRange(v as typeof range)}>
+          <TabsList className="bg-ink p-1 h-auto rounded-xl border-2 border-ink shadow-[3px_3px_0_0_oklch(0.69_0.22_38)]">
+            <TabsTrigger value="today" className="data-[state=active]:bg-brand-orange data-[state=active]:text-ink data-[state=active]:shadow-none rounded-lg font-bold uppercase tracking-wide text-background text-xs px-3">Hoje</TabsTrigger>
+            <TabsTrigger value="7d" className="data-[state=active]:bg-brand-orange data-[state=active]:text-ink data-[state=active]:shadow-none rounded-lg font-bold uppercase tracking-wide text-background text-xs px-3">7 dias</TabsTrigger>
+            <TabsTrigger value="30d" className="data-[state=active]:bg-brand-orange data-[state=active]:text-ink data-[state=active]:shadow-none rounded-lg font-bold uppercase tracking-wide text-background text-xs px-3">30 dias</TabsTrigger>
+          </TabsList>
+        </Tabs>
+      }
+    >
+      <PlanUsageBanner restaurantId={restaurantId} />
 
-      <div className="mb-6">
-        <PlanUsageBanner restaurantId={restaurantId} />
-      </div>
-
-      {/* KPI grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <DashboardGrid>
         {cards.map((c, i) => (
           <StatCard
             key={c.label}
@@ -125,11 +120,10 @@ function Dashboard() {
             accent={ACCENTS[i % ACCENTS.length]}
           />
         ))}
-      </div>
+      </DashboardGrid>
 
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
-        <div className="bg-card border-2 border-ink rounded-2xl p-6 shadow-[5px_5px_0_0_oklch(0.15_0.02_30)] lg:col-span-2">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <Section className="lg:col-span-2">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-display text-xl text-ink">Receita por dia</h3>
             <span className="text-[10px] uppercase tracking-[0.18em] font-bold text-brand-orange">↗ ao vivo</span>
@@ -148,9 +142,9 @@ function Dashboard() {
               </LineChart>
             </ResponsiveContainer>
           </div>
-        </div>
+        </Section>
 
-        <div className="bg-card border-2 border-ink rounded-2xl p-6 shadow-[5px_5px_0_0_oklch(0.15_0.02_30)]">
+        <Section>
           <h3 className="font-display text-xl text-ink mb-4">Tipo de pedido</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -163,11 +157,11 @@ function Dashboard() {
               </PieChart>
             </ResponsiveContainer>
           </div>
-        </div>
+        </Section>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="bg-card border-2 border-ink rounded-2xl p-6 shadow-[5px_5px_0_0_oklch(0.15_0.02_30)]">
+        <Section>
           <h3 className="font-display text-xl text-ink mb-4">Pedidos por dia</h3>
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
@@ -180,9 +174,9 @@ function Dashboard() {
               </BarChart>
             </ResponsiveContainer>
           </div>
-        </div>
+        </Section>
 
-        <div className="bg-card border-2 border-ink rounded-2xl p-6 shadow-[5px_5px_0_0_oklch(0.15_0.02_30)]">
+        <Section>
           <h3 className="font-display text-xl text-ink mb-4">Formas de pagamento</h3>
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
@@ -195,8 +189,8 @@ function Dashboard() {
               </BarChart>
             </ResponsiveContainer>
           </div>
-        </div>
+        </Section>
       </div>
-    </div>
+    </AdminPageLayout>
   );
 }
