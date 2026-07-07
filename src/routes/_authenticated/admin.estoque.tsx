@@ -104,6 +104,9 @@ function Estoque() {
   const [recipeDialogOpen, setRecipeDialogOpen] = useState(false);
   const [recipeTarget, setRecipeTarget] = useState<ProductRecipeStatus | null>(null);
 
+  const [invDialogOpen, setInvDialogOpen] = useState(false);
+  const [invTarget, setInvTarget] = useState<StockIngredient | null>(null);
+
   const load = useCallback(async () => {
     if (!restaurantId) return;
     setError(null);
