@@ -83,7 +83,7 @@ function EntregasPage() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [driverFilter, setDriverFilter] = useState<string>("all");
   const [paymentFilter, setPaymentFilter] = useState<string>("all");
-  const [view, setView] = useState<"kanban" | "list" | "map">("kanban");
+  const [view, setView] = useState<"kanban" | "list" | "map" | "reports">("kanban");
 
   const reload = useCallback(async () => {
     if (!restaurantId) return;
