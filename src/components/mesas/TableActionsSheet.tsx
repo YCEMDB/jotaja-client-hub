@@ -20,6 +20,7 @@ export function TableActionsSheet({
   onOpenSession,
   onCloseSession,
   onShowQr,
+  onShowDetail,
   onChanged,
 }: {
   table: TableMapRow | null;
@@ -28,6 +29,7 @@ export function TableActionsSheet({
   onOpenSession: (t: TableMapRow) => void;
   onCloseSession: (t: TableMapRow) => void;
   onShowQr: (t: TableMapRow) => void;
+  onShowDetail: (t: TableMapRow) => void;
   onChanged: () => void;
 }) {
   if (!table) return null;
