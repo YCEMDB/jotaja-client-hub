@@ -11,6 +11,7 @@ export const RESERVED_SLUGS = new Set<string>([
   "api",
   "pedido",
   "loja",
+  "mesa",
   "dashboard",
   "_authenticated",
   "assets",
