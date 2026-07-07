@@ -223,10 +223,10 @@ export async function createPublicTableOrder(params: {
     p_token: params.token,
     p_customer_name: params.customerName,
     p_customer_phone: params.customerPhone,
-    p_command_id: params.commandId ?? undefined,
-    p_notes: params.notes ?? undefined,
+    p_command_id: params.commandId ?? (null as any),
+    p_notes: params.notes ?? (null as any),
     p_items: params.items as any,
-  });
+  } as any);
   if (error) throw error;
   return data as unknown as { id: string; order_number: number; total: number };
 }
