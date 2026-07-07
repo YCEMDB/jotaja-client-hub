@@ -16,6 +16,8 @@ const FEATURE_LABEL: Record<string, { title: string; need: string }> = {
   multi_location:  { title: "Multi-unidades", need: "Business" },
   communication_channels_max: { title: "Central de Comunicação (WhatsApp)", need: "Pro" },
   tables_max:      { title: "Controle de Mesas e Comandas", need: "Pro" },
+  stock:           { title: "Controle de Estoque", need: "Pro" },
+  stock_recipes:   { title: "Ficha Técnica e Custos", need: "Business" },
 };
 
 export function FeatureGate({
