@@ -117,7 +117,10 @@ export function TableActionsSheet({
           )}
           {(status === "open" || status === "closing") && (
             <>
-              <Button className="col-span-2" onClick={() => onCloseSession(table)}>
+              <Button className="col-span-2" onClick={() => onShowDetail(table)}>
+                <ListChecks className="h-4 w-4 mr-2" /> Ver comandas e pedidos
+              </Button>
+              <Button variant="outline" onClick={() => onCloseSession(table)}>
                 <DoorClosed className="h-4 w-4 mr-2" /> Fechar mesa
               </Button>
               <Button variant="outline" onClick={doCancel}>
