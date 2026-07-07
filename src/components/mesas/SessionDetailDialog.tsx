@@ -7,7 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import {
   Clock, Users, DollarSign, Plus, Check, X, ChevronRight,
-  Receipt, ClipboardList, Activity, Loader2,
+  Receipt, ClipboardList, Activity, Loader2, ArrowRightLeft, Combine, Merge,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -18,6 +18,9 @@ import {
   type SessionDetail, type TableMapRow, type OrderStatus,
 } from "@/lib/tables";
 import { orderStatusLabel } from "@/lib/labels";
+import { TransferOrdersDialog } from "./TransferOrdersDialog";
+import { MergeSessionsDialog } from "./MergeSessionsDialog";
+import { MergeCommandsDialog } from "./MergeCommandsDialog";
 
 function fmtBRL(v: number) {
   return Number(v ?? 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
