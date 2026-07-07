@@ -1,6 +1,9 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { DoorOpen, DoorClosed, Ban, Unlock, QrCode, Users, Clock, DollarSign, X } from "lucide-react";
+import { DoorOpen, DoorClosed, Ban, Unlock, QrCode, Users, Clock, DollarSign, X, ListChecks } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import { blockTable, unblockTable, cancelTableSession, translateTableError, type TableMapRow } from "@/lib/tables";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { blockTable, unblockTable, cancelTableSession, translateTableError, type TableMapRow } from "@/lib/tables";
