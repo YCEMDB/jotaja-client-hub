@@ -65,12 +65,14 @@ export function PurchaseSuggestionsTab({ restaurantId, enabled }: { restaurantId
             <Section key={g.supplier_key}>
               <SectionHeader
                 title={g.supplier_name}
-                description={
-                  <span className="flex flex-wrap gap-3 text-xs text-ink/60">
-                    {g.phone && <span className="inline-flex items-center gap-1"><Phone className="h-3 w-3" />{g.phone}</span>}
-                    {g.email && <span className="inline-flex items-center gap-1"><Mail className="h-3 w-3" />{g.email}</span>}
-                  </span>
+                description={[g.phone, g.email].filter(Boolean).join(" · ") || undefined}
+                actions={
+                  <div className="flex items-center gap-3">
+                    <span className="font-display text-2xl text-ink">{formatBRL(g.estimated_cost)}</span>
+                    <Button size="sm" variant="outline" onClick={() => exportCSV(g)}><Download className="h-4 w-4 mr-2" />CSV</Button>
+                  </div>
                 }
+              />
                 actions={
                   <div className="flex items-center gap-3">
                     <span className="font-display text-2xl text-ink">{formatBRL(g.estimated_cost)}</span>
