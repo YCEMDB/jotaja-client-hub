@@ -26,6 +26,7 @@ import { Route as SistemaDeComandasDigitaisRouteImport } from './routes/sistema-
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as PerguntasFrequentesRouteImport } from './routes/perguntas-frequentes'
+import { Route as MotoboyRouteImport } from './routes/motoboy'
 import { Route as GlossarioRouteImport } from './routes/glossario'
 import { Route as GestaoDeRestaurantesRouteImport } from './routes/gestao-de-restaurantes'
 import { Route as EmpresaRouteImport } from './routes/empresa'
@@ -181,6 +182,11 @@ const PrivacidadeRoute = PrivacidadeRouteImport.update({
 const PerguntasFrequentesRoute = PerguntasFrequentesRouteImport.update({
   id: '/perguntas-frequentes',
   path: '/perguntas-frequentes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MotoboyRoute = MotoboyRouteImport.update({
+  id: '/motoboy',
+  path: '/motoboy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GlossarioRoute = GlossarioRouteImport.update({
@@ -570,6 +576,7 @@ export interface FileRoutesByFullPath {
   '/empresa': typeof EmpresaRoute
   '/gestao-de-restaurantes': typeof GestaoDeRestaurantesRoute
   '/glossario': typeof GlossarioRoute
+  '/motoboy': typeof MotoboyRoute
   '/perguntas-frequentes': typeof PerguntasFrequentesRoute
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -656,6 +663,7 @@ export interface FileRoutesByTo {
   '/empresa': typeof EmpresaRoute
   '/gestao-de-restaurantes': typeof GestaoDeRestaurantesRoute
   '/glossario': typeof GlossarioRoute
+  '/motoboy': typeof MotoboyRoute
   '/perguntas-frequentes': typeof PerguntasFrequentesRoute
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -745,6 +753,7 @@ export interface FileRoutesById {
   '/empresa': typeof EmpresaRoute
   '/gestao-de-restaurantes': typeof GestaoDeRestaurantesRoute
   '/glossario': typeof GlossarioRoute
+  '/motoboy': typeof MotoboyRoute
   '/perguntas-frequentes': typeof PerguntasFrequentesRoute
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -833,6 +842,7 @@ export interface FileRouteTypes {
     | '/empresa'
     | '/gestao-de-restaurantes'
     | '/glossario'
+    | '/motoboy'
     | '/perguntas-frequentes'
     | '/privacidade'
     | '/reset-password'
@@ -919,6 +929,7 @@ export interface FileRouteTypes {
     | '/empresa'
     | '/gestao-de-restaurantes'
     | '/glossario'
+    | '/motoboy'
     | '/perguntas-frequentes'
     | '/privacidade'
     | '/reset-password'
@@ -1007,6 +1018,7 @@ export interface FileRouteTypes {
     | '/empresa'
     | '/gestao-de-restaurantes'
     | '/glossario'
+    | '/motoboy'
     | '/perguntas-frequentes'
     | '/privacidade'
     | '/reset-password'
@@ -1096,6 +1108,7 @@ export interface RootRouteChildren {
   EmpresaRoute: typeof EmpresaRoute
   GestaoDeRestaurantesRoute: typeof GestaoDeRestaurantesRoute
   GlossarioRoute: typeof GlossarioRoute
+  MotoboyRoute: typeof MotoboyRoute
   PerguntasFrequentesRoute: typeof PerguntasFrequentesRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
@@ -1264,6 +1277,13 @@ declare module '@tanstack/react-router' {
       path: '/perguntas-frequentes'
       fullPath: '/perguntas-frequentes'
       preLoaderRoute: typeof PerguntasFrequentesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/motoboy': {
+      id: '/motoboy'
+      path: '/motoboy'
+      fullPath: '/motoboy'
+      preLoaderRoute: typeof MotoboyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/glossario': {
@@ -1849,6 +1869,7 @@ const rootRouteChildren: RootRouteChildren = {
   EmpresaRoute: EmpresaRoute,
   GestaoDeRestaurantesRoute: GestaoDeRestaurantesRoute,
   GlossarioRoute: GlossarioRoute,
+  MotoboyRoute: MotoboyRoute,
   PerguntasFrequentesRoute: PerguntasFrequentesRoute,
   PrivacidadeRoute: PrivacidadeRoute,
   ResetPasswordRoute: ResetPasswordRoute,
