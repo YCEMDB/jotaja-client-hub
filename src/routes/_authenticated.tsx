@@ -34,6 +34,7 @@ const NAV_GROUPS: NavGroup[] = [
       { to: "/admin/kds", label: "KDS", icon: Monitor },
       { to: "/admin/pdv", label: "PDV Manual", icon: ShoppingCart },
       { to: "/admin/caixa", label: "Caixa", icon: Wallet },
+      { to: "/admin/entregas", label: "Entregas", icon: Truck },
     ],
   },
   {
