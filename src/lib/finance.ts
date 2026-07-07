@@ -320,7 +320,7 @@ export interface CashflowResult {
 }
 
 export async function getCashflow(restaurantId: string, from?: string, to?: string): Promise<CashflowResult> {
-  const { data, error } = await supabase.rpc("get_finance_cashflow", {
+  const { data, error } = await (supabase.rpc as any)("get_finance_cashflow", {
     p_restaurant_id: restaurantId,
     p_from: from ?? undefined,
     p_to: to ?? undefined,
@@ -328,6 +328,7 @@ export async function getCashflow(restaurantId: string, from?: string, to?: stri
   if (error) throw error;
   return (data ?? {}) as unknown as CashflowResult;
 }
+
 
 // ---------- DRE ----------
 export interface DreCategoryBreakdown { category_id: string | null; name: string; color: string | null; total: number; }
