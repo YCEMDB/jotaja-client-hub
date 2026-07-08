@@ -19,6 +19,26 @@ import { paymentLabel, orderTypeLabel } from "@/lib/labels";
 export const Route = createFileRoute("/_authenticated/admin/kds")({
   component: KDSPage,
   head: () => ({ meta: [{ title: "KDS — Centro de Operações — Comandex" }] }),
+  errorComponent: ({ error, reset }) => {
+    const err = error as Error;
+    return (
+      <div className="min-h-screen bg-neutral-950 text-white p-6">
+        <div className="max-w-3xl mx-auto space-y-4">
+          <h1 className="text-2xl font-black">KDS — erro ao carregar</h1>
+          <p className="text-neutral-400">{err?.message ?? "Erro desconhecido"}</p>
+          <pre className="text-xs bg-neutral-900 border border-neutral-800 rounded p-3 overflow-auto whitespace-pre-wrap">
+            {err?.stack ?? String(err)}
+          </pre>
+          <button
+            onClick={() => reset()}
+            className="px-4 py-2 bg-brand-orange text-white rounded font-bold"
+          >
+            Tentar novamente
+          </button>
+        </div>
+      </div>
+    );
+  },
 });
 
 type KdsStatus = "pending" | "confirmed" | "preparing" | "ready" | "out_for_delivery";
