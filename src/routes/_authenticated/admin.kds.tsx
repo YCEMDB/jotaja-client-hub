@@ -113,7 +113,11 @@ function KDSPage() {
       p_restaurant_id: restaurantId,
       p_station_id: stationFilter === "all" ? undefined : stationFilter,
     });
-    if (error) { toast.error(translateError(error)); return; }
+    if (error) {
+      console.error("[KDS] get_kds_orders error", error);
+      toast.error(`KDS: ${error.message ?? translateError(error)}`);
+      return;
+    }
     const list = (data ?? []) as KdsOrder[];
     // Detectar novos pedidos para tocar som
     if (prevIds.current.size > 0 && soundOn && ops.sound_enabled) {
