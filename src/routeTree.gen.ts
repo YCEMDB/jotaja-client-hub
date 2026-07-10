@@ -70,6 +70,7 @@ import { Route as SuperSuperLeadsRouteImport } from './routes/_super/super.leads
 import { Route as SuperSuperEquipeRouteImport } from './routes/_super/super.equipe'
 import { Route as SuperSuperConfiguracoesRouteImport } from './routes/_super/super.configuracoes'
 import { Route as SuperSuperAvisosRouteImport } from './routes/_super/super.avisos'
+import { Route as SuperSuperAuditoriaRouteImport } from './routes/_super/super.auditoria'
 import { Route as AuthenticatedAdminSuperRouteImport } from './routes/_authenticated/admin.super'
 import { Route as AuthenticatedAdminRelatoriosRouteImport } from './routes/_authenticated/admin.relatorios'
 import { Route as AuthenticatedAdminPedidosRouteImport } from './routes/_authenticated/admin.pedidos'
@@ -417,6 +418,11 @@ const SuperSuperAvisosRoute = SuperSuperAvisosRouteImport.update({
   path: '/super/avisos',
   getParentRoute: () => SuperRoute,
 } as any)
+const SuperSuperAuditoriaRoute = SuperSuperAuditoriaRouteImport.update({
+  id: '/super/auditoria',
+  path: '/super/auditoria',
+  getParentRoute: () => SuperRoute,
+} as any)
 const AuthenticatedAdminSuperRoute = AuthenticatedAdminSuperRouteImport.update({
   id: '/admin/super',
   path: '/admin/super',
@@ -647,6 +653,7 @@ export interface FileRoutesByFullPath {
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/relatorios': typeof AuthenticatedAdminRelatoriosRoute
   '/admin/super': typeof AuthenticatedAdminSuperRoute
+  '/super/auditoria': typeof SuperSuperAuditoriaRoute
   '/super/avisos': typeof SuperSuperAvisosRoute
   '/super/configuracoes': typeof SuperSuperConfiguracoesRoute
   '/super/equipe': typeof SuperSuperEquipeRoute
@@ -736,6 +743,7 @@ export interface FileRoutesByTo {
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/relatorios': typeof AuthenticatedAdminRelatoriosRoute
   '/admin/super': typeof AuthenticatedAdminSuperRoute
+  '/super/auditoria': typeof SuperSuperAuditoriaRoute
   '/super/avisos': typeof SuperSuperAvisosRoute
   '/super/configuracoes': typeof SuperSuperConfiguracoesRoute
   '/super/equipe': typeof SuperSuperEquipeRoute
@@ -828,6 +836,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/_authenticated/admin/relatorios': typeof AuthenticatedAdminRelatoriosRoute
   '/_authenticated/admin/super': typeof AuthenticatedAdminSuperRoute
+  '/_super/super/auditoria': typeof SuperSuperAuditoriaRoute
   '/_super/super/avisos': typeof SuperSuperAvisosRoute
   '/_super/super/configuracoes': typeof SuperSuperConfiguracoesRoute
   '/_super/super/equipe': typeof SuperSuperEquipeRoute
@@ -919,6 +928,7 @@ export interface FileRouteTypes {
     | '/admin/pedidos'
     | '/admin/relatorios'
     | '/admin/super'
+    | '/super/auditoria'
     | '/super/avisos'
     | '/super/configuracoes'
     | '/super/equipe'
@@ -1008,6 +1018,7 @@ export interface FileRouteTypes {
     | '/admin/pedidos'
     | '/admin/relatorios'
     | '/admin/super'
+    | '/super/auditoria'
     | '/super/avisos'
     | '/super/configuracoes'
     | '/super/equipe'
@@ -1099,6 +1110,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/pedidos'
     | '/_authenticated/admin/relatorios'
     | '/_authenticated/admin/super'
+    | '/_super/super/auditoria'
     | '/_super/super/avisos'
     | '/_super/super/configuracoes'
     | '/_super/super/equipe'
@@ -1613,6 +1625,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SuperSuperAvisosRouteImport
       parentRoute: typeof SuperRoute
     }
+    '/_super/super/auditoria': {
+      id: '/_super/super/auditoria'
+      path: '/super/auditoria'
+      fullPath: '/super/auditoria'
+      preLoaderRoute: typeof SuperSuperAuditoriaRouteImport
+      parentRoute: typeof SuperRoute
+    }
     '/_authenticated/admin/super': {
       id: '/_authenticated/admin/super'
       path: '/admin/super'
@@ -1879,6 +1898,7 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 )
 
 interface SuperRouteChildren {
+  SuperSuperAuditoriaRoute: typeof SuperSuperAuditoriaRoute
   SuperSuperAvisosRoute: typeof SuperSuperAvisosRoute
   SuperSuperConfiguracoesRoute: typeof SuperSuperConfiguracoesRoute
   SuperSuperEquipeRoute: typeof SuperSuperEquipeRoute
@@ -1889,6 +1909,7 @@ interface SuperRouteChildren {
 }
 
 const SuperRouteChildren: SuperRouteChildren = {
+  SuperSuperAuditoriaRoute: SuperSuperAuditoriaRoute,
   SuperSuperAvisosRoute: SuperSuperAvisosRoute,
   SuperSuperConfiguracoesRoute: SuperSuperConfiguracoesRoute,
   SuperSuperEquipeRoute: SuperSuperEquipeRoute,
