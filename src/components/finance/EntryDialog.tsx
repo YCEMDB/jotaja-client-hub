@@ -84,6 +84,10 @@ export function EntryDialog({
   }, [open, editing, direction]);
 
   const save = async () => {
+    if (supportBlocked) {
+      toast.error("Lançamentos financeiros ficam bloqueados durante suporte assistido enquanto o Financeiro não expõe RPCs auditadas.");
+      return;
+    }
     const desc = description.trim();
     if (!desc) { toast.error("Informe uma descrição"); return; }
     if (desc.length > 200) { toast.error("Descrição muito longa"); return; }
