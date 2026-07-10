@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { useSupportContext, type SupportContext } from "@/hooks/useSupportContext";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,13 +17,36 @@ import { AdminPageLayout } from "@/components/ds";
 import { toast } from "sonner";
 import {
   Wallet, ArrowDownCircle, ArrowUpCircle, Receipt, Lock, Unlock,
-  Plus, TrendingUp, TrendingDown, Loader2, FileDown, Eye, Zap,
+  TrendingUp, TrendingDown, Loader2, FileDown, Eye, Zap, ShieldAlert,
 } from "lucide-react";
 import { downloadCSV } from "@/lib/export-csv";
 
 export const Route = createFileRoute("/_authenticated/admin/caixa")({
   component: CaixaPage,
 });
+
+// Traduções amigáveis dos erros retornados pelas RPCs de caixa.
+const ERR_MSG: Record<string, string> = {
+  forbidden: "Você não tem permissão para esta operação.",
+  cash_already_open: "Já existe um caixa aberto para este restaurante.",
+  cash_session_not_open: "Esta sessão de caixa não está aberta.",
+  cash_session_close_race: "Outra operação alterou o caixa. Recarregue e tente novamente.",
+  invalid_amount: "Informe um valor válido maior que zero.",
+  invalid_opening_amount: "Informe um valor de abertura válido.",
+  invalid_closing_amount: "Informe um valor de fechamento válido.",
+  amount_out_of_range: "Valor acima do limite permitido por operação.",
+  invalid_movement_type: "Tipo de movimentação não permitido.",
+  reason_required_for_support_open: "Informe um motivo (mín. 5 caracteres) para abrir o caixa em suporte.",
+  reason_required_for_support_close: "Informe um motivo (mín. 5 caracteres) para fechar o caixa em suporte.",
+  reason_required_for_support_movement: "Informe um motivo (mín. 5 caracteres) para movimentar em suporte.",
+  support_session_expired: "Sessão de suporte expirada. Reinicie o atendimento.",
+  support_access_denied: "Sua sessão de suporte não tem nível suficiente para esta ação.",
+};
+function friendlyError(msg: string | undefined | null): string {
+  if (!msg) return "Erro desconhecido.";
+  for (const k of Object.keys(ERR_MSG)) if (msg.includes(k)) return ERR_MSG[k];
+  return msg;
+}
 
 type Session = {
   id: string;
