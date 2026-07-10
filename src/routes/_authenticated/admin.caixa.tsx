@@ -16,7 +16,7 @@ import { AdminPageLayout } from "@/components/ds";
 import { toast } from "sonner";
 import {
   Wallet, ArrowDownCircle, ArrowUpCircle, Receipt, Lock, Unlock,
-  Plus, TrendingUp, TrendingDown, Loader2, FileDown, Eye,
+  Plus, TrendingUp, TrendingDown, Loader2, FileDown, Eye, Zap,
 } from "lucide-react";
 import { downloadCSV } from "@/lib/export-csv";
 
