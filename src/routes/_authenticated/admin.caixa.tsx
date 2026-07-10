@@ -27,7 +27,7 @@ export const Route = createFileRoute("/_authenticated/admin/caixa")({
 type Session = {
   id: string;
   restaurant_id: string;
-  opened_by: string;
+  opened_by: string | null;
   opened_at: string;
   opening_amount: number;
   closed_by: string | null;

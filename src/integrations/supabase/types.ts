@@ -117,7 +117,7 @@ export type Database = {
           id: string
           notes: string | null
           opened_at: string
-          opened_by: string
+          opened_by: string | null
           opening_amount: number
           origin: string
           restaurant_id: string
@@ -134,7 +134,7 @@ export type Database = {
           id?: string
           notes?: string | null
           opened_at?: string
-          opened_by: string
+          opened_by?: string | null
           opening_amount?: number
           origin?: string
           restaurant_id: string
@@ -151,7 +151,7 @@ export type Database = {
           id?: string
           notes?: string | null
           opened_at?: string
-          opened_by?: string
+          opened_by?: string | null
           opening_amount?: number
           origin?: string
           restaurant_id?: string
@@ -4112,6 +4112,16 @@ export type Database = {
       }
       get_customer_conversation_timeline: {
         Args: { p_customer_id: string }
+        Returns: Json
+      }
+      get_dashboard_summary: {
+        Args: {
+          p_from: string
+          p_prev_from: string
+          p_prev_to: string
+          p_restaurant_id: string
+          p_to: string
+        }
         Returns: Json
       }
       get_delivery_dashboard: {
