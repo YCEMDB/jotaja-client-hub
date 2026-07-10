@@ -4156,43 +4156,45 @@ export type Database = {
         Args: { p_days: number; p_reason: string; p_restaurant_id: string }
         Returns: Json
       }
-      finance_entry_cancel: {
-        Args: { p_entry_id: string }
-        Returns: {
-          amount: number
-          amount_paid: number
-          cash_session_id: string | null
-          category_id: string | null
-          cost_center_id: string | null
-          created_at: string
-          created_by: string | null
-          customer: string | null
-          description: string
-          direction: Database["public"]["Enums"]["finance_direction"]
-          document: string | null
-          due_date: string
-          id: string
-          is_fixed: boolean
-          issue_date: string
-          notes: string | null
-          order_id: string | null
-          paid_at: string | null
-          payment_method:
-            | Database["public"]["Enums"]["finance_pay_method"]
-            | null
-          recurrence: string | null
-          restaurant_id: string
-          status: Database["public"]["Enums"]["finance_status"]
-          supplier: string | null
-          updated_at: string
-        }
-        SetofOptions: {
-          from: "*"
-          to: "finance_entries"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
+      finance_entry_cancel:
+        | {
+            Args: { p_entry_id: string }
+            Returns: {
+              amount: number
+              amount_paid: number
+              cash_session_id: string | null
+              category_id: string | null
+              cost_center_id: string | null
+              created_at: string
+              created_by: string | null
+              customer: string | null
+              description: string
+              direction: Database["public"]["Enums"]["finance_direction"]
+              document: string | null
+              due_date: string
+              id: string
+              is_fixed: boolean
+              issue_date: string
+              notes: string | null
+              order_id: string | null
+              paid_at: string | null
+              payment_method:
+                | Database["public"]["Enums"]["finance_pay_method"]
+                | null
+              recurrence: string | null
+              restaurant_id: string
+              status: Database["public"]["Enums"]["finance_status"]
+              supplier: string | null
+              updated_at: string
+            }
+            SetofOptions: {
+              from: "*"
+              to: "finance_entries"
+              isOneToOne: true
+              isSetofReturn: false
+            }
+          }
+        | { Args: { p_id: string; p_reason?: string }; Returns: undefined }
       finance_entry_pay: {
         Args: {
           p_amount: number
@@ -4422,6 +4424,15 @@ export type Database = {
           p_offset?: number
           p_restaurant_id?: string
           p_search?: string
+          p_to?: string
+        }
+        Returns: Json
+      }
+      list_owner_audit: {
+        Args: {
+          p_from?: string
+          p_limit?: number
+          p_offset?: number
           p_to?: string
         }
         Returns: Json
