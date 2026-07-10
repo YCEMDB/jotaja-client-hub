@@ -7,6 +7,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
+import { ShieldAlert } from "lucide-react";
+import { useSupportContext } from "@/hooks/useSupportContext";
 import {
   METHOD_LABEL, upsertEntry,
   type FinanceCategory, type FinanceCostCenter, type FinanceDirection, type FinanceEntry, type FinancePayMethod,
