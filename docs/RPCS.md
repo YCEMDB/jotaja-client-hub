@@ -1,240 +1,137 @@
 # RPCs — Comandex
 
-Toda lógica crítica é exposta via RPCs `SECURITY DEFINER` com `search_path` fixo.
-Chamada padrão: `supabase.rpc('nome', { p_xxx: valor })`.
+Toda operação de escrita crítica é exposta via RPCs `SECURITY DEFINER` com
+`search_path` fixo e autorização centralizada em
+`private.authorize_tenant_action(restaurant_id, min_support_level)`.
+
+Chamada padrão do cliente: `supabase.rpc('nome', { p_xxx: valor })`.
 
 ## Convenções
 
 - Prefixo `p_` em todos os parâmetros.
-- Validações no início do `plpgsql`.
-- Erros com `ERRCODE` semântico (`42501` forbidden, `check_violation`, `no_data_found`, `unique_violation`).
-- Retorno JSONB para respostas ricas; TABLE(...) para listagens.
+- Validações começam pela autorização antes de qualquer retorno informativo.
+- Erros com `ERRCODE` semântico (`42501` forbidden, `check_violation`,
+  `no_data_found`, `unique_violation`, `22023` invalid input, `40001`
+  serialization / corrida).
+- Retorno JSONB para respostas ricas; `TABLE(...)` para listagens.
+- Todas as RPCs de tenant chamam `private.authorize_tenant_action(...)` e
+  seguem a matriz de níveis de suporte (`view_only` / `operational` /
+  `administrative`).
 
 ---
 
-## 🌐 Públicas (anon + authenticated)
+## Consolidado — Pedidos e Caixa (Ondas 2.a.1 e 2.a.2)
 
-### `get_public_restaurant(p_slug text) → jsonb`
-Retorna dados públicos do restaurante + `is_open_now` + `mp_online_ready`.
-**Erros:** retorna `NULL` se inexistente.
-**Chamada:** `src/routes/$slug.tsx` (loader do cardápio).
+| # | Nome                        | Módulo   | Parâmetros                                              | Mutável | Permissões nativas         | Nível mínimo suporte | Motivo obrigatório         | Auditoria                                        | Entidade afetada     | Concorrência                                | Idempotência                 | Chamadores                                             | Situação |
+|---|-----------------------------|----------|---------------------------------------------------------|---------|----------------------------|----------------------|----------------------------|--------------------------------------------------|----------------------|---------------------------------------------|------------------------------|--------------------------------------------------------|----------|
+| 1 | `update_order_status`       | Pedidos  | `p_order_id`, `p_new_status`, `p_source`, `p_reason`    | Sim     | owner / manager / employee | operational          | Só ao cancelar via suporte | `order.status_change` (quando suporte)           | `orders`             | `SELECT ... FOR UPDATE`                     | No-op se status já é o alvo  | Painel, KDS, Mesas, Delivery, POS                       | Ativa    |
+| 2 | `assign_driver`             | Pedidos  | `p_order_id`, `p_driver_id`                              | Sim     | owner (nativo)             | operational          | Não                        | `order.driver_assigned` (quando suporte)         | `orders`             | Update com validação de tenant do driver     | Substitui driver anterior     | Delivery                                                | Ativa    |
+| 3 | `unassign_driver`           | Pedidos  | `p_order_id`, `p_reason`                                 | Sim     | owner (nativo)             | operational          | Sim, em suporte             | `order.driver_unassigned` (quando suporte)       | `orders`             | Update simples                              | No-op silencioso sem driver   | Delivery                                                | Ativa    |
+| 4 | `cash_session_open`         | Caixa    | `p_restaurant_id`, `p_opening_amount`, `p_reason`        | Sim     | owner / manager / employee | administrative       | Sim, em suporte             | `cash_session.open` (quando suporte)             | `cash_sessions`      | Índice único parcial + captura de `23505`    | Rejeita se já há caixa aberto | `admin.caixa.tsx`                                       | Ativa    |
+| 5 | `cash_session_close`        | Caixa    | `p_session_id`, `p_closing_amount`, `p_notes`, `p_reason`| Sim     | owner / manager / employee | administrative       | Sim, em suporte             | `cash_session.close` (quando suporte)            | `cash_sessions`      | `FOR UPDATE` + guard `status='open'` + `40001`| Não reabre caixa fechado      | `admin.caixa.tsx`                                       | Ativa    |
+| 6 | `cash_session_add_movement` | Caixa    | `p_session_id`, `p_type`, `p_amount`, `p_description`, `p_reason` | Sim | owner / manager / employee | administrative       | Sim, em suporte             | `cash_movement.create` (quando suporte)          | `cash_movements`     | `FOR UPDATE` na sessão                       | Não; cada chamada cria linha | `admin.caixa.tsx`                                       | Ativa    |
+| 7 | `finance_entry_pay`         | Financeiro | `p_entry_id`, `p_amount`, `p_payment_method`, `p_cash_session_id`, `p_notes` | Sim | owner / manager / employee | — (bloqueada em suporte pela UI) | Não hoje                    | Sem auditoria de suporte                          | `finance_entries`    | `FOR UPDATE`                                | Verifica saldo restante       | `PayEntryDialog.tsx`                                    | Ativa (pendente cobertura de suporte) |
+| 8 | `finance_entry_cancel`      | Financeiro | `p_entry_id`                                             | Sim     | owner / manager / employee | — (bloqueada em suporte pela UI) | Não hoje                    | Sem auditoria de suporte                          | `finance_entries`    | `FOR UPDATE`                                | Idempotente para lançamentos já cancelados | `admin.financeiro.tsx`                     | Ativa (pendente cobertura de suporte) |
 
-### `get_public_categories(p_slug text) → SETOF (id, name, position, is_active)`
-Categorias ativas ordenadas.
+### Helpers privados
 
-### `get_public_products(p_slug text) → SETOF (...)`
-Produtos disponíveis ordenados por `position`.
+- `private.authorize_tenant_action(restaurant_id, min_level)` — retorna
+  `{ actor_id, is_native, support_level, support_session_id }`. Rejeita com
+  `forbidden` (42501) quando o ator nativo não pertence ao tenant e o super
+  admin não tem sessão de suporte ativa; rejeita com `support_access_denied`
+  quando a sessão de suporte não atinge o nível pedido.
+- `private.record_audit(...)` — insere em `audit_logs`. Falha aborta a
+  transação (garante rollback conjunto com a mutação).
+- `private.validate_money(amount, allow_zero)` — normaliza para 2 casas,
+  rejeita `NULL`, `NaN`, negativos, zero (quando não permitido) e valores
+  acima de R$ 1.000.000,00.
 
-### `get_public_order(p_id uuid) → jsonb`
-Pedido + itens + dados do restaurante para tela de acompanhamento.
+### Fórmula de saldo esperado (Caixa)
 
-### `validate_public_coupon(p_restaurant_id, p_code, p_subtotal, p_customer_id, p_phone) → jsonb`
-Valida cupom antes do checkout (dry-run).
-**Retornos:** `{ok:true, coupon:{...}}` ou `{ok:false, error:'invalid'|'expired'|'exhausted'|'min_order'|'customer_limit'|'first_purchase_only'|...}`.
-**Chamada:** carrinho do cardápio antes de finalizar.
+```
+esperado = round(
+  opening_amount
+  + Σ movimentos.type = 'sale'
+  + Σ movimentos.type = 'reinforcement'
+  − Σ movimentos.type = 'withdrawal'
+  − Σ movimentos.type = 'expense'
+, 2)
 
-### `create_public_order(...) → jsonb`
-**RPC mais crítica do sistema.** Atômica.
-Valida:
-- Restaurante ativo (`private.restaurant_is_active`)
-- Aberto agora (`is_restaurant_open_now`)
-- Nome (1–120) e telefone (6–20 dígitos)
-- Carrinho não vazio
-- Cupom (todas as regras) sob `FOR UPDATE`
-- Cliente não bloqueado
+diferença = round(closing_amount − esperado, 2)
+```
 
-Executa:
-- Upsert em `customers` por `(restaurant_id, phone)`
-- INSERT em `orders` (triggers: numeração, limite de plano, histórico)
-- INSERT em `order_items`
-- Incrementa `coupons.uses_count` + log em `coupon_uses`
+Regras vigentes:
 
-**Retorno:** `{id, order_number, customer_id, discount, total}`
-**Erros:** `restaurant_not_found`, `restaurant_closed`, `invalid_customer`, `empty_cart`, `coupon_*`, `plan_limit_reached`.
+- Vendas são somadas apenas quando o trigger operacional de pedido gerou
+  `cash_movements.type = 'sale'` na sessão aberta.
+- Movimentos de sessões anteriores nunca entram (filtro por `session_id`).
+- Pedidos cancelados **após** a inserção da movimentação de venda não
+  revertem o movimento (divergência conhecida — ver Pendências).
+- Pagamentos em dinheiro do Financeiro que criam movimentação são somados
+  pela `payEntry` como `reinforcement` (ainda via `finance_entry_pay`).
 
-### `is_restaurant_open_now(p_restaurant_id) → boolean`
-Considera `open_mode`, `timezone` e `opening_hours` (por dia, com suporte a overnight).
+## Autenticação e níveis de suporte
 
----
+| Nível             | Leitura direta | Escrita direta (RLS) | Escrita via RPC operacional | Escrita via RPC administrativa |
+|-------------------|:--------------:|:--------------------:|:---------------------------:|:------------------------------:|
+| `view_only`       | Sim            | Não                  | Não                         | Não                            |
+| `operational`     | Sim            | Não                  | Sim (com motivo)            | Não                            |
+| `administrative`  | Sim            | Não                  | Sim (com motivo)            | Sim (com motivo)               |
 
-## 🔐 Autenticadas (owner + super_admin)
+Nativos (owner/manager/employee/driver) não passam pelo gate de suporte.
 
-### `update_order_status(p_order_id, p_new_status, p_source, p_reason) → jsonb`
-**Único caminho** para alterar `orders.status`. Trigger bloqueia UPDATE direto.
-- Verifica permissão: `is_team_owner` OU `user_roles IN (employee, manager)`.
-- Valida transição em `private.is_valid_order_transition(from, to, type)`.
-- Insere em `order_status_history`.
+## Operações ainda com DML direto
 
-### `get_order_history(p_order_id) → SETOF (...)`
-Timeline completa do pedido com nome/email do responsável.
+- `finance_entries` (criação, edição, cancelamento) — via `upsertEntry` /
+  `finance_entry_cancel`. Suporte bloqueado na UI.
+- `restaurant_tables`, `products`, `categories`, `customers` — RLS nativa;
+  suporte assistido só tem SELECT.
+- `restaurants` (edição de dados administrativos), `app_plans`,
+  `restaurant_payments`, `global_announcements`, `delivery_neighborhoods`
+  globais, `signup_leads` — ainda dependem de RPCs administrativas
+  dedicadas (Onda 2.c pendente).
 
-### `is_team_owner(_uid, _restaurant_id) → boolean`
-Helper (também exposto). Retorna true para owner ou super_admin.
-**Bloqueio de spoofing:** rejeita se `_uid != auth.uid()` e caller não é super_admin.
+## Operações bloqueadas durante suporte
 
----
+- Todas as operações de escrita em `finance_entries` (bloqueadas na UI).
+- Escrita em `restaurants.metadata` e planos (bloqueadas por RLS).
+- Cancelamento de movimento de caixa, reabertura e ajuste manual de saldo
+  (não existem no schema).
 
-## 👥 Gestão de Equipe (owner + super_admin)
+## Pendências / roadmap
 
-### `create_team_invite(p_restaurant_id, p_email, p_role) → jsonb`
-Cria convite (token 24 bytes hex, expira em 7 dias).
-Valida: email válido, role ∈ {employee, manager}, não é dono, não é membro, sem duplicata pendente, respeita `plan.features.max_users`.
-**Erros:** `is_owner`, `already_member`, `duplicate_invite`, `plan_limit_reached`.
+- **Cancelamento de venda depois do movimento de caixa** — hoje não
+  reverte automaticamente `cash_movements.type = 'sale'`. Ajustar no
+  Turno 5.
+- **RPC financeira sensível a suporte** — `finance_entry_pay` /
+  `finance_entry_cancel` precisam de gate `authorize_tenant_action` com
+  motivo obrigatório e auditoria (planejado para Onda 2.b).
+- **RPCs administrativas para `/super`** — permanecem bloqueadas desde a
+  Onda 2.a.0 (planos, avisos, leads, pagamentos manuais, edição de
+  restaurante, bairros globais).
+- **Cancelar movimento / reabrir caixa / ajustar saldo** — dependem de
+  novo campo `cash_movements.cancelled_at` e `cash_sessions.reopened_at`.
 
-### `resend_team_invite(p_invite_id) → jsonb`
-Gera novo token + estende 7 dias.
+## Chamadores atualizados
 
-### `cancel_team_invite(p_invite_id) → void`
+- `src/routes/_authenticated/admin.caixa.tsx` — usa exclusivamente as RPCs
+  `cash_session_open`, `cash_session_close`, `cash_session_add_movement`.
+  Detecta contexto de suporte via `useSupportContext`, oculta / desabilita
+  botões de escrita para `view_only` e `operational`, exige motivo em
+  `administrative`.
+- `src/components/finance/EntryDialog.tsx` e
+  `src/components/finance/PayEntryDialog.tsx` — desabilitam salvamento
+  quando `support.active === true`, com aviso ao usuário.
 
-### `accept_team_invite(p_token) → jsonb`
-**Convidado autenticado** aceita. Valida email match. Insere em `user_roles`.
-**Erros:** `unauthorized`, `invite_invalid_or_expired`, `email_mismatch`.
+## Bloqueios de release
 
-### `list_team_members(p_restaurant_id) → SETOF (...)`
-Owner + employees + managers com email + nome.
+### Onda 2.a
+- Bateria E2E com JWT real ainda pendente de execução automatizada — roteiro
+  publicado em `docs/E2E_CAIXA_PEDIDOS.md`.
+- Migration da 2.a.2 e ajustes finais só podem ir a produção após a bateria
+  E2E acima.
 
-### `remove_team_member(p_restaurant_id, p_user_id) → void`
-
-### `cleanup_expired_invites() → int`
-Manutenção; remove convites expirados > 1 dia.
-
----
-
-## 👤 Clientes (público)
-
-### `upsert_public_customer(p_restaurant_id, p_name, p_phone, p_email, p_source) → uuid`
-Auxiliar. Prefira `create_public_order` que já faz upsert.
-
----
-
-## 📧 Fila de Emails (interno)
-
-- `enqueue_email(queue, payload) → bigint`
-- `read_email_batch(queue, size, vt) → SETOF`
-- `delete_email(queue, msg_id) → boolean`
-- `move_to_dlq(source, dlq, msg_id, payload) → bigint`
-- `email_queue_wake()` (trigger) / `email_queue_dispatch()` (cron)
-
-Consumidos por rota `/api/public/email/queue/process` autorizada por bearer do vault.
-
----
-
-## 🍽️ Mesas & Comandas (Sprint 6)
-
-### `get_table_map(p_restaurant_id) → jsonb`
-Mapa de mesas com sessão ativa, totais em aberto, contagem de pedidos, layout
-(`position_x/y`, `width`, `height`, `rotation`, `shape`) e `ui_status`
-(`free|open|closing|blocked|inactive`). Somente team_owner.
-
-### `create_table / update_table / delete_table / regen_table_qr`
-CRUD e regeneração de QR. Só team_owner.
-
-### `update_table_layout(p_restaurant_id, p_updates jsonb) → int` **(Sprint 6.3 Fase D)**
-Batch de layout do editor visual. `p_updates` é array
-`[{ id, position_x, position_y, width, height, rotation, shape, area }]`.
-Só aplica linhas do restaurante informado; erro `forbidden` se não for team_owner.
-Retorna quantidade de mesas efetivamente atualizadas.
-
-### `open_table_session / close_table_session`
-Abre/fecha sessão. `close_table_session` aceita splits (`amount`, `percent`,
-`people`, `items`) e exige justificativa quando total pago ≠ total pedidos.
-
-### `open_command / close_command`
-Comandas dentro da sessão. Fechamento é lógico (`closed_at`).
-
-### `merge_commands(p_source_id, p_target_id) → void` **(Sprint 6.3 Fase C)**
-Une duas comandas da mesma sessão. Move todos os pedidos da origem para o
-destino, fecha a origem (mantendo os dados) e registra `command_merged` na
-timeline. Erro se sessões diferentes ou destino já fechado.
-
-### `merge_sessions(p_source_id, p_target_id) → void`
-Une duas sessões. Move pedidos e comandas, fecha a origem como merged,
-grava evento `merged`.
-
-### `transfer_orders(p_order_ids uuid[], p_target_session_id, p_target_command_id?) → void`
-Transferência em lote de pedidos entre sessões/comandas. Evento `transferred`.
-
-### `attach_order_to_session(p_order_id, p_session_id, p_command_id?) → void`
-Vincula um pedido criado fora do fluxo QR a uma sessão/comanda.
-
-### `get_session_detail(p_session_id) → jsonb`
-Retorna sessão, mesa, comandas, pedidos com itens, splits e eventos —
-uma única chamada usada pelo `SessionDetailDialog`.
-
-### `get_public_table_by_qr / get_public_table_session / create_public_table_command / create_public_table_order`
-Rotas anônimas para a página `/mesa/:token`. Validação de preços feita no
-servidor contra `products`.
-
----
-
-## 🛵 Delivery Profissional (Sprint 7)
-
-Ver `DELIVERY.md` para o fluxo completo.
-
-### Cadastro & vínculo
-- `create_driver / update_driver / link_driver_user / set_driver_status`
-- `check_driver_limit(p_restaurant_id)` — enforce `max_drivers` do plano.
-
-### Despacho e operação
-- `assign_driver(p_order_id, p_driver_id)` / `unassign_driver(p_order_id, p_reason?)`
-- `driver_accept_order(p_order_id)` / `driver_reject_order(p_order_id, p_reason?)`
-- `driver_pickup_order(p_order_id)` → transiciona pedido para `out_for_delivery` via `update_order_status` e congela a comissão.
-- `driver_complete_delivery(p_order_id)` → transiciona para `delivered`.
-- `update_driver_location(lat, lng, ...)` — GPS a cada 30 s pelo app do motoboy.
-
-### Consultas (Fase D)
-- `get_delivery_dashboard(p_restaurant_id) → jsonb` — KPIs operacionais.
-- `get_driver_assigned_orders() → jsonb` — usada por `/motoboy`.
-- `get_delivery_financial_summary(p_restaurant_id, p_from, p_to, p_driver_id?) → jsonb` — totais e ranking por motoboy no período.
-- `get_delivery_metrics(p_restaurant_id, p_from, p_to) → jsonb` — SLA (aceite / retirada / rota / total), taxa de aceitação e produtividade.
-- `get_driver_last_locations(p_restaurant_id) → jsonb` — última posição por motoboy ativo (mapa).
-
----
-
-
-
-
-
-## Chamadas do Frontend (mapa rápido)
-
-| RPC | Componente/Rota |
-|---|---|
-| `get_public_restaurant` | `src/routes/$slug.tsx` loader |
-| `get_public_categories/products` | `src/routes/$slug.tsx` loader |
-| `validate_public_coupon` | Carrinho (`Cart.tsx`) |
-| `create_public_order` | Checkout (`Checkout.tsx`) |
-| `get_public_order` | `src/routes/pedido.$id.tsx` |
-| `update_order_status` | `src/routes/admin/orders.tsx` (dialog) |
-| `get_order_history` | Timeline no dialog do pedido |
-| `create_team_invite` | `src/routes/admin/team.tsx` |
-| `accept_team_invite` | `src/routes/invite.$token.tsx` |
-| `list_team_members` | `src/routes/admin/team.tsx` |
-| `is_restaurant_open_now` | Badge no cardápio + checkout |
-
-## Estoque — Fase C
-- `public.get_product_recipe(p_product_id uuid) → jsonb` — team_owner. Retorna `{ items[], total_cost }`.
-- `public.list_products_recipe_status(p_restaurant_id uuid) → jsonb` — team_owner. Um item por produto: `has_recipe`, `item_count`, `total_cost`, `margin_value`, `margin_percent`.
-- `public._apply_stock_sale(p_order_id uuid, p_reverse boolean)` — **interno**, chamado apenas pela trigger `orders_auto_stock_debit`. Idempotente por `order_id + movement_type`. Sem GRANT público.
-- Trigger `orders_auto_stock_debit AFTER INSERT OR UPDATE OF status ON public.orders` — ativo apenas para restaurantes em plano com `stock_recipes=true`.
-
-## Estoque — Fase D
-
-- `public.get_stock_consumption_report(p_restaurant_id uuid, p_from timestamptz, p_to timestamptz) → jsonb` — team_owner. Lista por ingrediente com totais de `entry/exit/sale/loss/adjust/reversal` + custo.
-- `public.get_stock_losses_report(p_restaurant_id, p_from, p_to) → jsonb` — team_owner. `{ total_value, total_events, by_ingredient[], events[] }`.
-- `public.get_products_profitability_report(p_restaurant_id, p_from, p_to) → jsonb` — team_owner. Ranking por margem total no período (usa `product_recipes` × `stock_ingredients.avg_cost`).
-- `public.get_purchase_suggestions(p_restaurant_id uuid) → jsonb` — team_owner. Agrupa por fornecedor os ingredientes abaixo do mínimo, com sugestão = déficit × 1,2.
-- `public.apply_inventory_adjustment(p_ingredient_id uuid, p_physical_qty numeric, p_reason text) → uuid` — team_owner. Registra a diferença como `adjust` via `register_stock_movement`. Retorna o id do movimento (ou NULL se delta = 0).
-
-Trigger: `stock_ingredients_low_alert` (AFTER INSERT OR UPDATE de `current_qty/min_qty/is_active`) enfileira e-mail em `communication_queue` (`template_code='stock_low_alert'`, idempotente por dia).
-
-## 💰 Financeiro (Sprint 9)
-
-- `public.finance_entry_pay(p_entry_id, p_amount, p_payment_method?, p_cash_session_id?, p_notes?) → finance_entries` — membro do restaurante. Registra pagamento parcial/total; se `p_cash_session_id` informado e método = `cash`, cria movimentação no caixa (`reinforcement` para receivable, `expense` para payable).
-- `public.finance_entry_cancel(p_entry_id) → finance_entries` — membro. Cancela lançamento preservando histórico.
-- `public.get_finance_dashboard(p_restaurant_id, p_from?, p_to?) → jsonb` — membro. KPIs de contas em aberto, vencidas, pagas/recebidas e vencendo hoje.
-- `public.get_finance_cashflow(p_restaurant_id, p_from?, p_to?) → jsonb` — membro. Série diária + totais + `cash_operational`. Combina `finance_entries` pagos com `cash_movements` sem duplicar (pagamentos em dinheiro vinculados a caixa entram só via `cash_movements`).
-- `public.get_finance_dre(p_restaurant_id, p_from?, p_to?, p_cost_center_id?) → jsonb` — membro. Receitas e despesas agregadas por categoria e centro de custo, `operating_profit` e `margin`.
-- `public.get_reconciliation_summary(p_restaurant_id, p_from?, p_to?) → jsonb` — membro. Para cada forma de pagamento retorna esperado (pedidos pagos) × recebido (dinheiro → caixa; PIX/cartão/online → pedido com `mp_payment_id`).
-- `public.create_reconciliation(p_restaurant_id, p_from, p_to, p_method, p_expected, p_received, p_notes?) → finance_reconciliations` — membro. Persiste snapshot de conciliação para auditoria.
-- `public.get_finance_by_payment_method(p_restaurant_id, p_from?, p_to?) → jsonb` — membro. Pedidos, bruto, descontos, líquido e ticket médio por forma de pagamento.
-- `public.get_finance_final_report(p_restaurant_id, p_from?, p_to?) → jsonb` — membro. Consolida DRE + fluxo de caixa + pagamentos + conciliação num único payload (usado pela aba Relatórios e pelas exportações CSV).
+### Release geral
+- Telas do `/super` sem RPCs administrativas (planos, avisos, configurações
+  globais, leads, alterações de restaurante, pagamentos manuais, bairros
+  globais) — bloqueio herdado da Onda 2.a.0.
