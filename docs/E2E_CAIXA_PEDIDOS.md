@@ -103,42 +103,81 @@ o registro em `audit_logs` (ou a ausência dele) confere.
 
 ## Bloqueios de release
 
-- **Desbloqueado (Onda 2.a.4)**: bateria E2E executada com clientes Supabase
-  autenticados (JWT real) contra o banco de produção da preview. Resultado
-  global: **33 PASS / 0 FAIL / 1 PENDING (34 cenários)**. O único PENDING é
-  R2 (rollback ao vivo com trigger de falha em `audit_logs`) porque
-  `sandbox_exec` não tem privilégio `CREATE TRIGGER` em `audit_logs`; a
-  invariante já está coberta por R1 (verificação por construção: as RPCs
-  chamam `private.record_audit` dentro do corpo PL/pgSQL, portanto qualquer
-  exceção do audit dispara ROLLBACK da RPC).
-- Bloqueio herdado: telas administrativas do `/super` continuam sem RPCs
-  seguras (Onda 2.c pendente).
+Release **NÃO liberado**. Bloqueios ativos:
 
-## Status atual
+1. **R2 pendente** — rollback ao vivo com falha real em
+   `private.record_audit` ainda não foi comprovado. `sandbox_exec` não tem
+   privilégio `CREATE TRIGGER` em `audit_logs`, e a orientação vigente é
+   não executar esse teste em produção. Deve rodar em staging por migration
+   temporária controlada (cria condição de falha em `record_audit`, chama
+   uma RPC financeira, valida erro + zero linhas em `cash_sessions` e
+   `audit_logs`, remove o mecanismo). R1 (verificação estrutural) permanece
+   como PASS mas **não substitui** R2.
+2. **Bloqueio herdado**: telas administrativas do `/super` continuam sem
+   RPCs seguras (Onda 2.c pendente).
 
-- Ajustes finais 2.a.2 aplicados (autorização primeiro, `validate_money`,
-  captura de `unique_violation`, restaurante derivado da sessão).
-- UI de caixa migrada 100% para as RPCs.
-- `EntryDialog` / `PayEntryDialog` bloqueiam escrita durante suporte
-  assistido.
-- Bateria E2E **executada e aprovada** — relatórios completos em
-  `/mnt/documents/e2e_onda_2a4_report.md` e `.json`. Script executor em
-  `/tmp/e2e/run.ts` (autenticação real por perfil: owner, manager,
-  employee, driver, owner_B, super sem sessão, super `view_only`, super
-  `operational`, super `administrative`, super com sessão expirada).
+## Correções aplicadas após revisão da 2.a.4 (reteste focado)
 
-### Resumo dos resultados (Onda 2.a.4)
+A revisão apontou três defeitos de instrumentação/identidade no relatório
+original. Todos foram reexecutados com asserção estrita (linhas afetadas +
+valor real no banco) e identidade correta. Relatórios em
+`/mnt/documents/e2e_onda_2a4_retest.md` e `.json`.
+
+### P10 — DML direto em `orders` sob suporte `administrative`
+
+O relatório anterior marcava `obtained=updated` e classificava como PASS —
+rótulo enganoso: o Postgres retorna `success` com 0 linhas quando a RLS
+filtra a linha alvo, e o script não afirmava o efeito real. Reinstrumentado:
+
+| Cenário | Identidade | rows afetadas | valor antes | valor depois | Status |
+|---|---|---|---|---|---|
+| P10.1 UPDATE `orders.status` | super_administrative (sem vínculo nativo) | 0 | pending | pending | PASS |
+| P10.2 UPDATE `orders.notes` (coluna não-status) | super_administrative | 0 | "nota inicial" | "nota inicial" | PASS |
+| P10.3 DELETE `orders` | super_administrative | 0 | linha existe | linha existe | PASS |
+
+Identidade do super_administrative validada no próprio script:
+`auth.uid()=20ece082-…` retornado pelo JWT (cliente com **publishable
+key**, não service_role), `user_roles=[{role:'super_admin',
+restaurant_id:null}]`, `owned_restaurants=0`, sessão de suporte ativa
+`administrative` com `expires_at` no futuro e `ended_at=null`. O JSON
+completo de identidades está no relatório.
+
+### C11 — DML direto em `cash_sessions`/`cash_movements` sob suporte
+
+O relatório anterior rodou como `owner_A`, o que não valida o cenário
+exigido. Reexecutado como `super_administrative` isolado:
+
+| Cenário | rows afetadas | mensagem | Status |
+|---|---|---|---|
+| C11.1 INSERT direto em `cash_sessions` | 0 | `new row violates row-level security policy` | PASS |
+| C11.2 UPDATE direto em `cash_sessions` (sessão legítima do owner) | 0 | sem erro, `opening_amount` inalterado | PASS |
+| C11.3 INSERT direto em `cash_movements` | 0 | `new row violates row-level security policy` | PASS |
+| C11.4 DELETE direto em `cash_movements` | 0 | sem erro, contagem inalterada | PASS |
+
+### R2 — Rollback ao vivo
+
+Continua **PENDING** (ver bloqueios acima). Não pode ser marcado como PASS
+enquanto uma execução transacional real não for feita em staging.
+
+## Matriz consolidada (após reteste)
 
 | Bloco | PASS | FAIL | PENDING |
 |---|---|---|---|
-| Pedidos (P1–P12) | 12 | 0 | 0 |
-| Caixa (C1–C14) | 20 | 0 | 0 |
-| Rollback (R1–R2) | 1 | 0 | 1 |
-| **Total** | **33** | **0** | **1** |
+| Pedidos (P1–P12, com P10 revisado em 3 sub-cenários) | 14 | 0 | 0 |
+| Caixa (C1–C14, com C11 revisado em 4 sub-cenários) | 22 | 0 | 0 |
+| Rollback (R1 estrutural / R2 ao vivo) | 1 | 0 | 1 |
+| Identidade (dump completo por persona) | 1 | 0 | 0 |
+| **Total** | **38** | **0** | **1** |
 
-Cenários cobertos além do roteiro original: `P10` (bloqueio de DML direto
-em `orders` mesmo sob suporte administrativo), `P11` (auditoria carrega
-`actor_id`, `restaurant_id` e `support_session_id`), `P12` (idempotência
-de transição repetida), `C11a/b` (bloqueio de DML direto em
-`cash_sessions` e `cash_movements`), `C14` (trigger operacional
-`orders_auto_open_cash` abre sessão automática com `origin='automatic'`).
+## Status atual
+
+- Ajustes de código 2.a completos; UI de caixa 100% em RPCs; `EntryDialog`
+  / `PayEntryDialog` bloqueando escrita durante suporte.
+- Bateria E2E principal executada (`/mnt/documents/e2e_onda_2a4_report.md`
+  / `.json`) e reteste focado publicado
+  (`/mnt/documents/e2e_onda_2a4_retest.md` / `.json`).
+- Script do reteste em `/tmp/e2e2/retest.ts` (autentica com JWT real via
+  publishable key; nunca usa service_role no ponto de ataque).
+- **Onda 2.b permanece bloqueada** até R2 ser executado em staging com
+  resultado PASS.
+
