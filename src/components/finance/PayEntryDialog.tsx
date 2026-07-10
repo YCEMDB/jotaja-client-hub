@@ -7,6 +7,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import { ShieldAlert } from "lucide-react";
+import { useSupportContext } from "@/hooks/useSupportContext";
 import { METHOD_LABEL, formatBRL, getOpenCashSession, payEntry, type FinanceEntry, type FinancePayMethod } from "@/lib/finance";
 
 interface Props {
