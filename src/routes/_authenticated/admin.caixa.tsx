@@ -305,16 +305,17 @@ function OpenForm({
 /* ============== CURRENT SESSION ============== */
 
 function CurrentSession({
-  session, movements, totals, userId, onChange, onClosed,
+  session, movements, totals, support, canWrite, onChange, onClosed,
 }: {
   session: Session;
   movements: Movement[];
   totals: { opening: number; sales: number; reinforcement: number; withdrawal: number; expense: number; expected: number };
-  userId: string;
+  support: SupportContext;
+  canWrite: boolean;
   onChange: () => void;
   onClosed: () => void;
 }) {
-  const [movDialog, setMovDialog] = useState<null | Movement["type"]>(null);
+  const [movDialog, setMovDialog] = useState<null | "reinforcement" | "withdrawal" | "expense">(null);
   const [closeOpen, setCloseOpen] = useState(false);
 
   return (
@@ -354,16 +355,16 @@ function CurrentSession({
           <p className="text-3xl font-bold">{fmt(totals.expected)}</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button variant="outline" size="sm" onClick={() => setMovDialog("reinforcement")}>
+          <Button variant="outline" size="sm" onClick={() => setMovDialog("reinforcement")} disabled={!canWrite}>
             <ArrowUpCircle className="h-4 w-4 mr-1.5" /> Reforço
           </Button>
-          <Button variant="outline" size="sm" onClick={() => setMovDialog("withdrawal")}>
+          <Button variant="outline" size="sm" onClick={() => setMovDialog("withdrawal")} disabled={!canWrite}>
             <ArrowDownCircle className="h-4 w-4 mr-1.5" /> Sangria
           </Button>
-          <Button variant="outline" size="sm" onClick={() => setMovDialog("expense")}>
+          <Button variant="outline" size="sm" onClick={() => setMovDialog("expense")} disabled={!canWrite}>
             <Receipt className="h-4 w-4 mr-1.5" /> Despesa
           </Button>
-          <Button size="sm" onClick={() => setCloseOpen(true)}>
+          <Button size="sm" onClick={() => setCloseOpen(true)} disabled={!canWrite}>
             <Lock className="h-4 w-4 mr-1.5" /> Fechar caixa
           </Button>
         </div>
@@ -402,8 +403,7 @@ function CurrentSession({
         open={movDialog !== null}
         type={movDialog}
         sessionId={session.id}
-        restaurantId={session.restaurant_id}
-        userId={userId}
+        support={support}
         onClose={() => setMovDialog(null)}
         onSaved={() => { setMovDialog(null); onChange(); }}
       />
@@ -413,7 +413,7 @@ function CurrentSession({
         onClose={() => setCloseOpen(false)}
         session={session}
         expected={totals.expected}
-        userId={userId}
+        support={support}
         onClosed={() => { setCloseOpen(false); onClosed(); }}
       />
     </div>
