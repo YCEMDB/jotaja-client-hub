@@ -3946,6 +3946,33 @@ export type Database = {
         Returns: undefined
       }
       cancel_team_invite: { Args: { p_invite_id: string }; Returns: undefined }
+      cash_session_add_movement: {
+        Args: {
+          p_amount: number
+          p_description?: string
+          p_reason?: string
+          p_session_id: string
+          p_type: Database["public"]["Enums"]["cash_movement_type"]
+        }
+        Returns: Json
+      }
+      cash_session_close: {
+        Args: {
+          p_closing_amount: number
+          p_notes?: string
+          p_reason?: string
+          p_session_id: string
+        }
+        Returns: Json
+      }
+      cash_session_open: {
+        Args: {
+          p_opening_amount: number
+          p_reason?: string
+          p_restaurant_id: string
+        }
+        Returns: Json
+      }
       check_driver_limit: {
         Args: { _restaurant_id: string }
         Returns: undefined
