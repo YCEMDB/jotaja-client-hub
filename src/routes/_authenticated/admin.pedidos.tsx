@@ -184,6 +184,7 @@ function PedidosPage() {
   const initializedRef = useRef(false);
   const autoPrintRef = useRef(autoPrint);
   const restaurantRef = useRef(restaurant);
+  const [rtStatus, setRtStatus] = useState<"connecting" | "live" | "polling" | "error">("connecting");
   useEffect(() => { autoPrintRef.current = autoPrint; }, [autoPrint]);
   useEffect(() => { restaurantRef.current = restaurant; }, [restaurant]);
 
@@ -215,6 +216,7 @@ function PedidosPage() {
         }
       });
     }
+    // dedupe: reconstruct known set from server list — evita duplicatas por eventos em rajada
     knownIdsRef.current = new Set(list.map((o) => o.id));
     initializedRef.current = true;
     setOrders(list);
@@ -230,9 +232,48 @@ function PedidosPage() {
       if (rest) setRestaurant(rest as any);
     })();
     setNotifEnabled(typeof Notification !== "undefined" && Notification.permission === "granted");
-    // Polling a cada 5s — substitui Realtime (removido por segurança de canal)
-    const iv = setInterval(load, 5000);
-    return () => { clearInterval(iv); };
+
+    // Realtime isolado por restaurant_id (filtro server-side impede vazamento entre restaurantes).
+    // Se a assinatura cair, ativamos polling de fallback.
+    setRtStatus("connecting");
+    let pollIv: ReturnType<typeof setInterval> | null = null;
+    const startPolling = () => {
+      if (pollIv) return;
+      pollIv = setInterval(load, 15000);
+    };
+    const stopPolling = () => {
+      if (pollIv) { clearInterval(pollIv); pollIv = null; }
+    };
+    const channel = supabase
+      .channel(`orders-rt-${restaurantId}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "orders", filter: `restaurant_id=eq.${restaurantId}` },
+        () => { load(); },
+      )
+      .subscribe((status) => {
+        if (status === "SUBSCRIBED") {
+          setRtStatus("live");
+          stopPolling();
+          // Refetch imediato: entre o mount e o SUBSCRIBED podem ter chegado pedidos.
+          load();
+        } else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT" || status === "CLOSED") {
+          setRtStatus(status === "CLOSED" ? "polling" : "error");
+          startPolling();
+        }
+      });
+
+    // Safety net: se em 8s não conectou, ativa polling para não deixar o operador sem pedidos.
+    const guard = setTimeout(() => {
+      setRtStatus((s) => (s === "connecting" ? "polling" : s));
+      startPolling();
+    }, 8000);
+
+    return () => {
+      clearTimeout(guard);
+      stopPolling();
+      supabase.removeChannel(channel);
+    };
   }, [restaurantId]);
 
   const enableNotifications = async () => {
