@@ -302,36 +302,6 @@ function OpenForm({
   );
 }
 
-  return (
-    <Card className="p-6 max-w-md space-y-4">
-      <div className="flex items-center gap-3">
-        <div className="h-10 w-10 rounded-full bg-brand-orange/10 grid place-items-center">
-          <Unlock className="h-5 w-5 text-brand-orange" />
-        </div>
-        <div>
-          <h2 className="font-bold text-lg">Abrir caixa</h2>
-          <p className="text-sm text-muted-foreground">Informe o valor inicial em espécie (fundo de troco).</p>
-        </div>
-      </div>
-      <div>
-        <Label htmlFor="opening">Valor inicial (R$)</Label>
-        <Input
-          id="opening"
-          type="number"
-          step="0.01"
-          min="0"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          autoFocus
-        />
-      </div>
-      <Button onClick={open} disabled={submitting} className="w-full">
-        {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Abrir caixa"}
-      </Button>
-    </Card>
-  );
-}
-
 /* ============== CURRENT SESSION ============== */
 
 function CurrentSession({
