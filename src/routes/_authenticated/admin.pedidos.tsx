@@ -409,7 +409,38 @@ function PedidosPage() {
           <h1 className="font-display text-5xl text-ink leading-[0.92] tracking-tight">
             Pedidos<span className="inline-block w-3 h-3 ml-1 -mb-0.5 bg-brand-orange align-baseline" />
           </h1>
-          <p className="mt-2 text-sm text-ink/60">{orders.length} pedidos · atualização em tempo real</p>
+          <p className="mt-2 text-sm text-ink/60 flex items-center gap-2">
+            <span>{orders.length} pedidos</span>
+            <span className="text-ink/30">·</span>
+            {rtStatus === "live" && (
+              <span className="inline-flex items-center gap-1.5 font-bold uppercase tracking-wide text-[11px] text-success">
+                <span className="inline-block h-2 w-2 rounded-full bg-success animate-pulse" />
+                Ao vivo
+              </span>
+            )}
+            {rtStatus === "connecting" && (
+              <span className="inline-flex items-center gap-1.5 font-bold uppercase tracking-wide text-[11px] text-ink/50">
+                <span className="inline-block h-2 w-2 rounded-full bg-ink/40 animate-pulse" />
+                Conectando…
+              </span>
+            )}
+            {rtStatus === "polling" && (
+              <span className="inline-flex items-center gap-1.5 font-bold uppercase tracking-wide text-[11px] text-warning">
+                <span className="inline-block h-2 w-2 rounded-full bg-warning" />
+                Atualização periódica
+              </span>
+            )}
+            {rtStatus === "error" && (
+              <button
+                onClick={() => load()}
+                className="inline-flex items-center gap-1.5 font-bold uppercase tracking-wide text-[11px] text-destructive hover:underline"
+                title="Clique para atualizar manualmente"
+              >
+                <span className="inline-block h-2 w-2 rounded-full bg-destructive" />
+                Sem conexão — atualizar
+              </button>
+            )}
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <Button
