@@ -33,6 +33,8 @@ const todayISO = () => new Date().toISOString().slice(0, 10);
 export function EntryDialog({
   open, onOpenChange, restaurantId, direction, editing, categories, costCenters, canCostCenters, onSaved,
 }: Props) {
+  const support = useSupportContext();
+  const supportBlocked = support.active;
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const [dueDate, setDueDate] = useState(todayISO());
