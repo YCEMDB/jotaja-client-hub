@@ -2,9 +2,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { Users, Phone, Mail, ShoppingBag } from "lucide-react";
+import { Users, Phone, Mail, ShoppingBag, MessageCircle } from "lucide-react";
 import { CustomerTimelineDialog } from "@/components/comunicacao/CustomerTimelineDialog";
 import { AdminPageLayout, StatCard, DashboardGrid, EmptyState, Section, FilterBar, SearchBar } from "@/components/ds";
+import { Button } from "@/components/ui/button";
+import { buildWhatsAppUrl, defaultWhatsAppGreeting, isValidWhatsAppPhone } from "@/lib/whatsapp";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/admin/clientes")({
   component: Clientes,
