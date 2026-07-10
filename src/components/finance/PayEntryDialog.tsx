@@ -22,6 +22,8 @@ interface Props {
 const METHODS: FinancePayMethod[] = ["cash", "pix", "credit", "debit", "transfer", "boleto", "other"];
 
 export function PayEntryDialog({ open, onOpenChange, entry, restaurantId, onPaid }: Props) {
+  const support = useSupportContext();
+  const supportBlocked = support.active; // Financeiro ainda não tem RPC de suporte auditada.
   const [amount, setAmount] = useState("");
   const [method, setMethod] = useState<FinancePayMethod>("cash");
   const [linkCash, setLinkCash] = useState(true);
