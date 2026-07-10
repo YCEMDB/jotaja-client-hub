@@ -7,6 +7,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
+import { ShieldAlert } from "lucide-react";
+import { useSupportContext } from "@/hooks/useSupportContext";
 import {
   METHOD_LABEL, upsertEntry,
   type FinanceCategory, type FinanceCostCenter, type FinanceDirection, type FinanceEntry, type FinancePayMethod,
@@ -31,6 +33,8 @@ const todayISO = () => new Date().toISOString().slice(0, 10);
 export function EntryDialog({
   open, onOpenChange, restaurantId, direction, editing, categories, costCenters, canCostCenters, onSaved,
 }: Props) {
+  const support = useSupportContext();
+  const supportBlocked = support.active;
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const [dueDate, setDueDate] = useState(todayISO());
@@ -80,6 +84,10 @@ export function EntryDialog({
   }, [open, editing, direction]);
 
   const save = async () => {
+    if (supportBlocked) {
+      toast.error("Lançamentos financeiros ficam bloqueados durante suporte assistido enquanto o Financeiro não expõe RPCs auditadas.");
+      return;
+    }
     const desc = description.trim();
     if (!desc) { toast.error("Informe uma descrição"); return; }
     if (desc.length > 200) { toast.error("Descrição muito longa"); return; }
@@ -127,6 +135,12 @@ export function EntryDialog({
         </DialogHeader>
 
         <div className="space-y-4">
+          {supportBlocked && (
+            <div className="rounded-lg border-2 border-brand-violet/40 bg-brand-violet/10 p-3 flex items-start gap-2 text-sm">
+              <ShieldAlert className="h-4 w-4 mt-0.5 text-brand-violet shrink-0" />
+              <span>Lançamentos do Financeiro estão bloqueados em sessão de suporte. Peça ao proprietário para registrar diretamente.</span>
+            </div>
+          )}
           <div>
             <Label>Descrição *</Label>
             <Input value={description} onChange={(e) => setDescription(e.target.value)} maxLength={200} placeholder="Ex.: Fornecedor de bebidas" />
@@ -212,7 +226,7 @@ export function EntryDialog({
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>Cancelar</Button>
-          <Button onClick={save} disabled={saving}>{saving ? "Salvando…" : "Salvar"}</Button>
+          <Button onClick={save} disabled={saving || supportBlocked}>{saving ? "Salvando…" : "Salvar"}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

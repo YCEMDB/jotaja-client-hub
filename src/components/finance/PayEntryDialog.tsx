@@ -7,6 +7,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import { ShieldAlert } from "lucide-react";
+import { useSupportContext } from "@/hooks/useSupportContext";
 import { METHOD_LABEL, formatBRL, getOpenCashSession, payEntry, type FinanceEntry, type FinancePayMethod } from "@/lib/finance";
 
 interface Props {
@@ -20,6 +22,8 @@ interface Props {
 const METHODS: FinancePayMethod[] = ["cash", "pix", "credit", "debit", "transfer", "boleto", "other"];
 
 export function PayEntryDialog({ open, onOpenChange, entry, restaurantId, onPaid }: Props) {
+  const support = useSupportContext();
+  const supportBlocked = support.active; // Financeiro ainda não tem RPC de suporte auditada.
   const [amount, setAmount] = useState("");
   const [method, setMethod] = useState<FinancePayMethod>("cash");
   const [linkCash, setLinkCash] = useState(true);
@@ -44,6 +48,10 @@ export function PayEntryDialog({ open, onOpenChange, entry, restaurantId, onPaid
   const remaining = Number(entry.amount) - Number(entry.amount_paid);
 
   const save = async () => {
+    if (supportBlocked) {
+      toast.error("Registros financeiros ficam bloqueados durante suporte assistido enquanto o Financeiro não expõe RPCs auditadas.");
+      return;
+    }
     const amt = parseFloat(amount.replace(",", "."));
     if (!amt || amt <= 0) { toast.error("Valor inválido"); return; }
     if (amt > remaining + 0.01) { toast.error(`Valor máximo: ${formatBRL(remaining)}`); return; }
@@ -74,6 +82,12 @@ export function PayEntryDialog({ open, onOpenChange, entry, restaurantId, onPaid
         </DialogHeader>
 
         <div className="space-y-4">
+          {supportBlocked && (
+            <div className="rounded-lg border-2 border-brand-violet/40 bg-brand-violet/10 p-3 flex items-start gap-2 text-sm">
+              <ShieldAlert className="h-4 w-4 mt-0.5 text-brand-violet shrink-0" />
+              <span>Lançamentos do Financeiro estão bloqueados em sessão de suporte. Peça ao proprietário para registrar diretamente.</span>
+            </div>
+          )}
           <div className="rounded-lg border-2 border-ink/10 bg-muted/40 p-3">
             <p className="text-xs uppercase tracking-wider font-bold text-ink/50">Lançamento</p>
             <p className="font-display text-lg text-ink">{entry.description}</p>
@@ -117,7 +131,7 @@ export function PayEntryDialog({ open, onOpenChange, entry, restaurantId, onPaid
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>Cancelar</Button>
-          <Button onClick={save} disabled={saving}>{saving ? "Salvando…" : "Confirmar"}</Button>
+          <Button onClick={save} disabled={saving || supportBlocked}>{saving ? "Salvando…" : "Confirmar"}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

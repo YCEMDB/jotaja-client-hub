@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { useSupportContext, type SupportContext } from "@/hooks/useSupportContext";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,13 +17,36 @@ import { AdminPageLayout } from "@/components/ds";
 import { toast } from "sonner";
 import {
   Wallet, ArrowDownCircle, ArrowUpCircle, Receipt, Lock, Unlock,
-  Plus, TrendingUp, TrendingDown, Loader2, FileDown, Eye, Zap,
+  TrendingUp, TrendingDown, Loader2, FileDown, Eye, Zap, ShieldAlert,
 } from "lucide-react";
 import { downloadCSV } from "@/lib/export-csv";
 
 export const Route = createFileRoute("/_authenticated/admin/caixa")({
   component: CaixaPage,
 });
+
+// Traduções amigáveis dos erros retornados pelas RPCs de caixa.
+const ERR_MSG: Record<string, string> = {
+  forbidden: "Você não tem permissão para esta operação.",
+  cash_already_open: "Já existe um caixa aberto para este restaurante.",
+  cash_session_not_open: "Esta sessão de caixa não está aberta.",
+  cash_session_close_race: "Outra operação alterou o caixa. Recarregue e tente novamente.",
+  invalid_amount: "Informe um valor válido maior que zero.",
+  invalid_opening_amount: "Informe um valor de abertura válido.",
+  invalid_closing_amount: "Informe um valor de fechamento válido.",
+  amount_out_of_range: "Valor acima do limite permitido por operação.",
+  invalid_movement_type: "Tipo de movimentação não permitido.",
+  reason_required_for_support_open: "Informe um motivo (mín. 5 caracteres) para abrir o caixa em suporte.",
+  reason_required_for_support_close: "Informe um motivo (mín. 5 caracteres) para fechar o caixa em suporte.",
+  reason_required_for_support_movement: "Informe um motivo (mín. 5 caracteres) para movimentar em suporte.",
+  support_session_expired: "Sessão de suporte expirada. Reinicie o atendimento.",
+  support_access_denied: "Sua sessão de suporte não tem nível suficiente para esta ação.",
+};
+function friendlyError(msg: string | undefined | null): string {
+  if (!msg) return "Erro desconhecido.";
+  for (const k of Object.keys(ERR_MSG)) if (msg.includes(k)) return ERR_MSG[k];
+  return msg;
+}
 
 type Session = {
   id: string;
@@ -62,18 +86,30 @@ const fmt = (n: number) =>
 
 function CaixaPage() {
   const { restaurantId, user } = useAuth();
+  const support = useSupportContext();
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<Session | null>(null);
   const [movements, setMovements] = useState<Movement[]>([]);
   const [history, setHistory] = useState<Session[]>([]);
   const [tab, setTab] = useState("atual");
 
+  // Se estiver em sessão de suporte para outra loja, usa o restaurante da sessão.
+  const activeRestaurantId = support.active && support.restaurantId
+    ? support.restaurantId
+    : restaurantId;
+
+  const canWrite = !support.active || support.level === "administrative";
+  const supportBlockedReason =
+    support.active && support.level !== "administrative"
+      ? "Esta operação exige uma sessão de suporte administrativo."
+      : null;
+
   const loadOpen = async () => {
-    if (!restaurantId) return;
+    if (!activeRestaurantId) return;
     const { data } = await supabase
       .from("cash_sessions")
       .select("*")
-      .eq("restaurant_id", restaurantId)
+      .eq("restaurant_id", activeRestaurantId)
       .eq("status", "open")
       .order("opened_at", { ascending: false })
       .limit(1)
@@ -93,11 +129,11 @@ function CaixaPage() {
   };
 
   const loadHistory = async () => {
-    if (!restaurantId) return;
+    if (!activeRestaurantId) return;
     const { data } = await supabase
       .from("cash_sessions")
       .select("*")
-      .eq("restaurant_id", restaurantId)
+      .eq("restaurant_id", activeRestaurantId)
       .eq("status", "closed")
       .order("closed_at", { ascending: false })
       .limit(100);
@@ -107,7 +143,7 @@ function CaixaPage() {
   useEffect(() => {
     loadOpen();
     loadHistory();
-  }, [restaurantId]);
+  }, [activeRestaurantId]);
 
   // Realtime nas movimentações da sessão aberta
   useEffect(() => {
@@ -153,6 +189,12 @@ function CaixaPage() {
       icon={Wallet}
       accent="amber"
     >
+      {supportBlockedReason && (
+        <div className="mb-4 rounded-xl border-2 border-brand-violet/40 bg-brand-violet/10 p-3 flex items-start gap-2 text-sm">
+          <ShieldAlert className="h-4 w-4 mt-0.5 text-brand-violet shrink-0" />
+          <span>{supportBlockedReason} Ações de escrita estão desabilitadas.</span>
+        </div>
+      )}
       <Tabs value={tab} onValueChange={setTab}>
         <TabsList>
           <TabsTrigger value="atual">Caixa atual</TabsTrigger>
@@ -162,8 +204,9 @@ function CaixaPage() {
         <TabsContent value="atual" className="mt-4">
           {!session ? (
             <OpenForm
-              restaurantId={restaurantId!}
-              userId={user?.id ?? ""}
+              restaurantId={activeRestaurantId!}
+              support={support}
+              canWrite={canWrite}
               onOpened={() => loadOpen()}
             />
           ) : (
@@ -171,7 +214,8 @@ function CaixaPage() {
               session={session}
               movements={movements}
               totals={totals}
-              userId={user?.id ?? ""}
+              support={support}
+              canWrite={canWrite}
               onChange={() => loadOpen()}
               onClosed={() => { loadOpen(); loadHistory(); setTab("historico"); }}
             />
@@ -189,30 +233,33 @@ function CaixaPage() {
 /* ============== OPEN ============== */
 
 function OpenForm({
-  restaurantId, userId, onOpened,
-}: { restaurantId: string; userId: string; onOpened: () => void }) {
+  restaurantId, support, canWrite, onOpened,
+}: {
+  restaurantId: string;
+  support: SupportContext;
+  canWrite: boolean;
+  onOpened: () => void;
+}) {
   const [amount, setAmount] = useState("0");
+  const [reason, setReason] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const requiresReason = support.active;
 
   const open = async () => {
-    if (!restaurantId || !userId) return;
+    if (!restaurantId) return;
     const n = Number((amount || "0").replace(",", "."));
     if (isNaN(n) || n < 0) return toast.error("Informe um valor válido");
-    setSubmitting(true);
-    const { error } = await supabase.from("cash_sessions").insert({
-      restaurant_id: restaurantId,
-      opened_by: userId,
-      opening_amount: n,
-    });
-    setSubmitting(false);
-    if (error) {
-      if (error.message.includes("cash_sessions_one_open_per_restaurant")) {
-        toast.error("Já existe um caixa aberto.");
-      } else {
-        toast.error(error.message);
-      }
-      return;
+    if (requiresReason && reason.trim().length < 5) {
+      return toast.error("Informe um motivo com pelo menos 5 caracteres.");
     }
+    setSubmitting(true);
+    const { error } = await supabase.rpc("cash_session_open" as never, {
+      p_restaurant_id: restaurantId,
+      p_opening_amount: n,
+      p_reason: requiresReason ? reason.trim() : null,
+    } as never);
+    setSubmitting(false);
+    if (error) return toast.error(friendlyError(error.message));
     toast.success("Caixa aberto!");
     onOpened();
   };
@@ -238,9 +285,17 @@ function OpenForm({
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           autoFocus
+          disabled={!canWrite}
         />
       </div>
-      <Button onClick={open} disabled={submitting} className="w-full">
+      {requiresReason && (
+        <div>
+          <Label htmlFor="open-reason">Motivo do atendimento (obrigatório em suporte)</Label>
+          <Textarea id="open-reason" value={reason} onChange={(e) => setReason(e.target.value)}
+            placeholder="Descreva por que está abrindo o caixa em nome do cliente." disabled={!canWrite} />
+        </div>
+      )}
+      <Button onClick={open} disabled={submitting || !canWrite} className="w-full">
         {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Abrir caixa"}
       </Button>
     </Card>
@@ -250,16 +305,17 @@ function OpenForm({
 /* ============== CURRENT SESSION ============== */
 
 function CurrentSession({
-  session, movements, totals, userId, onChange, onClosed,
+  session, movements, totals, support, canWrite, onChange, onClosed,
 }: {
   session: Session;
   movements: Movement[];
   totals: { opening: number; sales: number; reinforcement: number; withdrawal: number; expense: number; expected: number };
-  userId: string;
+  support: SupportContext;
+  canWrite: boolean;
   onChange: () => void;
   onClosed: () => void;
 }) {
-  const [movDialog, setMovDialog] = useState<null | Movement["type"]>(null);
+  const [movDialog, setMovDialog] = useState<null | "reinforcement" | "withdrawal" | "expense">(null);
   const [closeOpen, setCloseOpen] = useState(false);
 
   return (
@@ -299,16 +355,16 @@ function CurrentSession({
           <p className="text-3xl font-bold">{fmt(totals.expected)}</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button variant="outline" size="sm" onClick={() => setMovDialog("reinforcement")}>
+          <Button variant="outline" size="sm" onClick={() => setMovDialog("reinforcement")} disabled={!canWrite}>
             <ArrowUpCircle className="h-4 w-4 mr-1.5" /> Reforço
           </Button>
-          <Button variant="outline" size="sm" onClick={() => setMovDialog("withdrawal")}>
+          <Button variant="outline" size="sm" onClick={() => setMovDialog("withdrawal")} disabled={!canWrite}>
             <ArrowDownCircle className="h-4 w-4 mr-1.5" /> Sangria
           </Button>
-          <Button variant="outline" size="sm" onClick={() => setMovDialog("expense")}>
+          <Button variant="outline" size="sm" onClick={() => setMovDialog("expense")} disabled={!canWrite}>
             <Receipt className="h-4 w-4 mr-1.5" /> Despesa
           </Button>
-          <Button size="sm" onClick={() => setCloseOpen(true)}>
+          <Button size="sm" onClick={() => setCloseOpen(true)} disabled={!canWrite}>
             <Lock className="h-4 w-4 mr-1.5" /> Fechar caixa
           </Button>
         </div>
@@ -347,8 +403,7 @@ function CurrentSession({
         open={movDialog !== null}
         type={movDialog}
         sessionId={session.id}
-        restaurantId={session.restaurant_id}
-        userId={userId}
+        support={support}
         onClose={() => setMovDialog(null)}
         onSaved={() => { setMovDialog(null); onChange(); }}
       />
@@ -358,7 +413,7 @@ function CurrentSession({
         onClose={() => setCloseOpen(false)}
         session={session}
         expected={totals.expected}
-        userId={userId}
+        support={support}
         onClosed={() => { setCloseOpen(false); onClosed(); }}
       />
     </div>
@@ -379,42 +434,47 @@ function SummaryCard({ label, value, variant }: { label: string; value: number; 
 /* ============== MOVEMENT DIALOG ============== */
 
 function MovementDialog({
-  open, type, sessionId, restaurantId, userId, onClose, onSaved,
+  open, type, sessionId, support, onClose, onSaved,
 }: {
   open: boolean;
-  type: Movement["type"] | null;
+  type: "reinforcement" | "withdrawal" | "expense" | null;
   sessionId: string;
-  restaurantId: string;
-  userId: string;
+  support: SupportContext;
   onClose: () => void;
   onSaved: () => void;
 }) {
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
+  const [reason, setReason] = useState("");
   const [saving, setSaving] = useState(false);
+  const requiresReason = support.active;
 
-  useEffect(() => { if (open) { setAmount(""); setDescription(""); } }, [open]);
+  useEffect(() => {
+    if (open) { setAmount(""); setDescription(""); setReason(""); }
+  }, [open]);
 
   if (!type) return null;
   const title =
     type === "reinforcement" ? "Reforço de caixa" :
     type === "withdrawal" ? "Sangria" :
-    type === "expense" ? "Despesa" : "Movimentação";
+    "Despesa";
 
   const save = async () => {
     const n = Number((amount || "0").replace(",", "."));
     if (isNaN(n) || n <= 0) return toast.error("Informe um valor maior que zero");
+    if (requiresReason && reason.trim().length < 5) {
+      return toast.error("Informe um motivo com pelo menos 5 caracteres.");
+    }
     setSaving(true);
-    const { error } = await supabase.from("cash_movements").insert({
-      session_id: sessionId,
-      restaurant_id: restaurantId,
-      type,
-      amount: n,
-      description: description.trim() || null,
-      created_by: userId,
-    });
+    const { error } = await supabase.rpc("cash_session_add_movement" as never, {
+      p_session_id: sessionId,
+      p_type: type,
+      p_amount: n,
+      p_description: description.trim() || null,
+      p_reason: requiresReason ? reason.trim() : null,
+    } as never);
     setSaving(false);
-    if (error) return toast.error(error.message);
+    if (error) return toast.error(friendlyError(error.message));
     toast.success("Movimentação registrada");
     onSaved();
   };
@@ -430,10 +490,17 @@ function MovementDialog({
               value={amount} onChange={(e) => setAmount(e.target.value)} />
           </div>
           <div>
-            <Label htmlFor="mv-desc">Motivo / descrição</Label>
+            <Label htmlFor="mv-desc">Descrição</Label>
             <Textarea id="mv-desc" value={description} onChange={(e) => setDescription(e.target.value)}
               placeholder={type === "expense" ? "Ex.: pagamento de fornecedor" : type === "withdrawal" ? "Ex.: retirada do dono" : "Ex.: reforço de troco"} />
           </div>
+          {requiresReason && (
+            <div>
+              <Label htmlFor="mv-reason">Motivo do atendimento (obrigatório em suporte)</Label>
+              <Textarea id="mv-reason" value={reason} onChange={(e) => setReason(e.target.value)}
+                placeholder="Descreva por que essa movimentação está sendo feita em suporte." />
+            </div>
+          )}
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Cancelar</Button>
@@ -449,38 +516,40 @@ function MovementDialog({
 /* ============== CLOSE DIALOG ============== */
 
 function CloseDialog({
-  open, onClose, session, expected, userId, onClosed,
+  open, onClose, session, expected, support, onClosed,
 }: {
   open: boolean;
   onClose: () => void;
   session: Session;
   expected: number;
-  userId: string;
+  support: SupportContext;
   onClosed: () => void;
 }) {
   const [counted, setCounted] = useState("");
   const [notes, setNotes] = useState("");
+  const [reason, setReason] = useState("");
   const [saving, setSaving] = useState(false);
+  const requiresReason = support.active;
 
-  useEffect(() => { if (open) { setCounted(expected.toFixed(2)); setNotes(""); } }, [open, expected]);
+  useEffect(() => { if (open) { setCounted(expected.toFixed(2)); setNotes(""); setReason(""); } }, [open, expected]);
 
   const countedNum = Number((counted || "0").replace(",", "."));
   const diff = isNaN(countedNum) ? 0 : countedNum - expected;
 
   const close = async () => {
     if (isNaN(countedNum) || countedNum < 0) return toast.error("Informe o valor contado");
+    if (requiresReason && reason.trim().length < 5) {
+      return toast.error("Informe um motivo com pelo menos 5 caracteres.");
+    }
     setSaving(true);
-    const { error } = await supabase.from("cash_sessions").update({
-      status: "closed",
-      closed_by: userId,
-      closed_at: new Date().toISOString(),
-      closing_amount: countedNum,
-      expected_amount: expected,
-      difference: diff,
-      notes: notes.trim() || null,
-    }).eq("id", session.id);
+    const { error } = await supabase.rpc("cash_session_close" as never, {
+      p_session_id: session.id,
+      p_closing_amount: countedNum,
+      p_notes: notes.trim() || null,
+      p_reason: requiresReason ? reason.trim() : null,
+    } as never);
     setSaving(false);
-    if (error) return toast.error(error.message);
+    if (error) return toast.error(friendlyError(error.message));
     toast.success("Caixa fechado");
     onClosed();
   };
@@ -507,6 +576,13 @@ function CloseDialog({
             <Textarea id="cl-notes" value={notes} onChange={(e) => setNotes(e.target.value)}
               placeholder="Opcional: justificar diferença, observações do turno..." />
           </div>
+          {requiresReason && (
+            <div>
+              <Label htmlFor="cl-reason">Motivo do atendimento (obrigatório em suporte)</Label>
+              <Textarea id="cl-reason" value={reason} onChange={(e) => setReason(e.target.value)}
+                placeholder="Descreva por que está fechando o caixa em suporte." />
+            </div>
+          )}
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Cancelar</Button>
