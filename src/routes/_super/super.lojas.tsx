@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
 import { useServerFn } from "@tanstack/react-start";
 import { resetTenant, deleteTenant, resetOwnerPassword } from "@/lib/super-admin.functions";
 import { Card } from "@/components/ui/card";
@@ -13,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { LogIn, Search, AlertTriangle, Plus, Building2, RotateCcw, Trash2, KeyRound, Check, X, Clock, ShieldAlert } from "lucide-react";
+import { Search, AlertTriangle, Plus, Building2, KeyRound, Check, X, Clock, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
 import { CreateTenantDialog } from "@/components/super/CreateTenantDialog";
 import { PaymentsSection } from "@/components/super/PaymentsSection";
@@ -413,6 +412,22 @@ function LojasPage() {
         prefill={null}
         onCreated={() => load()}
       />
+
+      {extendTrialFor && (
+        <ExtendTrialDialog
+          open={!!extendTrialFor}
+          onOpenChange={(o) => !o && setExtendTrialFor(null)}
+          restaurant={extendTrialFor}
+          onDone={() => { setExtendTrialFor(null); load(); }}
+        />
+      )}
+      {supportFor && (
+        <StartSupportSessionDialog
+          open={!!supportFor}
+          onOpenChange={(o) => !o && setSupportFor(null)}
+          restaurant={supportFor}
+        />
+      )}
     </AdminPageLayout>
   );
 }
