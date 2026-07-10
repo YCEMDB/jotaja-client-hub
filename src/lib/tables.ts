@@ -263,19 +263,30 @@ export async function unblockTable(tableId: string): Promise<void> {
   if (error) throw error;
 }
 
-/** Mensagens amigáveis para erros vindos das RPCs. */
+/** Mensagens amigáveis para erros vindos das RPCs/triggers/DB. */
 export function translateTableError(msg: string): string {
-  if (msg.includes("tables_limit_reached")) return "Limite de mesas do seu plano atingido. Faça upgrade para adicionar mais mesas.";
-  if (msg.includes("table_busy")) return "Esta mesa já possui uma sessão aberta.";
-  if (msg.includes("table_inactive")) return "Esta mesa está inativa. Ative-a antes de abrir uma sessão.";
-  if (msg.includes("table_in_use")) return "Não é possível remover uma mesa com sessão aberta.";
-  if (msg.includes("session_not_open")) return "Esta sessão não está aberta.";
-  if (msg.includes("session_has_open_orders")) return "Existem pedidos ainda em preparo. Marque-os como entregues, cancele ou use forçar fechamento (apenas dono).";
-  if (msg.includes("forbidden: apenas o dono")) return "Apenas o dono do restaurante pode forçar o fechamento.";
-  if (msg.includes("forbidden")) return "Você não tem permissão para essa ação.";
-  if (msg.includes("not_found")) return "Registro não encontrado.";
-  if (msg.includes("duplicate key") && msg.includes("number")) return "Já existe uma mesa com este número.";
-  return msg;
+  const m = (msg || "").toLowerCase();
+  // Feature/plan gating vindo do trigger enforce_tables_max
+  if (m.includes("plan_feature_locked")) return "Seu plano atual não inclui o módulo de Mesas. Faça upgrade para o plano Pro para começar a cadastrar mesas.";
+  if (m.includes("plan_limit_reached") || m.includes("tables_limit_reached")) return "Limite de mesas do seu plano atingido. Faça upgrade para adicionar mais mesas.";
+  if (m.includes("table_busy")) return "Esta mesa já possui uma sessão aberta.";
+  if (m.includes("table_inactive")) return "Esta mesa está inativa. Ative-a antes de abrir uma sessão.";
+  if (m.includes("table_in_use")) return "Não é possível remover uma mesa com sessão aberta.";
+  if (m.includes("session_not_open")) return "Esta sessão não está aberta.";
+  if (m.includes("session_has_open_orders")) return "Existem pedidos ainda em preparo. Marque-os como entregues, cancele ou use forçar fechamento (apenas dono).";
+  if (m.includes("forbidden: apenas o dono")) return "Apenas o dono do restaurante pode forçar o fechamento.";
+  if (m.includes("forbidden") || m.includes("permission denied") || m.includes("42501")) {
+    return "Você não tem permissão para essa ação. Somente o dono ou administrador do restaurante pode cadastrar mesas.";
+  }
+  if (m.includes("not_found") || m.includes("no_data_found")) return "Registro não encontrado.";
+  // Duplicidade de número: constraint restaurant_tables_restaurant_id_number_key
+  if ((m.includes("duplicate key") || m.includes("23505")) && (m.includes("number") || m.includes("restaurant_tables"))) {
+    return "Já existe uma mesa com este número. Escolha um número diferente.";
+  }
+  if (m.includes("violates check constraint") || m.includes("invalid input")) {
+    return "Dados inválidos. Verifique o número e a capacidade da mesa.";
+  }
+  return msg || "Ocorreu um erro ao processar a operação de mesa.";
 }
 
 // ============================================================================
