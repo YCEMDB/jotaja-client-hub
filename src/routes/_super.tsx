@@ -4,7 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import {
   ShieldCheck, LayoutDashboard, Building2, Inbox, Layers, Megaphone,
   Settings2, LogOut, ArrowLeftRight, Users, PanelLeftClose, PanelLeftOpen,
-  Menu, ChevronRight, User as UserIcon,
+  Menu, ChevronRight, User as UserIcon, FileClock,
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import {
@@ -43,11 +43,13 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: "Sistema",
     items: [
+      { to: "/super/auditoria", label: "Auditoria", icon: FileClock },
       { to: "/super/equipe", label: "Equipe", icon: Users },
       { to: "/super/configuracoes", label: "Configurações", icon: Settings2 },
     ],
   },
 ];
+
 
 const ALL_NAV = NAV_GROUPS.flatMap((g) => g.items);
 

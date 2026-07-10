@@ -89,6 +89,8 @@ export function buildRange(
 
   let from: Date;
   let to: Date;
+  let prevFrom: Date | null = null;
+  let prevTo: Date | null = null;
   let label = "";
   let comparisonLabel = "período anterior";
 
@@ -122,13 +124,19 @@ export function buildRange(
       break;
     }
     case "this_month": {
-      // First day of current month in tz
+      // First day of current month in tz; end = tomorrow (exclusive, includes today)
       const y = Number(formatInTimeZone(now, tz, "yyyy"));
       const m = Number(formatInTimeZone(now, tz, "MM"));
       from = fromZonedTime(`${y}-${String(m).padStart(2, "0")}-01 00:00:00`, tz);
       to = tomorrowStart;
+      // Comparison: SAME number of days elapsed in previous month.
+      // e.g. Jul 1..10 → Jun 1..10 (not Jun 21..30)
+      const prevMonthStart = addMonths(from, -1, tz);
+      const elapsedDays = Math.round((to.getTime() - from.getTime()) / 86400000);
+      prevFrom = prevMonthStart;
+      prevTo = addDays(prevMonthStart, elapsedDays);
       label = "Mês atual";
-      comparisonLabel = "vs mês anterior";
+      comparisonLabel = "vs mesmos dias do mês anterior";
       break;
     }
     case "last_month": {
@@ -146,7 +154,6 @@ export function buildRange(
       const cf = custom?.from ?? todayStart;
       const ct = custom?.to ?? now;
       from = tzStartOfDay(cf, tz);
-      // to is exclusive: day after ct
       to = addDays(tzStartOfDay(ct, tz), 1);
       label = "Período personalizado";
       comparisonLabel = "vs período anterior equivalente";
@@ -154,12 +161,15 @@ export function buildRange(
     }
   }
 
-  const durationMs = to.getTime() - from.getTime();
-  const prevTo = from;
-  const prevFrom = new Date(from.getTime() - durationMs);
+  if (!prevFrom || !prevTo) {
+    const durationMs = to.getTime() - from.getTime();
+    prevTo = from;
+    prevFrom = new Date(from.getTime() - durationMs);
+  }
 
   return { from, to, prevFrom, prevTo, label, comparisonLabel };
 }
+
 
 export async function fetchDashboardSummary(
   restaurantId: string,

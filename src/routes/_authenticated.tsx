@@ -16,6 +16,7 @@ import {
 
 import { BlockedStoreScreen } from "@/components/BlockedStoreScreen";
 import { GlobalAnnouncementsBanner } from "@/components/GlobalAnnouncementsBanner";
+import { SupportSessionBanner } from "@/components/SupportSessionBanner";
 
 export const Route = createFileRoute("/_authenticated")({
   component: AuthLayout,
@@ -342,6 +343,7 @@ function AuthLayout() {
         />
         <div className="absolute top-14 md:top-16 left-0 right-0 h-32 bg-gradient-radial opacity-60 pointer-events-none" />
         <div className="relative flex-1 min-w-0">
+          <SupportSessionBanner />
           <GlobalAnnouncementsBanner />
           <Outlet />
         </div>

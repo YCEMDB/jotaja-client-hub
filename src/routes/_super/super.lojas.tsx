@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
 import { useServerFn } from "@tanstack/react-start";
 import { resetTenant, deleteTenant, resetOwnerPassword } from "@/lib/super-admin.functions";
 import { Card } from "@/components/ui/card";
@@ -13,10 +12,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { LogIn, Search, AlertTriangle, Plus, Building2, RotateCcw, Trash2, KeyRound, Check, X } from "lucide-react";
+import { Search, AlertTriangle, Plus, Building2, RotateCcw, Trash2, KeyRound, Check, X, Clock, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
 import { CreateTenantDialog } from "@/components/super/CreateTenantDialog";
 import { PaymentsSection } from "@/components/super/PaymentsSection";
+import { ExtendTrialDialog } from "@/components/super/ExtendTrialDialog";
+import { StartSupportSessionDialog } from "@/components/super/StartSupportSessionDialog";
 import { AdminPageLayout } from "@/components/AdminPageLayout";
 
 export const Route = createFileRoute("/_super/super/lojas")({
@@ -66,7 +67,6 @@ function fmtMoney(v: number) { return `R$ ${Number(v).toFixed(2).replace(".", ",
 function fmtDate(s: string | null) { return s ? new Date(s).toLocaleDateString("pt-BR") : "—"; }
 
 function LojasPage() {
-  const { selectRestaurant } = useAuth();
   const [rows, setRows] = useState<Row[]>([]);
   const [search, setSearch] = useState("");
   const [editing, setEditing] = useState<Row | null>(null);
@@ -74,6 +74,8 @@ function LojasPage() {
   const [createOpen, setCreateOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<Row | null>(null);
   const [deleteConfirmName, setDeleteConfirmName] = useState("");
+  const [extendTrialFor, setExtendTrialFor] = useState<Row | null>(null);
+  const [supportFor, setSupportFor] = useState<Row | null>(null);
   const resetTenantFn = useServerFn(resetTenant);
   const deleteTenantFn = useServerFn(deleteTenant);
   const resetPwdFn = useServerFn(resetOwnerPassword);
@@ -134,11 +136,8 @@ function LojasPage() {
     return { total, active, trial, paying, totalRevenue };
   }, [rows]);
 
-  const enterRestaurant = (r: Row) => {
-    selectRestaurant(r.id);
-    toast.success(`Acessando ${r.name}`);
-    setTimeout(() => { window.location.href = "/admin"; }, 200);
-  };
+  // Replaced by "Iniciar acesso assistido" flow via StartSupportSessionDialog.
+
 
   const save = async () => {
     if (!editing) return;
@@ -222,7 +221,10 @@ function LojasPage() {
                     <td className="p-3 text-right font-medium">{fmtMoney(r.revenue ?? 0)}</td>
                     <td className="p-3">
                       <div className="flex justify-end gap-1">
-                        <Button size="sm" variant="ghost" title="Acessar painel" onClick={() => enterRestaurant(r)}><LogIn className="h-4 w-4" /></Button>
+                        <Button size="sm" variant="ghost" title="Iniciar acesso assistido" onClick={() => setSupportFor(r)}><ShieldAlert className="h-4 w-4" /></Button>
+                        {r.plan === "trial" && (
+                          <Button size="sm" variant="ghost" title="Estender trial" onClick={() => setExtendTrialFor(r)}><Clock className="h-4 w-4" /></Button>
+                        )}
                         <Button size="sm" variant="outline" onClick={() => setEditing({ ...r })}>Gerenciar</Button>
                       </div>
                     </td>
@@ -410,6 +412,22 @@ function LojasPage() {
         prefill={null}
         onCreated={() => load()}
       />
+
+      {extendTrialFor && (
+        <ExtendTrialDialog
+          open={!!extendTrialFor}
+          onOpenChange={(o) => !o && setExtendTrialFor(null)}
+          restaurant={extendTrialFor}
+          onDone={() => { setExtendTrialFor(null); load(); }}
+        />
+      )}
+      {supportFor && (
+        <StartSupportSessionDialog
+          open={!!supportFor}
+          onOpenChange={(o) => !o && setSupportFor(null)}
+          restaurant={supportFor}
+        />
+      )}
     </AdminPageLayout>
   );
 }

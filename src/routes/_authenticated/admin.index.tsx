@@ -134,21 +134,30 @@ function Dashboard() {
     queryFn: () => fetchDashboardSummary(restaurantId!, range),
   });
 
-  // Realtime: single filtered channel on orders → invalidate query
+  // Realtime: single filtered channel on orders → debounced invalidate
   useEffect(() => {
     if (!restaurantId) return;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    const invalidateDebounced = () => {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ["dashboard-summary", restaurantId] });
+      }, 1500);
+    };
     const channel = supabase
       .channel(`dashboard-orders-${restaurantId}`)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "orders", filter: `restaurant_id=eq.${restaurantId}` },
-        () => queryClient.invalidateQueries({ queryKey: ["dashboard-summary", restaurantId] }),
+        invalidateDebounced,
       )
       .subscribe();
     return () => {
+      if (timer) clearTimeout(timer);
       supabase.removeChannel(channel);
     };
   }, [restaurantId, queryClient]);
+
 
   // Refresh clock every minute so "há N min" stays fresh
   useEffect(() => {
