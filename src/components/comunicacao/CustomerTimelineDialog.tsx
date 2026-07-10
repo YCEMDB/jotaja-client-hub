@@ -1,12 +1,16 @@
 // Sprint 4.3 — Dialog com timeline do cliente
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { getCustomerConversationTimeline } from "@/lib/communication/automation.functions";
 import { orderStatusLabel } from "@/lib/labels";
-import { Bot, Inbox, User, ShoppingBag } from "lucide-react";
+import { Bot, Inbox, User, ShoppingBag, MessageCircle } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { buildWhatsAppUrl, defaultWhatsAppGreeting, isValidWhatsAppPhone } from "@/lib/whatsapp";
+import { toast } from "sonner";
 
 export function CustomerTimelineDialog({
   customerId, open, onOpenChange,
