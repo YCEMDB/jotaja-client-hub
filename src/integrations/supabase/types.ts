@@ -119,6 +119,7 @@ export type Database = {
           opened_at: string
           opened_by: string
           opening_amount: number
+          origin: string
           restaurant_id: string
           status: Database["public"]["Enums"]["cash_session_status"]
           updated_at: string
@@ -135,6 +136,7 @@ export type Database = {
           opened_at?: string
           opened_by: string
           opening_amount?: number
+          origin?: string
           restaurant_id: string
           status?: Database["public"]["Enums"]["cash_session_status"]
           updated_at?: string
@@ -151,6 +153,7 @@ export type Database = {
           opened_at?: string
           opened_by?: string
           opening_amount?: number
+          origin?: string
           restaurant_id?: string
           status?: Database["public"]["Enums"]["cash_session_status"]
           updated_at?: string

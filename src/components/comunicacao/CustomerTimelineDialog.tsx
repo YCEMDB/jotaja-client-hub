@@ -1,12 +1,16 @@
 // Sprint 4.3 — Dialog com timeline do cliente
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { getCustomerConversationTimeline } from "@/lib/communication/automation.functions";
 import { orderStatusLabel } from "@/lib/labels";
-import { Bot, Inbox, User, ShoppingBag } from "lucide-react";
+import { Bot, Inbox, User, ShoppingBag, MessageCircle } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { buildWhatsAppUrl, defaultWhatsAppGreeting, isValidWhatsAppPhone } from "@/lib/whatsapp";
+import { toast } from "sonner";
 
 export function CustomerTimelineDialog({
   customerId, open, onOpenChange,
@@ -28,12 +32,40 @@ export function CustomerTimelineDialog({
     return () => { alive = false; };
   }, [open, customerId, fn]);
 
+  const { restaurantId, restaurants } = useAuth();
+  const restaurantName = useMemo(
+    () => restaurants.find((r) => r.id === restaurantId)?.name ?? "nosso restaurante",
+    [restaurants, restaurantId],
+  );
+  const phone: string | null = data?.customer?.phone ?? null;
+  const waOk = isValidWhatsAppPhone(phone);
+  const openWhatsApp = () => {
+    const url = buildWhatsAppUrl(phone, defaultWhatsAppGreeting(data?.customer?.name ?? "", restaurantName));
+    if (!url) return toast.error("Telefone inválido para WhatsApp.");
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{data?.customer?.name ?? "Cliente"}</DialogTitle>
-          <p className="text-xs text-muted-foreground">{data?.customer?.phone}</p>
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <DialogTitle>{data?.customer?.name ?? "Cliente"}</DialogTitle>
+              <p className="text-xs text-muted-foreground">{phone}</p>
+            </div>
+            {waOk && (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={openWhatsApp}
+                aria-label="Abrir conversa no WhatsApp"
+                className="gap-1.5 text-green-700 border-green-600/40 hover:bg-green-50 hover:text-green-800 shrink-0"
+              >
+                <MessageCircle className="h-4 w-4" /> WhatsApp
+              </Button>
+            )}
+          </div>
         </DialogHeader>
         {loading ? <p className="text-sm text-muted-foreground">Carregando…</p> : data && (
           <Tabs defaultValue="mensagens">

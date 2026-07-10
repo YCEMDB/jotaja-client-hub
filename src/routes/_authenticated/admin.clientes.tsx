@@ -2,9 +2,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { Users, Phone, Mail, ShoppingBag } from "lucide-react";
+import { Users, Phone, Mail, ShoppingBag, MessageCircle } from "lucide-react";
 import { CustomerTimelineDialog } from "@/components/comunicacao/CustomerTimelineDialog";
 import { AdminPageLayout, StatCard, DashboardGrid, EmptyState, Section, FilterBar, SearchBar } from "@/components/ds";
+import { Button } from "@/components/ui/button";
+import { buildWhatsAppUrl, defaultWhatsAppGreeting, isValidWhatsAppPhone } from "@/lib/whatsapp";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/admin/clientes")({
   component: Clientes,
@@ -23,7 +26,11 @@ interface Customer {
 }
 
 function Clientes() {
-  const { restaurantId } = useAuth();
+  const { restaurantId, restaurants } = useAuth();
+  const restaurantName = useMemo(
+    () => restaurants.find((r) => r.id === restaurantId)?.name ?? "nosso restaurante",
+    [restaurants, restaurantId],
+  );
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [q, setQ] = useState("");
   const [openId, setOpenId] = useState<string | null>(null);
@@ -74,28 +81,52 @@ function Clientes() {
       ) : (
         <Section className="p-0 overflow-hidden">
           <ul className="divide-y divide-ink/10">
-            {filtered.map((c) => (
-              <li key={c.id}>
-                <button
-                  type="button"
-                  onClick={() => setOpenId(c.id)}
-                  className="w-full text-left p-4 flex items-center justify-between hover:bg-muted/50 transition-colors"
-                >
-                  <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-ink truncate">{c.name}</div>
-                    <div className="text-sm text-ink/60 flex flex-wrap gap-3 mt-1">
-                      <span className="flex items-center gap-1"><Phone className="h-3 w-3" />{c.phone}</span>
-                      {c.email && <span className="flex items-center gap-1"><Mail className="h-3 w-3" />{c.email}</span>}
-                      {c.last_order_at && <span>Último: {new Date(c.last_order_at).toLocaleDateString("pt-BR")}</span>}
+            {filtered.map((c) => {
+              const waOk = isValidWhatsAppPhone(c.phone);
+              const handleWhatsApp = (e: React.MouseEvent) => {
+                e.stopPropagation();
+                const url = buildWhatsAppUrl(c.phone, defaultWhatsAppGreeting(c.name, restaurantName));
+                if (!url) return toast.error("Telefone inválido para WhatsApp.");
+                window.open(url, "_blank", "noopener,noreferrer");
+              };
+              return (
+                <li key={c.id} className="flex items-stretch hover:bg-muted/50 transition-colors">
+                  <button
+                    type="button"
+                    onClick={() => setOpenId(c.id)}
+                    className="flex-1 min-w-0 text-left p-4 flex items-center justify-between"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <div className="font-semibold text-ink truncate">{c.name}</div>
+                      <div className="text-sm text-ink/60 flex flex-wrap gap-3 mt-1">
+                        <span className="flex items-center gap-1"><Phone className="h-3 w-3" />{c.phone}</span>
+                        {c.email && <span className="flex items-center gap-1"><Mail className="h-3 w-3" />{c.email}</span>}
+                        {c.last_order_at && <span>Último: {new Date(c.last_order_at).toLocaleDateString("pt-BR")}</span>}
+                      </div>
                     </div>
-                  </div>
-                  <div className="text-right shrink-0 ml-4">
-                    <div className="text-sm text-ink/60 flex items-center gap-1 justify-end"><ShoppingBag className="h-3 w-3" />{c.total_orders ?? 0} pedidos</div>
-                    <div className="font-bold text-lg text-ink">R$ {Number(c.total_spent ?? 0).toFixed(2)}</div>
-                  </div>
-                </button>
-              </li>
-            ))}
+                    <div className="text-right shrink-0 ml-4">
+                      <div className="text-sm text-ink/60 flex items-center gap-1 justify-end"><ShoppingBag className="h-3 w-3" />{c.total_orders ?? 0} pedidos</div>
+                      <div className="font-bold text-lg text-ink">R$ {Number(c.total_spent ?? 0).toFixed(2)}</div>
+                    </div>
+                  </button>
+                  {waOk && (
+                    <div className="flex items-center pr-4">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        aria-label={`Conversar com ${c.name} no WhatsApp`}
+                        title="Abrir conversa no WhatsApp"
+                        onClick={handleWhatsApp}
+                        className="gap-1.5 text-green-700 border-green-600/40 hover:bg-green-50 hover:text-green-800"
+                      >
+                        <MessageCircle className="h-4 w-4" />
+                        <span className="hidden sm:inline">WhatsApp</span>
+                      </Button>
+                    </div>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </Section>
       )}

@@ -16,7 +16,7 @@ import { AdminPageLayout } from "@/components/ds";
 import { toast } from "sonner";
 import {
   Wallet, ArrowDownCircle, ArrowUpCircle, Receipt, Lock, Unlock,
-  Plus, TrendingUp, TrendingDown, Loader2, FileDown, Eye,
+  Plus, TrendingUp, TrendingDown, Loader2, FileDown, Eye, Zap,
 } from "lucide-react";
 import { downloadCSV } from "@/lib/export-csv";
 
@@ -37,6 +37,7 @@ type Session = {
   difference: number | null;
   status: "open" | "closed";
   notes: string | null;
+  origin?: "manual" | "automatic" | null;
 };
 
 type Movement = {
@@ -268,8 +269,20 @@ function CurrentSession({
         <div>
           <p className="text-xs uppercase tracking-wide text-muted-foreground">Sessão aberta em</p>
           <p className="font-semibold">{new Date(session.opened_at).toLocaleString("pt-BR")}</p>
+          {session.origin === "automatic" && (
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Abertura automática — saldo inicial R$ 0,00. Ajuste com um reforço se necessário.
+            </p>
+          )}
         </div>
-        <Badge variant="secondary" className="gap-1.5"><Unlock className="h-3.5 w-3.5" /> Aberto</Badge>
+        <div className="flex items-center gap-2">
+          {session.origin === "automatic" && (
+            <Badge variant="outline" className="gap-1.5 border-brand-orange/40 text-brand-orange">
+              <Zap className="h-3.5 w-3.5" /> Automático
+            </Badge>
+          )}
+          <Badge variant="secondary" className="gap-1.5"><Unlock className="h-3.5 w-3.5" /> Aberto</Badge>
+        </div>
       </Card>
 
       {/* Resumo */}
