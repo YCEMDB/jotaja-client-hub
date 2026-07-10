@@ -82,6 +82,12 @@ export function PayEntryDialog({ open, onOpenChange, entry, restaurantId, onPaid
         </DialogHeader>
 
         <div className="space-y-4">
+          {supportBlocked && (
+            <div className="rounded-lg border-2 border-brand-violet/40 bg-brand-violet/10 p-3 flex items-start gap-2 text-sm">
+              <ShieldAlert className="h-4 w-4 mt-0.5 text-brand-violet shrink-0" />
+              <span>Lançamentos do Financeiro estão bloqueados em sessão de suporte. Peça ao proprietário para registrar diretamente.</span>
+            </div>
+          )}
           <div className="rounded-lg border-2 border-ink/10 bg-muted/40 p-3">
             <p className="text-xs uppercase tracking-wider font-bold text-ink/50">Lançamento</p>
             <p className="font-display text-lg text-ink">{entry.description}</p>
