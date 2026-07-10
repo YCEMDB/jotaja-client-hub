@@ -48,6 +48,10 @@ export function PayEntryDialog({ open, onOpenChange, entry, restaurantId, onPaid
   const remaining = Number(entry.amount) - Number(entry.amount_paid);
 
   const save = async () => {
+    if (supportBlocked) {
+      toast.error("Registros financeiros ficam bloqueados durante suporte assistido enquanto o Financeiro não expõe RPCs auditadas.");
+      return;
+    }
     const amt = parseFloat(amount.replace(",", "."));
     if (!amt || amt <= 0) { toast.error("Valor inválido"); return; }
     if (amt > remaining + 0.01) { toast.error(`Valor máximo: ${formatBRL(remaining)}`); return; }
