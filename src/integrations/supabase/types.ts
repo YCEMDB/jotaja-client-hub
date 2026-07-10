@@ -4114,6 +4114,16 @@ export type Database = {
         Args: { p_customer_id: string }
         Returns: Json
       }
+      get_dashboard_summary: {
+        Args: {
+          p_from: string
+          p_prev_from: string
+          p_prev_to: string
+          p_restaurant_id: string
+          p_to: string
+        }
+        Returns: Json
+      }
       get_delivery_dashboard: {
         Args: { p_restaurant_id: string }
         Returns: Json
