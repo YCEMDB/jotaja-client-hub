@@ -37,6 +37,7 @@ type Session = {
   difference: number | null;
   status: "open" | "closed";
   notes: string | null;
+  origin?: "manual" | "automatic" | null;
 };
 
 type Movement = {
