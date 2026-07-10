@@ -131,7 +131,7 @@ export function PayEntryDialog({ open, onOpenChange, entry, restaurantId, onPaid
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>Cancelar</Button>
-          <Button onClick={save} disabled={saving}>{saving ? "Salvando…" : "Confirmar"}</Button>
+          <Button onClick={save} disabled={saving || supportBlocked}>{saving ? "Salvando…" : "Confirmar"}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
