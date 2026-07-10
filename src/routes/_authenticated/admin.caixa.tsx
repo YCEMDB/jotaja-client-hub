@@ -244,7 +244,6 @@ function OpenForm({
   const [reason, setReason] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const requiresReason = support.active;
-  void user;
 
   const open = async () => {
     if (!restaurantId) return;
