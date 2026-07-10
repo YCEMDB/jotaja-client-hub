@@ -86,18 +86,30 @@ const fmt = (n: number) =>
 
 function CaixaPage() {
   const { restaurantId, user } = useAuth();
+  const support = useSupportContext();
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<Session | null>(null);
   const [movements, setMovements] = useState<Movement[]>([]);
   const [history, setHistory] = useState<Session[]>([]);
   const [tab, setTab] = useState("atual");
 
+  // Se estiver em sessão de suporte para outra loja, usa o restaurante da sessão.
+  const activeRestaurantId = support.active && support.restaurantId
+    ? support.restaurantId
+    : restaurantId;
+
+  const canWrite = !support.active || support.level === "administrative";
+  const supportBlockedReason =
+    support.active && support.level !== "administrative"
+      ? "Esta operação exige uma sessão de suporte administrativo."
+      : null;
+
   const loadOpen = async () => {
-    if (!restaurantId) return;
+    if (!activeRestaurantId) return;
     const { data } = await supabase
       .from("cash_sessions")
       .select("*")
-      .eq("restaurant_id", restaurantId)
+      .eq("restaurant_id", activeRestaurantId)
       .eq("status", "open")
       .order("opened_at", { ascending: false })
       .limit(1)
@@ -117,11 +129,11 @@ function CaixaPage() {
   };
 
   const loadHistory = async () => {
-    if (!restaurantId) return;
+    if (!activeRestaurantId) return;
     const { data } = await supabase
       .from("cash_sessions")
       .select("*")
-      .eq("restaurant_id", restaurantId)
+      .eq("restaurant_id", activeRestaurantId)
       .eq("status", "closed")
       .order("closed_at", { ascending: false })
       .limit(100);
@@ -131,7 +143,7 @@ function CaixaPage() {
   useEffect(() => {
     loadOpen();
     loadHistory();
-  }, [restaurantId]);
+  }, [activeRestaurantId]);
 
   // Realtime nas movimentações da sessão aberta
   useEffect(() => {
@@ -177,6 +189,12 @@ function CaixaPage() {
       icon={Wallet}
       accent="amber"
     >
+      {supportBlockedReason && (
+        <div className="mb-4 rounded-xl border-2 border-brand-violet/40 bg-brand-violet/10 p-3 flex items-start gap-2 text-sm">
+          <ShieldAlert className="h-4 w-4 mt-0.5 text-brand-violet shrink-0" />
+          <span>{supportBlockedReason} Ações de escrita estão desabilitadas.</span>
+        </div>
+      )}
       <Tabs value={tab} onValueChange={setTab}>
         <TabsList>
           <TabsTrigger value="atual">Caixa atual</TabsTrigger>
@@ -186,8 +204,9 @@ function CaixaPage() {
         <TabsContent value="atual" className="mt-4">
           {!session ? (
             <OpenForm
-              restaurantId={restaurantId!}
-              userId={user?.id ?? ""}
+              restaurantId={activeRestaurantId!}
+              support={support}
+              canWrite={canWrite}
               onOpened={() => loadOpen()}
             />
           ) : (
@@ -195,7 +214,8 @@ function CaixaPage() {
               session={session}
               movements={movements}
               totals={totals}
-              userId={user?.id ?? ""}
+              support={support}
+              canWrite={canWrite}
               onChange={() => loadOpen()}
               onClosed={() => { loadOpen(); loadHistory(); setTab("historico"); }}
             />
@@ -213,33 +233,75 @@ function CaixaPage() {
 /* ============== OPEN ============== */
 
 function OpenForm({
-  restaurantId, userId, onOpened,
-}: { restaurantId: string; userId: string; onOpened: () => void }) {
+  restaurantId, support, canWrite, onOpened,
+}: {
+  restaurantId: string;
+  support: SupportContext;
+  canWrite: boolean;
+  onOpened: () => void;
+}) {
   const [amount, setAmount] = useState("0");
+  const [reason, setReason] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const requiresReason = support.active;
+  void user;
 
   const open = async () => {
-    if (!restaurantId || !userId) return;
+    if (!restaurantId) return;
     const n = Number((amount || "0").replace(",", "."));
     if (isNaN(n) || n < 0) return toast.error("Informe um valor válido");
-    setSubmitting(true);
-    const { error } = await supabase.from("cash_sessions").insert({
-      restaurant_id: restaurantId,
-      opened_by: userId,
-      opening_amount: n,
-    });
-    setSubmitting(false);
-    if (error) {
-      if (error.message.includes("cash_sessions_one_open_per_restaurant")) {
-        toast.error("Já existe um caixa aberto.");
-      } else {
-        toast.error(error.message);
-      }
-      return;
+    if (requiresReason && reason.trim().length < 5) {
+      return toast.error("Informe um motivo com pelo menos 5 caracteres.");
     }
+    setSubmitting(true);
+    const { error } = await supabase.rpc("cash_session_open" as never, {
+      p_restaurant_id: restaurantId,
+      p_opening_amount: n,
+      p_reason: requiresReason ? reason.trim() : null,
+    } as never);
+    setSubmitting(false);
+    if (error) return toast.error(friendlyError(error.message));
     toast.success("Caixa aberto!");
     onOpened();
   };
+
+  return (
+    <Card className="p-6 max-w-md space-y-4">
+      <div className="flex items-center gap-3">
+        <div className="h-10 w-10 rounded-full bg-brand-orange/10 grid place-items-center">
+          <Unlock className="h-5 w-5 text-brand-orange" />
+        </div>
+        <div>
+          <h2 className="font-bold text-lg">Abrir caixa</h2>
+          <p className="text-sm text-muted-foreground">Informe o valor inicial em espécie (fundo de troco).</p>
+        </div>
+      </div>
+      <div>
+        <Label htmlFor="opening">Valor inicial (R$)</Label>
+        <Input
+          id="opening"
+          type="number"
+          step="0.01"
+          min="0"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          autoFocus
+          disabled={!canWrite}
+        />
+      </div>
+      {requiresReason && (
+        <div>
+          <Label htmlFor="open-reason">Motivo do atendimento (obrigatório em suporte)</Label>
+          <Textarea id="open-reason" value={reason} onChange={(e) => setReason(e.target.value)}
+            placeholder="Descreva por que está abrindo o caixa em nome do cliente." disabled={!canWrite} />
+        </div>
+      )}
+      <Button onClick={open} disabled={submitting || !canWrite} className="w-full">
+        {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Abrir caixa"}
+      </Button>
+    </Card>
+  );
+}
 
   return (
     <Card className="p-6 max-w-md space-y-4">
