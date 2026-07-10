@@ -62,6 +62,85 @@ export type Database = {
         }
         Relationships: []
       }
+      audit_logs: {
+        Row: {
+          action: string
+          actor_id: string | null
+          actor_role: string | null
+          actor_type: string
+          category: string
+          created_at: string
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          ip: unknown
+          metadata: Json | null
+          new_value: Json | null
+          old_value: Json | null
+          reason: string | null
+          restaurant_id: string | null
+          support_session_id: string | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          actor_role?: string | null
+          actor_type?: string
+          category?: string
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          ip?: unknown
+          metadata?: Json | null
+          new_value?: Json | null
+          old_value?: Json | null
+          reason?: string | null
+          restaurant_id?: string | null
+          support_session_id?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          actor_role?: string | null
+          actor_type?: string
+          category?: string
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          ip?: unknown
+          metadata?: Json | null
+          new_value?: Json | null
+          old_value?: Json | null
+          reason?: string | null
+          restaurant_id?: string | null
+          support_session_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audit_logs_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "audit_logs_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "audit_logs_support_session_id_fkey"
+            columns: ["support_session_id"]
+            isOneToOne: false
+            referencedRelation: "support_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cash_movements: {
         Row: {
           amount: number
@@ -3389,6 +3468,63 @@ export type Database = {
           },
         ]
       }
+      support_sessions: {
+        Row: {
+          access_level: string
+          admin_id: string
+          created_at: string
+          end_reason: string | null
+          ended_at: string | null
+          ended_by: string | null
+          expires_at: string
+          id: string
+          reason: string
+          restaurant_id: string
+          started_at: string
+        }
+        Insert: {
+          access_level?: string
+          admin_id: string
+          created_at?: string
+          end_reason?: string | null
+          ended_at?: string | null
+          ended_by?: string | null
+          expires_at: string
+          id?: string
+          reason: string
+          restaurant_id: string
+          started_at?: string
+        }
+        Update: {
+          access_level?: string
+          admin_id?: string
+          created_at?: string
+          end_reason?: string | null
+          ended_at?: string | null
+          ended_by?: string | null
+          expires_at?: string
+          id?: string
+          reason?: string
+          restaurant_id?: string
+          started_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_sessions_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "support_sessions_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       suppressed_emails: {
         Row: {
           created_at: string
@@ -3991,6 +4127,7 @@ export type Database = {
         Returns: undefined
       }
       email_queue_dispatch: { Args: never; Returns: undefined }
+      end_support_session: { Args: { p_session_id?: string }; Returns: Json }
       enqueue_communication: {
         Args: {
           p_channel?: Database["public"]["Enums"]["comm_channel"]
@@ -4013,6 +4150,10 @@ export type Database = {
           p_order_id: string
           p_station_id?: string
         }
+        Returns: Json
+      }
+      extend_trial: {
+        Args: { p_days: number; p_reason: string; p_restaurant_id: string }
         Returns: Json
       }
       finance_entry_cancel: {
@@ -4106,6 +4247,7 @@ export type Database = {
         }
         Returns: string
       }
+      get_active_support_session: { Args: never; Returns: Json }
       get_conversations_dashboard: {
         Args: { p_restaurant_id: string }
         Returns: Json
@@ -4270,6 +4412,20 @@ export type Database = {
         Args: { p_driver_id: string; p_user_id: string }
         Returns: undefined
       }
+      list_audit_logs: {
+        Args: {
+          p_action?: string
+          p_actor_id?: string
+          p_category?: string
+          p_from?: string
+          p_limit?: number
+          p_offset?: number
+          p_restaurant_id?: string
+          p_search?: string
+          p_to?: string
+        }
+        Returns: Json
+      }
       list_products_recipe_status: {
         Args: { p_restaurant_id: string }
         Returns: Json
@@ -4403,6 +4559,15 @@ export type Database = {
           p_settings_id: string
         }
         Returns: undefined
+      }
+      start_support_session: {
+        Args: {
+          p_access_level?: string
+          p_minutes?: number
+          p_reason: string
+          p_restaurant_id: string
+        }
+        Returns: Json
       }
       transfer_orders: {
         Args: {
