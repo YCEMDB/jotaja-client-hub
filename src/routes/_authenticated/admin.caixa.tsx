@@ -434,42 +434,47 @@ function SummaryCard({ label, value, variant }: { label: string; value: number; 
 /* ============== MOVEMENT DIALOG ============== */
 
 function MovementDialog({
-  open, type, sessionId, restaurantId, userId, onClose, onSaved,
+  open, type, sessionId, support, onClose, onSaved,
 }: {
   open: boolean;
-  type: Movement["type"] | null;
+  type: "reinforcement" | "withdrawal" | "expense" | null;
   sessionId: string;
-  restaurantId: string;
-  userId: string;
+  support: SupportContext;
   onClose: () => void;
   onSaved: () => void;
 }) {
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
+  const [reason, setReason] = useState("");
   const [saving, setSaving] = useState(false);
+  const requiresReason = support.active;
 
-  useEffect(() => { if (open) { setAmount(""); setDescription(""); } }, [open]);
+  useEffect(() => {
+    if (open) { setAmount(""); setDescription(""); setReason(""); }
+  }, [open]);
 
   if (!type) return null;
   const title =
     type === "reinforcement" ? "Reforço de caixa" :
     type === "withdrawal" ? "Sangria" :
-    type === "expense" ? "Despesa" : "Movimentação";
+    "Despesa";
 
   const save = async () => {
     const n = Number((amount || "0").replace(",", "."));
     if (isNaN(n) || n <= 0) return toast.error("Informe um valor maior que zero");
+    if (requiresReason && reason.trim().length < 5) {
+      return toast.error("Informe um motivo com pelo menos 5 caracteres.");
+    }
     setSaving(true);
-    const { error } = await supabase.from("cash_movements").insert({
-      session_id: sessionId,
-      restaurant_id: restaurantId,
-      type,
-      amount: n,
-      description: description.trim() || null,
-      created_by: userId,
-    });
+    const { error } = await supabase.rpc("cash_session_add_movement" as never, {
+      p_session_id: sessionId,
+      p_type: type,
+      p_amount: n,
+      p_description: description.trim() || null,
+      p_reason: requiresReason ? reason.trim() : null,
+    } as never);
     setSaving(false);
-    if (error) return toast.error(error.message);
+    if (error) return toast.error(friendlyError(error.message));
     toast.success("Movimentação registrada");
     onSaved();
   };
@@ -485,10 +490,17 @@ function MovementDialog({
               value={amount} onChange={(e) => setAmount(e.target.value)} />
           </div>
           <div>
-            <Label htmlFor="mv-desc">Motivo / descrição</Label>
+            <Label htmlFor="mv-desc">Descrição</Label>
             <Textarea id="mv-desc" value={description} onChange={(e) => setDescription(e.target.value)}
               placeholder={type === "expense" ? "Ex.: pagamento de fornecedor" : type === "withdrawal" ? "Ex.: retirada do dono" : "Ex.: reforço de troco"} />
           </div>
+          {requiresReason && (
+            <div>
+              <Label htmlFor="mv-reason">Motivo do atendimento (obrigatório em suporte)</Label>
+              <Textarea id="mv-reason" value={reason} onChange={(e) => setReason(e.target.value)}
+                placeholder="Descreva por que essa movimentação está sendo feita em suporte." />
+            </div>
+          )}
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Cancelar</Button>
@@ -504,38 +516,40 @@ function MovementDialog({
 /* ============== CLOSE DIALOG ============== */
 
 function CloseDialog({
-  open, onClose, session, expected, userId, onClosed,
+  open, onClose, session, expected, support, onClosed,
 }: {
   open: boolean;
   onClose: () => void;
   session: Session;
   expected: number;
-  userId: string;
+  support: SupportContext;
   onClosed: () => void;
 }) {
   const [counted, setCounted] = useState("");
   const [notes, setNotes] = useState("");
+  const [reason, setReason] = useState("");
   const [saving, setSaving] = useState(false);
+  const requiresReason = support.active;
 
-  useEffect(() => { if (open) { setCounted(expected.toFixed(2)); setNotes(""); } }, [open, expected]);
+  useEffect(() => { if (open) { setCounted(expected.toFixed(2)); setNotes(""); setReason(""); } }, [open, expected]);
 
   const countedNum = Number((counted || "0").replace(",", "."));
   const diff = isNaN(countedNum) ? 0 : countedNum - expected;
 
   const close = async () => {
     if (isNaN(countedNum) || countedNum < 0) return toast.error("Informe o valor contado");
+    if (requiresReason && reason.trim().length < 5) {
+      return toast.error("Informe um motivo com pelo menos 5 caracteres.");
+    }
     setSaving(true);
-    const { error } = await supabase.from("cash_sessions").update({
-      status: "closed",
-      closed_by: userId,
-      closed_at: new Date().toISOString(),
-      closing_amount: countedNum,
-      expected_amount: expected,
-      difference: diff,
-      notes: notes.trim() || null,
-    }).eq("id", session.id);
+    const { error } = await supabase.rpc("cash_session_close" as never, {
+      p_session_id: session.id,
+      p_closing_amount: countedNum,
+      p_notes: notes.trim() || null,
+      p_reason: requiresReason ? reason.trim() : null,
+    } as never);
     setSaving(false);
-    if (error) return toast.error(error.message);
+    if (error) return toast.error(friendlyError(error.message));
     toast.success("Caixa fechado");
     onClosed();
   };
@@ -562,6 +576,13 @@ function CloseDialog({
             <Textarea id="cl-notes" value={notes} onChange={(e) => setNotes(e.target.value)}
               placeholder="Opcional: justificar diferença, observações do turno..." />
           </div>
+          {requiresReason && (
+            <div>
+              <Label htmlFor="cl-reason">Motivo do atendimento (obrigatório em suporte)</Label>
+              <Textarea id="cl-reason" value={reason} onChange={(e) => setReason(e.target.value)}
+                placeholder="Descreva por que está fechando o caixa em suporte." />
+            </div>
+          )}
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Cancelar</Button>
