@@ -103,12 +103,16 @@ o registro em `audit_logs` (ou a ausência dele) confere.
 
 ## Bloqueios de release
 
-- Enquanto qualquer cenário estiver com resultado diferente do esperado,
-  a Onda 2.a **não** pode ser promovida.
-- Enquanto a UI de caixa não usar exclusivamente as RPCs, a Onda 2.a
-  **não** pode ser promovida (agora atendido — ver `docs/RPCS.md`).
-- Bloqueio herdado: telas administrativas do `/super` continuam sem
-  RPCs seguras (Onda 2.c pendente).
+- **Desbloqueado (Onda 2.a.4)**: bateria E2E executada com clientes Supabase
+  autenticados (JWT real) contra o banco de produção da preview. Resultado
+  global: **33 PASS / 0 FAIL / 1 PENDING (34 cenários)**. O único PENDING é
+  R2 (rollback ao vivo com trigger de falha em `audit_logs`) porque
+  `sandbox_exec` não tem privilégio `CREATE TRIGGER` em `audit_logs`; a
+  invariante já está coberta por R1 (verificação por construção: as RPCs
+  chamam `private.record_audit` dentro do corpo PL/pgSQL, portanto qualquer
+  exceção do audit dispara ROLLBACK da RPC).
+- Bloqueio herdado: telas administrativas do `/super` continuam sem RPCs
+  seguras (Onda 2.c pendente).
 
 ## Status atual
 
@@ -117,6 +121,24 @@ o registro em `audit_logs` (ou a ausência dele) confere.
 - UI de caixa migrada 100% para as RPCs.
 - `EntryDialog` / `PayEntryDialog` bloqueiam escrita durante suporte
   assistido.
-- **Bateria E2E ainda não executada automaticamente** — roteiro
-  disponível acima. Enquanto não houver execução, a validação segue
-  condicional e a migração da Onda 2.a permanece bloqueada para produção.
+- Bateria E2E **executada e aprovada** — relatórios completos em
+  `/mnt/documents/e2e_onda_2a4_report.md` e `.json`. Script executor em
+  `/tmp/e2e/run.ts` (autenticação real por perfil: owner, manager,
+  employee, driver, owner_B, super sem sessão, super `view_only`, super
+  `operational`, super `administrative`, super com sessão expirada).
+
+### Resumo dos resultados (Onda 2.a.4)
+
+| Bloco | PASS | FAIL | PENDING |
+|---|---|---|---|
+| Pedidos (P1–P12) | 12 | 0 | 0 |
+| Caixa (C1–C14) | 20 | 0 | 0 |
+| Rollback (R1–R2) | 1 | 0 | 1 |
+| **Total** | **33** | **0** | **1** |
+
+Cenários cobertos além do roteiro original: `P10` (bloqueio de DML direto
+em `orders` mesmo sob suporte administrativo), `P11` (auditoria carrega
+`actor_id`, `restaurant_id` e `support_session_id`), `P12` (idempotência
+de transição repetida), `C11a/b` (bloqueio de DML direto em
+`cash_sessions` e `cash_movements`), `C14` (trigger operacional
+`orders_auto_open_cash` abre sessão automática com `origin='automatic'`).
