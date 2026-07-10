@@ -12,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Search, AlertTriangle, Plus, Building2, KeyRound, Check, X, Clock, ShieldAlert } from "lucide-react";
+import { Search, AlertTriangle, Plus, Building2, RotateCcw, Trash2, KeyRound, Check, X, Clock, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
 import { CreateTenantDialog } from "@/components/super/CreateTenantDialog";
 import { PaymentsSection } from "@/components/super/PaymentsSection";
