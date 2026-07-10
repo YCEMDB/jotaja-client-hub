@@ -13,10 +13,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { LogIn, Search, AlertTriangle, Plus, Building2, RotateCcw, Trash2, KeyRound, Check, X } from "lucide-react";
+import { LogIn, Search, AlertTriangle, Plus, Building2, RotateCcw, Trash2, KeyRound, Check, X, Clock, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
 import { CreateTenantDialog } from "@/components/super/CreateTenantDialog";
 import { PaymentsSection } from "@/components/super/PaymentsSection";
+import { ExtendTrialDialog } from "@/components/super/ExtendTrialDialog";
+import { StartSupportSessionDialog } from "@/components/super/StartSupportSessionDialog";
 import { AdminPageLayout } from "@/components/AdminPageLayout";
 
 export const Route = createFileRoute("/_super/super/lojas")({
@@ -66,7 +68,6 @@ function fmtMoney(v: number) { return `R$ ${Number(v).toFixed(2).replace(".", ",
 function fmtDate(s: string | null) { return s ? new Date(s).toLocaleDateString("pt-BR") : "—"; }
 
 function LojasPage() {
-  const { selectRestaurant } = useAuth();
   const [rows, setRows] = useState<Row[]>([]);
   const [search, setSearch] = useState("");
   const [editing, setEditing] = useState<Row | null>(null);
@@ -74,6 +75,8 @@ function LojasPage() {
   const [createOpen, setCreateOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<Row | null>(null);
   const [deleteConfirmName, setDeleteConfirmName] = useState("");
+  const [extendTrialFor, setExtendTrialFor] = useState<Row | null>(null);
+  const [supportFor, setSupportFor] = useState<Row | null>(null);
   const resetTenantFn = useServerFn(resetTenant);
   const deleteTenantFn = useServerFn(deleteTenant);
   const resetPwdFn = useServerFn(resetOwnerPassword);
@@ -134,11 +137,8 @@ function LojasPage() {
     return { total, active, trial, paying, totalRevenue };
   }, [rows]);
 
-  const enterRestaurant = (r: Row) => {
-    selectRestaurant(r.id);
-    toast.success(`Acessando ${r.name}`);
-    setTimeout(() => { window.location.href = "/admin"; }, 200);
-  };
+  // Replaced by "Iniciar acesso assistido" flow via StartSupportSessionDialog.
+
 
   const save = async () => {
     if (!editing) return;
