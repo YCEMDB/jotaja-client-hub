@@ -26,7 +26,11 @@ interface Customer {
 }
 
 function Clientes() {
-  const { restaurantId } = useAuth();
+  const { restaurantId, restaurants } = useAuth();
+  const restaurantName = useMemo(
+    () => restaurants.find((r) => r.id === restaurantId)?.name ?? "nosso restaurante",
+    [restaurants, restaurantId],
+  );
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [q, setQ] = useState("");
   const [openId, setOpenId] = useState<string | null>(null);
