@@ -222,7 +222,10 @@ function LojasPage() {
                     <td className="p-3 text-right font-medium">{fmtMoney(r.revenue ?? 0)}</td>
                     <td className="p-3">
                       <div className="flex justify-end gap-1">
-                        <Button size="sm" variant="ghost" title="Acessar painel" onClick={() => enterRestaurant(r)}><LogIn className="h-4 w-4" /></Button>
+                        <Button size="sm" variant="ghost" title="Iniciar acesso assistido" onClick={() => setSupportFor(r)}><ShieldAlert className="h-4 w-4" /></Button>
+                        {r.plan === "trial" && (
+                          <Button size="sm" variant="ghost" title="Estender trial" onClick={() => setExtendTrialFor(r)}><Clock className="h-4 w-4" /></Button>
+                        )}
                         <Button size="sm" variant="outline" onClick={() => setEditing({ ...r })}>Gerenciar</Button>
                       </div>
                     </td>
