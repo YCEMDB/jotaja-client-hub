@@ -103,6 +103,7 @@ export function PaymentsSection({
           </div>
         </div>
         <Input value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} placeholder="Observações (opcional)" />
+        <Input value={form.reason} onChange={(e) => setForm({ ...form, reason: e.target.value })} placeholder="Motivo (obrigatório, mín. 5 caracteres) — ex.: pagamento PIX ref. #123" />
         <Button size="sm" onClick={register} disabled={busy} className="w-full">
           {busy ? "Registrando..." : "Registrar e estender assinatura"}
         </Button>
