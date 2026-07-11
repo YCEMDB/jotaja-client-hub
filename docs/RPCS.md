@@ -135,3 +135,121 @@ Nativos (owner/manager/employee/driver) não passam pelo gate de suporte.
 - Telas do `/super` sem RPCs administrativas (planos, avisos, configurações
   globais, leads, alterações de restaurante, pagamentos manuais, bairros
   globais) — bloqueio herdado da Onda 2.a.0.
+
+## Onda 2.b — Cardápio, Estoque e Adicionais (encerrada)
+
+Todas as RPCs abaixo compartilham o mesmo padrão de segurança:
+`SECURITY DEFINER`, `SET search_path = public, private, pg_temp`, objetos
+totalmente qualificados, `REVOKE ALL … FROM PUBLIC, anon`,
+`GRANT EXECUTE … TO authenticated, service_role`, uma única assinatura,
+sem SQL dinâmico e sem JSON livre. Autorização passa por
+`private.authorize_tenant_action(v_rest, <nível>)`; motivo passa por
+`private.validate_reason(p_reason, <obrigatório?>)`.
+
+### Cardápio — categorias e produtos (Onda 2.b.3)
+
+| RPC | Nível nativo | Nível suporte | Motivo | Auditoria | Concorrência | Chamadores | UI |
+|---|---|---|---|---|---|---|---|
+| `create_category` / `update_category` | owner/manager/employee | operational | Só em suporte | Só em suporte | — | `src/lib/menu.ts` → `admin.cardapio.tsx` | ativa |
+| `archive_category` / `restore_category` | owner/manager | administrative | Sempre | Só em suporte | `FOR UPDATE` + verificação de produtos ativos | `menu.ts` → `admin.cardapio.tsx` | ativa |
+| `create_product` / `update_product` | owner/manager/employee | operational | Só em suporte | Só em suporte | — | `menu.ts` → `admin.cardapio.tsx` | ativa |
+| `set_product_availability` | owner/manager/employee | operational | Só em suporte | Só em suporte | no-op sem update | `menu.ts` → `admin.cardapio.tsx` | ativa |
+| `set_product_price` | owner/manager | administrative | Só em suporte | Só em suporte | `p_expected_provided=true` obrigatório + `IS DISTINCT FROM` + `FOR UPDATE` | `menu.ts` → `ProductPriceDialog` | ativa |
+| `archive_product` / `restore_product` | owner/manager | administrative | Sempre | Só em suporte | `FOR UPDATE` | `menu.ts` → `admin.cardapio.tsx` | ativa |
+
+### Estoque (Onda 2.b.1–2.b.2)
+
+Ver `docs/STOCK.md`. Padrão idêntico; motivo obrigatório em suporte;
+`apply_inventory_adjustment` usa lock explícito antes do cálculo de delta.
+
+### Pedidos públicos (Onda 2.b.4.1 — bloco crítico)
+
+| RPC | Fonte financeira | Regras |
+|---|---|---|
+| `create_public_order` (delivery / pickup / dine-in) | 100 % servidor via `private._menu_price_item` | `unit_price`, `subtotal`, `delivery_fee` e `discount` do cliente são descartados; taxa de entrega vem de `delivery_areas` do próprio restaurante; cupom aplicado e contador incrementado dentro da mesma transação; snapshot `order_items.options` ordenado; `price_changed_refresh_menu` quando expectativa diverge; ausência de expectativa **não** libera manipulação — apenas suprime o aviso amigável. |
+| `create_public_table_order` | idem | idem, sem `delivery_fee`/`discount`; valida sessão de mesa aberta. |
+
+Confirmações do bloco crítico (validadas por inspeção de `pg_get_functiondef`):
+
+- Área de entrega utilizada pertence ao mesmo `restaurant_id` e está ativa —
+  o `SELECT` de `delivery_areas` filtra por tenant e por `is_active`.
+- Bairros duplicados/ambíguos: a busca usa `lower(neighborhood)` exato +
+  `LIMIT 1` sobre `ORDER BY position, id` (determinístico, não arbitrário) —
+  bairros ambíguos são configuração inválida do restaurante, não escolha do
+  cliente.
+- Cupom validado e `coupons.uses_count` incrementado dentro da mesma
+  transação do `INSERT` em `orders`/`order_items`/`coupon_uses`; qualquer
+  falha aborta o `INSERT` do cupom (garantia da transação PostgreSQL — a
+  tabela temporária de preparo não é a fonte da atomicidade).
+- Produtos gratuitos: `price = 0` é aceito; a regra rejeita apenas
+  `price < 0`. Não há caminho para "gratificação retroativa" via cliente.
+- Adicionais obrigatórios, mín./máx. de seleção e IDs inválidos são
+  rejeitados por `private._menu_price_item` antes do `INSERT`.
+- Ficha técnica (`set_product_recipe`) bloqueia produto arquivado e insumo
+  com `is_active = false`.
+
+### Adicionais — grupos e itens (Onda 2.b — bloco final)
+
+Escrita direta em `product_option_groups` e `product_option_items` está
+revogada para `anon` e `authenticated`; leitura é liberada para o cardápio
+público via policies existentes.
+
+| RPC | Nível nativo | Nível suporte | Motivo | Auditoria | Concorrência | Chamadores | Estado da UI |
+|---|---|---|---|---|---|---|---|
+| `create_option_group` | owner/manager/employee | operational | Só em suporte | Só em suporte | — | `src/lib/menu-options.ts` | wrappers prontos; UI dedicada não construída |
+| `update_option_group_name` | idem | operational | Só em suporte | Só em suporte | `FOR UPDATE` + no-op | idem | idem |
+| `update_option_group_position` | idem | operational | Só em suporte | Só em suporte | `FOR UPDATE` + no-op | idem | idem |
+| `update_option_group_limits` | idem | operational | Só em suporte | Só em suporte | `FOR UPDATE` + `_menu_option_group_feasible` (rechecka itens utilizáveis ao apertar limites) | idem | idem |
+| `archive_option_group` | owner/manager | administrative | Sempre | Só em suporte | `FOR UPDATE` | idem | idem |
+| `restore_option_group` | owner/manager | administrative | Sempre | Só em suporte | `FOR UPDATE` | idem | idem |
+| `create_option_item` (`extra_price = 0`) | owner/manager/employee | operational | Só em suporte | Só em suporte | — | idem | idem |
+| `create_option_item` (`extra_price > 0`) | owner/manager | **administrative** | Só em suporte | Só em suporte | — | idem | idem |
+| `update_option_item_name` | owner/manager/employee | operational | Só em suporte | Só em suporte | `FOR UPDATE` + no-op | idem | idem |
+| `update_option_item_position` | idem | operational | Só em suporte | Só em suporte | idem | idem | idem |
+| `set_option_item_availability` | idem | operational | Só em suporte | Só em suporte | idem; retorna `{noop:true}` sem update/audit | idem | idem |
+| `set_option_item_price` | owner/manager | administrative | Só em suporte | Só em suporte | `p_expected_provided=true` obrigatório + `IS DISTINCT FROM` + `FOR UPDATE`; conflito → `option_price_changed_by_another_user` | idem | idem |
+| `archive_option_item` | owner/manager | administrative | Sempre | Só em suporte | `FOR UPDATE`; força `is_available = false` | idem | idem |
+| `restore_option_item` | owner/manager | administrative | Sempre | Só em suporte | `FOR UPDATE`; **restaura como `is_available = false`** — ativação explícita | idem | idem |
+
+Regra de nível para `create_option_item`: RPC única com decisão interna
+(`v_required_level := CASE WHEN v_price > 0 THEN 'administrative' ELSE
+'operational' END`) — não há RPC operacional que aceite preço adicional e
+contorne o gate financeiro.
+
+Hook `useOptionsCapabilities()` expõe `canWriteOperational` / `canAdmin` /
+`requiresReasonForWrites` para futura UI. Nenhum botão parcial foi
+publicado no painel.
+
+### Verificações executadas
+
+- Grants em `product_option_groups`/`product_option_items`: apenas `SELECT`
+  para `anon`/`authenticated`; `ALL` para `service_role`. Nenhum
+  INSERT/UPDATE/DELETE direto.
+- ACL de todas as 13 RPCs de adicionais: `postgres`, `authenticated`,
+  `service_role`, `sandbox_exec` — sem `public` e sem `anon`.
+- Assinaturas únicas (13 funções, 13 registros em `pg_proc`).
+- `search_path` fixo em `public, private, pg_temp` para todas.
+- Policies de SELECT preservam filtro por `archived_at IS NULL` e produto
+  ativo.
+- Constraints: `min_select >= 0`, `max_select >= min_select`,
+  `extra_price >= 0` (herdadas da Onda 2.b.4.1).
+- No-op: verificado por `IS NOT DISTINCT FROM` antes de qualquer
+  `UPDATE` ou `record_audit`.
+- Cross-tenant: RPCs derivam `restaurant_id` do produto, ignoram qualquer
+  restaurant enviado pelo cliente.
+- Snapshot histórico em `order_items.options` mantido pela Onda 2.b.4.1.
+- Typecheck: `bunx tsgo --noEmit` — exit 0.
+- Build: `bun run build` — exit 0, sem erros de bundling.
+
+### Testes adiados
+
+- **DEFERRED — test credentials unavailable in current sandbox**: bateria
+  JWT end-to-end para as 13 RPCs de adicionais (payloads maliciosos,
+  cross-tenant, snapshot histórico após arquivamento, mudança de preço
+  concorrente). Alinhado com o padrão da Onda 2.a (R2) e Onda 2.b.4.1.
+
+### Bloqueios restantes
+
+Onda 2.b encerrada. Nenhum bloqueio adicional de cardápio, estoque ou
+adicionais. Testes JWT permanecem como DEFERRED e serão executados quando o
+ambiente disponibilizar credenciais de teste.
