@@ -6,7 +6,9 @@
  *
  * Credenciais esperadas (por ambiente) via Secrets:
  *  - Sandbox:    PAGBANK_SANDBOX_CLIENT_ID / PAGBANK_SANDBOX_CLIENT_SECRET
+ *                PAGBANK_SANDBOX_TOKEN
  *  - Produção:   PAGBANK_PROD_CLIENT_ID / PAGBANK_PROD_CLIENT_SECRET
+ *                PAGBANK_PROD_TOKEN
  *
  * Enquanto elas não forem preenchidas via add_secret, as chamadas HTTP
  * retornarão erro estruturado (`missing_credentials`) e a UI mostrará a
@@ -39,6 +41,14 @@ function envCreds(env: PagbankEnvironment): { clientId: string; clientSecret: st
       : process.env.PAGBANK_PROD_CLIENT_SECRET ?? process.env.PAGBANK_CLIENT_SECRET;
   if (!cid || !sec) return null;
   return { clientId: cid, clientSecret: sec };
+}
+
+function envAuthToken(env: PagbankEnvironment): string | null {
+  const token =
+    env === "sandbox"
+      ? process.env.PAGBANK_SANDBOX_TOKEN ?? process.env.PAGBANK_TOKEN_SANDBOX
+      : process.env.PAGBANK_PROD_TOKEN ?? process.env.PAGBANK_TOKEN;
+  return token?.trim() || null;
 }
 
 export function siteUrl(): string {
@@ -89,14 +99,17 @@ export async function exchangeAuthorizationCode(input: {
   code: string;
 }): Promise<ExchangeTokenResult> {
   const creds = envCreds(input.environment);
-  if (!creds) return { ok: false, error: "missing_credentials" };
+  const authToken = envAuthToken(input.environment);
+  if (!creds || !authToken) return { ok: false, error: "missing_credentials" };
   try {
     // O endpoint /oauth2/token do PagBank Connect exige JSON e envia as
-    // credenciais nos headers X_CLIENT_ID / X_CLIENT_SECRET (não é OAuth
-    // padrão). Enviar form-urlencoded devolve HTTP 415.
+    // credenciais do app nos headers X_CLIENT_ID / X_CLIENT_SECRET, além do
+    // token de autenticação do ambiente no Authorization. Enviar
+    // form-urlencoded devolve HTTP 415; omitir Authorization devolve HTTP 401.
     const res = await fetch(`${BASE[input.environment].api}/oauth2/token`, {
       method: "POST",
       headers: {
+        Authorization: `Bearer ${authToken}`,
         "Content-Type": "application/json",
         Accept: "application/json",
         X_CLIENT_ID: creds.clientId,
