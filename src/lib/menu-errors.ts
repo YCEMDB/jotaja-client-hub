@@ -65,6 +65,7 @@ export function translateMenuError(err: unknown): string {
 }
 
 export function isPriceConflict(err: unknown): boolean {
-  const raw = (err as { message?: string } | null)?.message ?? "";
-  return raw.toLowerCase().includes("price_changed_by_another_user");
+  const raw = ((err as { message?: string } | null)?.message ?? "").toLowerCase();
+  return raw.includes("price_changed_by_another_user")
+      || raw.includes("option_price_changed_by_another_user");
 }
