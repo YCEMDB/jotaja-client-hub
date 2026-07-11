@@ -4715,6 +4715,62 @@ export type Database = {
         Args: { p_restaurant_id: string; p_user_id: string }
         Returns: undefined
       }
+      report_cash: {
+        Args: {
+          p_from: string
+          p_restaurant_id: string
+          p_to: string
+          p_tz?: string
+        }
+        Returns: Json
+      }
+      report_customers: {
+        Args: {
+          p_from: string
+          p_limit?: number
+          p_restaurant_id: string
+          p_to: string
+          p_tz?: string
+        }
+        Returns: Json
+      }
+      report_orders_breakdown: {
+        Args: {
+          p_from: string
+          p_restaurant_id: string
+          p_to: string
+          p_tz?: string
+        }
+        Returns: Json
+      }
+      report_overview: {
+        Args: {
+          p_from: string
+          p_restaurant_id: string
+          p_to: string
+          p_tz?: string
+        }
+        Returns: Json
+      }
+      report_products: {
+        Args: {
+          p_from: string
+          p_limit?: number
+          p_restaurant_id: string
+          p_to: string
+          p_tz?: string
+        }
+        Returns: Json
+      }
+      report_stock: {
+        Args: {
+          p_from: string
+          p_restaurant_id: string
+          p_to: string
+          p_tz?: string
+        }
+        Returns: Json
+      }
       resend_team_invite: { Args: { p_invite_id: string }; Returns: Json }
       restore_category: {
         Args: { p_id: string; p_reason?: string }
