@@ -256,6 +256,14 @@ function Estoque() {
         </Button>
       }
     >
+      {caps.isSupport && (
+        <div className="mb-4 rounded-xl border-2 border-brand-violet/50 bg-brand-violet/10 px-4 py-3 text-sm text-ink">
+          <strong>Sessão de suporte ativa</strong> — nível <code className="px-1 rounded bg-ink/10">{caps.supportLevel}</code>.
+          {caps.supportLevel === "view_only" && " Somente leitura: nenhuma operação de escrita é permitida."}
+          {caps.supportLevel === "operational" && " Escritas comuns permitidas; ajustes de saldo e arquivamento bloqueados."}
+          {caps.supportLevel === "administrative" && " Todas as operações exigem motivo próprio."}
+        </div>
+      )}
       <Tabs defaultValue="dashboard" className="space-y-6">
           <TabsList className="h-auto p-1 flex flex-wrap gap-1 bg-card border-2 border-ink rounded-xl">
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
