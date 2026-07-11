@@ -315,7 +315,7 @@ function Estoque() {
         <TabsContent value="ingredients" className="space-y-4">
           <FilterBar
             actions={
-              <Button onClick={() => { setEditingIng(null); setIngDialogOpen(true); }}>
+              <Button onClick={() => { setEditingIng(null); setIngDialogOpen(true); }} disabled={!caps.canWrite}>
                 <Plus className="h-4 w-4 mr-2" /> Novo ingrediente
               </Button>
             }
@@ -346,7 +346,7 @@ function Estoque() {
               icon={Boxes}
               title="Nenhum ingrediente"
               description="Cadastre seu primeiro ingrediente para começar o controle de estoque."
-              action={<Button onClick={() => { setEditingIng(null); setIngDialogOpen(true); }}><Plus className="h-4 w-4 mr-2" /> Novo ingrediente</Button>}
+              action={<Button onClick={() => { setEditingIng(null); setIngDialogOpen(true); }} disabled={!caps.canWrite}><Plus className="h-4 w-4 mr-2" /> Novo ingrediente</Button>}
             />
           ) : (
             <Section chrome={false} className="overflow-hidden border-2 border-ink rounded-2xl bg-card shadow-[5px_5px_0_0_oklch(0.15_0.02_30)]">
@@ -412,7 +412,7 @@ function Estoque() {
         <TabsContent value="suppliers" className="space-y-4">
           <FilterBar
             actions={
-              <Button onClick={() => { setEditingSup(null); setSupDialogOpen(true); }}>
+              <Button onClick={() => { setEditingSup(null); setSupDialogOpen(true); }} disabled={!caps.canWrite}>
                 <Plus className="h-4 w-4 mr-2" /> Novo fornecedor
               </Button>
             }
@@ -460,7 +460,7 @@ function Estoque() {
         <TabsContent value="units" className="space-y-4">
           <FilterBar
             actions={
-              <Button onClick={() => { setEditingUnit(null); setUnitDialogOpen(true); }}>
+              <Button onClick={() => { setEditingUnit(null); setUnitDialogOpen(true); }} disabled={!caps.canWrite}>
                 <Plus className="h-4 w-4 mr-2" /> Nova unidade
               </Button>
             }
