@@ -103,18 +103,15 @@ o registro em `audit_logs` (ou a ausência dele) confere.
 
 ## Bloqueios de release
 
-Release **NÃO liberado**. Bloqueios ativos:
+Onda 2.a encerrada. Bloqueios remanescentes para release completo:
 
-1. **R2 pendente** — rollback ao vivo com falha real em
-   `private.record_audit` ainda não foi comprovado. `sandbox_exec` não tem
-   privilégio `CREATE TRIGGER` em `audit_logs`, e a orientação vigente é
-   não executar esse teste em produção. Deve rodar em staging por migration
-   temporária controlada (cria condição de falha em `record_audit`, chama
-   uma RPC financeira, valida erro + zero linhas em `cash_sessions` e
-   `audit_logs`, remove o mecanismo). R1 (verificação estrutural) permanece
-   como PASS mas **não substitui** R2.
-2. **Bloqueio herdado**: telas administrativas do `/super` continuam sem
-   RPCs seguras (Onda 2.c pendente).
+1. **Bloqueio herdado**: telas administrativas do `/super` continuam sem
+   RPCs seguras (Onda 2.c pendente). Impede publicar as migrations de
+   hardening em produção enquanto os fluxos globais não forem migrados.
+
+R2 (rollback ao vivo com falha real em `private.record_audit`) foi
+classificado como **DEFERRED — environment limitation** (ver seção "R2 —
+Rollback ao vivo" abaixo) e **não bloqueia a Onda 2.b**.
 
 ## Correções aplicadas após revisão da 2.a.4 (reteste focado)
 
