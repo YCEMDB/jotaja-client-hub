@@ -66,6 +66,7 @@ type SortKey = "name" | "current_qty" | "avg_cost" | "value";
 
 function Estoque() {
   const { restaurantId } = useAuth();
+  const caps = useStockCapabilities();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
