@@ -4564,7 +4564,7 @@ export type Database = {
           p_type: Database["public"]["Enums"]["stock_movement_type"]
           p_unit_cost?: number
         }
-        Returns: string
+        Returns: Json
       }
       remove_team_member: {
         Args: { p_restaurant_id: string; p_user_id: string }

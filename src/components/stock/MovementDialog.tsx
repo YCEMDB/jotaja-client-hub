@@ -46,10 +46,11 @@ export function MovementDialog({ open, onOpenChange, ingredient, suppliers, defa
   const save = async () => {
     if (!ingredient) return;
     const qty = parseFloat(quantity.replace(",", "."));
-    if (!qty || qty <= 0) { toast.error("Quantidade inválida"); return; }
+    if (Number.isNaN(qty) || qty < 0) { toast.error("Quantidade inválida"); return; }
+    if (type !== "adjust" && qty === 0) { toast.error("Quantidade inválida"); return; }
     setSaving(true);
     try {
-      await registerMovement({
+      const res = await registerMovement({
         ingredient_id: ingredient.id,
         type,
         quantity: qty,
@@ -57,7 +58,11 @@ export function MovementDialog({ open, onOpenChange, ingredient, suppliers, defa
         supplier_id: type === "entry" && supplierId ? supplierId : null,
         reason: reason || null,
       });
-      toast.success(`${MOVEMENT_LABEL[type]} registrada`);
+      if (res.noop) {
+        toast.info("Ajuste sem alteração — saldo já era esse valor");
+      } else {
+        toast.success(`${MOVEMENT_LABEL[type]} registrada`);
+      }
       onOpenChange(false);
       onSuccess?.();
     } catch (e: any) {
