@@ -359,6 +359,10 @@ export type PublicTableOrderItem = {
   product_name: string;
   quantity: number;
   notes?: string | null;
+  /** Preço unitário exibido ao cliente (só serve para detectar preço mudou). */
+  unit_price?: number | null;
+  /** IDs dos itens de adicionais selecionados. Preços derivados no servidor. */
+  option_item_ids?: string[];
 };
 
 export async function createPublicTableOrder(params: {
@@ -387,9 +391,17 @@ export function translatePublicTableError(msg: string): string {
   if (msg.includes("invalid_name")) return "Informe seu nome (mínimo 2 caracteres).";
   if (msg.includes("invalid_phone")) return "Informe um telefone válido.";
   if (msg.includes("invalid_label")) return "Nome da comanda inválido.";
-  if (msg.includes("invalid_product")) return "Um dos produtos não está mais disponível.";
+  if (msg.includes("invalid_product") || msg.includes("product_archived") || msg.includes("product_unavailable"))
+    return "Um dos produtos não está mais disponível.";
   if (msg.includes("invalid_command")) return "Comanda inválida.";
   if (msg.includes("empty_cart")) return "Adicione ao menos um item.";
+  if (msg.includes("too_many_items")) return "Pedido muito grande. Divida em pedidos menores.";
+  if (msg.includes("too_many_options")) return "Excesso de adicionais em um item.";
+  if (msg.includes("price_changed_refresh_menu")) return "Os preços foram atualizados. Revise o carrinho.";
+  if (msg.includes("required_group_missing")) return "Selecione as opções obrigatórias.";
+  if (msg.includes("min_select_violation")) return "Selecione a quantidade mínima de opções.";
+  if (msg.includes("max_select_violation")) return "Selecione a quantidade máxima de opções.";
+  if (msg.includes("invalid_option_item")) return "Adicional inválido para este produto.";
   if (msg.includes("customer_blocked")) return "Não foi possível registrar o pedido com este contato.";
   return msg;
 }
