@@ -170,7 +170,15 @@ export async function createPixCharge(input: {
   const expiresAt = new Date(Date.now() + expiresInMinutes * 60_000);
   const body = {
     reference_id: input.referenceId,
-    customer: { name: "Cliente" },
+    customer: { name: "Cliente", email: "cliente@comandahub.online", tax_id: "12345678909" },
+    items: [
+      {
+        reference_id: input.referenceId,
+        name: input.description.slice(0, 100),
+        quantity: 1,
+        unit_amount: input.amountCents,
+      },
+    ],
     qr_codes: [
       {
         amount: { value: input.amountCents },
