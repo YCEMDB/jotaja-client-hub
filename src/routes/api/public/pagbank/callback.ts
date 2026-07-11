@@ -39,12 +39,20 @@ export const Route = createFileRoute("/api/public/pagbank/callback")({
           code,
         });
         if (!exchange.ok) {
-          // Marca state como usado para bloquear replay
+          console.error("[pagbank] exchange failed", { error: exchange.error });
           await supabaseAdmin
             .from("pagbank_oauth_states")
             .update({ used_at: new Date().toISOString() })
             .eq("state", state);
-          return redirectWithError(siteBase, exchange.error);
+          return redirectWithError(siteBase, `exchange_${exchange.error}`);
+        }
+
+        if (!exchange.access_token || typeof exchange.access_token !== "string") {
+          console.error("[pagbank] exchange returned no access_token", {
+            hasRefresh: !!exchange.refresh_token,
+            scopeLen: exchange.scope?.length,
+          });
+          return redirectWithError(siteBase, "exchange_no_access_token");
         }
 
         const { error: completeErr } = await supabaseAdmin.rpc("pagbank_connect_complete", {
@@ -56,7 +64,13 @@ export const Route = createFileRoute("/api/public/pagbank/callback")({
           p_provider_account_id: exchange.account_id,
           p_provider_account_masked: exchange.account_masked,
         } as never);
-        if (completeErr) return redirectWithError(siteBase, "pagbank_connection_failed");
+        if (completeErr) {
+          console.error("[pagbank] rpc pagbank_connect_complete failed", completeErr);
+          const errCode = (completeErr.message || "rpc_failed")
+            .replace(/[^a-z0-9_]/gi, "_")
+            .slice(0, 60);
+          return redirectWithError(siteBase, `rpc_${errCode}`);
+        }
 
         const dest = new URL(stateRow.redirect_after ?? "/admin/configuracoes?tab=pagamentos", siteBase);
         dest.searchParams.set("pagbank", "connected");
