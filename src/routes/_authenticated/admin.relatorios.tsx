@@ -137,21 +137,26 @@ function RelatoriosPage() {
 
   const exportOverviewCSV = () => {
     if (!overview) return;
+    const c = overview.current;
     const rows: (string | number)[][] = [
       ["Período", from + " a " + to, "TZ", overview.tz, "Granularidade", overview.granularity],
       [],
       ["Métrica", "Valor"],
-      ["Faturamento (R$)", overview.current.revenue.toFixed(2)],
-      ["Pedidos válidos", overview.current.valid_orders],
-      ["Pedidos cancelados", overview.current.cancelled_orders],
-      ["Ticket médio (R$)", overview.current.avg_ticket.toFixed(2)],
-      ["Descontos (R$)", overview.current.total_discount.toFixed(2)],
-      ["Taxa de entrega (R$)", overview.current.total_delivery_fee.toFixed(2)],
-      ["Clientes únicos", overview.current.unique_customers],
-      ["Novos clientes", overview.current.new_customers],
-      ["Itens vendidos", overview.current.units_sold],
+      ["Receita concluída (R$)", c.completed_revenue.toFixed(2)],
+      ["Pedidos concluídos", c.completed_orders],
+      ["Valor em aberto (R$)", c.open_amount.toFixed(2)],
+      ["Pedidos em aberto", c.open_orders],
+      ["Pedidos válidos operacionais", c.valid_orders],
+      ["Pedidos cancelados", c.cancelled_orders],
+      ["Pedidos pendentes", c.pending_orders],
+      ["Ticket médio concluído (R$)", c.avg_ticket_completed.toFixed(2)],
+      ["Descontos concluídos (R$)", c.total_discount.toFixed(2)],
+      ["Taxa de entrega concluída (R$)", c.total_delivery_fee.toFixed(2)],
+      ["Clientes únicos (concluídos)", c.unique_customers],
+      ["Novos clientes", c.new_customers],
+      ["Itens vendidos (concluídos)", c.units_sold],
       [],
-      ["Série", "Receita (R$)", "Pedidos"],
+      ["Série (receita concluída)", "Receita (R$)", "Pedidos"],
       ...overview.series.map((s) => [s.bucket, s.revenue.toFixed(2), s.orders]),
     ];
     downloadCSV(`visao_geral_${from}_a_${to}.csv`, rows);
@@ -227,15 +232,19 @@ function RelatoriosPage() {
                   </Button>
                 </div>
                 <DashboardGrid cols={4}>
-                  <StatCard label="Faturamento" value={fmtBRL(stats.revenue)} accent="green"
-                    hint={deltaText(stats.revenue, prev.revenue)} />
-                  <StatCard label="Pedidos válidos" value={fmtInt(stats.valid_orders)} accent="orange"
-                    hint={deltaText(stats.valid_orders, prev.valid_orders)} />
-                  <StatCard label="Ticket médio" value={fmtBRL(stats.avg_ticket)} accent="violet" />
+                  <StatCard label="Receita concluída" value={fmtBRL(stats.completed_revenue)} accent="green"
+                    hint={deltaText(stats.completed_revenue, prev.completed_revenue)} />
+                  <StatCard label="Pedidos concluídos" value={fmtInt(stats.completed_orders)} accent="orange"
+                    hint={deltaText(stats.completed_orders, prev.completed_orders)} />
+                  <StatCard label="Ticket médio (concluídos)" value={fmtBRL(stats.avg_ticket_completed)} accent="violet" />
+                  <StatCard label="Valor em aberto" value={fmtBRL(stats.open_amount)} accent="amber"
+                    hint={`${fmtInt(stats.open_orders)} pedidos em operação`} />
+                  <StatCard label="Pedidos válidos (operacionais)" value={fmtInt(stats.valid_orders)} accent="violet"
+                    hint="Confirmados + em preparo + prontos + em rota + entregues" />
                   <StatCard label="Cancelados" value={fmtInt(stats.cancelled_orders)} accent="magenta" />
-                  <StatCard label="Descontos" value={fmtBRL(stats.total_discount)} accent="amber" />
-                  <StatCard label="Taxa de entrega" value={fmtBRL(stats.total_delivery_fee)} accent="violet" />
-                  <StatCard label="Clientes únicos" value={fmtInt(stats.unique_customers)} accent="green" />
+                  <StatCard label="Descontos (concluídos)" value={fmtBRL(stats.total_discount)} accent="amber" />
+                  <StatCard label="Taxa de entrega (concluídos)" value={fmtBRL(stats.total_delivery_fee)} accent="violet" />
+                  <StatCard label="Clientes únicos (concluídos)" value={fmtInt(stats.unique_customers)} accent="green" />
                   <StatCard label="Novos clientes" value={fmtInt(stats.new_customers)} accent="orange" />
                 </DashboardGrid>
 
@@ -272,15 +281,15 @@ function RelatoriosPage() {
                     />
                   </Section>
                   <Section>
-                    <h3 className="font-bold mb-2">Forma de pagamento escolhida</h3>
+                    <h3 className="font-bold mb-2">Forma de pagamento informada</h3>
                     <BreakdownList
-                      items={Object.entries(breakdown.by_payment).map(([k, v]) => ({
+                      items={Object.entries(breakdown.by_payment_method).map(([k, v]) => ({
                         label: paymentLabel(k),
                         value: `${fmtInt(v.count)} — ${fmtBRL(v.revenue)}`,
                       }))}
                     />
                     <p className="text-[11px] text-muted-foreground mt-2">
-                      Escolha do cliente no pedido — nem toda escolha implica pagamento confirmado.
+                      Escolha do cliente no pedido — não representa pagamento confirmado. Receita listada é a de pedidos concluídos.
                     </p>
                   </Section>
                   <Section>

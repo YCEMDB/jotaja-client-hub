@@ -3,10 +3,14 @@ import { supabase } from "@/integrations/supabase/client";
 export type ReportRange = { from: string; to: string; tz?: string };
 
 export type OverviewMetrics = {
-  revenue: number;
+  completed_revenue: number;
+  completed_orders: number;
+  open_amount: number;
+  open_orders: number;
   valid_orders: number;
   cancelled_orders: number;
-  avg_ticket: number;
+  pending_orders: number;
+  avg_ticket_completed: number;
   total_discount: number;
   total_delivery_fee: number;
   unique_customers: number;
@@ -22,7 +26,7 @@ export type OverviewReport = {
   to: string;
   granularity: "hour" | "day" | "month";
   current: OverviewMetrics;
-  previous: { revenue: number; valid_orders: number; cancelled_orders: number };
+  previous: { completed_revenue: number; completed_orders: number; cancelled_orders: number };
   series: OverviewSeriesPoint[];
 };
 
@@ -32,7 +36,7 @@ export type OrdersBreakdown = {
   to: string;
   by_status: Record<string, number>;
   by_type: Record<string, { count: number; revenue: number }>;
-  by_payment: Record<string, { count: number; revenue: number }>;
+  by_payment_method: Record<string, { count: number; revenue: number }>;
   by_payment_status: Record<string, number>;
   by_hour: { hour: number; orders: number }[];
   by_dow: { dow: number; orders: number }[];
