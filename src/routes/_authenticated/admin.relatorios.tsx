@@ -281,15 +281,15 @@ function RelatoriosPage() {
                     />
                   </Section>
                   <Section>
-                    <h3 className="font-bold mb-2">Forma de pagamento escolhida</h3>
+                    <h3 className="font-bold mb-2">Forma de pagamento informada</h3>
                     <BreakdownList
-                      items={Object.entries(breakdown.by_payment).map(([k, v]) => ({
+                      items={Object.entries(breakdown.by_payment_method).map(([k, v]) => ({
                         label: paymentLabel(k),
                         value: `${fmtInt(v.count)} — ${fmtBRL(v.revenue)}`,
                       }))}
                     />
                     <p className="text-[11px] text-muted-foreground mt-2">
-                      Escolha do cliente no pedido — nem toda escolha implica pagamento confirmado.
+                      Escolha do cliente no pedido — não representa pagamento confirmado. Receita listada é a de pedidos concluídos.
                     </p>
                   </Section>
                   <Section>
