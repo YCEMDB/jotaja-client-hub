@@ -3,8 +3,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { applyInventoryAdjustment, formatBRL, type StockIngredient } from "@/lib/stock";
+import { translateStockError } from "@/lib/stock-errors";
+import { useStockCapabilities, validateReason } from "@/hooks/useStockCapabilities";
+import { ReasonField } from "@/components/stock/ReasonField";
 import { toast } from "sonner";
 
 export function InventoryDialog({ open, onOpenChange, ingredient, onSuccess }: {
@@ -13,6 +15,7 @@ export function InventoryDialog({ open, onOpenChange, ingredient, onSuccess }: {
   ingredient: StockIngredient | null;
   onSuccess: () => void;
 }) {
+  const caps = useStockCapabilities();
   const [physical, setPhysical] = useState<string>("");
   const [reason, setReason] = useState<string>("");
   const [saving, setSaving] = useState(false);
@@ -29,20 +32,29 @@ export function InventoryDialog({ open, onOpenChange, ingredient, onSuccess }: {
   const physicalNum = Number(physical.replace(",", "."));
   const delta = physicalNum - Number(ingredient.current_qty);
   const impact = delta * Number(ingredient.avg_cost);
+  // Ajuste é sempre operação administrativa — motivo sempre obrigatório
+  const reasonRequired = true;
 
   const save = async () => {
+    if (!caps.canAdmin) {
+      toast.error("Ajuste de inventário requer nível administrativo.");
+      return;
+    }
     if (!Number.isFinite(physicalNum) || physicalNum < 0) {
       toast.error("Informe uma quantidade física válida.");
       return;
     }
+    const err = validateReason(reason);
+    if (err) { toast.error(err); return; }
+
     setSaving(true);
     try {
-      await applyInventoryAdjustment(ingredient.id, physicalNum, reason || null);
-      toast.success(delta === 0 ? "Sem diferença — nada ajustado." : "Inventário ajustado.");
+      const id = await applyInventoryAdjustment(ingredient.id, physicalNum, reason.trim());
+      toast.success(id == null ? "Sem diferença — nada ajustado." : "Inventário ajustado.");
       onOpenChange(false);
       onSuccess();
-    } catch (e: any) {
-      toast.error(e?.message ?? "Erro ao ajustar");
+    } catch (e) {
+      toast.error(translateStockError(e));
     } finally { setSaving(false); }
   };
 
@@ -53,6 +65,11 @@ export function InventoryDialog({ open, onOpenChange, ingredient, onSuccess }: {
           <DialogTitle>Inventário físico — {ingredient.name}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
+          {caps.isSupport && (
+            <div className="rounded-lg border-2 border-brand-violet/40 bg-brand-violet/5 p-2 text-[11px] text-ink/70">
+              Sessão de suporte ({caps.supportLevel}). Motivo próprio é obrigatório.
+            </div>
+          )}
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
               <p className="text-xs text-ink/60 uppercase font-bold">Sistema</p>
@@ -64,13 +81,18 @@ export function InventoryDialog({ open, onOpenChange, ingredient, onSuccess }: {
             </div>
           </div>
           <div>
-            <Label>Quantidade contada</Label>
+            <Label>Novo saldo do estoque (contagem física)</Label>
             <Input value={physical} onChange={(e) => setPhysical(e.target.value)} inputMode="decimal" />
+            <p className="text-[11px] text-ink/50 mt-1">
+              Este valor é o <strong>saldo final absoluto</strong>. A diferença vira uma movimentação de ajuste.
+            </p>
           </div>
-          <div>
-            <Label>Motivo / observação</Label>
-            <Textarea value={reason} onChange={(e) => setReason(e.target.value)} placeholder="Ex.: contagem semanal 07/07" />
-          </div>
+          <ReasonField
+            value={reason}
+            onChange={setReason}
+            required={reasonRequired}
+            placeholder="Ex.: contagem semanal 07/07"
+          />
           {Number.isFinite(physicalNum) && (
             <div className={`rounded-xl border-2 border-ink p-3 ${delta === 0 ? "bg-muted/30" : delta > 0 ? "bg-emerald-500/10" : "bg-brand-magenta/10"}`}>
               <p className="text-xs uppercase font-bold text-ink/60">Ajuste</p>
@@ -82,7 +104,7 @@ export function InventoryDialog({ open, onOpenChange, ingredient, onSuccess }: {
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-          <Button onClick={save} disabled={saving}>{saving ? "Salvando…" : "Aplicar ajuste"}</Button>
+          <Button onClick={save} disabled={saving || !caps.canAdmin}>{saving ? "Salvando…" : "Aplicar ajuste"}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

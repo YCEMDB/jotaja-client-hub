@@ -7,6 +7,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { Plus, Trash2 } from "lucide-react";
 import { formatBRL, getProductRecipe, setProductRecipe, type StockIngredient } from "@/lib/stock";
+import { translateStockError } from "@/lib/stock-errors";
+import { useStockCapabilities, validateReason } from "@/hooks/useStockCapabilities";
+import { ReasonField } from "@/components/stock/ReasonField";
 
 interface RecipeLine {
   ingredient_id: string;
@@ -22,7 +25,9 @@ interface Props {
 }
 
 export function RecipeDialog({ open, onOpenChange, product, ingredients, onSaved }: Props) {
+  const caps = useStockCapabilities();
   const [lines, setLines] = useState<RecipeLine[]>([]);
+  const [reason, setReason] = useState("");
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -33,6 +38,7 @@ export function RecipeDialog({ open, onOpenChange, product, ingredients, onSaved
 
   useEffect(() => {
     if (!open || !product) return;
+    setReason("");
     setLoading(true);
     getProductRecipe(product.id)
       .then((r) => {
@@ -40,7 +46,7 @@ export function RecipeDialog({ open, onOpenChange, product, ingredients, onSaved
           r.items.map((it) => ({ ingredient_id: it.ingredient_id, quantity: String(it.quantity) })),
         );
       })
-      .catch((e) => toast.error(e?.message ?? "Erro ao carregar ficha"))
+      .catch((e) => toast.error(translateStockError(e)))
       .finally(() => setLoading(false));
   }, [open, product]);
 
@@ -61,29 +67,36 @@ export function RecipeDialog({ open, onOpenChange, product, ingredients, onSaved
   const updateLine = (idx: number, patch: Partial<RecipeLine>) =>
     setLines((l) => l.map((row, i) => (i === idx ? { ...row, ...patch } : row)));
 
+  const reasonRequired = caps.requiresReasonForWrites;
+
   const save = async () => {
     if (!product) return;
+    if (!caps.canWrite) { toast.error("Somente leitura no nível atual de suporte."); return; }
     const items: Array<{ ingredient_id: string; quantity: number }> = [];
     for (const l of lines) {
-      if (!l.ingredient_id) { toast.error("Selecione o ingrediente em todas as linhas"); return; }
+      if (!l.ingredient_id) { toast.error("Selecione o ingrediente em todas as linhas."); return; }
       const q = parseFloat(l.quantity.replace(",", "."));
-      if (!q || q <= 0) { toast.error("Quantidade inválida"); return; }
+      if (!q || q <= 0) { toast.error("Quantidade inválida."); return; }
       items.push({ ingredient_id: l.ingredient_id, quantity: q });
     }
     // dedupe
     const seen = new Set<string>();
     for (const it of items) {
-      if (seen.has(it.ingredient_id)) { toast.error("Ingredientes duplicados na ficha"); return; }
+      if (seen.has(it.ingredient_id)) { toast.error("Ingredientes duplicados na ficha."); return; }
       seen.add(it.ingredient_id);
+    }
+    if (reasonRequired) {
+      const err = validateReason(reason);
+      if (err) { toast.error(err); return; }
     }
     setSaving(true);
     try {
-      await setProductRecipe(product.id, items);
-      toast.success("Ficha técnica salva");
+      await setProductRecipe(product.id, items, reason.trim() || null);
+      toast.success("Ficha técnica salva.");
       onOpenChange(false);
       onSaved?.();
-    } catch (e: any) {
-      toast.error(e?.message ?? "Erro ao salvar ficha");
+    } catch (e) {
+      toast.error(translateStockError(e));
     } finally {
       setSaving(false);
     }
@@ -178,12 +191,25 @@ export function RecipeDialog({ open, onOpenChange, product, ingredients, onSaved
                 </p>
               </div>
             </div>
+
+            {caps.isSupport && (
+              <div className="rounded-lg border-2 border-brand-violet/40 bg-brand-violet/5 p-2 text-[11px] text-ink/70">
+                Sessão de suporte ({caps.supportLevel}). Motivo próprio é obrigatório.
+              </div>
+            )}
+
+            <ReasonField
+              value={reason}
+              onChange={setReason}
+              required={reasonRequired}
+              placeholder="Ex.: revisão de receita 07/07"
+            />
           </div>
         )}
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>Cancelar</Button>
-          <Button onClick={save} disabled={saving || loading}>{saving ? "Salvando…" : "Salvar ficha"}</Button>
+          <Button onClick={save} disabled={saving || loading || !caps.canWrite}>{saving ? "Salvando…" : "Salvar ficha"}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
