@@ -78,6 +78,7 @@ function LojasPage() {
   const [search, setSearch] = useState("");
   const [editing, setEditing] = useState<Row | null>(null);
   const [busy, setBusy] = useState(false);
+  const [saveReason, setSaveReason] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<Row | null>(null);
   const [deleteConfirmName, setDeleteConfirmName] = useState("");
