@@ -480,13 +480,13 @@ function Estoque() {
                       <p className="text-xs text-ink/60">Símbolo: {u.symbol}</p>
                     </div>
                     <div className="flex gap-1">
-                      <Button size="sm" variant="ghost" onClick={() => { setEditingUnit(u); setUnitDialogOpen(true); }}>
+                      <Button size="sm" variant="ghost" onClick={() => { setEditingUnit(u); setUnitDialogOpen(true); }} disabled={!caps.canWrite}>
                         <Pencil className="h-3.5 w-3.5" />
                       </Button>
-                      <Button size="sm" variant="ghost" onClick={async () => {
+                      <Button size="sm" variant="ghost" disabled={!caps.canAdmin} title={caps.canAdmin ? "Remover" : "Requer nível administrativo"} onClick={async () => {
                         if (!confirm(`Remover unidade "${u.name}"?`)) return;
                         try { await deleteUnit(u.id); toast.success("Removida"); load(); }
-                        catch (e: any) { toast.error(e?.message ?? "Erro"); }
+                        catch (e) { toast.error(translateStockError(e)); }
                       }}>
                         <Trash2 className="h-3.5 w-3.5" />
                       </Button>
