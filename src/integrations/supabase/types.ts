@@ -3941,6 +3941,14 @@ export type Database = {
         Args: { p_id: string; p_reason?: string }
         Returns: undefined
       }
+      archive_option_group: {
+        Args: { p_id: string; p_reason?: string }
+        Returns: undefined
+      }
+      archive_option_item: {
+        Args: { p_id: string; p_reason?: string }
+        Returns: undefined
+      }
       archive_product: {
         Args: { p_id: string; p_reason?: string }
         Returns: undefined
@@ -4064,6 +4072,29 @@ export type Database = {
           p_phone?: string
           p_restaurant_id: string
           p_vehicle?: string
+        }
+        Returns: string
+      }
+      create_option_group: {
+        Args: {
+          p_is_required?: boolean
+          p_max_select?: number
+          p_min_select?: number
+          p_name: string
+          p_position?: number
+          p_product_id: string
+          p_reason?: string
+        }
+        Returns: string
+      }
+      create_option_item: {
+        Args: {
+          p_extra_price?: number
+          p_group_id: string
+          p_is_available?: boolean
+          p_name: string
+          p_position?: number
+          p_reason?: string
         }
         Returns: string
       }
@@ -4622,6 +4653,14 @@ export type Database = {
         Args: { p_id: string; p_reason?: string }
         Returns: undefined
       }
+      restore_option_group: {
+        Args: { p_id: string; p_reason?: string }
+        Returns: undefined
+      }
+      restore_option_item: {
+        Args: { p_id: string; p_reason?: string }
+        Returns: undefined
+      }
       restore_product: {
         Args: { p_id: string; p_reason?: string }
         Returns: undefined
@@ -4640,6 +4679,20 @@ export type Database = {
           p_status: Database["public"]["Enums"]["driver_status"]
         }
         Returns: undefined
+      }
+      set_option_item_availability: {
+        Args: { p_id: string; p_is_available: boolean; p_reason?: string }
+        Returns: Json
+      }
+      set_option_item_price: {
+        Args: {
+          p_expected_current_price: number
+          p_expected_provided?: boolean
+          p_extra_price: number
+          p_id: string
+          p_reason?: string
+        }
+        Returns: Json
       }
       set_product_availability: {
         Args: { p_id: string; p_is_available: boolean; p_reason?: string }
@@ -4728,6 +4781,32 @@ export type Database = {
           p_order_id?: string
           p_speed?: number
         }
+        Returns: undefined
+      }
+      update_option_group_limits: {
+        Args: {
+          p_id: string
+          p_is_required: boolean
+          p_max_select: number
+          p_min_select: number
+          p_reason?: string
+        }
+        Returns: undefined
+      }
+      update_option_group_name: {
+        Args: { p_id: string; p_name: string; p_reason?: string }
+        Returns: undefined
+      }
+      update_option_group_position: {
+        Args: { p_id: string; p_position: number; p_reason?: string }
+        Returns: undefined
+      }
+      update_option_item_name: {
+        Args: { p_id: string; p_name: string; p_reason?: string }
+        Returns: undefined
+      }
+      update_option_item_position: {
+        Args: { p_id: string; p_position: number; p_reason?: string }
         Returns: undefined
       }
       update_order_status: {
