@@ -149,25 +149,62 @@ function LojasPage() {
 
   const save = async () => {
     if (!editing) return;
+    const original = rows.find((r) => r.id === editing.id);
+    if (!original) return;
+    const planChanged = editing.plan_id !== original.plan_id;
+    const activeChanged = editing.is_active !== original.is_active;
+    const subChanged = (editing.subscription_ends_at ?? null) !== (original.subscription_ends_at ?? null);
+    const sensitive = planChanged || activeChanged || subChanged;
+    const reason = saveReason.trim();
+    if (sensitive && reason.length < 5) {
+      toast.error("Informe um motivo (mín. 5 caracteres) para alterar plano, ativação ou assinatura.");
+      return;
+    }
     setBusy(true);
-    // Map plan_id to legacy plan enum for backwards compat
-    const legacyPlan: Plan =
-      editing.plan_id === "starter" ? "essential" :
-      editing.plan_id === "pro" || editing.plan_id === "business" ? "professional" :
-      editing.plan;
-    const { error } = await supabase.from("restaurants").update({
-      plan: legacyPlan,
-      plan_id: editing.plan_id,
-      is_active: editing.is_active,
-      trial_ends_at: editing.trial_ends_at,
-      subscription_ends_at: editing.subscription_ends_at,
-      admin_notes: editing.admin_notes,
-    }).eq("id", editing.id);
-    setBusy(false);
-    if (error) return toast.error(error.message);
-    toast.success("Restaurante atualizado");
-    setEditing(null);
-    load();
+    try {
+      if (planChanged || activeChanged || editing.admin_notes !== original.admin_notes) {
+        await adminUpdateRestaurantMeta({
+          restaurantId: editing.id,
+          planId: planChanged ? editing.plan_id : null,
+          isActive: activeChanged ? editing.is_active : null,
+          adminNotes: editing.admin_notes !== original.admin_notes ? (editing.admin_notes ?? "") : null,
+          reason: sensitive ? reason : null,
+        });
+      }
+      if (subChanged) {
+        await adminSetSubscriptionEnd({
+          restaurantId: editing.id,
+          endsAt: editing.subscription_ends_at,
+          reason,
+        });
+      }
+      toast.success("Restaurante atualizado");
+      setSaveReason("");
+      setEditing(null);
+      load();
+    } catch (e: unknown) {
+      toast.error(translateAdminError(e));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const suspendOrReactivate = async (r: Row, targetActive: boolean) => {
+    const reason = window.prompt(
+      targetActive
+        ? `Reativar "${r.name}". Motivo (mín. 5 caracteres):`
+        : `Suspender "${r.name}". O dono verá tela de bloqueio. Motivo (mín. 5 caracteres):`,
+      "",
+    );
+    if (!reason || reason.trim().length < 5) return;
+    try {
+      if (targetActive) await adminReactivateRestaurant(r.id, reason);
+      else await adminSuspendRestaurant(r.id, reason);
+      toast.success(targetActive ? "Loja reativada" : "Loja suspensa");
+      load();
+    } catch (e: unknown) {
+      toast.error(translateAdminError(e));
+    }
   };
 
   return (
