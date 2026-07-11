@@ -13,7 +13,7 @@
  * mensagem apropriada. Não simulamos conexão bem-sucedida.
  */
 
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { createHash, timingSafeEqual } from "node:crypto";
 
 export type PagbankEnvironment = "sandbox" | "production";
 
