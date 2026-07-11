@@ -88,27 +88,24 @@ BEGIN
   END IF;
 
   -- ---------------------------------------------------------------------------
-  -- 2. Dono reaproveitado: usuário auth.users, distinto do ator, NÃO banido,
-  --    NÃO super_admin, e que JÁ possua o papel 'owner' antes do teste.
-  --    Nenhum papel é criado/alterado/removido por este script.
+  -- 2. Dono reaproveitado: usuário que JÁ possua o papel 'owner' antes do
+  --    teste, distinto do ator e NÃO super_admin. Consulta feita somente
+  --    sobre public.user_roles — não lemos auth.users. A existência do
+  --    usuário em auth.users é implicitamente garantida pela FK do INSERT
+  --    em public.restaurants (owner_id -> auth.users.id). Nenhum papel é
+  --    criado/alterado/removido por este script.
   -- ---------------------------------------------------------------------------
-  SELECT u.id
+  SELECT ur.user_id
     INTO v_owner_uid
-    FROM auth.users u
-   WHERE u.id <> v_super_uid
-     AND u.deleted_at IS NULL
-     AND (u.banned_until IS NULL OR u.banned_until < now())
-     AND EXISTS (
-       SELECT 1 FROM public.user_roles ur
-        WHERE ur.user_id = u.id
-          AND ur.role    = 'owner'::public.app_role
-     )
+    FROM public.user_roles ur
+   WHERE ur.role = 'owner'::public.app_role
+     AND ur.user_id <> v_super_uid
      AND NOT EXISTS (
-       SELECT 1 FROM public.user_roles ur
-        WHERE ur.user_id = u.id
-          AND ur.role    = 'super_admin'::public.app_role
+       SELECT 1 FROM public.user_roles ur2
+        WHERE ur2.user_id = ur.user_id
+          AND ur2.role    = 'super_admin'::public.app_role
      )
-   ORDER BY u.created_at NULLS LAST
+   ORDER BY ur.user_id
    LIMIT 1;
 
   IF v_owner_uid IS NULL THEN
