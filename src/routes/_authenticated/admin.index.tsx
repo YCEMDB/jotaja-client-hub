@@ -106,7 +106,7 @@ function ComparisonBadge({ current, previous }: { current: number; previous: num
 
 function Dashboard() {
   const { restaurantId, roles } = useAuth();
-  const canWriteOnboarding = roles.includes("owner") || roles.includes("manager");
+  const canWriteOnboarding = roles.includes("owner");
   const queryClient = useQueryClient();
   const { data: tz } = useRestaurantTimezone(restaurantId);
   const timezone = tz || "America/Sao_Paulo";
