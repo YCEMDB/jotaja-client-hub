@@ -38,6 +38,9 @@ import {
   type StockIngredient, type StockMovement, type StockOverview, type StockSupplier, type StockUnit,
   type StockMovementType, type ProductRecipeStatus,
 } from "@/lib/stock";
+import { translateStockError } from "@/lib/stock-errors";
+import { useStockCapabilities, validateReason } from "@/hooks/useStockCapabilities";
+import { ReasonField } from "@/components/stock/ReasonField";
 import { MovementDialog } from "@/components/stock/MovementDialog";
 import { RecipeDialog } from "@/components/stock/RecipeDialog";
 import { ReportsTab } from "@/components/stock/ReportsTab";
