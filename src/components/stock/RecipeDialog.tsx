@@ -38,6 +38,7 @@ export function RecipeDialog({ open, onOpenChange, product, ingredients, onSaved
 
   useEffect(() => {
     if (!open || !product) return;
+    setReason("");
     setLoading(true);
     getProductRecipe(product.id)
       .then((r) => {
@@ -45,7 +46,7 @@ export function RecipeDialog({ open, onOpenChange, product, ingredients, onSaved
           r.items.map((it) => ({ ingredient_id: it.ingredient_id, quantity: String(it.quantity) })),
         );
       })
-      .catch((e) => toast.error(e?.message ?? "Erro ao carregar ficha"))
+      .catch((e) => toast.error(translateStockError(e)))
       .finally(() => setLoading(false));
   }, [open, product]);
 
