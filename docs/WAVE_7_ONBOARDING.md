@@ -219,3 +219,115 @@ Frontend:
 - Um único registro por restaurante — quem for alterado por suporte não
   guarda histórico de outros valores anteriores (apenas o snapshot em
   `record_audit` durante `reset`).
+
+---
+
+## 13. Fechamento final — garantias registradas
+
+### 13.1 Pedido de teste (`orders.is_test_order`)
+
+- Coluna `NOT NULL DEFAULT false` em `public.orders`.
+- **Frontend público não controla a flag**: as RPCs públicas
+  `public.create_public_order(p_restaurant_id, p_customer_id, p_customer_name,
+  p_customer_phone, p_type, p_payment, p_subtotal, p_delivery_fee, p_discount,
+  p_total, p_coupon_code, p_estimated_minutes, p_change_for, p_notes,
+  p_delivery_address, p_items)` e `public.create_public_table_order(p_token,
+  p_customer_name, p_customer_phone, p_command_id, p_notes, p_items)` **não
+  possuem parâmetro `is_test_order`**; o `INSERT` interno nunca seta a coluna,
+  então herda o default `false`. Qualquer tentativa do cliente de enviar a flag
+  é ignorada pela ausência do parâmetro.
+- Pedidos de teste só podem ser criados por RPC autenticada e autorizada
+  (fluxo de suporte/admin nativo, gate `authorize_onboarding_write`).
+- `restaurant_id` do checkout público é resolvido no backend a partir do slug
+  ou do token da mesa; jamais aceito livre.
+- **Efeitos colaterais desligados** por `WHEN (NEW.is_test_order IS NOT TRUE)`
+  nos triggers: caixa (`orders_auto_open_cash`, `orders_register_cash_sale`),
+  estoque (`orders_auto_stock_debit`), estatísticas de cliente
+  (`orders_sync_customer_stats_iu/_d`), plano
+  (`trg_enforce_plan_order_limit`), mesa (`orders_table_link_event`),
+  comunicação (`trg_comm_on_payment_status`).
+- **Nada de `order_payments`, Mercado Pago, PagBank, cupom
+  (`coupon_uses`/contador), estoque, caixa, financeiro, comunicação
+  comercial, entregador ou integração externa** para pedidos de teste.
+- Histórico de status preserva-se (`trg_seed_order_status_history` +
+  `trg_enforce_order_status`): o pedido percorre `pending → confirmed →
+  preparing → ready → out_for_delivery → delivered` para fins educativos.
+- Continua visível no painel/mesas/KDS com badge claro; **não** entra em
+  faturamento, ticket médio, ranking de produtos, top clientes, séries diárias
+  nem em nenhuma das 5 RPCs de relatório (filtro `is_test_order = false`
+  aplicado no backend, não apenas na UI).
+
+### 13.2 Checklist derivado
+
+Todas as regras são calculadas no banco em `private.derive_onboarding_steps`:
+
+- Categoria: `EXISTS categoria is_active AND archived_at IS NULL`.
+- Produto: `EXISTS produto archived_at IS NULL`.
+- Horários: `timezone` real + `opening_hours` JSON não vazio.
+- Delivery/mesas: derivado de `delivery_areas` ativas ou
+  `restaurant_tables` ativas conforme o modo de operação real.
+- Pagamento: qualquer forma válida (dinheiro, cartão na entrega, Pix online,
+  `restaurant_payment_integrations.status='active'` ou
+  `active_payment_provider`). **PagBank indisponível não bloqueia** — outra
+  forma válida satisfaz a etapa.
+- Percentual (`progress_pct`) é calculado no backend a partir do checklist
+  derivado; **frontend não envia progresso**.
+- `set_onboarding_current_step` valida a chave contra whitelist; não permite
+  inventar conclusão.
+- `complete_onboarding` chama `derive_onboarding_steps` e recusa a conclusão
+  quando `required_done < required_total` (`restaurant_not_ready`).
+- Restaurante antigo aproveita configurações existentes automaticamente na
+  primeira leitura — o snapshot já entra parcial ou totalmente concluído.
+
+### 13.3 RPCs (6 assinaturas únicas)
+
+| Função | Assinatura |
+|---|---|
+| `get_onboarding_status` | `(p_restaurant_id uuid)` |
+| `start_onboarding` | `(p_restaurant_id uuid, p_reason text)` |
+| `set_onboarding_current_step` | `(p_restaurant_id uuid, p_step text, p_reason text)` |
+| `dismiss_onboarding` | `(p_restaurant_id uuid, p_reason text)` |
+| `complete_onboarding` | `(p_restaurant_id uuid, p_reason text)` |
+| `reset_onboarding` | `(p_restaurant_id uuid, p_reason text)` |
+
+Confirmações comuns às seis:
+
+- Uma única assinatura por nome (sem overloads).
+- `REVOKE ALL ON FUNCTION ... FROM PUBLIC` e `FROM anon`.
+- `GRANT EXECUTE ... TO authenticated, service_role`.
+- `SECURITY DEFINER` com `SET search_path = pg_catalog, public, private, pg_temp`.
+- Autorização nativa via `user_roles` (owner/manager) resolvida por
+  `auth.uid()`; suporte apenas com sessão ativa e nível administrativo
+  (`private.has_support_administrative_access`); `view_only` fica restrito à
+  leitura de `get_onboarding_status`.
+- **Nenhuma** RPC recebe `actor_id`, nível de suporte ou percentual do cliente.
+- Auditoria (`private.record_audit`) em `complete_onboarding`,
+  `reset_onboarding` e toda intervenção via sessão de suporte.
+- Frontend só chama via wrappers em `src/lib/onboarding.ts`; **zero DML direto
+  em `restaurant_onboarding` no cliente**.
+
+### 13.4 Verificações finais
+
+- **Typecheck:** `bunx tsgo --noEmit` limpo.
+- **Build de produção:** OK (nenhum novo warning introduzido; warnings
+  pré-existentes de chunk size e sourcemap seguem inalterados).
+- **STRUCTURAL PASS:** derivação, grants, `search_path`, RLS, triggers de
+  isolamento de teste, filtros de relatórios.
+- **JWT E2E DEFERRED:** matriz autenticada (owner, manager, employee,
+  view_only, suporte expirado, cross-tenant) segue como gate herdado das
+  Ondas 2.a/2.b; não executada neste turno.
+- **Arquivos alterados neste turno:** `src/lib/onboarding.ts` (novo),
+  `src/hooks/useOnboarding.ts` (novo),
+  `src/components/onboarding/OnboardingChecklist.tsx` (novo),
+  `src/routes/_authenticated/admin.index.tsx` (montagem do checklist),
+  `docs/WAVE_7_ONBOARDING.md`. Backend: migration
+  `20260711_wave7_test_orders_and_onboarding`.
+- **Limitações reais:** ambiente sem credenciais externas mantém PagBank
+  como `BLOCKED BY EXTERNAL E2E`; tours contextuais visuais permanecem
+  deferidos; primeiro cadastro pré-restaurante continua em
+  `admin.onboarding.tsx`.
+
+**Turno 7 encerrado.** Nenhuma nova etapa de Tutorial será aberta.
+Próximo trabalho: **Sprint RC2 — Estabilização** (QA autenticado, JWT E2E,
+Mercado Pago/PagBank com credenciais, feature gates/downgrade, varredura de
+DML residual, enums na UI, índices/realtime, relatório de prontidão).
