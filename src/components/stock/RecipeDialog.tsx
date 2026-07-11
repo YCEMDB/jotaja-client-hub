@@ -7,6 +7,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { Plus, Trash2 } from "lucide-react";
 import { formatBRL, getProductRecipe, setProductRecipe, type StockIngredient } from "@/lib/stock";
+import { translateStockError } from "@/lib/stock-errors";
+import { useStockCapabilities, validateReason } from "@/hooks/useStockCapabilities";
+import { ReasonField } from "@/components/stock/ReasonField";
 
 interface RecipeLine {
   ingredient_id: string;
