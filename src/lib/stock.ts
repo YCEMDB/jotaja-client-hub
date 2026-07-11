@@ -306,10 +306,15 @@ export async function listProductsRecipeStatus(restaurantId: string): Promise<Pr
   return ((data as unknown) ?? []) as ProductRecipeStatus[];
 }
 
-export async function setProductRecipe(productId: string, items: Array<{ ingredient_id: string; quantity: number; notes?: string | null }>): Promise<number> {
+export async function setProductRecipe(
+  productId: string,
+  items: Array<{ ingredient_id: string; quantity: number; notes?: string | null }>,
+  reason?: string | null,
+): Promise<number> {
   const { data, error } = await supabase.rpc("set_product_recipe", {
     p_product_id: productId,
-    p_items: items as any,
+    p_items: items as unknown as Database["public"]["Functions"]["set_product_recipe"]["Args"]["p_items"],
+    p_reason: reason ?? undefined,
   });
   if (error) throw error;
   return (data as number) ?? 0;
