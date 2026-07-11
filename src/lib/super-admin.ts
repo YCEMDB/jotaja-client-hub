@@ -4,13 +4,10 @@ import { supabase } from "@/integrations/supabase/client";
  * Wrappers das RPCs administrativas do Super Admin (Onda 2.c).
  * NUNCA usar DML direto nas telas /super — sempre chamar essas funções.
  * Todas exigem Super Admin autenticado e são auditadas no backend.
+ *
+ * Nota de tipagem: usamos `as never` no payload para permitir null nos
+ * parâmetros opcionais das RPCs (o tipo gerado é conservador demais).
  */
-
-const undef = <T>(v: T | null | undefined): T | undefined => (v ?? undefined);
-const blank = (s: string | null | undefined) => {
-  const v = (s ?? "").trim();
-  return v ? v : undefined;
-};
 
 export async function adminUpdateRestaurantMeta(input: {
   restaurantId: string;
@@ -21,11 +18,11 @@ export async function adminUpdateRestaurantMeta(input: {
 }) {
   const { error } = await supabase.rpc("admin_update_restaurant_meta", {
     p_restaurant_id: input.restaurantId,
-    p_plan_id: undef(input.planId),
-    p_is_active: undef(input.isActive),
-    p_admin_notes: input.adminNotes === undefined ? undefined : input.adminNotes,
-    p_reason: blank(input.reason),
-  });
+    p_plan_id: input.planId ?? null,
+    p_is_active: input.isActive ?? null,
+    p_admin_notes: input.adminNotes ?? null,
+    p_reason: (input.reason ?? "").trim() || null,
+  } as never);
   if (error) throw error;
 }
 
@@ -38,7 +35,7 @@ export async function adminSetSubscriptionEnd(input: {
     p_restaurant_id: input.restaurantId,
     p_ends_at: input.endsAt,
     p_reason: input.reason.trim(),
-  });
+  } as never);
   if (error) throw error;
 }
 
@@ -46,7 +43,7 @@ export async function adminSuspendRestaurant(restaurantId: string, reason: strin
   const { error } = await supabase.rpc("admin_suspend_restaurant", {
     p_restaurant_id: restaurantId,
     p_reason: reason.trim(),
-  });
+  } as never);
   if (error) throw error;
 }
 
@@ -54,7 +51,7 @@ export async function adminReactivateRestaurant(restaurantId: string, reason: st
   const { error } = await supabase.rpc("admin_reactivate_restaurant", {
     p_restaurant_id: restaurantId,
     p_reason: reason.trim(),
-  });
+  } as never);
   if (error) throw error;
 }
 
@@ -73,9 +70,9 @@ export async function adminRegisterPayment(input: {
     p_method: input.method ?? null,
     p_notes: input.notes ?? null,
     p_reason: input.reason.trim(),
-  });
+  } as never);
   if (error) throw error;
-  return data as { ok: boolean; payment_id: string; subscription_ends_at: string };
+  return data as unknown as { ok: boolean; payment_id: string; subscription_ends_at: string };
 }
 
 export async function adminUpsertAnnouncement(input: {
@@ -91,13 +88,13 @@ export async function adminUpsertAnnouncement(input: {
     p_variant: input.variant,
     p_is_active: input.isActive,
     p_expires_at: input.expiresAt,
-  });
+  } as never);
   if (error) throw error;
-  return data as { ok: boolean; id: string };
+  return data as unknown as { ok: boolean; id: string };
 }
 
 export async function adminDeleteAnnouncement(id: string) {
-  const { error } = await supabase.rpc("admin_delete_announcement", { p_id: id });
+  const { error } = await supabase.rpc("admin_delete_announcement", { p_id: id } as never);
   if (error) throw error;
 }
 
@@ -113,10 +110,10 @@ export async function adminUpsertPlan(input: {
     p_id: input.id,
     p_name: input.name.trim(),
     p_price_monthly: input.priceMonthly,
-    p_features: input.features as never,
+    p_features: input.features,
     p_position: input.position,
     p_is_active: input.isActive,
-  });
+  } as never);
   if (error) throw error;
 }
 
@@ -124,7 +121,7 @@ export async function adminDeletePlan(id: string, reason: string) {
   const { error } = await supabase.rpc("admin_delete_plan", {
     p_id: id,
     p_reason: reason.trim(),
-  });
+  } as never);
   if (error) throw error;
 }
 
@@ -135,9 +132,9 @@ export async function adminUpdateLead(input: {
 }) {
   const { error } = await supabase.rpc("admin_update_lead", {
     p_id: input.id,
-    p_status: undef(input.status),
-    p_notes: input.notes === undefined ? undefined : input.notes,
-  });
+    p_status: input.status ?? null,
+    p_notes: input.notes ?? null,
+  } as never);
   if (error) throw error;
 }
 
