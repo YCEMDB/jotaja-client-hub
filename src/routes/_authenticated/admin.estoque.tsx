@@ -902,19 +902,49 @@ function RecipesTab({ enabled, products, ingredients, search, onSearch, filter, 
 
 
 // ---------- Ingredient dialog ----------
+function ArchiveIngredientDialog({ target, reason, onReasonChange, onCancel, onConfirm, saving }: {
+  target: StockIngredient | null;
+  reason: string;
+  onReasonChange: (v: string) => void;
+  onCancel: () => void;
+  onConfirm: () => void;
+  saving: boolean;
+}) {
+  return (
+    <Dialog open={!!target} onOpenChange={(v) => { if (!v) onCancel(); }}>
+      <DialogContent className="max-w-md">
+        <DialogHeader><DialogTitle>Arquivar ingrediente</DialogTitle></DialogHeader>
+        <div className="space-y-3">
+          <p className="text-sm text-ink/70">
+            Você vai arquivar <strong>{target?.name}</strong>. Essa ação é auditada e exige motivo (mínimo 5 caracteres).
+          </p>
+          <ReasonField value={reason} onChange={onReasonChange} required placeholder="Ex.: produto descontinuado" />
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={onCancel} disabled={saving}>Cancelar</Button>
+          <Button onClick={onConfirm} disabled={saving}>{saving ? "Arquivando…" : "Arquivar"}</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 function IngredientDialog({ open, onOpenChange, editing, units, suppliers, restaurantId, onSuccess }: {
   open: boolean; onOpenChange: (v: boolean) => void;
   editing: StockIngredient | null; units: StockUnit[]; suppliers: StockSupplier[];
   restaurantId: string; onSuccess: () => void;
 }) {
+  const caps = useStockCapabilities();
   const [form, setForm] = useState({
     name: "", sku: "", unit_id: "", supplier_id: "", min_qty: "", notes: "",
     initial_qty: "", initial_cost: "", is_active: true,
   });
+  const [reason, setReason] = useState("");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (!open) return;
+    setReason("");
     if (editing) {
       setForm({
         name: editing.name, sku: editing.sku ?? "", unit_id: editing.unit_id ?? "",
@@ -926,8 +956,21 @@ function IngredientDialog({ open, onOpenChange, editing, units, suppliers, resta
     }
   }, [open, editing]);
 
+  const unitChanged = !!editing && !!editing.unit_id && form.unit_id && form.unit_id !== editing.unit_id;
+  const deactivating = !!editing && editing.is_active && !form.is_active;
+  const isAdminAction = deactivating || !!unitChanged;
+  const reasonRequired = caps.requiresReasonForWrites || isAdminAction;
+
   const save = async () => {
     if (!form.name.trim()) { toast.error("Nome é obrigatório"); return; }
+    if (isAdminAction && !caps.canAdmin) {
+      toast.error("Arquivamento ou troca de unidade requer nível administrativo.");
+      return;
+    }
+    if (reasonRequired) {
+      const err = validateReason(reason);
+      if (err) { toast.error(err); return; }
+    }
     setSaving(true);
     try {
       if (editing) {
@@ -940,6 +983,7 @@ function IngredientDialog({ open, onOpenChange, editing, units, suppliers, resta
           min_qty: form.min_qty ? parseFloat(form.min_qty.replace(",", ".")) : 0,
           notes: form.notes || null,
           is_active: form.is_active,
+          reason: reasonRequired ? reason.trim() : null,
         });
         toast.success("Ingrediente atualizado");
       } else {
@@ -953,12 +997,13 @@ function IngredientDialog({ open, onOpenChange, editing, units, suppliers, resta
           initial_qty: form.initial_qty ? parseFloat(form.initial_qty.replace(",", ".")) : 0,
           initial_cost: form.initial_cost ? parseFloat(form.initial_cost.replace(",", ".")) : 0,
           notes: form.notes || null,
+          reason: reasonRequired ? reason.trim() : null,
         });
         toast.success("Ingrediente cadastrado");
       }
       onOpenChange(false); onSuccess();
-    } catch (e: any) {
-      toast.error(e?.message ?? "Erro");
+    } catch (e) {
+      toast.error(translateStockError(e));
     } finally {
       setSaving(false);
     }
@@ -1018,15 +1063,25 @@ function IngredientDialog({ open, onOpenChange, editing, units, suppliers, resta
             </div>
             {editing && (
               <div className="col-span-2 flex items-center gap-2">
-                <Switch checked={form.is_active} onCheckedChange={(v) => setForm({ ...form, is_active: v })} />
+                <Switch checked={form.is_active} onCheckedChange={(v) => setForm({ ...form, is_active: v })} disabled={!caps.canAdmin && !form.is_active === false} />
                 <span className="text-sm">Ativo</span>
+                {deactivating && <span className="text-[11px] text-brand-magenta font-semibold">(arquivamento — requer motivo)</span>}
               </div>
             )}
           </div>
+
+          {reasonRequired && (
+            <ReasonField
+              value={reason}
+              onChange={setReason}
+              required
+              placeholder={isAdminAction ? "Motivo do ajuste administrativo" : "Motivo (sessão de suporte)"}
+            />
+          )}
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>Cancelar</Button>
-          <Button onClick={save} disabled={saving}>{saving ? "Salvando…" : "Salvar"}</Button>
+          <Button onClick={save} disabled={saving || !caps.canWrite}>{saving ? "Salvando…" : "Salvar"}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -1038,11 +1093,14 @@ function SupplierDialog({ open, onOpenChange, editing, restaurantId, onSuccess }
   open: boolean; onOpenChange: (v: boolean) => void; editing: StockSupplier | null;
   restaurantId: string; onSuccess: () => void;
 }) {
+  const caps = useStockCapabilities();
   const [form, setForm] = useState({ name: "", contact: "", phone: "", email: "", notes: "", is_active: true });
+  const [reason, setReason] = useState("");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (!open) return;
+    setReason("");
     if (editing) setForm({
       name: editing.name, contact: editing.contact ?? "", phone: editing.phone ?? "",
       email: editing.email ?? "", notes: editing.notes ?? "", is_active: editing.is_active,
@@ -1050,18 +1108,25 @@ function SupplierDialog({ open, onOpenChange, editing, restaurantId, onSuccess }
     else setForm({ name: "", contact: "", phone: "", email: "", notes: "", is_active: true });
   }, [open, editing]);
 
+  const reasonRequired = caps.requiresReasonForWrites;
+
   const save = async () => {
     if (!form.name.trim()) { toast.error("Nome é obrigatório"); return; }
+    if (reasonRequired) {
+      const err = validateReason(reason);
+      if (err) { toast.error(err); return; }
+    }
     setSaving(true);
     try {
       await upsertSupplier({
         restaurantId, id: editing?.id ?? null,
         name: form.name, contact: form.contact || null, phone: form.phone || null,
         email: form.email || null, notes: form.notes || null, is_active: form.is_active,
+        reason: reasonRequired ? reason.trim() : null,
       });
       toast.success(editing ? "Fornecedor atualizado" : "Fornecedor cadastrado");
       onOpenChange(false); onSuccess();
-    } catch (e: any) { toast.error(e?.message ?? "Erro"); }
+    } catch (e) { toast.error(translateStockError(e)); }
     finally { setSaving(false); }
   };
 
@@ -1081,10 +1146,13 @@ function SupplierDialog({ open, onOpenChange, editing, restaurantId, onSuccess }
             <Switch checked={form.is_active} onCheckedChange={(v) => setForm({ ...form, is_active: v })} />
             <span className="text-sm">Ativo</span>
           </div>
+          {reasonRequired && (
+            <ReasonField value={reason} onChange={setReason} required placeholder="Motivo (sessão de suporte)" />
+          )}
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>Cancelar</Button>
-          <Button onClick={save} disabled={saving}>{saving ? "Salvando…" : "Salvar"}</Button>
+          <Button onClick={save} disabled={saving || !caps.canWrite}>{saving ? "Salvando…" : "Salvar"}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -1096,23 +1164,35 @@ function UnitDialog({ open, onOpenChange, editing, restaurantId, onSuccess }: {
   open: boolean; onOpenChange: (v: boolean) => void; editing: StockUnit | null;
   restaurantId: string; onSuccess: () => void;
 }) {
+  const caps = useStockCapabilities();
   const [form, setForm] = useState({ name: "", symbol: "" });
+  const [reason, setReason] = useState("");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (!open) return;
+    setReason("");
     if (editing) setForm({ name: editing.name, symbol: editing.symbol });
     else setForm({ name: "", symbol: "" });
   }, [open, editing]);
 
+  const reasonRequired = caps.requiresReasonForWrites;
+
   const save = async () => {
     if (!form.name.trim() || !form.symbol.trim()) { toast.error("Nome e símbolo obrigatórios"); return; }
+    if (reasonRequired) {
+      const err = validateReason(reason);
+      if (err) { toast.error(err); return; }
+    }
     setSaving(true);
     try {
-      await upsertUnit({ restaurantId, id: editing?.id ?? null, name: form.name, symbol: form.symbol });
+      await upsertUnit({
+        restaurantId, id: editing?.id ?? null, name: form.name, symbol: form.symbol,
+        reason: reasonRequired ? reason.trim() : null,
+      });
       toast.success(editing ? "Unidade atualizada" : "Unidade cadastrada");
       onOpenChange(false); onSuccess();
-    } catch (e: any) { toast.error(e?.message ?? "Erro"); }
+    } catch (e) { toast.error(translateStockError(e)); }
     finally { setSaving(false); }
   };
 
@@ -1123,12 +1203,16 @@ function UnitDialog({ open, onOpenChange, editing, restaurantId, onSuccess }: {
         <div className="space-y-3">
           <div><Label>Nome</Label><Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Quilograma" /></div>
           <div><Label>Símbolo</Label><Input value={form.symbol} onChange={(e) => setForm({ ...form, symbol: e.target.value })} placeholder="kg" /></div>
+          {reasonRequired && (
+            <ReasonField value={reason} onChange={setReason} required placeholder="Motivo (sessão de suporte)" />
+          )}
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>Cancelar</Button>
-          <Button onClick={save} disabled={saving}>{saving ? "Salvando…" : "Salvar"}</Button>
+          <Button onClick={save} disabled={saving || !caps.canWrite}>{saving ? "Salvando…" : "Salvar"}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 }
+
