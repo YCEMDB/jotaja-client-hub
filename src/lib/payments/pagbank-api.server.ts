@@ -201,11 +201,10 @@ export async function createPixCharge(input: {
     const payload: any = await res.json().catch(() => ({}));
     if (!res.ok) {
       console.error("[pagbank] create pix http error", res.status, JSON.stringify(payload).slice(0, 1500));
-      const em = payload?.error_messages?.[0];
       return {
         ok: false,
-        error: em?.code ?? `http_${res.status}`,
-        message: em ? `${em.description ?? ""}${em.parameter_name ? ` (${em.parameter_name})` : ""}` : undefined,
+        error: `http_${res.status}`,
+        message: JSON.stringify(payload).slice(0, 500),
       };
     }
     const qr = payload?.qr_codes?.[0];
