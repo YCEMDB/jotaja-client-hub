@@ -100,12 +100,14 @@ export async function upsertUnit(input: {
   id?: string | null;
   name: string;
   symbol: string;
+  reason?: string | null;
 }): Promise<string> {
   const { data, error } = await supabase.rpc("upsert_stock_unit", {
     p_restaurant_id: input.restaurantId,
     p_name: input.name,
     p_symbol: input.symbol,
     p_id: input.id ?? undefined,
+    p_reason: input.reason ?? undefined,
   });
   if (error) throw error;
   return data as string;
@@ -136,6 +138,7 @@ export async function upsertSupplier(input: {
   email?: string | null;
   notes?: string | null;
   is_active?: boolean;
+  reason?: string | null;
 }): Promise<string> {
   const { data, error } = await supabase.rpc("upsert_stock_supplier", {
     p_restaurant_id: input.restaurantId,
@@ -146,6 +149,7 @@ export async function upsertSupplier(input: {
     p_notes: input.notes ?? undefined,
     p_is_active: input.is_active ?? true,
     p_id: input.id ?? undefined,
+    p_reason: input.reason ?? undefined,
   });
   if (error) throw error;
   return data as string;
@@ -177,6 +181,7 @@ export async function createIngredient(input: {
   initial_qty?: number;
   initial_cost?: number;
   notes?: string | null;
+  reason?: string | null;
 }): Promise<string> {
   const { data, error } = await supabase.rpc("create_stock_ingredient", {
     p_restaurant_id: input.restaurantId,
@@ -188,6 +193,7 @@ export async function createIngredient(input: {
     p_initial_qty: input.initial_qty ?? 0,
     p_initial_cost: input.initial_cost ?? 0,
     p_notes: input.notes ?? undefined,
+    p_reason: input.reason ?? undefined,
   });
   if (error) throw error;
   return data as string;
@@ -202,6 +208,7 @@ export async function updateIngredient(input: {
   min_qty?: number;
   notes?: string | null;
   is_active?: boolean;
+  reason?: string | null;
 }): Promise<void> {
   const { error } = await supabase.rpc("update_stock_ingredient", {
     p_id: input.id,
@@ -212,6 +219,7 @@ export async function updateIngredient(input: {
     p_min_qty: input.min_qty ?? undefined,
     p_notes: input.notes ?? undefined,
     p_is_active: input.is_active ?? undefined,
+    p_reason: input.reason ?? undefined,
   });
   if (error) throw error;
 }
