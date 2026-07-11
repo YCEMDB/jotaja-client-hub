@@ -1157,7 +1157,19 @@ function PagbankIntegrationCard({ r, onSaved }: { r: Restaurant; onSaved: () => 
         toast.error(res.detail ?? res.error ?? "Falha ao iniciar conexão");
         return;
       }
-      window.location.href = res.url;
+      // PagBank bloqueia login dentro de iframes (X-Frame-Options + cookies
+      // de terceiros), o que provoca "acesso.pagbank.com.br redirecionou
+      // muitas vezes" no preview do Lovable. Forçamos navegação top-level
+      // e, quando não é possível (cross-origin), abrimos em nova aba.
+      try {
+        if (window.top && window.top !== window.self) {
+          window.top.location.href = res.url;
+        } else {
+          window.location.href = res.url;
+        }
+      } catch {
+        window.open(res.url, "_blank", "noopener,noreferrer");
+      }
     } finally {
       setBusy(false);
     }
