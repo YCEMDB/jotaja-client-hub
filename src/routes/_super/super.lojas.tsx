@@ -350,8 +350,8 @@ function LojasPage() {
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <Label className="text-xs">Fim do trial</Label>
-                    <Input type="date" value={editing.trial_ends_at?.slice(0, 10) ?? ""} onChange={(e) => setEditing({ ...editing, trial_ends_at: e.target.value ? new Date(e.target.value).toISOString() : null })} />
+                    <Label className="text-xs">Fim do trial (somente leitura — use "Estender trial")</Label>
+                    <Input type="date" disabled value={editing.trial_ends_at?.slice(0, 10) ?? ""} />
                   </div>
                   <div>
                     <Label className="text-xs">Fim da assinatura</Label>
@@ -361,6 +361,19 @@ function LojasPage() {
                 <div>
                   <Label className="text-xs">Anotações internas</Label>
                   <Textarea rows={3} value={editing.admin_notes ?? ""} onChange={(e) => setEditing({ ...editing, admin_notes: e.target.value })} placeholder="Visível apenas para super-admins" />
+                </div>
+                <div>
+                  <Label className="text-xs">Motivo (obrigatório para alterar plano, ativação ou assinatura — mín. 5 caracteres)</Label>
+                  <Textarea rows={2} value={saveReason} onChange={(e) => setSaveReason(e.target.value)} placeholder="Ex.: upgrade solicitado pelo cliente #123" />
+                </div>
+                <div className="flex items-center justify-between rounded border-2 border-amber-300 bg-amber-500/5 p-3">
+                  <div>
+                    <p className="font-bold text-sm">Suspender / Reativar</p>
+                    <p className="text-xs text-muted-foreground">Alternativa recomendada à exclusão. Também exige motivo.</p>
+                  </div>
+                  <Button variant="outline" size="sm" onClick={() => suspendOrReactivate(editing, !editing.is_active)}>
+                    {editing.is_active ? "Suspender" : "Reativar"}
+                  </Button>
                 </div>
 
                 <PaymentsSection
