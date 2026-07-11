@@ -137,21 +137,26 @@ function RelatoriosPage() {
 
   const exportOverviewCSV = () => {
     if (!overview) return;
+    const c = overview.current;
     const rows: (string | number)[][] = [
       ["Período", from + " a " + to, "TZ", overview.tz, "Granularidade", overview.granularity],
       [],
       ["Métrica", "Valor"],
-      ["Faturamento (R$)", overview.current.revenue.toFixed(2)],
-      ["Pedidos válidos", overview.current.valid_orders],
-      ["Pedidos cancelados", overview.current.cancelled_orders],
-      ["Ticket médio (R$)", overview.current.avg_ticket.toFixed(2)],
-      ["Descontos (R$)", overview.current.total_discount.toFixed(2)],
-      ["Taxa de entrega (R$)", overview.current.total_delivery_fee.toFixed(2)],
-      ["Clientes únicos", overview.current.unique_customers],
-      ["Novos clientes", overview.current.new_customers],
-      ["Itens vendidos", overview.current.units_sold],
+      ["Receita concluída (R$)", c.completed_revenue.toFixed(2)],
+      ["Pedidos concluídos", c.completed_orders],
+      ["Valor em aberto (R$)", c.open_amount.toFixed(2)],
+      ["Pedidos em aberto", c.open_orders],
+      ["Pedidos válidos operacionais", c.valid_orders],
+      ["Pedidos cancelados", c.cancelled_orders],
+      ["Pedidos pendentes", c.pending_orders],
+      ["Ticket médio concluído (R$)", c.avg_ticket_completed.toFixed(2)],
+      ["Descontos concluídos (R$)", c.total_discount.toFixed(2)],
+      ["Taxa de entrega concluída (R$)", c.total_delivery_fee.toFixed(2)],
+      ["Clientes únicos (concluídos)", c.unique_customers],
+      ["Novos clientes", c.new_customers],
+      ["Itens vendidos (concluídos)", c.units_sold],
       [],
-      ["Série", "Receita (R$)", "Pedidos"],
+      ["Série (receita concluída)", "Receita (R$)", "Pedidos"],
       ...overview.series.map((s) => [s.bucket, s.revenue.toFixed(2), s.orders]),
     ];
     downloadCSV(`visao_geral_${from}_a_${to}.csv`, rows);
