@@ -3992,6 +3992,10 @@ export type Database = {
         }
         Returns: Json
       }
+      admin_upsert_setting: {
+        Args: { p_key: string; p_reason: string; p_value: Json }
+        Returns: Json
+      }
       apply_inventory_adjustment: {
         Args: {
           p_ingredient_id: string
