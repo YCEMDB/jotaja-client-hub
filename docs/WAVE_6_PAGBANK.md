@@ -147,26 +147,54 @@ recebido = header x-authenticity-token (fallback x-signature)
 - Assinatura oficial **SHA-256(access_token + "-" + raw_body)** com comparação em tempo constante (correção desta rodada).
 - Nenhum DML direto financeiro no navegador.
 
-### DEFERRED
-- **PagBank Sandbox E2E — application credentials unavailable.**
-- **PagBank Production E2E — application credentials and homologation unavailable.**
+### Classificação PagBank Sandbox E2E
 
-Requer, externamente:
-- Cadastro da aplicação PagBank Connect e homologação.
-- Secrets `PAGBANK_CLIENT_ID(_SANDBOX)` / `PAGBANK_CLIENT_SECRET(_SANDBOX)` via `add_secret`.
-- Conta PagBank de testes com chave Pix ativa.
+| Item | Classificação |
+| --- | --- |
+| PagBank Connect application creation | **SANDBOX PASS** (HTTP 201 no `POST /oauth2/application` do ambiente sandbox — logo `https://comandahub.online/pagbank-logo.png`, callback `https://comandahub.online/api/public/pagbank/callback`) |
+| OAuth Sandbox E2E | **DEFERRED** — requer login interativo em conta vendedora Sandbox no PagBank |
+| Pix creation Sandbox E2E | **DEFERRED** — depende de OAuth concluído |
+| Webhook Sandbox E2E | **DEFERRED** — depende de OAuth + cobrança real (assinatura SHA-256 já implementada e coberta por teste estrutural) |
+| Reconciliation Sandbox E2E | **DEFERRED** — depende de OAuth |
+| Production E2E | **DEFERRED** |
+| Production release | **BLOCKED BY HOMOLOGATION AND PROD CREDENTIALS** |
 
-### Status para produção
-**BLOCKED BY EXTERNAL E2E.** A integração não deve ser anunciada como
-"funcional em produção" nem "PagBank conectado" com base apenas em build
-verde. A ativação real exige as credenciais e a bateria E2E acima.
+### Alinhamento de secrets (executado nesta rodada)
+
+- `src/lib/payments/pagbank-api.server.ts` agora resolve credenciais por
+  ambiente com estes nomes canônicos, com fallback para os antigos:
+  - Sandbox: `PAGBANK_SANDBOX_CLIENT_ID` / `PAGBANK_SANDBOX_CLIENT_SECRET`
+    (fallback: `PAGBANK_CLIENT_ID_SANDBOX` / `PAGBANK_CLIENT_SECRET_SANDBOX`).
+  - Produção: `PAGBANK_PROD_CLIENT_ID` / `PAGBANK_PROD_CLIENT_SECRET`
+    (fallback: `PAGBANK_CLIENT_ID` / `PAGBANK_CLIENT_SECRET`).
+- `PAGBANK_SANDBOX_TOKEN` é usado apenas para a operação one-shot de
+  criação da aplicação (endpoint admin `POST /oauth2/application`) e
+  **não** é consumido em runtime pelo fluxo OAuth do lojista.
+- Nenhum secret duplicado foi criado; nenhum valor foi exposto em código,
+  migrations, banco público ou logs; arquivos temporários apagados.
+
+### Bloqueios reais que impedem rodar o Sandbox E2E autonomamente agora
+
+1. **Login vendedor Sandbox** — o fluxo OAuth exige que um humano
+   autentique numa conta vendedora de teste do PagBank e clique em
+   "Autorizar". Não posso automatizar sem essas credenciais.
+2. **Vault `pagbank_token_encryption_key` ausente** — sem esse segredo
+   `pagbank_connect_complete` levanta `pagbank_encryption_key_missing`
+   ao tentar gravar tokens. Precisa ser criado no vault do backend
+   antes do primeiro Connect real (>= 32 chars).
+3. **Feature gate por plano** — o restaurante de teste precisa estar
+   num plano cujo `pagbank_enabled = true`.
+
+Depois que (1)–(3) forem atendidos, o E2E completo (Connect → Pix →
+Webhook → Reconciliação → Falhas) pode ser executado seguindo o roteiro
+descrito nas Seções 3–8.
 
 ## 15. Requisitos externos ainda pendentes
 
-- Aprovação da aplicação PagBank Connect.
-- Secrets `PAGBANK_CLIENT_ID(_SANDBOX)` / `PAGBANK_CLIENT_SECRET(_SANDBOX)`.
+- Homologação da aplicação PagBank Connect (produção).
+- Conta vendedora PagBank Sandbox para o E2E interativo.
+- Chave do vault `pagbank_token_encryption_key` provisionada.
 - `PUBLIC_SITE_URL` já configurado (default `https://comandahub.online`).
-- Conta PagBank de testes com Pix ativo para rodar sandbox E2E.
-
 
 Fora do escopo desta entrega (não implementado): split, cartão, custódia, comissão automática.
+
