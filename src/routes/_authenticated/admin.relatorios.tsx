@@ -36,18 +36,11 @@ function RelatoriosGated() {
 
 const DOW_LABEL = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
 
-function Delta({ current, previous }: { current: number; previous: number }) {
+function deltaText(current: number, previous: number): string {
   const pct = fmtPct(current, previous);
-  if (pct === null) {
-    return <span className="text-xs text-muted-foreground flex items-center gap-1"><Minus className="h-3 w-3" aria-hidden />Sem base</span>;
-  }
-  const up = pct >= 0;
-  return (
-    <span className={`text-xs font-medium flex items-center gap-1 ${up ? "text-emerald-600" : "text-rose-600"}`}>
-      {up ? <TrendingUp className="h-3 w-3" aria-hidden /> : <TrendingDown className="h-3 w-3" aria-hidden />}
-      {pct.toFixed(1)}% vs. anterior
-    </span>
-  );
+  if (pct === null) return "Sem base anterior";
+  const sign = pct >= 0 ? "↑" : "↓";
+  return `${sign} ${Math.abs(pct).toFixed(1)}% vs. anterior`;
 }
 
 function RelatoriosPage() {
