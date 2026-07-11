@@ -2453,30 +2453,33 @@ export type Database = {
       }
       product_option_groups: {
         Row: {
+          archived_at: string | null
           id: string
-          is_required: boolean | null
-          max_select: number | null
-          min_select: number | null
+          is_required: boolean
+          max_select: number
+          min_select: number
           name: string
-          position: number | null
+          position: number
           product_id: string
         }
         Insert: {
+          archived_at?: string | null
           id?: string
-          is_required?: boolean | null
-          max_select?: number | null
-          min_select?: number | null
+          is_required?: boolean
+          max_select?: number
+          min_select?: number
           name: string
-          position?: number | null
+          position?: number
           product_id: string
         }
         Update: {
+          archived_at?: string | null
           id?: string
-          is_required?: boolean | null
-          max_select?: number | null
-          min_select?: number | null
+          is_required?: boolean
+          max_select?: number
+          min_select?: number
           name?: string
-          position?: number | null
+          position?: number
           product_id?: string
         }
         Relationships: [
@@ -2491,28 +2494,31 @@ export type Database = {
       }
       product_option_items: {
         Row: {
-          extra_price: number | null
+          archived_at: string | null
+          extra_price: number
           group_id: string
           id: string
-          is_available: boolean | null
+          is_available: boolean
           name: string
-          position: number | null
+          position: number
         }
         Insert: {
-          extra_price?: number | null
+          archived_at?: string | null
+          extra_price?: number
           group_id: string
           id?: string
-          is_available?: boolean | null
+          is_available?: boolean
           name: string
-          position?: number | null
+          position?: number
         }
         Update: {
-          extra_price?: number | null
+          archived_at?: string | null
+          extra_price?: number
           group_id?: string
           id?: string
-          is_available?: boolean | null
+          is_available?: boolean
           name?: string
-          position?: number | null
+          position?: number
         }
         Relationships: [
           {
