@@ -4112,6 +4112,7 @@ export type Database = {
           p_min_qty?: number
           p_name: string
           p_notes?: string
+          p_reason?: string
           p_restaurant_id: string
           p_sku?: string
           p_supplier_id?: string
@@ -4586,7 +4587,7 @@ export type Database = {
         Returns: undefined
       }
       set_product_recipe: {
-        Args: { p_items: Json; p_product_id: string }
+        Args: { p_items: Json; p_product_id: string; p_reason?: string }
         Returns: number
       }
       set_settings_health: {
@@ -4662,6 +4663,7 @@ export type Database = {
           p_min_qty?: number
           p_name?: string
           p_notes?: string
+          p_reason?: string
           p_sku?: string
           p_supplier_id?: string
           p_unit_id?: string
@@ -4695,6 +4697,7 @@ export type Database = {
           p_name: string
           p_notes?: string
           p_phone?: string
+          p_reason?: string
           p_restaurant_id: string
         }
         Returns: string
@@ -4703,6 +4706,7 @@ export type Database = {
         Args: {
           p_id?: string
           p_name: string
+          p_reason?: string
           p_restaurant_id: string
           p_symbol: string
         }
