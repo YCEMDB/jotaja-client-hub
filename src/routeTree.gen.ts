@@ -95,9 +95,11 @@ import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/l
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
+import { Route as ApiPublicPagbankCallbackRouteImport } from './routes/api/public/pagbank/callback'
 import { Route as ApiPublicHooksCommunicationWorkerRouteImport } from './routes/api/public/hooks/communication-worker'
 import { Route as AuthenticatedAdminMesasEditorRouteImport } from './routes/_authenticated/admin.mesas.editor'
 import { Route as AuthenticatedAdminMesasCadastroRouteImport } from './routes/_authenticated/admin.mesas.cadastro'
+import { Route as ApiPublicHooksPagbankWebhookKeyRouteImport } from './routes/api/public/hooks/pagbank.$webhookKey'
 import { Route as ApiPublicHooksCommunicationProviderSettingsIdRouteImport } from './routes/api/public/hooks/communication.$provider.$settingsId'
 
 const TermosRoute = TermosRouteImport.update({
@@ -560,6 +562,12 @@ const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
   path: '/lovable/email/auth/preview',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicPagbankCallbackRoute =
+  ApiPublicPagbankCallbackRouteImport.update({
+    id: '/api/public/pagbank/callback',
+    path: '/api/public/pagbank/callback',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksCommunicationWorkerRoute =
   ApiPublicHooksCommunicationWorkerRouteImport.update({
     id: '/api/public/hooks/communication-worker',
@@ -577,6 +585,12 @@ const AuthenticatedAdminMesasCadastroRoute =
     id: '/cadastro',
     path: '/cadastro',
     getParentRoute: () => AuthenticatedAdminMesasRoute,
+  } as any)
+const ApiPublicHooksPagbankWebhookKeyRoute =
+  ApiPublicHooksPagbankWebhookKeyRouteImport.update({
+    id: '/api/public/hooks/pagbank/$webhookKey',
+    path: '/api/public/hooks/pagbank/$webhookKey',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const ApiPublicHooksCommunicationProviderSettingsIdRoute =
   ApiPublicHooksCommunicationProviderSettingsIdRouteImport.update({
@@ -668,11 +682,13 @@ export interface FileRoutesByFullPath {
   '/admin/mesas/cadastro': typeof AuthenticatedAdminMesasCadastroRoute
   '/admin/mesas/editor': typeof AuthenticatedAdminMesasEditorRoute
   '/api/public/hooks/communication-worker': typeof ApiPublicHooksCommunicationWorkerRoute
+  '/api/public/pagbank/callback': typeof ApiPublicPagbankCallbackRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
   '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
+  '/api/public/hooks/pagbank/$webhookKey': typeof ApiPublicHooksPagbankWebhookKeyRoute
   '/api/public/hooks/communication/$provider/$settingsId': typeof ApiPublicHooksCommunicationProviderSettingsIdRoute
 }
 export interface FileRoutesByTo {
@@ -758,11 +774,13 @@ export interface FileRoutesByTo {
   '/admin/mesas/cadastro': typeof AuthenticatedAdminMesasCadastroRoute
   '/admin/mesas/editor': typeof AuthenticatedAdminMesasEditorRoute
   '/api/public/hooks/communication-worker': typeof ApiPublicHooksCommunicationWorkerRoute
+  '/api/public/pagbank/callback': typeof ApiPublicPagbankCallbackRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
   '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
+  '/api/public/hooks/pagbank/$webhookKey': typeof ApiPublicHooksPagbankWebhookKeyRoute
   '/api/public/hooks/communication/$provider/$settingsId': typeof ApiPublicHooksCommunicationProviderSettingsIdRoute
 }
 export interface FileRoutesById {
@@ -851,11 +869,13 @@ export interface FileRoutesById {
   '/_authenticated/admin/mesas/cadastro': typeof AuthenticatedAdminMesasCadastroRoute
   '/_authenticated/admin/mesas/editor': typeof AuthenticatedAdminMesasEditorRoute
   '/api/public/hooks/communication-worker': typeof ApiPublicHooksCommunicationWorkerRoute
+  '/api/public/pagbank/callback': typeof ApiPublicPagbankCallbackRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
   '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
+  '/api/public/hooks/pagbank/$webhookKey': typeof ApiPublicHooksPagbankWebhookKeyRoute
   '/api/public/hooks/communication/$provider/$settingsId': typeof ApiPublicHooksCommunicationProviderSettingsIdRoute
 }
 export interface FileRouteTypes {
@@ -943,11 +963,13 @@ export interface FileRouteTypes {
     | '/admin/mesas/cadastro'
     | '/admin/mesas/editor'
     | '/api/public/hooks/communication-worker'
+    | '/api/public/pagbank/callback'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
     | '/lovable/email/transactional/preview'
     | '/lovable/email/transactional/send'
+    | '/api/public/hooks/pagbank/$webhookKey'
     | '/api/public/hooks/communication/$provider/$settingsId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -1033,11 +1055,13 @@ export interface FileRouteTypes {
     | '/admin/mesas/cadastro'
     | '/admin/mesas/editor'
     | '/api/public/hooks/communication-worker'
+    | '/api/public/pagbank/callback'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
     | '/lovable/email/transactional/preview'
     | '/lovable/email/transactional/send'
+    | '/api/public/hooks/pagbank/$webhookKey'
     | '/api/public/hooks/communication/$provider/$settingsId'
   id:
     | '__root__'
@@ -1125,11 +1149,13 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/mesas/cadastro'
     | '/_authenticated/admin/mesas/editor'
     | '/api/public/hooks/communication-worker'
+    | '/api/public/pagbank/callback'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
     | '/lovable/email/transactional/preview'
     | '/lovable/email/transactional/send'
+    | '/api/public/hooks/pagbank/$webhookKey'
     | '/api/public/hooks/communication/$provider/$settingsId'
   fileRoutesById: FileRoutesById
 }
@@ -1188,11 +1214,13 @@ export interface RootRouteChildren {
   ApiPublicMercadopagoWebhookRoute: typeof ApiPublicMercadopagoWebhookRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   ApiPublicHooksCommunicationWorkerRoute: typeof ApiPublicHooksCommunicationWorkerRoute
+  ApiPublicPagbankCallbackRoute: typeof ApiPublicPagbankCallbackRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
   LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
   LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
   LovableEmailTransactionalSendRoute: typeof LovableEmailTransactionalSendRoute
+  ApiPublicHooksPagbankWebhookKeyRoute: typeof ApiPublicHooksPagbankWebhookKeyRoute
   ApiPublicHooksCommunicationProviderSettingsIdRoute: typeof ApiPublicHooksCommunicationProviderSettingsIdRoute
 }
 
@@ -1800,6 +1828,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LovableEmailAuthPreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/pagbank/callback': {
+      id: '/api/public/pagbank/callback'
+      path: '/api/public/pagbank/callback'
+      fullPath: '/api/public/pagbank/callback'
+      preLoaderRoute: typeof ApiPublicPagbankCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/communication-worker': {
       id: '/api/public/hooks/communication-worker'
       path: '/api/public/hooks/communication-worker'
@@ -1820,6 +1855,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/mesas/cadastro'
       preLoaderRoute: typeof AuthenticatedAdminMesasCadastroRouteImport
       parentRoute: typeof AuthenticatedAdminMesasRoute
+    }
+    '/api/public/hooks/pagbank/$webhookKey': {
+      id: '/api/public/hooks/pagbank/$webhookKey'
+      path: '/api/public/hooks/pagbank/$webhookKey'
+      fullPath: '/api/public/hooks/pagbank/$webhookKey'
+      preLoaderRoute: typeof ApiPublicHooksPagbankWebhookKeyRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/public/hooks/communication/$provider/$settingsId': {
       id: '/api/public/hooks/communication/$provider/$settingsId'
@@ -1984,11 +2026,13 @@ const rootRouteChildren: RootRouteChildren = {
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   ApiPublicHooksCommunicationWorkerRoute:
     ApiPublicHooksCommunicationWorkerRoute,
+  ApiPublicPagbankCallbackRoute: ApiPublicPagbankCallbackRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
   LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
   LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
   LovableEmailTransactionalSendRoute: LovableEmailTransactionalSendRoute,
+  ApiPublicHooksPagbankWebhookKeyRoute: ApiPublicHooksPagbankWebhookKeyRoute,
   ApiPublicHooksCommunicationProviderSettingsIdRoute:
     ApiPublicHooksCommunicationProviderSettingsIdRoute,
 }
