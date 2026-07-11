@@ -4,9 +4,9 @@
  * NUNCA importar este módulo do bundle do cliente. Ele lê secrets do processo
  * e chama endpoints do PagBank com o token do restaurante.
  *
- * ⚠️ Credenciais externas ainda pendentes (DEFERRED):
- *  - PAGBANK_CLIENT_ID / PAGBANK_CLIENT_SECRET (por ambiente)
- *  - Homologação da aplicação PagBank Connect
+ * Credenciais esperadas (por ambiente) via Secrets:
+ *  - Sandbox:    PAGBANK_SANDBOX_CLIENT_ID / PAGBANK_SANDBOX_CLIENT_SECRET
+ *  - Produção:   PAGBANK_PROD_CLIENT_ID / PAGBANK_PROD_CLIENT_SECRET
  *
  * Enquanto elas não forem preenchidas via add_secret, as chamadas HTTP
  * retornarão erro estruturado (`missing_credentials`) e a UI mostrará a
@@ -30,11 +30,13 @@ const BASE = {
 
 function envCreds(env: PagbankEnvironment): { clientId: string; clientSecret: string } | null {
   const cid =
-    env === "sandbox" ? process.env.PAGBANK_CLIENT_ID_SANDBOX : process.env.PAGBANK_CLIENT_ID;
+    env === "sandbox"
+      ? process.env.PAGBANK_SANDBOX_CLIENT_ID ?? process.env.PAGBANK_CLIENT_ID_SANDBOX
+      : process.env.PAGBANK_PROD_CLIENT_ID ?? process.env.PAGBANK_CLIENT_ID;
   const sec =
     env === "sandbox"
-      ? process.env.PAGBANK_CLIENT_SECRET_SANDBOX
-      : process.env.PAGBANK_CLIENT_SECRET;
+      ? process.env.PAGBANK_SANDBOX_CLIENT_SECRET ?? process.env.PAGBANK_CLIENT_SECRET_SANDBOX
+      : process.env.PAGBANK_PROD_CLIENT_SECRET ?? process.env.PAGBANK_CLIENT_SECRET;
   if (!cid || !sec) return null;
   return { clientId: cid, clientSecret: sec };
 }
