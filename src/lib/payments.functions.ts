@@ -20,6 +20,30 @@ export const createPixPayment = createServerFn({ method: "POST" })
     if (order.payment_status === "paid")
       return { ok: true, alreadyPaid: true };
 
+    // Roteamento por provedor ativo (PagBank ou Mercado Pago).
+    const { data: restProvider } = await supabaseAdmin
+      .from("restaurants")
+      .select("active_payment_provider")
+      .eq("id", order.restaurant_id)
+      .maybeSingle();
+    if (restProvider?.active_payment_provider === "pagbank") {
+      const { createPagbankPixCharge } = await import("./payments/pagbank.functions");
+      const r: any = await createPagbankPixCharge({ data: { orderId: order.id } });
+      if (!r?.ok) return { ok: false, error: r?.error ?? "Erro ao gerar Pix PagBank", detail: r?.detail };
+      // Espelha no orders para a UI existente
+      if (r.qr_code) {
+        await supabaseAdmin
+          .from("orders")
+          .update({
+            pix_qr_code: r.qr_code,
+            pix_qr_code_base64: r.qr_code_image_url ?? null,
+            pix_expires_at: r.expires_at ?? null,
+          })
+          .eq("id", order.id);
+      }
+      return { ok: true, qr_code: r.qr_code, qr_code_base64: r.qr_code_image_url };
+    }
+
     // Reuse existing QR if still valid
     if (order.pix_qr_code) {
       return {
@@ -118,8 +142,22 @@ export const syncPixPayment = createServerFn({ method: "POST" })
       .select("id, restaurant_id, mp_payment_id, payment_status")
       .eq("id", data.orderId)
       .maybeSingle();
-    if (!order || !order.mp_payment_id) return { ok: false, status: "no_payment" };
+    if (!order) return { ok: false, status: "no_payment" };
     if (order.payment_status === "paid") return { ok: true, status: "paid" };
+
+    // Roteamento por provedor ativo
+    const { data: restProvider } = await supabaseAdmin
+      .from("restaurants")
+      .select("active_payment_provider")
+      .eq("id", order.restaurant_id)
+      .maybeSingle();
+    if (restProvider?.active_payment_provider === "pagbank") {
+      const { syncPagbankPayment } = await import("./payments/pagbank.functions");
+      const r: any = await syncPagbankPayment({ data: { orderId: order.id } });
+      return { ok: !!r?.ok, status: r?.status ?? "unknown" };
+    }
+
+    if (!order.mp_payment_id) return { ok: false, status: "no_payment" };
 
     const { data: secret } = await supabaseAdmin
       .from("restaurant_secrets")

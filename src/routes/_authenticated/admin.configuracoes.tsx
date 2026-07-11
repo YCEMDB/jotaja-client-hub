@@ -14,6 +14,13 @@ import { AdminPageLayout } from "@/components/ds";
 import { Badge } from "@/components/ui/badge";
 import { useServerFn } from "@tanstack/react-start";
 import { verifyMercadoPago } from "@/lib/payments.functions";
+import {
+  pagbankConnectInit,
+  pagbankDisconnect,
+  pagbankRotateWebhookKey,
+  setActivePaymentProvider,
+  getPaymentIntegrationsSummary,
+} from "@/lib/payments/pagbank.functions";
 import { FeatureGate } from "@/components/FeatureGate";
 import { toast } from "sonner";
 import {
@@ -620,6 +627,8 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
   return (
     <div className="space-y-5">
       <PaymentMethodsCard r={r} onSaved={onSaved} mpConnected={isConnected} />
+      <ActivePaymentProviderCard r={r} onSaved={onSaved} />
+      <PagbankIntegrationCard r={r} onSaved={onSaved} />
     <Card className="p-6 space-y-5">
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <div>
@@ -1025,3 +1034,229 @@ function KioskCommandBox() {
   );
 }
 
+
+// ─── Provedor ativo (Mercado Pago | PagBank) ───────────────────────────
+function ActivePaymentProviderCard({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
+  const current: "mercado_pago" | "pagbank" | null = r.active_payment_provider ?? "mercado_pago";
+  const [value, setValue] = useState<"mercado_pago" | "pagbank">(current ?? "mercado_pago");
+  const [reason, setReason] = useState("");
+  const [saving, setSaving] = useState(false);
+  const setProvider = useServerFn(setActivePaymentProvider);
+
+  useEffect(() => setValue(current ?? "mercado_pago"), [r.id, current]);
+
+  const dirty = value !== (current ?? "mercado_pago");
+
+  const save = async () => {
+    if (!dirty) return;
+    if (reason.trim().length < 5) return toast.error("Informe um motivo (mín. 5 caracteres).");
+    setSaving(true);
+    const res = await setProvider({ data: { restaurantId: r.id, provider: value, reason: reason.trim() } });
+    setSaving(false);
+    if (!res.ok) return toast.error(res.error ?? "Erro ao trocar provedor");
+    toast.success("Provedor de pagamento atualizado");
+    setReason("");
+    onSaved();
+  };
+
+  return (
+    <Card className="p-6 space-y-4">
+      <div>
+        <h3 className="font-semibold">Provedor Pix ativo</h3>
+        <p className="text-sm text-muted-foreground">
+          Escolha qual conta será usada para gerar QR Codes Pix no cardápio. Somente uma pode estar ativa por vez.
+        </p>
+      </div>
+      <div className="grid gap-2 sm:grid-cols-2">
+        <button
+          type="button"
+          onClick={() => setValue("mercado_pago")}
+          className={`text-left border rounded-lg p-3 transition ${value === "mercado_pago" ? "border-primary ring-2 ring-primary/40" : "hover:border-primary/50"}`}
+        >
+          <p className="font-medium">Mercado Pago</p>
+          <p className="text-xs text-muted-foreground">Conexão via Access Token do lojista.</p>
+        </button>
+        <button
+          type="button"
+          onClick={() => setValue("pagbank")}
+          className={`text-left border rounded-lg p-3 transition ${value === "pagbank" ? "border-primary ring-2 ring-primary/40" : "hover:border-primary/50"}`}
+        >
+          <p className="font-medium">PagBank</p>
+          <p className="text-xs text-muted-foreground">Conexão via OAuth (PagBank Connect).</p>
+        </button>
+      </div>
+      {dirty && (
+        <>
+          <div>
+            <Label>Motivo da troca (obrigatório)</Label>
+            <Input value={reason} onChange={(e) => setReason(e.target.value)} placeholder="Ex.: passando a receber via PagBank" />
+          </div>
+          <Button onClick={save} disabled={saving}>{saving ? "Salvando…" : "Confirmar troca"}</Button>
+        </>
+      )}
+    </Card>
+  );
+}
+
+// ─── PagBank Connect ───────────────────────────────────────────────────
+type PagbankIntegrationSummary = {
+  provider: string;
+  status: string;
+  environment: string;
+  provider_account_masked: string | null;
+  connected_at: string | null;
+  disconnected_at: string | null;
+  last_webhook_at: string | null;
+  last_error_code: string | null;
+  last_error_at: string | null;
+  webhook_key_masked: string | null;
+};
+
+function PagbankIntegrationCard({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
+  const [summary, setSummary] = useState<PagbankIntegrationSummary | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [env, setEnv] = useState<"sandbox" | "production">("sandbox");
+  const [busy, setBusy] = useState(false);
+  const [reason, setReason] = useState("");
+  const connectFn = useServerFn(pagbankConnectInit);
+  const disconnectFn = useServerFn(pagbankDisconnect);
+  const rotateFn = useServerFn(pagbankRotateWebhookKey);
+  const summaryFn = useServerFn(getPaymentIntegrationsSummary);
+
+  const load = async () => {
+    setLoading(true);
+    try {
+      const res = await summaryFn({ data: { restaurantId: r.id } });
+      const pb = (res.integrations ?? []).find((i: any) => i.provider === "pagbank") ?? null;
+      setSummary(pb as PagbankIntegrationSummary | null);
+    } catch (e: any) {
+      toast.error(e?.message ?? "Erro ao carregar integração PagBank");
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => { load(); /* eslint-disable-next-line */ }, [r.id]);
+
+  // Feedback do callback via query string
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("pagbank") === "connected") {
+      toast.success("PagBank conectado com sucesso!");
+      load();
+    }
+    const err = params.get("pagbank_error");
+    if (err) toast.error(`Não foi possível conectar: ${err}`);
+    // eslint-disable-next-line
+  }, []);
+
+  const connect = async () => {
+    setBusy(true);
+    try {
+      const res = await connectFn({ data: { restaurantId: r.id, environment: env } });
+      if (!res.ok) {
+        toast.error(res.detail ?? res.error ?? "Falha ao iniciar conexão");
+        return;
+      }
+      window.location.href = res.url;
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const disconnect = async () => {
+    if (reason.trim().length < 5) return toast.error("Informe um motivo (mín. 5 caracteres).");
+    if (!confirm("Desconectar a conta PagBank? Novos Pix via PagBank ficarão indisponíveis.")) return;
+    setBusy(true);
+    const res = await disconnectFn({ data: { restaurantId: r.id, reason: reason.trim() } });
+    setBusy(false);
+    if (!res.ok) return toast.error(res.error);
+    toast.success("PagBank desconectado");
+    setReason("");
+    load();
+    onSaved();
+  };
+
+  const rotate = async () => {
+    if (reason.trim().length < 5) return toast.error("Informe um motivo (mín. 5 caracteres).");
+    setBusy(true);
+    const res = await rotateFn({ data: { restaurantId: r.id, reason: reason.trim() } });
+    setBusy(false);
+    if (!res.ok) return toast.error(res.error);
+    toast.success("Nova URL de webhook gerada. Reconfigure no PagBank se necessário.");
+    setReason("");
+    load();
+  };
+
+  const isActive = summary?.status === "active";
+
+  return (
+    <Card className="p-6 space-y-4">
+      <div className="flex items-start justify-between gap-3 flex-wrap">
+        <div>
+          <h3 className="font-semibold flex items-center gap-2">
+            PIX via PagBank (Connect)
+            {loading ? (
+              <Badge variant="secondary" className="gap-1"><Loader2 className="h-3 w-3 animate-spin" /> carregando</Badge>
+            ) : isActive ? (
+              <Badge className="gap-1 bg-emerald-600 hover:bg-emerald-600 text-white">
+                <ShieldCheck className="h-3 w-3" />
+                {summary?.environment === "production" ? "Conectado" : "Conectado (Sandbox)"}
+              </Badge>
+            ) : summary?.status === "revoked" ? (
+              <Badge variant="destructive" className="gap-1"><ShieldAlert className="h-3 w-3" /> autorização expirada</Badge>
+            ) : (
+              <Badge variant="outline">Não conectado</Badge>
+            )}
+          </h3>
+          <p className="text-sm text-muted-foreground mt-1">
+            Conecte sua conta PagBank via OAuth. O dinheiro cai <strong>direto na sua conta</strong> — o COMANDAHUB não recebe nem faz custódia.
+          </p>
+          {isActive && summary?.provider_account_masked && (
+            <p className="text-xs text-muted-foreground mt-1">
+              Conta: <strong>{summary.provider_account_masked}</strong>
+              {summary.last_webhook_at && ` · último webhook: ${new Date(summary.last_webhook_at).toLocaleString("pt-BR")}`}
+            </p>
+          )}
+          {summary?.last_error_code && (
+            <p className="text-xs text-amber-600 mt-1">Último erro: <code>{summary.last_error_code}</code></p>
+          )}
+        </div>
+      </div>
+
+      {!isActive && (
+        <div className="space-y-3">
+          <div>
+            <Label>Ambiente</Label>
+            <div className="flex gap-2 mt-1">
+              <Button type="button" variant={env === "sandbox" ? "default" : "outline"} size="sm" onClick={() => setEnv("sandbox")}>Sandbox (testes)</Button>
+              <Button type="button" variant={env === "production" ? "default" : "outline"} size="sm" onClick={() => setEnv("production")}>Produção</Button>
+            </div>
+          </div>
+          <Button onClick={connect} disabled={busy}>
+            <LinkIcon className="h-4 w-4" /> {busy ? "Redirecionando…" : "Conectar PagBank"}
+          </Button>
+          <p className="text-xs text-muted-foreground">
+            Você será redirecionado ao PagBank para autorizar o COMANDAHUB. O token fica criptografado e nunca aparece no navegador.
+          </p>
+        </div>
+      )}
+
+      {isActive && (
+        <div className="space-y-3 border-t pt-4">
+          <div>
+            <Label>Motivo (para desconectar ou rotacionar webhook)</Label>
+            <Input value={reason} onChange={(e) => setReason(e.target.value)} placeholder="Ex.: rotação periódica de credenciais" />
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button size="sm" variant="outline" onClick={rotate} disabled={busy}>
+              <Settings2 className="h-4 w-4" /> Rotacionar webhook
+            </Button>
+            <Button size="sm" variant="ghost" onClick={disconnect} disabled={busy} className="text-destructive hover:text-destructive">
+              <Unplug className="h-4 w-4" /> Desconectar
+            </Button>
+          </div>
+        </div>
+      )}
+    </Card>
+  );
+}
