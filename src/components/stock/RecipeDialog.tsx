@@ -191,12 +191,25 @@ export function RecipeDialog({ open, onOpenChange, product, ingredients, onSaved
                 </p>
               </div>
             </div>
+
+            {caps.isSupport && (
+              <div className="rounded-lg border-2 border-brand-violet/40 bg-brand-violet/5 p-2 text-[11px] text-ink/70">
+                Sessão de suporte ({caps.supportLevel}). Motivo próprio é obrigatório.
+              </div>
+            )}
+
+            <ReasonField
+              value={reason}
+              onChange={setReason}
+              required={reasonRequired}
+              placeholder="Ex.: revisão de receita 07/07"
+            />
           </div>
         )}
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>Cancelar</Button>
-          <Button onClick={save} disabled={saving || loading}>{saving ? "Salvando…" : "Salvar ficha"}</Button>
+          <Button onClick={save} disabled={saving || loading || !caps.canWrite}>{saving ? "Salvando…" : "Salvar ficha"}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
