@@ -2,18 +2,20 @@
 -- R2 — Rollback ao vivo de public.cash_session_open quando record_audit falha.
 -- =============================================================================
 -- ATENÇÃO: este arquivo NÃO é uma migration permanente. NÃO deve ser aplicado
--- via supabase/migrations/. Execute uma única vez como script administrativo
--- em staging, fora do horário de pico, com um usuário com privilégios DDL
--- sobre public.audit_logs. Todo o conteúdo roda em uma transação self-contained
--- que cria, testa e remove suas próprias fixtures. Nenhuma linha permanece
--- após o commit.
+-- via supabase/migrations/. Este projeto não possui staging separado; execute
+-- uma única vez como script administrativo self-contained na base única do
+-- projeto, em janela de menor movimento, com um usuário com privilégios DDL
+-- sobre public.audit_logs. Todo o conteúdo roda em uma transação atômica que
+-- cria, testa e remove suas próprias fixtures. Nenhuma linha permanece após
+-- o commit. NÃO modifica public.user_roles em nenhum momento.
 --
 -- Pré-requisitos observacionais (o script aborta se não encontrar):
 --   • pelo menos um usuário com role global 'super_admin' SEM qualquer
 --     support_session com ended_at IS NULL (mesmo expirada);
---   • pelo menos um segundo usuário em auth.users, distinto do ator, não
---     super_admin, para servir de "dono sintético" temporário do restaurante
---     de teste (reaproveitado apenas dentro da transação).
+--   • pelo menos um outro usuário em auth.users, distinto do ator, NÃO
+--     super_admin e que JÁ possua o papel 'owner' em public.user_roles antes
+--     do teste — reaproveitado como dono do restaurante temporário. Nenhum
+--     papel é criado, alterado ou removido por este script.
 --
 -- Marcador único do teste (usado para isolar trigger, fixtures e auditoria):
 --   app.r2_marker = <uuid>
@@ -25,7 +27,7 @@ DO $r2$
 DECLARE
   v_marker            uuid := gen_random_uuid();
   v_super_uid         uuid;
-  v_synthetic_owner   uuid;
+  v_owner_uid         uuid;
   v_temp_rest         uuid;
   v_support_sid       uuid;
 
@@ -43,12 +45,17 @@ DECLARE
   v_neg_sqlstate      text;
   v_neg_msg           text;
 
-  v_rest_row          public.restaurants%ROWTYPE;
   v_sess_row          public.cash_sessions%ROWTYPE;
   v_audit_row         public.audit_logs%ROWTYPE;
+
+  -- Snapshots de user_roles do dono reaproveitado (invariante: preservação).
+  v_roles_count_before bigint;
+  v_roles_count_after  bigint;
+  v_roles_json_before  jsonb;
+  v_roles_json_after   jsonb;
 BEGIN
   -- ---------------------------------------------------------------------------
-  -- 0. Guardas de ambiente: locks curtos para não travar produção em uso.
+  -- 0. Guardas de ambiente: locks curtos para não travar a base em uso.
   -- ---------------------------------------------------------------------------
   PERFORM set_config('lock_timeout',       '2s',  true);
   PERFORM set_config('statement_timeout',  '30s', true);
@@ -81,36 +88,47 @@ BEGIN
   END IF;
 
   -- ---------------------------------------------------------------------------
-  -- 2. Dono sintético: reaproveita um usuário existente em auth.users que
-  --    NÃO seja o ator e NÃO seja super_admin. Preferimos usuário não banido
-  --    quando a coluna existir (Supabase Auth expõe banned_until).
+  -- 2. Dono reaproveitado: usuário que JÁ possua o papel 'owner' antes do
+  --    teste, distinto do ator e NÃO super_admin. Consulta feita somente
+  --    sobre public.user_roles — não lemos auth.users. A existência do
+  --    usuário em auth.users é implicitamente garantida pela FK do INSERT
+  --    em public.restaurants (owner_id -> auth.users.id). Nenhum papel é
+  --    criado/alterado/removido por este script.
   -- ---------------------------------------------------------------------------
-  SELECT u.id
-    INTO v_synthetic_owner
-    FROM auth.users u
-   WHERE u.id <> v_super_uid
-     AND COALESCE(u.banned_until, 'infinity'::timestamptz) <= now()
-        IS NOT TRUE  -- ou seja: NÃO banido (banned_until nulo ou no passado)
-     AND u.deleted_at IS NULL
+  SELECT ur.user_id
+    INTO v_owner_uid
+    FROM public.user_roles ur
+   WHERE ur.role = 'owner'::public.app_role
+     AND ur.user_id <> v_super_uid
      AND NOT EXISTS (
        SELECT 1 FROM public.user_roles ur2
-        WHERE ur2.user_id = u.id AND ur2.role = 'super_admin'::public.app_role
+        WHERE ur2.user_id = ur.user_id
+          AND ur2.role    = 'super_admin'::public.app_role
      )
-   ORDER BY u.created_at
+   ORDER BY ur.user_id
    LIMIT 1;
 
-  IF v_synthetic_owner IS NULL THEN
-    RAISE EXCEPTION 'R2 ABORT: nenhum usuário elegível para dono sintético temporário';
+  IF v_owner_uid IS NULL THEN
+    RAISE EXCEPTION 'R2 abortado: nenhum owner elegível disponível';
   END IF;
+
+  -- Snapshot dos papéis do dono ANTES de qualquer fixture.
+  SELECT COUNT(*),
+         COALESCE(jsonb_agg(to_jsonb(ur.*) ORDER BY ur.role::text, ur.id::text), '[]'::jsonb)
+    INTO v_roles_count_before, v_roles_json_before
+    FROM public.user_roles ur
+   WHERE ur.user_id = v_owner_uid;
 
   -- ---------------------------------------------------------------------------
   -- 3. Fixtures temporárias (restaurante + sessão de suporte administrativa).
-  --    O trigger sync_owner_role em restaurants criará o vínculo nativo do
-  --    dono sintético automaticamente. Só será removido no cleanup.
+  --    O dono reaproveitado JÁ tem papel 'owner' global; o trigger
+  --    sync_owner_role, se existir, encontrará o papel presente e não deverá
+  --    inserir novo — mas o teste NÃO depende disso: o cleanup NÃO toca em
+  --    user_roles e o assert final compara o snapshot exato.
   -- ---------------------------------------------------------------------------
   INSERT INTO public.restaurants (owner_id, slug, name)
   VALUES (
-    v_synthetic_owner,
+    v_owner_uid,
     'r2-test-' || replace(v_marker::text, '-', ''),
     '__R2 TEST__ ' || v_marker::text
   )
@@ -158,9 +176,7 @@ BEGIN
   CREATE OR REPLACE FUNCTION pg_temp.__r2_fail_audit()
   RETURNS trigger LANGUAGE plpgsql AS $fn$
   BEGIN
-    IF NEW.restaurant_id::text = current_setting('app.r2_marker', true)
-       -- redundância defensiva: só dispara se realmente for a fixture do teste
-       OR NEW.restaurant_id IN (
+    IF NEW.restaurant_id IN (
          SELECT id FROM public.restaurants
           WHERE name = '__R2 TEST__ ' || current_setting('app.r2_marker', true)
        )
@@ -271,15 +287,18 @@ BEGIN
     RAISE EXCEPTION 'R2 FAIL: audit_logs esperado %+1, obtido %', v_audit_before, v_audit_after_pos;
   END IF;
 
-  -- Sessão criada deve casar com o restaurante, estar aberta e ser do ator.
+  -- Sessão criada deve casar com restaurante, estar aberta, ser do ator e ter
+  -- opening_amount igual ao informado. Valida apenas campos garantidos pelo
+  -- schema atual; 'origin' NÃO é requisito e não é validado aqui.
   SELECT * INTO v_sess_row
     FROM public.cash_sessions
    WHERE id = v_pos_session_id;
 
   IF NOT FOUND
-     OR v_sess_row.restaurant_id <> v_temp_rest
-     OR v_sess_row.status        <> 'open'
-     OR v_sess_row.opened_by     <> v_super_uid
+     OR v_sess_row.restaurant_id  <> v_temp_rest
+     OR v_sess_row.status         <> 'open'
+     OR v_sess_row.opened_by      <> v_super_uid
+     OR v_sess_row.opening_amount <> 100.00
   THEN
     RAISE EXCEPTION 'R2 FAIL: cash_session inconsistente (%)', to_jsonb(v_sess_row);
   END IF;
@@ -301,33 +320,18 @@ BEGIN
 
   -- ---------------------------------------------------------------------------
   -- 10. CLEANUP total das fixtures deste teste. Tudo por marker/rest_id.
-  --     Ordem respeita FKs. user_roles nativo do dono sintético é revogado
-  --     apenas se o trigger sync_owner_role o tiver criado exclusivamente
-  --     para este restaurante (não removemos vínculos anteriores).
+  --     Ordem respeita FKs. NÃO tocamos em public.user_roles.
   -- ---------------------------------------------------------------------------
   DELETE FROM public.cash_movements
     WHERE session_id IN (SELECT id FROM public.cash_sessions WHERE restaurant_id = v_temp_rest);
-  DELETE FROM public.cash_sessions   WHERE restaurant_id = v_temp_rest;
-  DELETE FROM public.audit_logs      WHERE restaurant_id = v_temp_rest;
+  DELETE FROM public.cash_sessions    WHERE restaurant_id = v_temp_rest;
+  DELETE FROM public.audit_logs       WHERE restaurant_id = v_temp_rest;
   DELETE FROM public.support_sessions WHERE id = v_support_sid;
-
-  -- Remove APENAS o vínculo nativo (owner) que o trigger sync_owner_role tenha
-  -- criado para este restaurante temporário. user_roles não tem coluna
-  -- restaurant_id no schema atual, então restringimos ao dono sintético
-  -- + role 'owner' + verificação de que ele não é dono de outro restaurante.
-  DELETE FROM public.user_roles ur
-   WHERE ur.user_id = v_synthetic_owner
-     AND ur.role    = 'owner'::public.app_role
-     AND NOT EXISTS (
-       SELECT 1 FROM public.restaurants r
-        WHERE r.owner_id = v_synthetic_owner
-          AND r.id <> v_temp_rest
-     );
-
-  DELETE FROM public.restaurants WHERE id = v_temp_rest;
+  DELETE FROM public.restaurants      WHERE id = v_temp_rest;
 
   -- ---------------------------------------------------------------------------
-  -- 11. Asserts finais: nada do teste deve permanecer.
+  -- 11. Asserts finais: nada do teste deve permanecer, e user_roles do dono
+  --     reaproveitado deve estar EXATAMENTE como antes.
   -- ---------------------------------------------------------------------------
   IF EXISTS (SELECT 1 FROM public.cash_sessions   WHERE restaurant_id = v_temp_rest) THEN
     RAISE EXCEPTION 'R2 FAIL: cash_sessions remanescente'; END IF;
@@ -355,8 +359,24 @@ BEGIN
   ) THEN
     RAISE EXCEPTION 'R2 FAIL: função temporária remanescente'; END IF;
 
-  RAISE NOTICE 'R2 RESULT: PASS (marker=%, super=%, rest=%, support=%, session=%)',
-    v_marker, v_super_uid, v_temp_rest, v_support_sid, v_pos_session_id;
+  -- Preservação estrita de user_roles do dono reaproveitado.
+  SELECT COUNT(*),
+         COALESCE(jsonb_agg(to_jsonb(ur.*) ORDER BY ur.role::text, ur.id::text), '[]'::jsonb)
+    INTO v_roles_count_after, v_roles_json_after
+    FROM public.user_roles ur
+   WHERE ur.user_id = v_owner_uid;
+
+  IF v_roles_count_after <> v_roles_count_before THEN
+    RAISE EXCEPTION 'R2 FAIL: user_roles do owner alterou em quantidade (antes=%, depois=%)',
+      v_roles_count_before, v_roles_count_after;
+  END IF;
+  IF v_roles_json_after IS DISTINCT FROM v_roles_json_before THEN
+    RAISE EXCEPTION 'R2 FAIL: user_roles do owner alterou em conteúdo (antes=%, depois=%)',
+      v_roles_json_before, v_roles_json_after;
+  END IF;
+
+  RAISE NOTICE 'R2 RESULT: PASS (marker=%, super=%, owner=%, rest=%, support=%, session=%, roles_preserved=%)',
+    v_marker, v_super_uid, v_owner_uid, v_temp_rest, v_support_sid, v_pos_session_id, v_roles_count_after;
 END
 $r2$;
 
