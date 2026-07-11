@@ -2332,6 +2332,7 @@ export type Database = {
           driver_rejected_at: string | null
           estimated_minutes: number | null
           id: string
+          is_test_order: boolean
           mp_payment_id: string | null
           notes: string | null
           order_number: number
@@ -2373,6 +2374,7 @@ export type Database = {
           driver_rejected_at?: string | null
           estimated_minutes?: number | null
           id?: string
+          is_test_order?: boolean
           mp_payment_id?: string | null
           notes?: string | null
           order_number?: number
@@ -2414,6 +2416,7 @@ export type Database = {
           driver_rejected_at?: string | null
           estimated_minutes?: number | null
           id?: string
+          is_test_order?: boolean
           mp_payment_id?: string | null
           notes?: string | null
           order_number?: number
@@ -3060,6 +3063,66 @@ export type Database = {
             foreignKeyName: "restaurant_invites_restaurant_id_fkey"
             columns: ["restaurant_id"]
             isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      restaurant_onboarding: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          current_step: string | null
+          dismissed_at: string | null
+          id: string
+          last_seen_at: string | null
+          metadata: Json
+          restaurant_id: string
+          started_at: string | null
+          status: string
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          current_step?: string | null
+          dismissed_at?: string | null
+          id?: string
+          last_seen_at?: string | null
+          metadata?: Json
+          restaurant_id: string
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          current_step?: string | null
+          dismissed_at?: string | null
+          id?: string
+          last_seen_at?: string | null
+          metadata?: Json
+          restaurant_id?: string
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "restaurant_onboarding_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: true
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "restaurant_onboarding_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: true
             referencedRelation: "restaurants_team_view"
             referencedColumns: ["id"]
           },
@@ -4424,6 +4487,10 @@ export type Database = {
         Args: { p_force?: boolean; p_session_id: string; p_splits?: Json }
         Returns: Json
       }
+      complete_onboarding: {
+        Args: { p_reason?: string; p_restaurant_id: string }
+        Returns: Json
+      }
       create_category: {
         Args: {
           p_description?: string
@@ -4595,6 +4662,10 @@ export type Database = {
         Returns: boolean
       }
       delete_table: { Args: { p_table_id: string }; Returns: undefined }
+      dismiss_onboarding: {
+        Args: { p_reason?: string; p_restaurant_id: string }
+        Returns: Json
+      }
       driver_accept_order: { Args: { p_order_id: string }; Returns: undefined }
       driver_complete_delivery: {
         Args: { p_order_id: string }
@@ -4796,6 +4867,10 @@ export type Database = {
       }
       get_kds_orders: {
         Args: { p_restaurant_id: string; p_station_id?: string }
+        Returns: Json
+      }
+      get_onboarding_status: {
+        Args: { p_restaurant_id: string }
         Returns: Json
       }
       get_order_communication_timeline: {
@@ -5188,6 +5263,10 @@ export type Database = {
         Returns: Json
       }
       resend_team_invite: { Args: { p_invite_id: string }; Returns: Json }
+      reset_onboarding: {
+        Args: { p_reason: string; p_restaurant_id: string }
+        Returns: Json
+      }
       restore_category: {
         Args: { p_id: string; p_reason?: string }
         Returns: undefined
@@ -5222,6 +5301,10 @@ export type Database = {
           p_status: Database["public"]["Enums"]["driver_status"]
         }
         Returns: undefined
+      }
+      set_onboarding_current_step: {
+        Args: { p_reason?: string; p_restaurant_id: string; p_step: string }
+        Returns: Json
       }
       set_option_item_availability: {
         Args: { p_id: string; p_is_available: boolean; p_reason?: string }
@@ -5265,6 +5348,10 @@ export type Database = {
           p_settings_id: string
         }
         Returns: undefined
+      }
+      start_onboarding: {
+        Args: { p_reason?: string; p_restaurant_id: string }
+        Returns: Json
       }
       start_support_session: {
         Args: {

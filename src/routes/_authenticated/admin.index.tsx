@@ -33,6 +33,7 @@ import {
   Legend,
 } from "recharts";
 import { PlanUsageBanner } from "@/components/PlanUsageBanner";
+import { OnboardingChecklist } from "@/components/onboarding/OnboardingChecklist";
 import { AdminPageLayout, StatCard, DashboardGrid, Section } from "@/components/ds";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -104,7 +105,8 @@ function ComparisonBadge({ current, previous }: { current: number; previous: num
 }
 
 function Dashboard() {
-  const { restaurantId } = useAuth();
+  const { restaurantId, roles } = useAuth();
+  const canWriteOnboarding = roles.includes("owner");
   const queryClient = useQueryClient();
   const { data: tz } = useRestaurantTimezone(restaurantId);
   const timezone = tz || "America/Sao_Paulo";
@@ -323,6 +325,7 @@ function Dashboard() {
         </div>
       }
     >
+      <OnboardingChecklist restaurantId={restaurantId} canWrite={canWriteOnboarding} />
       <PlanUsageBanner restaurantId={restaurantId} />
 
       <div className="flex flex-wrap items-center gap-2 text-xs">
