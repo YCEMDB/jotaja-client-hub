@@ -241,6 +241,7 @@ export type Database = {
       }
       categories: {
         Row: {
+          archived_at: string | null
           created_at: string
           description: string | null
           id: string
@@ -251,6 +252,7 @@ export type Database = {
           station_id: string | null
         }
         Insert: {
+          archived_at?: string | null
           created_at?: string
           description?: string | null
           id?: string
@@ -261,6 +263,7 @@ export type Database = {
           station_id?: string | null
         }
         Update: {
+          archived_at?: string | null
           created_at?: string
           description?: string | null
           id?: string
@@ -2585,6 +2588,7 @@ export type Database = {
       }
       products: {
         Row: {
+          archived_at: string | null
           category_id: string | null
           created_at: string
           description: string | null
@@ -2600,6 +2604,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          archived_at?: string | null
           category_id?: string | null
           created_at?: string
           description?: string | null
@@ -2615,6 +2620,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          archived_at?: string | null
           category_id?: string | null
           created_at?: string
           description?: string | null
@@ -3925,6 +3931,14 @@ export type Database = {
         }
         Returns: string
       }
+      archive_category: {
+        Args: { p_id: string; p_reason?: string }
+        Returns: undefined
+      }
+      archive_product: {
+        Args: { p_id: string; p_reason?: string }
+        Returns: undefined
+      }
       assign_driver: {
         Args: { p_driver_id: string; p_order_id: string }
         Returns: undefined
@@ -4023,6 +4037,17 @@ export type Database = {
         Args: { p_force?: boolean; p_session_id: string; p_splits?: Json }
         Returns: Json
       }
+      create_category: {
+        Args: {
+          p_description?: string
+          p_name: string
+          p_position?: number
+          p_reason?: string
+          p_restaurant_id: string
+          p_station_id?: string
+        }
+        Returns: string
+      }
       create_driver: {
         Args: {
           p_commission_percent?: number
@@ -4033,6 +4058,22 @@ export type Database = {
           p_phone?: string
           p_restaurant_id: string
           p_vehicle?: string
+        }
+        Returns: string
+      }
+      create_product: {
+        Args: {
+          p_category_id?: string
+          p_description?: string
+          p_image_url?: string
+          p_is_available?: boolean
+          p_name: string
+          p_position?: number
+          p_price: number
+          p_promo_price?: number
+          p_reason?: string
+          p_restaurant_id: string
+          p_station_id?: string
         }
         Returns: string
       }
@@ -4571,6 +4612,14 @@ export type Database = {
         Returns: undefined
       }
       resend_team_invite: { Args: { p_invite_id: string }; Returns: Json }
+      restore_category: {
+        Args: { p_id: string; p_reason?: string }
+        Returns: undefined
+      }
+      restore_product: {
+        Args: { p_id: string; p_reason?: string }
+        Returns: undefined
+      }
       seed_default_automation_rules: {
         Args: { p_restaurant_id: string }
         Returns: number
@@ -4585,6 +4634,21 @@ export type Database = {
           p_status: Database["public"]["Enums"]["driver_status"]
         }
         Returns: undefined
+      }
+      set_product_availability: {
+        Args: { p_id: string; p_is_available: boolean; p_reason?: string }
+        Returns: Json
+      }
+      set_product_price: {
+        Args: {
+          p_expected_current_price?: number
+          p_expected_current_promo_price?: number
+          p_id: string
+          p_price: number
+          p_promo_price?: number
+          p_reason?: string
+        }
+        Returns: Json
       }
       set_product_recipe: {
         Args: { p_items: Json; p_product_id: string; p_reason?: string }
@@ -4622,6 +4686,18 @@ export type Database = {
         Returns: undefined
       }
       unblock_table: { Args: { p_table_id: string }; Returns: undefined }
+      update_category: {
+        Args: {
+          p_description?: string
+          p_id: string
+          p_is_active?: boolean
+          p_name?: string
+          p_position?: number
+          p_reason?: string
+          p_station_id?: string
+        }
+        Returns: undefined
+      }
       update_driver: {
         Args: {
           p_commission_percent?: number
@@ -4655,6 +4731,20 @@ export type Database = {
           p_source?: string
         }
         Returns: Json
+      }
+      update_product: {
+        Args: {
+          p_category_id?: string
+          p_clear_image?: boolean
+          p_description?: string
+          p_id: string
+          p_image_url?: string
+          p_name?: string
+          p_position?: number
+          p_reason?: string
+          p_station_id?: string
+        }
+        Returns: undefined
       }
       update_stock_ingredient: {
         Args: {
