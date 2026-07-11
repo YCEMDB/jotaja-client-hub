@@ -151,20 +151,73 @@ exigido. Reexecutado como `super_administrative` isolado:
 | C11.3 INSERT direto em `cash_movements` | 0 | `new row violates row-level security policy` | PASS |
 | C11.4 DELETE direto em `cash_movements` | 0 | sem erro, contagem inalterada | PASS |
 
-### R2 — Rollback ao vivo
+### R2 — Rollback ao vivo — DEFERRED (environment limitation)
 
-Continua **PENDING** (ver bloqueios acima). Não pode ser marcado como PASS
-enquanto uma execução transacional real não for feita em staging.
+Reclassificado de PENDING para **DEFERRED — environment limitation**. O
+teste ao vivo exigiria `CREATE TRIGGER` em `public.audit_logs`, privilégio
+inexistente em qualquer canal administrativo disponível neste projeto.
+
+**Tentativa registrada:**
+
+- Data/hora: 2026-07-11 00:31:03 UTC
+- Roles avaliadas: `sandbox_exec` e `supabase_read_only_user`
+- `has_table_privilege(<role>, 'public.audit_logs', 'TRIGGER') = false` em ambas
+- Erro observado ao executar `scripts/database/r2_rollback_test.sql`:
+  `ERROR: 42501: permission denied for table audit_logs` no `CREATE TRIGGER __r2_fail_audit`
+- Transação abortada; resíduos: `trigger_residual=false`, `function_residual=false`, restaurantes temporários = 0
+- Motivo do adiamento: ausência de canal administrativo **não permanente**
+  com privilégio `TRIGGER`. O sandbox não tem DDL; `supabase--migration`
+  é vetado por ser cadeia permanente; não há Supabase Branch, staging
+  separado ou SQL Editor administrativo neste projeto. Não foi concedido
+  privilégio adicional ao sandbox nem publicada migration para o teste.
+
+O teste poderá ser executado no futuro quando houver: ambiente de staging
+separado, Supabase Branch, SQL Editor administrativo acessível, ou
+pipeline temporário autorizado para testes destrutivos de banco.
+
+**Evidência estrutural equivalente (via `pg_get_functiondef`):**
+
+Inspecionados: `private.record_audit` e todas as RPCs auditáveis da 2.a
+(`update_order_status`, `assign_driver`, `unassign_driver`,
+`cash_session_open`, `cash_session_close`, `cash_session_add_movement`).
+
+- `private.record_audit` executa um único `INSERT` e não contém
+  `BEGIN … EXCEPTION` — qualquer falha (trigger, constraint, RLS) propaga
+  como exceção para o chamador.
+- Nenhuma RPC envolve a chamada de `record_audit` em bloco
+  `BEGIN … EXCEPTION WHEN OTHERS THEN …` que continue a execução ou
+  retorne sucesso. Os únicos `EXCEPTION` presentes tratam
+  `unique_violation` (`cash_session_open`) para reemitir `cash_already_open`
+  — não capturam falha de auditoria.
+- As RPCs não usam `dblink`, `pg_background`, filas, `NOTIFY`, `pg_cron`
+  agendado nem qualquer extensão de transação autônoma; `record_audit` é
+  chamada via `PERFORM` na mesma conexão, dentro da mesma transação
+  implícita da statement da RPC.
+- A chamada de `record_audit` ocorre antes do `RETURN` da RPC (linhas
+  57–65 em `update_order_status`, 121–130 em `cash_session_open`,
+  293–303 em `cash_session_close`, 375–384 em `cash_session_add_movement`,
+  206–213 em `unassign_driver`, 432–441 em `assign_driver`).
+- Todas as RPCs são `LANGUAGE plpgsql SECURITY DEFINER` sem
+  `SET LOCAL synchronous_commit = off` ou qualquer diretiva que enfraqueça
+  a atomicidade.
+
+Portanto: qualquer exceção levantada por `record_audit` (incluindo o
+trigger simulado do R2) propaga, interrompe a statement e o Postgres
+desfaz o `INSERT`/`UPDATE` feito pela RPC no mesmo comando. A prova ao
+vivo seria confirmação adicional dessa propriedade estrutural, não uma
+condição necessária para aceitá-la.
 
 ## Matriz consolidada (após reteste)
 
-| Bloco | PASS | FAIL | PENDING |
+| Bloco | PASS | FAIL | DEFERRED |
 |---|---|---|---|
 | Pedidos (P1–P12, com P10 revisado em 3 sub-cenários) | 14 | 0 | 0 |
 | Caixa (C1–C14, com C11 revisado em 4 sub-cenários) | 22 | 0 | 0 |
-| Rollback (R1 estrutural / R2 ao vivo) | 1 | 0 | 1 |
+| Rollback (R1 estrutural PASS / R2 ao vivo DEFERRED) | 1 | 0 | 1 |
 | Identidade (dump completo por persona) | 1 | 0 | 0 |
 | **Total** | **38** | **0** | **1** |
+
+Zero PENDING executável no ambiente atual.
 
 ## Status atual
 
@@ -175,6 +228,7 @@ enquanto uma execução transacional real não for feita em staging.
   (`/mnt/documents/e2e_onda_2a4_retest.md` / `.json`).
 - Script do reteste em `/tmp/e2e2/retest.ts` (autentica com JWT real via
   publishable key; nunca usa service_role no ponto de ataque).
-- **Onda 2.b permanece bloqueada** até R2 ser executado em staging com
-  resultado PASS.
+- R2 classificado como DEFERRED — environment limitation.
+- **Onda 2.a encerrada.** Onda 2.b liberada. Onda 2.c permanece bloqueando
+  o release completo em produção.
 
