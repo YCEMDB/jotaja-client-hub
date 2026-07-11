@@ -627,7 +627,7 @@ function Estoque() {
                             <td className="py-2 text-right">{formatBRL(i.avg_cost)}</td>
                             <td className="py-2 text-right font-bold">{formatBRL(Number(i.current_qty) * Number(i.avg_cost))}</td>
                             <td className="py-2 text-right">
-                              <Button size="sm" variant="outline" onClick={() => { setInvTarget(i); setInvDialogOpen(true); }}>
+                              <Button size="sm" variant="outline" onClick={() => { setInvTarget(i); setInvDialogOpen(true); }} disabled={!caps.canAdmin} title={caps.canAdmin ? "Contar" : "Requer nível administrativo"}>
                                 <ClipboardCheck className="h-3.5 w-3.5 mr-1" /> Contar
                               </Button>
                             </td>
