@@ -31,7 +31,7 @@ export function PaymentsSection({
 }) {
   const [payments, setPayments] = useState<Payment[]>([]);
   const [loadingP, setLoadingP] = useState(true);
-  const [form, setForm] = useState({ amount: "", method: "pix", months: 1, notes: "" });
+  const [form, setForm] = useState({ amount: "", method: "pix", months: 1, notes: "", reason: "" });
   const [busy, setBusy] = useState(false);
 
   const load = async () => {
