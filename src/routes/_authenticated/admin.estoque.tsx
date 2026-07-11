@@ -742,6 +742,16 @@ function Estoque() {
         ingredient={invTarget}
         onSuccess={load}
       />
+
+      {/* Archive confirmation */}
+      <ArchiveIngredientDialog
+        target={archiveTarget}
+        reason={archiveReason}
+        onReasonChange={setArchiveReason}
+        onCancel={() => setArchiveTarget(null)}
+        onConfirm={confirmArchive}
+        saving={archiving}
+      />
     </AdminPageLayout>
   );
 }
