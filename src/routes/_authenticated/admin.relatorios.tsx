@@ -6,7 +6,6 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Download, BarChart3 } from "lucide-react";
-import { toast } from "sonner";
 import { downloadCSV } from "@/lib/export-csv";
 import { FeatureGate } from "@/components/FeatureGate";
 import {
@@ -564,7 +563,6 @@ function RelatoriosPage() {
     </AdminPageLayout>
   );
 
-  function _unused() { toast; } // silence
 }
 
 function BreakdownList({ items }: { items: { label: string; value: string }[] }) {
