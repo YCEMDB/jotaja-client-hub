@@ -25,7 +25,9 @@ interface Props {
 }
 
 export function RecipeDialog({ open, onOpenChange, product, ingredients, onSaved }: Props) {
+  const caps = useStockCapabilities();
   const [lines, setLines] = useState<RecipeLine[]>([]);
+  const [reason, setReason] = useState("");
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
 
