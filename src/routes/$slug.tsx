@@ -605,12 +605,15 @@ function CheckoutDialog({
       }
     }
 
+    // Contrato novo: envia apenas identificadores e seleção.
+    // unit_price é enviado somente como "expectativa visual" — o servidor recalcula
+    // e usa esse valor apenas para detectar `price_changed_refresh_menu`.
     const itemsPayload = cart.map((i) => ({
       product_id: i.product.id,
       product_name: i.product.name,
       quantity: i.qty,
       unit_price: Number(i.product.promo_price ?? i.product.price),
-      subtotal: Number(i.product.promo_price ?? i.product.price) * i.qty,
+      option_item_ids: [] as string[],
     }));
 
     const { data: rpcData, error: oErr } = await supabase.rpc("create_public_order", {
@@ -620,6 +623,7 @@ function CheckoutDialog({
       p_customer_phone: phone.trim(),
       p_type: orderType,
       p_payment: payment,
+      // Valores enviados apenas por compatibilidade — servidor recalcula tudo.
       p_subtotal: subtotal,
       p_delivery_fee: finalShipping,
       p_discount: coupon?.type === "free_shipping" ? 0 : discount,
@@ -643,6 +647,22 @@ function CheckoutDialog({
         return toast.error("Esta loja atingiu o limite de pedidos do mês. Tente novamente em breve.");
       }
       if (msg.includes("restaurant_closed")) return toast.error("A loja está fechada no momento.");
+      if (msg.includes("price_changed_refresh_menu"))
+        return toast.error("Os preços foram atualizados. Revise seu carrinho antes de finalizar.");
+      if (msg.includes("delivery_area_required")) return toast.error("Selecione um bairro para a entrega.");
+      if (msg.includes("delivery_area_not_found"))
+        return toast.error("Este bairro não faz parte da área de entrega da loja.");
+      if (msg.includes("delivery_min_order"))
+        return toast.error("Pedido abaixo do mínimo para o bairro selecionado.");
+      if (msg.includes("too_many_items")) return toast.error("Pedido muito grande. Divida em pedidos menores.");
+      if (msg.includes("too_many_options")) return toast.error("Excesso de adicionais em um item.");
+      if (msg.includes("product_archived") || msg.includes("product_unavailable"))
+        return toast.error("Um dos itens não está mais disponível. Atualize o cardápio.");
+      if (msg.includes("required_group_missing"))
+        return toast.error("Selecione as opções obrigatórias antes de finalizar.");
+      if (msg.includes("min_select_violation")) return toast.error("Selecione a quantidade mínima de opções.");
+      if (msg.includes("max_select_violation")) return toast.error("Selecione a quantidade máxima de opções.");
+      if (msg.includes("invalid_option_item")) return toast.error("Adicional inválido para este produto.");
       if (msg.includes("coupon_not_started")) return toast.error("Cupom ainda não está válido.");
       if (msg.includes("coupon_expired")) return toast.error("Cupom expirado.");
       if (msg.includes("coupon_exhausted")) return toast.error("Cupom esgotado.");
