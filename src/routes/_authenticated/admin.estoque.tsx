@@ -198,10 +198,34 @@ function Estoque() {
     setMovTarget(ing); setMovDefaultType(type); setMovDialogOpen(true);
   };
 
-  const inactivateIng = async (ing: StockIngredient) => {
-    if (!confirm(`Inativar ingrediente "${ing.name}"?`)) return;
-    try { await updateIngredient({ id: ing.id, is_active: false }); toast.success("Inativado"); load(); }
-    catch (e: any) { toast.error(e?.message ?? "Erro"); }
+  const [archiveTarget, setArchiveTarget] = useState<StockIngredient | null>(null);
+  const [archiveReason, setArchiveReason] = useState("");
+  const [archiving, setArchiving] = useState(false);
+
+  const requestArchive = (ing: StockIngredient) => {
+    if (!caps.canAdmin) {
+      toast.error("Arquivamento requer nível administrativo.");
+      return;
+    }
+    setArchiveTarget(ing);
+    setArchiveReason("");
+  };
+
+  const confirmArchive = async () => {
+    if (!archiveTarget) return;
+    const err = validateReason(archiveReason);
+    if (err) { toast.error(err); return; }
+    setArchiving(true);
+    try {
+      await updateIngredient({ id: archiveTarget.id, is_active: false, reason: archiveReason.trim() });
+      toast.success("Ingrediente arquivado.");
+      setArchiveTarget(null);
+      load();
+    } catch (e) {
+      toast.error(translateStockError(e));
+    } finally {
+      setArchiving(false);
+    }
   };
 
   if (loading) {
