@@ -24,6 +24,21 @@ const MAP: Record<string, string> = {
     "Limite do plano atingido. Faça upgrade ou arquive registros para liberar espaço.",
   reason_required: "Motivo obrigatório (mínimo 5 caracteres).",
   not_found: "Registro não encontrado.",
+
+  // Adicionais (Onda 2.b — bloco final)
+  invalid_option_group: "Grupo de adicionais inválido ou de outro restaurante.",
+  invalid_option_item: "Adicional inválido ou de outro restaurante.",
+  option_group_archived: "Grupo de adicionais arquivado. Restaure-o antes de continuar.",
+  option_item_archived: "Adicional arquivado. Restaure-o antes de continuar.",
+  option_item_unavailable: "Adicional indisponível no momento.",
+  invalid_selection_limits:
+    "Limites de seleção inválidos. Confira mínimo, máximo e obrigatoriedade.",
+  required_group_without_items:
+    "Grupo obrigatório precisa ter itens utilizáveis suficientes antes de salvar.",
+  invalid_extra_price: "Preço adicional inválido.",
+  option_price_changed_by_another_user:
+    "O preço deste adicional foi alterado por outro usuário. Recarregue antes de salvar.",
+
   "forbidden: not_authenticated": "Sessão expirada. Entre novamente.",
   "forbidden: no_active_support_session":
     "Sessão de suporte encerrada — reabra para continuar.",
