@@ -170,7 +170,15 @@ export async function createPixCharge(input: {
   const expiresAt = new Date(Date.now() + expiresInMinutes * 60_000);
   const body = {
     reference_id: input.referenceId,
-    customer: { name: "Cliente" },
+    customer: { name: "Cliente", email: "cliente@comandahub.online", tax_id: "12345678909" },
+    items: [
+      {
+        reference_id: input.referenceId,
+        name: input.description.slice(0, 100),
+        quantity: 1,
+        unit_amount: input.amountCents,
+      },
+    ],
     qr_codes: [
       {
         amount: { value: input.amountCents },
@@ -192,10 +200,12 @@ export async function createPixCharge(input: {
     });
     const payload: any = await res.json().catch(() => ({}));
     if (!res.ok) {
+      console.error("[pagbank] create pix http error", res.status, JSON.stringify(payload).slice(0, 1500));
+      const em = payload?.error_messages?.[0];
       return {
         ok: false,
-        error: payload?.error_messages?.[0]?.code ?? `http_${res.status}`,
-        message: payload?.error_messages?.[0]?.description,
+        error: em?.code ?? `http_${res.status}`,
+        message: em ? `${em.description ?? ""}${em.parameter_name ? ` (${em.parameter_name})` : ""}` : undefined,
       };
     }
     const qr = payload?.qr_codes?.[0];
