@@ -236,9 +236,9 @@ function RelatoriosPage() {
                 </div>
                 <DashboardGrid cols={4}>
                   <StatCard label="Faturamento" value={fmtBRL(stats.revenue)} accent="green"
-                    footer={<Delta current={stats.revenue} previous={prev.revenue} />} />
+                    hint={deltaText(stats.revenue, prev.revenue)} />
                   <StatCard label="Pedidos válidos" value={fmtInt(stats.valid_orders)} accent="orange"
-                    footer={<Delta current={stats.valid_orders} previous={prev.valid_orders} />} />
+                    hint={deltaText(stats.valid_orders, prev.valid_orders)} />
                   <StatCard label="Ticket médio" value={fmtBRL(stats.avg_ticket)} accent="violet" />
                   <StatCard label="Cancelados" value={fmtInt(stats.cancelled_orders)} accent="magenta" />
                   <StatCard label="Descontos" value={fmtBRL(stats.total_discount)} accent="amber" />
@@ -461,10 +461,10 @@ function RelatoriosPage() {
             {cash && (
               <>
                 <DashboardGrid cols={4}>
-                  <StatCard label="Vendas registradas" value={fmtBRL(cash.movements.sale?.total ?? 0)} accent="green" footer={`${fmtInt(cash.movements.sale?.count ?? 0)} lançamentos`} />
-                  <StatCard label="Suprimentos" value={fmtBRL(cash.movements.reinforcement?.total ?? 0)} accent="orange" footer={`${fmtInt(cash.movements.reinforcement?.count ?? 0)} manuais`} />
-                  <StatCard label="Sangrias" value={fmtBRL(cash.movements.withdrawal?.total ?? 0)} accent="magenta" footer={`${fmtInt(cash.movements.withdrawal?.count ?? 0)} manuais`} />
-                  <StatCard label="Despesas" value={fmtBRL(cash.movements.expense?.total ?? 0)} accent="amber" footer={`${fmtInt(cash.movements.expense?.count ?? 0)} manuais`} />
+                  <StatCard label="Vendas registradas" value={fmtBRL(cash.movements.sale?.total ?? 0)} accent="green" hint={`${fmtInt(cash.movements.sale?.count ?? 0)} lançamentos`} />
+                  <StatCard label="Suprimentos" value={fmtBRL(cash.movements.reinforcement?.total ?? 0)} accent="orange" hint={`${fmtInt(cash.movements.reinforcement?.count ?? 0)} manuais`} />
+                  <StatCard label="Sangrias" value={fmtBRL(cash.movements.withdrawal?.total ?? 0)} accent="magenta" hint={`${fmtInt(cash.movements.withdrawal?.count ?? 0)} manuais`} />
+                  <StatCard label="Despesas" value={fmtBRL(cash.movements.expense?.total ?? 0)} accent="amber" hint={`${fmtInt(cash.movements.expense?.count ?? 0)} manuais`} />
                 </DashboardGrid>
                 <Section className="p-0 overflow-hidden">
                   <div className="overflow-x-auto">
@@ -512,10 +512,10 @@ function RelatoriosPage() {
             {stock && (
               <>
                 <DashboardGrid cols={4}>
-                  <StatCard label="Entradas" value={fmtInt(stock.movements.entry?.qty ?? 0)} accent="green" footer={fmtBRL(stock.movements.entry?.cost ?? 0)} />
-                  <StatCard label="Saídas" value={fmtInt((stock.movements.exit?.qty ?? 0) + (stock.movements.sale?.qty ?? 0))} accent="orange" footer={`${fmtInt(stock.movements.sale?.count ?? 0)} por vendas`} />
-                  <StatCard label="Perdas" value={fmtInt(stock.movements.loss?.qty ?? 0)} accent="magenta" footer={fmtBRL(stock.movements.loss?.cost ?? 0)} />
-                  <StatCard label="Ajustes" value={fmtInt(stock.movements.adjust?.qty ?? 0)} accent="amber" footer={`${fmtInt(stock.movements.adjust?.count ?? 0)} ajustes`} />
+                  <StatCard label="Entradas" value={fmtInt(stock.movements.entry?.qty ?? 0)} accent="green" hint={fmtBRL(stock.movements.entry?.cost ?? 0)} />
+                  <StatCard label="Saídas" value={fmtInt((stock.movements.exit?.qty ?? 0) + (stock.movements.sale?.qty ?? 0))} accent="orange" hint={`${fmtInt(stock.movements.sale?.count ?? 0)} por vendas`} />
+                  <StatCard label="Perdas" value={fmtInt(stock.movements.loss?.qty ?? 0)} accent="magenta" hint={fmtBRL(stock.movements.loss?.cost ?? 0)} />
+                  <StatCard label="Ajustes" value={fmtInt(stock.movements.adjust?.qty ?? 0)} accent="amber" hint={`${fmtInt(stock.movements.adjust?.count ?? 0)} ajustes`} />
                 </DashboardGrid>
                 <DashboardGrid cols={2}>
                   <Section>
