@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { adminRegisterPayment, translateAdminError } from "@/lib/super-admin";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,7 +31,7 @@ export function PaymentsSection({
 }) {
   const [payments, setPayments] = useState<Payment[]>([]);
   const [loadingP, setLoadingP] = useState(true);
-  const [form, setForm] = useState({ amount: "", method: "pix", months: 1, notes: "" });
+  const [form, setForm] = useState({ amount: "", method: "pix", months: 1, notes: "", reason: "" });
   const [busy, setBusy] = useState(false);
 
   const load = async () => {
@@ -50,44 +51,26 @@ export function PaymentsSection({
     const amount = Number(form.amount.replace(",", "."));
     if (!amount || amount <= 0) return toast.error("Informe um valor válido");
     if (!form.months || form.months < 1) return toast.error("Informe quantos meses");
+    if (form.reason.trim().length < 5) return toast.error("Informe um motivo (mín. 5 caracteres)");
     setBusy(true);
-
-    const { data: rest } = await supabase
-      .from("restaurants")
-      .select("subscription_ends_at")
-      .eq("id", restaurantId)
-      .maybeSingle();
-
-    const now = new Date();
-    const startBase = rest?.subscription_ends_at && new Date(rest.subscription_ends_at) > now
-      ? new Date(rest.subscription_ends_at)
-      : now;
-    const periodStart = new Date(startBase);
-    const periodEnd = new Date(startBase);
-    periodEnd.setMonth(periodEnd.getMonth() + form.months);
-
-    const { error: insErr } = await supabase.from("restaurant_payments").insert({
-      restaurant_id: restaurantId,
-      amount,
-      plan: currentPlan,
-      period_start: periodStart.toISOString(),
-      period_end: periodEnd.toISOString(),
-      method: form.method,
-      notes: form.notes || null,
-    });
-    if (insErr) { setBusy(false); return toast.error(insErr.message); }
-
-    const { error: updErr } = await supabase
-      .from("restaurants")
-      .update({ subscription_ends_at: periodEnd.toISOString(), is_active: true })
-      .eq("id", restaurantId);
-    setBusy(false);
-    if (updErr) return toast.error(updErr.message);
-
-    toast.success(`Pagamento registrado. Assinatura válida até ${periodEnd.toLocaleDateString("pt-BR")}.`);
-    setForm({ amount: "", method: "pix", months: 1, notes: "" });
-    onRegistered(periodEnd.toISOString());
-    load();
+    try {
+      const res = await adminRegisterPayment({
+        restaurantId,
+        amount,
+        months: form.months,
+        method: form.method,
+        notes: form.notes || null,
+        reason: form.reason,
+      });
+      toast.success(`Pagamento registrado. Assinatura válida até ${new Date(res.subscription_ends_at).toLocaleDateString("pt-BR")}.`);
+      setForm({ amount: "", method: "pix", months: 1, notes: "", reason: "" });
+      onRegistered(res.subscription_ends_at);
+      load();
+    } catch (e: unknown) {
+      toast.error(translateAdminError(e));
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
@@ -120,6 +103,7 @@ export function PaymentsSection({
           </div>
         </div>
         <Input value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} placeholder="Observações (opcional)" />
+        <Input value={form.reason} onChange={(e) => setForm({ ...form, reason: e.target.value })} placeholder="Motivo (obrigatório, mín. 5 caracteres) — ex.: pagamento PIX ref. #123" />
         <Button size="sm" onClick={register} disabled={busy} className="w-full">
           {busy ? "Registrando..." : "Registrar e estender assinatura"}
         </Button>

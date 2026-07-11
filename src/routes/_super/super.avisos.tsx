@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { adminUpsertAnnouncement, adminDeleteAnnouncement, translateAdminError } from "@/lib/super-admin";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -52,30 +53,45 @@ function AvisosPage() {
 
   const create = async () => {
     if (!form.message.trim()) return toast.error("Mensagem obrigatória");
-    const { error } = await supabase.from("global_announcements").insert({
-      message: form.message.trim(),
-      variant: form.variant,
-      is_active: form.is_active,
-      expires_at: form.expires_at ? new Date(form.expires_at).toISOString() : null,
-    });
-    if (error) return toast.error(error.message);
-    toast.success("Aviso publicado");
-    setForm({ message: "", variant: "info", is_active: true, expires_at: "" });
-    load();
+    try {
+      await adminUpsertAnnouncement({
+        message: form.message,
+        variant: form.variant,
+        isActive: form.is_active,
+        expiresAt: form.expires_at ? new Date(form.expires_at).toISOString() : null,
+      });
+      toast.success("Aviso publicado");
+      setForm({ message: "", variant: "info", is_active: true, expires_at: "" });
+      load();
+    } catch (e: unknown) {
+      toast.error(translateAdminError(e));
+    }
   };
 
   const toggle = async (a: Ann) => {
-    const { error } = await supabase.from("global_announcements").update({ is_active: !a.is_active }).eq("id", a.id);
-    if (error) return toast.error(error.message);
-    load();
+    try {
+      await adminUpsertAnnouncement({
+        id: a.id,
+        message: a.message,
+        variant: a.variant,
+        isActive: !a.is_active,
+        expiresAt: a.expires_at,
+      });
+      load();
+    } catch (e: unknown) {
+      toast.error(translateAdminError(e));
+    }
   };
 
   const remove = async (id: string) => {
     if (!confirm("Excluir esse aviso?")) return;
-    const { error } = await supabase.from("global_announcements").delete().eq("id", id);
-    if (error) return toast.error(error.message);
-    toast.success("Aviso removido");
-    load();
+    try {
+      await adminDeleteAnnouncement(id);
+      toast.success("Aviso removido");
+      load();
+    } catch (e: unknown) {
+      toast.error(translateAdminError(e));
+    }
   };
 
   return (

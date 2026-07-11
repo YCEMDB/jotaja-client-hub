@@ -3,6 +3,13 @@ import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useServerFn } from "@tanstack/react-start";
 import { resetTenant, deleteTenant, resetOwnerPassword } from "@/lib/super-admin.functions";
+import {
+  adminUpdateRestaurantMeta,
+  adminSetSubscriptionEnd,
+  adminSuspendRestaurant,
+  adminReactivateRestaurant,
+  translateAdminError,
+} from "@/lib/super-admin";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -71,6 +78,7 @@ function LojasPage() {
   const [search, setSearch] = useState("");
   const [editing, setEditing] = useState<Row | null>(null);
   const [busy, setBusy] = useState(false);
+  const [saveReason, setSaveReason] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<Row | null>(null);
   const [deleteConfirmName, setDeleteConfirmName] = useState("");
@@ -141,25 +149,62 @@ function LojasPage() {
 
   const save = async () => {
     if (!editing) return;
+    const original = rows.find((r) => r.id === editing.id);
+    if (!original) return;
+    const planChanged = editing.plan_id !== original.plan_id;
+    const activeChanged = editing.is_active !== original.is_active;
+    const subChanged = (editing.subscription_ends_at ?? null) !== (original.subscription_ends_at ?? null);
+    const sensitive = planChanged || activeChanged || subChanged;
+    const reason = saveReason.trim();
+    if (sensitive && reason.length < 5) {
+      toast.error("Informe um motivo (mín. 5 caracteres) para alterar plano, ativação ou assinatura.");
+      return;
+    }
     setBusy(true);
-    // Map plan_id to legacy plan enum for backwards compat
-    const legacyPlan: Plan =
-      editing.plan_id === "starter" ? "essential" :
-      editing.plan_id === "pro" || editing.plan_id === "business" ? "professional" :
-      editing.plan;
-    const { error } = await supabase.from("restaurants").update({
-      plan: legacyPlan,
-      plan_id: editing.plan_id,
-      is_active: editing.is_active,
-      trial_ends_at: editing.trial_ends_at,
-      subscription_ends_at: editing.subscription_ends_at,
-      admin_notes: editing.admin_notes,
-    }).eq("id", editing.id);
-    setBusy(false);
-    if (error) return toast.error(error.message);
-    toast.success("Restaurante atualizado");
-    setEditing(null);
-    load();
+    try {
+      if (planChanged || activeChanged || editing.admin_notes !== original.admin_notes) {
+        await adminUpdateRestaurantMeta({
+          restaurantId: editing.id,
+          planId: planChanged ? editing.plan_id : null,
+          isActive: activeChanged ? editing.is_active : null,
+          adminNotes: editing.admin_notes !== original.admin_notes ? (editing.admin_notes ?? "") : null,
+          reason: sensitive ? reason : null,
+        });
+      }
+      if (subChanged) {
+        await adminSetSubscriptionEnd({
+          restaurantId: editing.id,
+          endsAt: editing.subscription_ends_at,
+          reason,
+        });
+      }
+      toast.success("Restaurante atualizado");
+      setSaveReason("");
+      setEditing(null);
+      load();
+    } catch (e: unknown) {
+      toast.error(translateAdminError(e));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const suspendOrReactivate = async (r: Row, targetActive: boolean) => {
+    const reason = window.prompt(
+      targetActive
+        ? `Reativar "${r.name}". Motivo (mín. 5 caracteres):`
+        : `Suspender "${r.name}". O dono verá tela de bloqueio. Motivo (mín. 5 caracteres):`,
+      "",
+    );
+    if (!reason || reason.trim().length < 5) return;
+    try {
+      if (targetActive) await adminReactivateRestaurant(r.id, reason);
+      else await adminSuspendRestaurant(r.id, reason);
+      toast.success(targetActive ? "Loja reativada" : "Loja suspensa");
+      load();
+    } catch (e: unknown) {
+      toast.error(translateAdminError(e));
+    }
   };
 
   return (
@@ -305,8 +350,8 @@ function LojasPage() {
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <Label className="text-xs">Fim do trial</Label>
-                    <Input type="date" value={editing.trial_ends_at?.slice(0, 10) ?? ""} onChange={(e) => setEditing({ ...editing, trial_ends_at: e.target.value ? new Date(e.target.value).toISOString() : null })} />
+                    <Label className="text-xs">Fim do trial (somente leitura — use "Estender trial")</Label>
+                    <Input type="date" disabled value={editing.trial_ends_at?.slice(0, 10) ?? ""} />
                   </div>
                   <div>
                     <Label className="text-xs">Fim da assinatura</Label>
@@ -316,6 +361,19 @@ function LojasPage() {
                 <div>
                   <Label className="text-xs">Anotações internas</Label>
                   <Textarea rows={3} value={editing.admin_notes ?? ""} onChange={(e) => setEditing({ ...editing, admin_notes: e.target.value })} placeholder="Visível apenas para super-admins" />
+                </div>
+                <div>
+                  <Label className="text-xs">Motivo (obrigatório para alterar plano, ativação ou assinatura — mín. 5 caracteres)</Label>
+                  <Textarea rows={2} value={saveReason} onChange={(e) => setSaveReason(e.target.value)} placeholder="Ex.: upgrade solicitado pelo cliente #123" />
+                </div>
+                <div className="flex items-center justify-between rounded border-2 border-amber-300 bg-amber-500/5 p-3">
+                  <div>
+                    <p className="font-bold text-sm">Suspender / Reativar</p>
+                    <p className="text-xs text-muted-foreground">Alternativa recomendada à exclusão. Também exige motivo.</p>
+                  </div>
+                  <Button variant="outline" size="sm" onClick={() => suspendOrReactivate(editing, !editing.is_active)}>
+                    {editing.is_active ? "Suspender" : "Reativar"}
+                  </Button>
                 </div>
 
                 <PaymentsSection

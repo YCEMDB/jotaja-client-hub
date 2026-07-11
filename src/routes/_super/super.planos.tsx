@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { adminUpsertPlan, adminDeletePlan, translateAdminError } from "@/lib/super-admin";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -49,39 +50,53 @@ function PlanosPage() {
   };
 
   const save = async (p: AppPlan) => {
-    const { error } = await supabase.from("app_plans").update({
-      name: p.name,
-      price_monthly: p.price_monthly,
-      features: p.features,
-      position: p.position,
-      is_active: p.is_active,
-    }).eq("id", p.id);
-    if (error) return toast.error(error.message);
-    toast.success(`Plano ${p.name} atualizado`);
+    try {
+      await adminUpsertPlan({
+        id: p.id,
+        name: p.name,
+        priceMonthly: p.price_monthly,
+        features: p.features,
+        position: p.position,
+        isActive: p.is_active,
+      });
+      toast.success(`Plano ${p.name} atualizado`);
+    } catch (e: unknown) {
+      toast.error(translateAdminError(e));
+    }
   };
 
   const create = async () => {
     const id = prompt("Identificador único do plano (ex: ultra)");
     if (!id) return;
-    const { error } = await supabase.from("app_plans").insert({
-      id: id.toLowerCase().replace(/[^a-z0-9_]/g, ""),
-      name: "Novo plano",
-      price_monthly: 0,
-      features: [],
-      position: plans.length,
-      is_active: true,
-    });
-    if (error) return toast.error(error.message);
-    toast.success("Plano criado");
-    load();
+    const cleanId = id.toLowerCase().replace(/[^a-z0-9_]/g, "");
+    if (!cleanId) return toast.error("Identificador inválido");
+    try {
+      await adminUpsertPlan({
+        id: cleanId,
+        name: "Novo plano",
+        priceMonthly: 0,
+        features: [],
+        position: plans.length,
+        isActive: true,
+      });
+      toast.success("Plano criado");
+      load();
+    } catch (e: unknown) {
+      toast.error(translateAdminError(e));
+    }
   };
 
   const remove = async (id: string) => {
     if (!confirm("Excluir esse plano? Lojas existentes não serão afetadas.")) return;
-    const { error } = await supabase.from("app_plans").delete().eq("id", id);
-    if (error) return toast.error(error.message);
-    toast.success("Plano removido");
-    load();
+    const reason = prompt("Motivo (mín. 5 caracteres):", "");
+    if (!reason || reason.trim().length < 5) return;
+    try {
+      await adminDeletePlan(id, reason);
+      toast.success("Plano removido");
+      load();
+    } catch (e: unknown) {
+      toast.error(translateAdminError(e));
+    }
   };
 
   return (

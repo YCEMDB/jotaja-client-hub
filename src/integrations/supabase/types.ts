@@ -3929,6 +3929,69 @@ export type Database = {
       _tables_can_manage: { Args: { _rid: string }; Returns: boolean }
       _tables_max_for: { Args: { _rid: string }; Returns: number }
       accept_team_invite: { Args: { p_token: string }; Returns: Json }
+      admin_delete_announcement: { Args: { p_id: string }; Returns: Json }
+      admin_delete_plan: {
+        Args: { p_id: string; p_reason: string }
+        Returns: Json
+      }
+      admin_reactivate_restaurant: {
+        Args: { p_reason: string; p_restaurant_id: string }
+        Returns: Json
+      }
+      admin_register_payment: {
+        Args: {
+          p_amount: number
+          p_method: string
+          p_months: number
+          p_notes: string
+          p_reason: string
+          p_restaurant_id: string
+        }
+        Returns: Json
+      }
+      admin_set_subscription_end: {
+        Args: { p_ends_at: string; p_reason: string; p_restaurant_id: string }
+        Returns: Json
+      }
+      admin_suspend_restaurant: {
+        Args: { p_reason: string; p_restaurant_id: string }
+        Returns: Json
+      }
+      admin_update_lead: {
+        Args: { p_id: string; p_notes: string; p_status: string }
+        Returns: Json
+      }
+      admin_update_restaurant_meta: {
+        Args: {
+          p_admin_notes?: string
+          p_is_active?: boolean
+          p_plan_id?: string
+          p_reason?: string
+          p_restaurant_id: string
+        }
+        Returns: Json
+      }
+      admin_upsert_announcement: {
+        Args: {
+          p_expires_at: string
+          p_id: string
+          p_is_active: boolean
+          p_message: string
+          p_variant: string
+        }
+        Returns: Json
+      }
+      admin_upsert_plan: {
+        Args: {
+          p_features: Json
+          p_id: string
+          p_is_active: boolean
+          p_name: string
+          p_position: number
+          p_price_monthly: number
+        }
+        Returns: Json
+      }
       apply_inventory_adjustment: {
         Args: {
           p_ingredient_id: string

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { adminUpdateLead, translateAdminError } from "@/lib/super-admin";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -52,19 +53,25 @@ function LeadsPage() {
   const list = filter === "all" ? leads : leads.filter((l) => l.status === filter);
 
   const setStatus = async (l: Lead, status: LeadStatus) => {
-    const { error } = await supabase.from("signup_leads").update({ status }).eq("id", l.id);
-    if (error) return toast.error(error.message);
-    toast.success(`Lead marcado como ${LEAD_LABEL[status]}`);
-    load();
+    try {
+      await adminUpdateLead({ id: l.id, status });
+      toast.success(`Lead marcado como ${LEAD_LABEL[status]}`);
+      load();
+    } catch (e: unknown) {
+      toast.error(translateAdminError(e));
+    }
   };
 
   const saveNote = async () => {
     if (!noteEditing) return;
-    const { error } = await supabase.from("signup_leads").update({ notes: noteText }).eq("id", noteEditing.id);
-    if (error) return toast.error(error.message);
-    toast.success("Nota salva");
-    setNoteEditing(null);
-    load();
+    try {
+      await adminUpdateLead({ id: noteEditing.id, notes: noteText });
+      toast.success("Nota salva");
+      setNoteEditing(null);
+      load();
+    } catch (e: unknown) {
+      toast.error(translateAdminError(e));
+    }
   };
 
   return (
