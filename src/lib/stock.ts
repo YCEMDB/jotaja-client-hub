@@ -228,6 +228,11 @@ export async function listMovements(restaurantId: string, limit = 100): Promise<
   return (data ?? []) as unknown as StockMovement[];
 }
 
+export type RegisterMovementResult = {
+  id: string | null;
+  noop: boolean;
+};
+
 export async function registerMovement(input: {
   ingredient_id: string;
   type: StockMovementType;
@@ -235,7 +240,7 @@ export async function registerMovement(input: {
   unit_cost?: number | null;
   supplier_id?: string | null;
   reason?: string | null;
-}): Promise<string> {
+}): Promise<RegisterMovementResult> {
   const { data, error } = await supabase.rpc("register_stock_movement", {
     p_ingredient_id: input.ingredient_id,
     p_type: input.type,
@@ -245,7 +250,11 @@ export async function registerMovement(input: {
     p_reason: input.reason ?? undefined,
   });
   if (error) throw error;
-  return data as string;
+  const raw = (data ?? {}) as { id?: string | null; noop?: boolean };
+  return {
+    id: raw.id ?? null,
+    noop: raw.noop === true,
+  };
 }
 
 // -------------------- Recipes / Ficha Técnica --------------------
