@@ -91,19 +91,22 @@ export async function exchangeAuthorizationCode(input: {
   const creds = envCreds(input.environment);
   if (!creds) return { ok: false, error: "missing_credentials" };
   try {
+    // O endpoint /oauth2/token do PagBank Connect exige JSON e envia as
+    // credenciais nos headers X_CLIENT_ID / X_CLIENT_SECRET (não é OAuth
+    // padrão). Enviar form-urlencoded devolve HTTP 415.
     const res = await fetch(`${BASE[input.environment].api}/oauth2/token`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Type": "application/json",
         Accept: "application/json",
+        X_CLIENT_ID: creds.clientId,
+        X_CLIENT_SECRET: creds.clientSecret,
       },
-      body: new URLSearchParams({
+      body: JSON.stringify({
         grant_type: "authorization_code",
         code: input.code,
         redirect_uri: pagbankRedirectUri(),
-        client_id: creds.clientId,
-        client_secret: creds.clientSecret,
-      }).toString(),
+      }),
     });
     const body: any = await res.json().catch(() => ({}));
     if (!res.ok) return { ok: false, error: body?.error ?? `http_${res.status}` };
