@@ -138,6 +138,20 @@ export async function adminUpdateLead(input: {
   if (error) throw error;
 }
 
+export async function adminUpsertSetting(input: {
+  key: string;
+  value: string;
+  reason: string;
+}) {
+  const { data, error } = await supabase.rpc("admin_upsert_setting", {
+    p_key: input.key,
+    p_value: input.value as unknown as never,
+    p_reason: input.reason.trim(),
+  } as never);
+  if (error) throw error;
+  return data as unknown as { ok: boolean; changed: boolean; key: string };
+}
+
 /** Traduções semânticas dos erros das RPCs administrativas. */
 export function translateAdminError(err: unknown): string {
   const raw = err instanceof Error ? err.message : String(err ?? "");
@@ -159,5 +173,7 @@ export function translateAdminError(err: unknown): string {
   if (m.includes("message_required")) return "Mensagem obrigatória.";
   if (m.includes("id_required")) return "Identificador obrigatório.";
   if (m.includes("name_required")) return "Nome obrigatório.";
+  if (m.includes("setting_key_not_allowed")) return "Configuração não permitida por esta tela.";
+  if (m.includes("invalid_setting_value")) return "Valor inválido para esta configuração.";
   return raw || "Erro ao executar ação administrativa.";
 }
