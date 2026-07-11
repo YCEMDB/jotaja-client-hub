@@ -51,44 +51,26 @@ export function PaymentsSection({
     const amount = Number(form.amount.replace(",", "."));
     if (!amount || amount <= 0) return toast.error("Informe um valor válido");
     if (!form.months || form.months < 1) return toast.error("Informe quantos meses");
+    if (form.reason.trim().length < 5) return toast.error("Informe um motivo (mín. 5 caracteres)");
     setBusy(true);
-
-    const { data: rest } = await supabase
-      .from("restaurants")
-      .select("subscription_ends_at")
-      .eq("id", restaurantId)
-      .maybeSingle();
-
-    const now = new Date();
-    const startBase = rest?.subscription_ends_at && new Date(rest.subscription_ends_at) > now
-      ? new Date(rest.subscription_ends_at)
-      : now;
-    const periodStart = new Date(startBase);
-    const periodEnd = new Date(startBase);
-    periodEnd.setMonth(periodEnd.getMonth() + form.months);
-
-    const { error: insErr } = await supabase.from("restaurant_payments").insert({
-      restaurant_id: restaurantId,
-      amount,
-      plan: currentPlan,
-      period_start: periodStart.toISOString(),
-      period_end: periodEnd.toISOString(),
-      method: form.method,
-      notes: form.notes || null,
-    });
-    if (insErr) { setBusy(false); return toast.error(insErr.message); }
-
-    const { error: updErr } = await supabase
-      .from("restaurants")
-      .update({ subscription_ends_at: periodEnd.toISOString(), is_active: true })
-      .eq("id", restaurantId);
-    setBusy(false);
-    if (updErr) return toast.error(updErr.message);
-
-    toast.success(`Pagamento registrado. Assinatura válida até ${periodEnd.toLocaleDateString("pt-BR")}.`);
-    setForm({ amount: "", method: "pix", months: 1, notes: "" });
-    onRegistered(periodEnd.toISOString());
-    load();
+    try {
+      const res = await adminRegisterPayment({
+        restaurantId,
+        amount,
+        months: form.months,
+        method: form.method,
+        notes: form.notes || null,
+        reason: form.reason,
+      });
+      toast.success(`Pagamento registrado. Assinatura válida até ${new Date(res.subscription_ends_at).toLocaleDateString("pt-BR")}.`);
+      setForm({ amount: "", method: "pix", months: 1, notes: "", reason: "" });
+      onRegistered(res.subscription_ends_at);
+      load();
+    } catch (e: unknown) {
+      toast.error(translateAdminError(e));
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
