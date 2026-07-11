@@ -385,14 +385,14 @@ function Estoque() {
                           <td className="px-4 py-3 font-bold">{formatBRL(value)}</td>
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-1 justify-end">
-                              <Button size="sm" variant="outline" onClick={() => openMovement(i, "entry")} title="Registrar movimentação">
+                              <Button size="sm" variant="outline" onClick={() => openMovement(i, "entry")} title="Registrar movimentação" disabled={!caps.canWrite}>
                                 <ArrowDownUp className="h-3.5 w-3.5" />
                               </Button>
-                              <Button size="sm" variant="ghost" onClick={() => { setEditingIng(i); setIngDialogOpen(true); }} title="Editar">
+                              <Button size="sm" variant="ghost" onClick={() => { setEditingIng(i); setIngDialogOpen(true); }} title="Editar" disabled={!caps.canWrite}>
                                 <Pencil className="h-3.5 w-3.5" />
                               </Button>
                               {i.is_active && (
-                                <Button size="sm" variant="ghost" onClick={() => inactivateIng(i)} title="Inativar">
+                                <Button size="sm" variant="ghost" onClick={() => requestArchive(i)} title={caps.canAdmin ? "Arquivar" : "Requer nível administrativo"} disabled={!caps.canAdmin}>
                                   <Trash2 className="h-3.5 w-3.5" />
                                 </Button>
                               )}
