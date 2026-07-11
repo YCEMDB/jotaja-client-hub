@@ -108,7 +108,29 @@ Checkout do cliente (`/pedido/:id`) **não mudou**: `createPixPayment`/`syncPixP
 - Super Admin vê integração via `admin_view_payment_integrations`: status, environment, conta mascarada, `last_webhook_at`, `last_error_code` — **nunca** tokens/segredos.
 - Auditoria (`private.record_audit`): `pagbank_connect`, `pagbank_disconnect`, `pagbank_rotate_webhook`, `pagbank_webhook_event`, `set_active_payment_provider`, `payment_status_change`.
 
-## 13. Testes
+## 13. Assinatura do Webhook (correção)
+
+Regra oficial do PagBank confirmada e implementada em
+`verifyWebhookSignature` (`src/lib/payments/pagbank-api.server.ts`):
+
+```
+expected = SHA-256( access_token + "-" + raw_body )  // hex
+recebido = header x-authenticity-token (fallback x-signature)
+```
+
+- **Não é HMAC.** É digest SHA-256 puro sobre a concatenação
+  `access_token + "-" + payload_bruto`. O `access_token` do lojista é o
+  próprio segredo compartilhado — não existe chave separada.
+- `raw_body` é o buffer exato lido de `request.text()` **antes** de
+  qualquer `JSON.parse`. Nunca se reconstrói via `JSON.stringify`.
+- Comparação com `timingSafeEqual` (tempo constante).
+- Header ausente, tamanho divergente ou hash divergente → 401 e
+  nenhum efeito no banco.
+- O `webhook_key` opaco na URL (`/api/public/hooks/pagbank/{webhook_key}`)
+  é apenas roteamento anti-enumeração — **não é** prova de autenticidade.
+  A prova é sempre a comparação SHA-256 acima.
+
+## 14. Testes e classificação de release
 
 ### STRUCTURAL PASS
 - Typecheck limpo (bunx tsgo).
@@ -116,26 +138,35 @@ Checkout do cliente (`/pedido/:id`) **não mudou**: `createPixPayment`/`syncPixP
 - Tokens nunca aparecem no bundle client (imports server-only).
 - Service role via `client.server.ts` (import protegido).
 - Grants restritos: `webhook_key` / `access_token_encrypted` sem acesso a `authenticated`/`anon`.
-- Índice único parcial impede 2 pagamentos ativos por pedido.
-- `payment_apply_provider_event` idempotente via `payment_webhook_events`.
-- Enum financeiro separado do operacional.
+- Índice único parcial impede 2 pagamentos ativos por pedido — inclusive entre providers (Mercado Pago × PagBank não coexistem ativos no mesmo pedido; estados ativos = `waiting|processing|authorized|paid`).
+- `payment_apply_provider_event` idempotente via `payment_webhook_events` (chave `(provider, external_event_id | payload_hash)`).
+- Enum financeiro separado do enum operacional. `orders.payment_status` é apenas espelho gravado pela função canônica; ambos os webhooks (MP e PagBank) passam pela mesma RPC; `orders.status` só transiciona via `update_order_status`.
+- Backfill do Mercado Pago preservou `mp_payment_id`, provider histórico e `paid_at` apenas quando já existiam; pedidos sem confirmação ficaram como `waiting` (não inventados como pagos, não migrados para PagBank).
+- Troca de provider afeta apenas cobranças futuras; pagamentos pendentes seguem no provider original; desconectar não apaga histórico e não bloqueia reconciliação de cobranças já criadas.
+- Chave de criptografia dos tokens fica em `vault`; descriptografia só em RPCs `SECURITY DEFINER` server-side; `authenticated` não lê `access_token_encrypted`; auditoria nunca grava token/secret/QR.
+- Assinatura oficial **SHA-256(access_token + "-" + raw_body)** com comparação em tempo constante (correção desta rodada).
 - Nenhum DML direto financeiro no navegador.
-- Assinatura HMAC-SHA256 com comparação em tempo constante.
 
-### DEFERRED — Sandbox E2E
-Requer configuração externa do administrador do COMANDAHUB:
-- Cadastro da aplicação PagBank Connect
-- `CLIENT_ID`/`CLIENT_SECRET` (sandbox e produção)
-- Homologação PagBank
-- Conta PagBank de testes com chave Pix ativa
+### DEFERRED
+- **PagBank Sandbox E2E — application credentials unavailable.**
+- **PagBank Production E2E — application credentials and homologation unavailable.**
 
-Assim que forem provisionados via `add_secret`, os cenários E2E listados no escopo do turno podem ser executados (conectar, criar Pix, webhook válido, assinatura alterada, duplicado, valor divergente, expiração, reconexão etc.).
+Requer, externamente:
+- Cadastro da aplicação PagBank Connect e homologação.
+- Secrets `PAGBANK_CLIENT_ID(_SANDBOX)` / `PAGBANK_CLIENT_SECRET(_SANDBOX)` via `add_secret`.
+- Conta PagBank de testes com chave Pix ativa.
 
-## 14. Requisitos externos ainda pendentes
+### Status para produção
+**BLOCKED BY EXTERNAL E2E.** A integração não deve ser anunciada como
+"funcional em produção" nem "PagBank conectado" com base apenas em build
+verde. A ativação real exige as credenciais e a bateria E2E acima.
 
-- Aprovação da aplicação PagBank Connect
-- Secrets `PAGBANK_CLIENT_ID(_SANDBOX)` / `PAGBANK_CLIENT_SECRET(_SANDBOX)`
-- `PUBLIC_SITE_URL` já configurado (default `https://comandahub.online`)
-- Conta PagBank de testes com Pix ativo para rodar sandbox E2E
+## 15. Requisitos externos ainda pendentes
+
+- Aprovação da aplicação PagBank Connect.
+- Secrets `PAGBANK_CLIENT_ID(_SANDBOX)` / `PAGBANK_CLIENT_SECRET(_SANDBOX)`.
+- `PUBLIC_SITE_URL` já configurado (default `https://comandahub.online`).
+- Conta PagBank de testes com Pix ativo para rodar sandbox E2E.
+
 
 Fora do escopo desta entrega (não implementado): split, cartão, custódia, comissão automática.
