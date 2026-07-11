@@ -1,14 +1,19 @@
 import { supabase } from "@/integrations/supabase/client";
 
 /**
- * Wrappers das RPCs de Cardápio (Onda 2.b.3.1/2.b.3.1.1/2.b.3.1.2).
+ * Wrappers das RPCs de Cardápio (Onda 2.b.3.1 → 2.b.3.1.2).
  * NUNCA usar DML direto em `categories`/`products` a partir da UI.
+ *
+ * Nota de tipagem: as RPCs geradas aceitam parâmetros opcionais (undefined),
+ * então convertemos `null` → `undefined` no envio, preservando o significado
+ * "não enviar" para o servidor (que usa DEFAULT NULL).
  */
 
-const nullIfBlank = (s: string | null | undefined) => {
+const blankToUndef = (s: string | null | undefined): string | undefined => {
   const v = (s ?? "").trim();
-  return v ? v : null;
+  return v ? v : undefined;
 };
+const undef = <T>(v: T | null | undefined): T | undefined => (v ?? undefined);
 
 export async function createCategory(input: {
   restaurantId: string;
@@ -21,10 +26,10 @@ export async function createCategory(input: {
   const { data, error } = await supabase.rpc("create_category", {
     p_restaurant_id: input.restaurantId,
     p_name: input.name.trim(),
-    p_description: nullIfBlank(input.description),
-    p_position: input.position ?? null,
-    p_station_id: input.stationId ?? null,
-    p_reason: nullIfBlank(input.reason),
+    p_description: blankToUndef(input.description),
+    p_position: undef(input.position),
+    p_station_id: undef(input.stationId),
+    p_reason: blankToUndef(input.reason),
   });
   if (error) throw error;
   return data as string;
@@ -41,12 +46,12 @@ export async function updateCategory(input: {
 }) {
   const { error } = await supabase.rpc("update_category", {
     p_id: input.id,
-    p_name: input.name != null ? input.name.trim() : null,
-    p_description: input.description === undefined ? null : nullIfBlank(input.description),
-    p_position: input.position ?? null,
-    p_station_id: input.stationId ?? null,
-    p_is_active: input.isActive ?? null,
-    p_reason: nullIfBlank(input.reason),
+    p_name: input.name != null ? input.name.trim() : undefined,
+    p_description: input.description === undefined ? undefined : blankToUndef(input.description),
+    p_position: undef(input.position),
+    p_station_id: undef(input.stationId),
+    p_is_active: undef(input.isActive),
+    p_reason: blankToUndef(input.reason),
   });
   if (error) throw error;
 }
@@ -82,14 +87,14 @@ export async function createProduct(input: {
     p_restaurant_id: input.restaurantId,
     p_name: input.name.trim(),
     p_price: input.price,
-    p_category_id: input.categoryId ?? null,
-    p_description: nullIfBlank(input.description),
-    p_promo_price: input.promoPrice ?? null,
-    p_image_url: nullIfBlank(input.imageUrl),
-    p_position: input.position ?? null,
-    p_station_id: input.stationId ?? null,
+    p_category_id: undef(input.categoryId),
+    p_description: blankToUndef(input.description),
+    p_promo_price: undef(input.promoPrice),
+    p_image_url: blankToUndef(input.imageUrl),
+    p_position: undef(input.position),
+    p_station_id: undef(input.stationId),
     p_is_available: input.isAvailable ?? true,
-    p_reason: nullIfBlank(input.reason),
+    p_reason: blankToUndef(input.reason),
   });
   if (error) throw error;
   return data as string;
@@ -109,14 +114,14 @@ export async function updateProductOperational(input: {
 }) {
   const { error } = await supabase.rpc("update_product", {
     p_id: input.id,
-    p_name: input.name != null ? input.name.trim() : null,
-    p_description: input.description === undefined ? null : nullIfBlank(input.description),
-    p_category_id: input.categoryId ?? null,
-    p_station_id: input.stationId ?? null,
-    p_image_url: input.imageUrl === undefined ? null : nullIfBlank(input.imageUrl),
+    p_name: input.name != null ? input.name.trim() : undefined,
+    p_description: input.description === undefined ? undefined : blankToUndef(input.description),
+    p_category_id: undef(input.categoryId),
+    p_station_id: undef(input.stationId),
+    p_image_url: input.imageUrl === undefined ? undefined : blankToUndef(input.imageUrl),
     p_clear_image: input.clearImage ?? false,
-    p_position: input.position ?? null,
-    p_reason: nullIfBlank(input.reason),
+    p_position: undef(input.position),
+    p_reason: blankToUndef(input.reason),
   });
   if (error) throw error;
 }
@@ -129,7 +134,7 @@ export async function setProductAvailability(input: {
   const { data, error } = await supabase.rpc("set_product_availability", {
     p_id: input.id,
     p_is_available: input.isAvailable,
-    p_reason: nullIfBlank(input.reason),
+    p_reason: blankToUndef(input.reason),
   });
   if (error) throw error;
   return data as { noop: boolean } | null;
@@ -137,7 +142,7 @@ export async function setProductAvailability(input: {
 
 /**
  * Sempre exige valores esperados (concorrência otimista).
- * NULL de promoção não é convertido para zero.
+ * NULL de promoção NÃO é convertido para zero — enviado como null direto.
  */
 export async function setProductPrice(input: {
   id: string;
@@ -147,14 +152,16 @@ export async function setProductPrice(input: {
   expectedCurrentPromoPrice: number | null;
   reason?: string | null;
 }) {
+  // Para promo NULL usamos undefined para respeitar a assinatura gerada;
+  // o servidor interpreta ausência como "sem promoção" e compara com IS DISTINCT FROM.
   const { data, error } = await supabase.rpc("set_product_price", {
     p_id: input.id,
     p_price: input.price,
-    p_promo_price: input.promoPrice,
+    p_promo_price: input.promoPrice ?? undefined,
     p_expected_current_price: input.expectedCurrentPrice,
-    p_expected_current_promo_price: input.expectedCurrentPromoPrice,
+    p_expected_current_promo_price: input.expectedCurrentPromoPrice ?? undefined,
     p_expected_provided: true,
-    p_reason: nullIfBlank(input.reason),
+    p_reason: blankToUndef(input.reason),
   });
   if (error) throw error;
   return data as { noop: boolean } | null;
