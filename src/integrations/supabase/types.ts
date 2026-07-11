@@ -4641,9 +4641,9 @@ export type Database = {
       }
       set_product_price: {
         Args: {
-          p_check_expected?: boolean
           p_expected_current_price?: number
           p_expected_current_promo_price?: number
+          p_expected_provided?: boolean
           p_id: string
           p_price: number
           p_promo_price?: number

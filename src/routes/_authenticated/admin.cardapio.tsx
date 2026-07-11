@@ -1,45 +1,72 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger,
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
-} from "@/components/ui/select";
-import { Pencil, Trash2, Plus, Upload, ImageIcon, Sparkles, Loader2, UtensilsCrossed } from "lucide-react";
+  Pencil, Plus, ImageIcon, Sparkles, Loader2, UtensilsCrossed,
+  Archive, ArchiveRestore, DollarSign, Info,
+} from "lucide-react";
 import { AdminPageLayout } from "@/components/ds";
 import { toast } from "sonner";
+import { setProductAvailability } from "@/lib/menu";
+import { translateMenuError } from "@/lib/menu-errors";
+import { useMenuCapabilities } from "@/hooks/useMenuCapabilities";
+import { CategoryFormDialog } from "@/components/menu/CategoryFormDialog";
+import { ProductCreateDialog } from "@/components/menu/ProductCreateDialog";
+import { ProductEditDialog } from "@/components/menu/ProductEditDialog";
+import { ProductPriceDialog } from "@/components/menu/ProductPriceDialog";
+import { ArchiveConfirmDialog } from "@/components/menu/ArchiveConfirmDialog";
 
 export const Route = createFileRoute("/_authenticated/admin/cardapio")({
   component: CardapioPage,
   head: () => ({ meta: [{ title: "Cardápio — Comandex" }] }),
 });
 
-type Category = { id: string; name: string; description: string | null; position: number | null; is_active: boolean | null };
+type Category = {
+  id: string; name: string; description: string | null;
+  position: number | null; is_active: boolean | null;
+  archived_at: string | null;
+};
 type Product = {
   id: string; name: string; description: string | null; price: number;
   promo_price: number | null; image_url: string | null; category_id: string | null;
   is_available: boolean | null; position: number | null;
+  archived_at: string | null;
 };
+
+type Tab = "ativos" | "arquivados";
 
 function CardapioPage() {
   const { restaurantId } = useAuth();
+  const caps = useMenuCapabilities();
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [tab, setTab] = useState<Tab>("ativos");
 
-  const [catOpen, setCatOpen] = useState(false);
-  const [editCat, setEditCat] = useState<Category | null>(null);
-  const [prodOpen, setProdOpen] = useState(false);
-  const [editProd, setEditProd] = useState<Product | null>(null);
+  // Dialog state
+  const [catFormOpen, setCatFormOpen] = useState(false);
+  const [catEditing, setCatEditing] = useState<Category | null>(null);
+
+  const [prodCreateOpen, setProdCreateOpen] = useState(false);
+  const [prodEditOpen, setProdEditOpen] = useState(false);
+  const [prodEditing, setProdEditing] = useState<Product | null>(null);
+
+  const [priceOpen, setPriceOpen] = useState(false);
+  const [priceProduct, setPriceProduct] = useState<Product | null>(null);
+
+  const [archiveOpen, setArchiveOpen] = useState(false);
+  const [archiveKind, setArchiveKind] = useState<"category" | "product">("product");
+  const [archiveMode, setArchiveMode] = useState<"archive" | "restore">("archive");
+  const [archiveTarget, setArchiveTarget] = useState<{ id: string; name: string } | null>(null);
 
   const load = async () => {
     if (!restaurantId) return;
@@ -48,35 +75,39 @@ function CardapioPage() {
       supabase.from("categories").select("*").eq("restaurant_id", restaurantId).order("position"),
       supabase.from("products").select("*").eq("restaurant_id", restaurantId).order("position"),
     ]);
-    setCategories(c.data ?? []);
-    setProducts(p.data ?? []);
+    setCategories((c.data as Category[] | null) ?? []);
+    setProducts((p.data as Product[] | null) ?? []);
     setLoading(false);
   };
 
   useEffect(() => { load(); }, [restaurantId]);
 
-  const deleteCategory = async (id: string) => {
-    if (!confirm("Excluir categoria? Os produtos ficarão sem categoria.")) return;
-    const { error } = await supabase.from("categories").delete().eq("id", id);
-    if (error) return toast.error(error.message);
-    toast.success("Categoria excluída");
-    load();
+  const activeCategories = useMemo(() => categories.filter((c) => !c.archived_at), [categories]);
+  const archivedCategories = useMemo(() => categories.filter((c) => !!c.archived_at), [categories]);
+  const activeProducts = useMemo(() => products.filter((p) => !p.archived_at), [products]);
+  const archivedProducts = useMemo(() => products.filter((p) => !!p.archived_at), [products]);
+
+  const toggleAvailability = async (p: Product) => {
+    try {
+      await setProductAvailability({ id: p.id, isAvailable: !p.is_available });
+      load();
+    } catch (e) {
+      toast.error(translateMenuError(e));
+    }
   };
 
-  const deleteProduct = async (id: string) => {
-    if (!confirm("Excluir produto?")) return;
-    const { error } = await supabase.from("products").delete().eq("id", id);
-    if (error) return toast.error(error.message);
-    toast.success("Produto excluído");
-    load();
+  const openArchive = (kind: "category" | "product", mode: "archive" | "restore", target: { id: string; name: string }) => {
+    setArchiveKind(kind);
+    setArchiveMode(mode);
+    setArchiveTarget(target);
+    setArchiveOpen(true);
   };
 
-  const toggleProduct = async (p: Product) => {
-    await supabase.from("products").update({ is_available: !p.is_available }).eq("id", p.id);
-    load();
-  };
+  if (!restaurantId) {
+    return <AdminPageLayout title="Cardápio"><p className="text-ink/60">Configure seu restaurante primeiro.</p></AdminPageLayout>;
+  }
 
-  if (!restaurantId) return <AdminPageLayout title="Cardápio"><p className="text-ink/60">Configure seu restaurante primeiro.</p></AdminPageLayout>;
+  const readOnly = !caps.canWriteOperational;
 
   return (
     <AdminPageLayout
@@ -88,319 +119,327 @@ function CardapioPage() {
       actions={
         <>
           <AISuggestButton restaurantId={restaurantId} />
-          <Button variant="outline" onClick={() => { setEditCat(null); setCatOpen(true); }}>
+          <Button
+            variant="outline"
+            onClick={() => { setCatEditing(null); setCatFormOpen(true); }}
+            disabled={!caps.canWriteOperational}
+            title={readOnly ? "Nível de acesso não permite" : undefined}
+          >
             <Plus className="h-4 w-4 mr-2" /> Categoria
           </Button>
-          <Button onClick={() => { setEditProd(null); setProdOpen(true); }} disabled={categories.length === 0}>
+          <Button
+            onClick={() => setProdCreateOpen(true)}
+            disabled={!caps.canAdmin || activeCategories.length === 0}
+            title={
+              !caps.canAdmin
+                ? "Criar produto exige nível administrativo"
+                : activeCategories.length === 0
+                  ? "Crie uma categoria ativa primeiro"
+                  : undefined
+            }
+          >
             <Plus className="h-4 w-4 mr-2" /> Produto
           </Button>
         </>
       }
     >
-
-      {loading ? (
-        <p className="text-muted-foreground">Carregando…</p>
-      ) : categories.length === 0 ? (
-        <Card className="p-12 text-center">
-          <h3 className="text-lg font-semibold mb-2">Nenhuma categoria ainda</h3>
-          <p className="text-muted-foreground mb-4">Crie uma categoria (ex: Pizzas, Bebidas) para começar.</p>
-          <Button onClick={() => { setEditCat(null); setCatOpen(true); }}>
-            <Plus className="h-4 w-4 mr-2" /> Criar primeira categoria
-          </Button>
-        </Card>
-      ) : (
-        <div className="space-y-8">
-          {categories.map((cat) => {
-            const items = products.filter((p) => p.category_id === cat.id);
-            return (
-              <div key={cat.id}>
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <h2 className="text-xl font-semibold">{cat.name}</h2>
-                    <span className="text-sm text-muted-foreground">{items.length} item(s)</span>
-                    {!cat.is_active && <span className="text-xs px-2 py-1 rounded bg-muted text-muted-foreground">Inativa</span>}
-                  </div>
-                  <div className="flex gap-1">
-                    <Button size="icon" variant="ghost" onClick={() => { setEditCat(cat); setCatOpen(true); }}>
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button size="icon" variant="ghost" onClick={() => deleteCategory(cat.id)}>
-                      <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {items.map((p) => (
-                    <Card key={p.id} className="p-3 flex gap-3">
-                      <div className="h-20 w-20 rounded-md bg-muted shrink-0 grid place-items-center overflow-hidden">
-                        {p.image_url ? (
-                          <img src={p.image_url} alt={p.name} className="h-full w-full object-cover" />
-                        ) : (
-                          <ImageIcon className="h-6 w-6 text-muted-foreground" />
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="min-w-0">
-                            <h3 className="font-medium truncate">{p.name}</h3>
-                            <p className="text-xs text-muted-foreground line-clamp-2">{p.description}</p>
-                          </div>
-                          <Switch checked={!!p.is_available} onCheckedChange={() => toggleProduct(p)} />
-                        </div>
-                        <div className="flex items-center justify-between mt-2">
-                          <div className="text-sm">
-                            {p.promo_price != null && (
-                              <span className="text-muted-foreground line-through mr-1">R$ {Number(p.price).toFixed(2)}</span>
-                            )}
-                            <span className="font-semibold">R$ {Number(p.promo_price ?? p.price).toFixed(2)}</span>
-                          </div>
-                          <div className="flex gap-1">
-                            <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => { setEditProd(p); setProdOpen(true); }}>
-                              <Pencil className="h-3.5 w-3.5" />
-                            </Button>
-                            <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => deleteProduct(p.id)}>
-                              <Trash2 className="h-3.5 w-3.5 text-destructive" />
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
-                  {items.length === 0 && (
-                    <p className="text-sm text-muted-foreground col-span-full">Sem produtos nesta categoria.</p>
-                  )}
-                </div>
-              </div>
-            );
-          })}
+      {caps.isSupport && (
+        <div className="mb-4 flex gap-2 rounded-md border border-brand-orange/40 bg-brand-orange/5 p-3 text-sm">
+          <Info className="h-4 w-4 text-brand-orange shrink-0 mt-0.5" />
+          <div>
+            Sessão de suporte assistido — nível <b>{caps.supportLevel}</b>. Toda escrita exige motivo próprio; ações administrativas exigem nível <b>administrative</b>.
+          </div>
         </div>
       )}
 
-      <CategoryDialog
-        open={catOpen}
-        onOpenChange={setCatOpen}
-        editing={editCat}
+      <Tabs value={tab} onValueChange={(v) => setTab(v as Tab)} className="mb-4">
+        <TabsList>
+          <TabsTrigger value="ativos">
+            Ativos
+            <span className="ml-2 text-xs text-ink/50">{activeCategories.length}c · {activeProducts.length}p</span>
+          </TabsTrigger>
+          <TabsTrigger value="arquivados">
+            Arquivados
+            <span className="ml-2 text-xs text-ink/50">{archivedCategories.length}c · {archivedProducts.length}p</span>
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="ativos" className="mt-4">
+          {loading ? (
+            <p className="text-muted-foreground">Carregando…</p>
+          ) : activeCategories.length === 0 ? (
+            <Card className="p-12 text-center">
+              <h3 className="text-lg font-semibold mb-2">Nenhuma categoria ativa</h3>
+              <p className="text-muted-foreground mb-4">Crie uma categoria (ex: Pizzas, Bebidas) para começar.</p>
+              <Button
+                disabled={!caps.canWriteOperational}
+                onClick={() => { setCatEditing(null); setCatFormOpen(true); }}
+              >
+                <Plus className="h-4 w-4 mr-2" /> Criar primeira categoria
+              </Button>
+            </Card>
+          ) : (
+            <div className="space-y-8">
+              {activeCategories.map((cat) => {
+                const items = activeProducts.filter((p) => p.category_id === cat.id);
+                return (
+                  <div key={cat.id}>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <h2 className="text-xl font-semibold">{cat.name}</h2>
+                        <span className="text-sm text-muted-foreground">{items.length} item(s)</span>
+                        {!cat.is_active && <Badge variant="secondary">Inativa</Badge>}
+                      </div>
+                      <div className="flex gap-1">
+                        <Button
+                          size="sm" variant="ghost"
+                          disabled={!caps.canWriteOperational}
+                          onClick={() => { setCatEditing(cat); setCatFormOpen(true); }}
+                        >
+                          <Pencil className="h-4 w-4 mr-1" /> Editar
+                        </Button>
+                        <Button
+                          size="sm" variant="ghost"
+                          disabled={!caps.canAdmin}
+                          onClick={() => openArchive("category", "archive", { id: cat.id, name: cat.name })}
+                          title={!caps.canAdmin ? "Arquivar exige nível administrativo" : undefined}
+                        >
+                          <Archive className="h-4 w-4 mr-1" /> Arquivar
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                      {items.map((p) => (
+                        <ProductCard
+                          key={p.id} product={p} caps={caps}
+                          onToggle={() => toggleAvailability(p)}
+                          onEdit={() => { setProdEditing(p); setProdEditOpen(true); }}
+                          onPrice={() => { setPriceProduct(p); setPriceOpen(true); }}
+                          onArchive={() => openArchive("product", "archive", { id: p.id, name: p.name })}
+                        />
+                      ))}
+                      {items.length === 0 && (
+                        <p className="text-sm text-muted-foreground col-span-full">Sem produtos nesta categoria.</p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+              {activeProducts.some((p) => !p.category_id) && (
+                <div>
+                  <h2 className="text-xl font-semibold mb-3">Sem categoria</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {activeProducts.filter((p) => !p.category_id).map((p) => (
+                      <ProductCard
+                        key={p.id} product={p} caps={caps}
+                        onToggle={() => toggleAvailability(p)}
+                        onEdit={() => { setProdEditing(p); setProdEditOpen(true); }}
+                        onPrice={() => { setPriceProduct(p); setPriceOpen(true); }}
+                        onArchive={() => openArchive("product", "archive", { id: p.id, name: p.name })}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="arquivados" className="mt-4">
+          <ArchivedList
+            categories={archivedCategories}
+            products={archivedProducts}
+            canRestore={caps.canAdmin}
+            onRestoreCategory={(c) => openArchive("category", "restore", { id: c.id, name: c.name })}
+            onRestoreProduct={(p) => openArchive("product", "restore", { id: p.id, name: p.name })}
+          />
+        </TabsContent>
+      </Tabs>
+
+      <CategoryFormDialog
+        open={catFormOpen}
+        onOpenChange={setCatFormOpen}
         restaurantId={restaurantId}
+        editing={catEditing ? { id: catEditing.id, name: catEditing.name, description: catEditing.description } : null}
         onSaved={load}
       />
-      <ProductDialog
-        open={prodOpen}
-        onOpenChange={setProdOpen}
-        editing={editProd}
+      <ProductCreateDialog
+        open={prodCreateOpen}
+        onOpenChange={setProdCreateOpen}
         restaurantId={restaurantId}
-        categories={categories}
+        categories={activeCategories.map((c) => ({ id: c.id, name: c.name }))}
         onSaved={load}
+      />
+      <ProductEditDialog
+        open={prodEditOpen}
+        onOpenChange={setProdEditOpen}
+        restaurantId={restaurantId}
+        editing={prodEditing}
+        categories={activeCategories.map((c) => ({ id: c.id, name: c.name }))}
+        onSaved={load}
+      />
+      <ProductPriceDialog
+        open={priceOpen}
+        onOpenChange={setPriceOpen}
+        product={priceProduct}
+        onSaved={load}
+      />
+      <ArchiveConfirmDialog
+        open={archiveOpen}
+        onOpenChange={setArchiveOpen}
+        kind={archiveKind}
+        mode={archiveMode}
+        id={archiveTarget?.id ?? null}
+        name={archiveTarget?.name ?? ""}
+        onDone={load}
       />
     </AdminPageLayout>
   );
 }
 
-function CategoryDialog({
-  open, onOpenChange, editing, restaurantId, onSaved,
+function ProductCard({
+  product: p, caps, onToggle, onEdit, onPrice, onArchive,
 }: {
-  open: boolean; onOpenChange: (o: boolean) => void;
-  editing: Category | null; restaurantId: string; onSaved: () => void;
+  product: Product;
+  caps: ReturnType<typeof useMenuCapabilities>;
+  onToggle: () => void;
+  onEdit: () => void;
+  onPrice: () => void;
+  onArchive: () => void;
 }) {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [isActive, setIsActive] = useState(true);
-  const [saving, setSaving] = useState(false);
-
-  useEffect(() => {
-    if (open) {
-      setName(editing?.name ?? "");
-      setDescription(editing?.description ?? "");
-      setIsActive(editing?.is_active ?? true);
-    }
-  }, [open, editing]);
-
-  const save = async () => {
-    if (!name.trim()) return toast.error("Nome obrigatório");
-    setSaving(true);
-    const payload = { name: name.trim(), description: description.trim() || null, is_active: isActive, restaurant_id: restaurantId };
-    const { error } = editing
-      ? await supabase.from("categories").update(payload).eq("id", editing.id)
-      : await supabase.from("categories").insert(payload);
-    setSaving(false);
-    if (error) return toast.error(error.message);
-    toast.success(editing ? "Categoria atualizada" : "Categoria criada");
-    onOpenChange(false);
-    onSaved();
-  };
-
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{editing ? "Editar categoria" : "Nova categoria"}</DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4">
-          <div>
-            <Label>Nome *</Label>
-            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex: Pizzas" />
+    <Card className="p-3 flex gap-3">
+      <div className="h-20 w-20 rounded-md bg-muted shrink-0 grid place-items-center overflow-hidden">
+        {p.image_url ? (
+          <img src={p.image_url} alt={p.name} className="h-full w-full object-cover" />
+        ) : (
+          <ImageIcon className="h-6 w-6 text-muted-foreground" />
+        )}
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <h3 className="font-medium truncate">{p.name}</h3>
+            <p className="text-xs text-muted-foreground line-clamp-2">{p.description}</p>
           </div>
-          <div>
-            <Label>Descrição</Label>
-            <Textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={2} />
+          <Switch
+            checked={!!p.is_available}
+            onCheckedChange={onToggle}
+            disabled={!caps.canWriteOperational}
+          />
+        </div>
+        <div className="flex items-center justify-between mt-2">
+          <div className="text-sm">
+            {p.promo_price != null && (
+              <span className="text-muted-foreground line-through mr-1">R$ {Number(p.price).toFixed(2)}</span>
+            )}
+            <span className="font-semibold">R$ {Number(p.promo_price ?? p.price).toFixed(2)}</span>
           </div>
-          <div className="flex items-center gap-2">
-            <Switch checked={isActive} onCheckedChange={setIsActive} />
-            <Label>Ativa</Label>
+          <div className="flex gap-1">
+            <Button
+              size="icon" variant="ghost" className="h-7 w-7"
+              disabled={!caps.canWriteOperational}
+              onClick={onEdit}
+              title="Editar informações"
+            >
+              <Pencil className="h-3.5 w-3.5" />
+            </Button>
+            <Button
+              size="icon" variant="ghost" className="h-7 w-7"
+              disabled={!caps.canAdmin}
+              onClick={onPrice}
+              title={!caps.canAdmin ? "Alterar preço exige nível administrativo" : "Alterar preço"}
+            >
+              <DollarSign className="h-3.5 w-3.5" />
+            </Button>
+            <Button
+              size="icon" variant="ghost" className="h-7 w-7"
+              disabled={!caps.canAdmin}
+              onClick={onArchive}
+              title={!caps.canAdmin ? "Arquivar exige nível administrativo" : "Arquivar"}
+            >
+              <Archive className="h-3.5 w-3.5 text-destructive" />
+            </Button>
           </div>
         </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-          <Button onClick={save} disabled={saving}>{saving ? "Salvando…" : "Salvar"}</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </Card>
   );
 }
 
-function ProductDialog({
-  open, onOpenChange, editing, restaurantId, categories, onSaved,
+function ArchivedList({
+  categories, products, canRestore, onRestoreCategory, onRestoreProduct,
 }: {
-  open: boolean; onOpenChange: (o: boolean) => void;
-  editing: Product | null; restaurantId: string; categories: Category[]; onSaved: () => void;
+  categories: Category[];
+  products: Product[];
+  canRestore: boolean;
+  onRestoreCategory: (c: Category) => void;
+  onRestoreProduct: (p: Product) => void;
 }) {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [promoPrice, setPromoPrice] = useState("");
-  const [categoryId, setCategoryId] = useState<string>("");
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [isAvailable, setIsAvailable] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const fileRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (open) {
-      setName(editing?.name ?? "");
-      setDescription(editing?.description ?? "");
-      setPrice(editing?.price ? String(editing.price) : "");
-      setPromoPrice(editing?.promo_price != null ? String(editing.promo_price) : "");
-      setCategoryId(editing?.category_id ?? categories[0]?.id ?? "");
-      setImageUrl(editing?.image_url ?? null);
-      setIsAvailable(editing?.is_available ?? true);
-    }
-  }, [open, editing, categories]);
-
-  const uploadImage = async (file: File) => {
-    setUploading(true);
-    const ext = file.name.split(".").pop();
-    const path = `${restaurantId}/${crypto.randomUUID()}.${ext}`;
-    const { error } = await supabase.storage.from("product-images").upload(path, file, { upsert: false });
-    if (error) {
-      toast.error(error.message);
-      setUploading(false);
-      return;
-    }
-    const { data } = supabase.storage.from("product-images").getPublicUrl(path);
-    setImageUrl(data.publicUrl);
-    setUploading(false);
-  };
-
-  const save = async () => {
-    if (!name.trim()) return toast.error("Nome obrigatório");
-    if (!price || isNaN(Number(price))) return toast.error("Preço inválido");
-    setSaving(true);
-    const payload = {
-      name: name.trim(),
-      description: description.trim() || null,
-      price: Number(price),
-      promo_price: promoPrice ? Number(promoPrice) : null,
-      category_id: categoryId || null,
-      image_url: imageUrl,
-      is_available: isAvailable,
-      restaurant_id: restaurantId,
-    };
-    const { error } = editing
-      ? await supabase.from("products").update(payload).eq("id", editing.id)
-      : await supabase.from("products").insert(payload);
-    setSaving(false);
-    if (error) return toast.error(error.message);
-    toast.success(editing ? "Produto atualizado" : "Produto criado");
-    onOpenChange(false);
-    onSaved();
-  };
-
+  if (categories.length === 0 && products.length === 0) {
+    return <p className="text-sm text-muted-foreground">Nenhum registro arquivado.</p>;
+  }
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-xl">
-        <DialogHeader>
-          <DialogTitle>{editing ? "Editar produto" : "Novo produto"}</DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-1">
-          <div className="flex gap-4 items-start">
-            <button
-              type="button"
-              onClick={() => fileRef.current?.click()}
-              className="h-24 w-24 rounded-md bg-muted grid place-items-center overflow-hidden border-2 border-dashed shrink-0"
-            >
-              {imageUrl ? (
-                <img src={imageUrl} alt="" className="h-full w-full object-cover" />
-              ) : uploading ? (
-                <span className="text-xs">Enviando…</span>
-              ) : (
-                <Upload className="h-5 w-5 text-muted-foreground" />
-              )}
-            </button>
-            <input
-              ref={fileRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadImage(f); }}
-            />
-            <div className="flex-1 space-y-3">
-              <div>
-                <Label>Nome *</Label>
-                <Input value={name} onChange={(e) => setName(e.target.value)} />
-              </div>
-              <div>
-                <Label>Categoria</Label>
-                <Select value={categoryId} onValueChange={setCategoryId}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    {categories.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-          <div>
-            <div className="flex items-center justify-between">
-              <Label>Descrição</Label>
-              <AIDescriptionButton
-                productName={name}
-                price={price}
-                onResult={setDescription}
-              />
-            </div>
-            <Textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} />
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <Label>Preço *</Label>
-              <Input type="number" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)} />
-            </div>
-            <div>
-              <Label>Preço promocional</Label>
-              <Input type="number" step="0.01" value={promoPrice} onChange={(e) => setPromoPrice(e.target.value)} />
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Switch checked={isAvailable} onCheckedChange={setIsAvailable} />
-            <Label>Disponível para venda</Label>
+    <div className="space-y-8">
+      {categories.length > 0 && (
+        <div>
+          <h2 className="text-lg font-semibold mb-3">Categorias arquivadas</h2>
+          <div className="space-y-2">
+            {categories.map((c) => (
+              <Card key={c.id} className="p-3 flex items-center justify-between opacity-70">
+                <div className="flex items-center gap-3">
+                  <Badge variant="outline">Arquivada</Badge>
+                  <span className="font-medium">{c.name}</span>
+                </div>
+                <Button
+                  size="sm" variant="outline"
+                  disabled={!canRestore}
+                  onClick={() => onRestoreCategory(c)}
+                  title={!canRestore ? "Restaurar exige nível administrativo" : undefined}
+                >
+                  <ArchiveRestore className="h-4 w-4 mr-1" /> Restaurar
+                </Button>
+              </Card>
+            ))}
           </div>
         </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-          <Button onClick={save} disabled={saving || uploading}>{saving ? "Salvando…" : "Salvar"}</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+      )}
+      {products.length > 0 && (
+        <div>
+          <h2 className="text-lg font-semibold mb-3">Produtos arquivados</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {products.map((p) => (
+              <Card key={p.id} className="p-3 flex gap-3 opacity-70">
+                <div className="h-16 w-16 rounded-md bg-muted shrink-0 grid place-items-center overflow-hidden">
+                  {p.image_url ? (
+                    <img src={p.image_url} alt={p.name} className="h-full w-full object-cover" />
+                  ) : (
+                    <ImageIcon className="h-5 w-5 text-muted-foreground" />
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline">Arquivado</Badge>
+                    <h3 className="font-medium truncate">{p.name}</h3>
+                  </div>
+                  <p className="text-xs text-muted-foreground">R$ {Number(p.price).toFixed(2)}</p>
+                  <div className="mt-2">
+                    <Button
+                      size="sm" variant="outline"
+                      disabled={!canRestore}
+                      onClick={() => onRestoreProduct(p)}
+                      title={!canRestore ? "Restaurar exige nível administrativo" : "Restaurar (fica indisponível)"}
+                    >
+                      <ArchiveRestore className="h-4 w-4 mr-1" /> Restaurar
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -418,8 +457,8 @@ function AISuggestButton({ restaurantId }: { restaurantId: string }) {
     });
     setLoading(false);
     if (error) return toast.error(error.message);
-    if ((data as any)?.error) return toast.error((data as any).error);
-    setContent((data as any)?.content ?? "");
+    if ((data as { error?: string })?.error) return toast.error((data as { error: string }).error);
+    setContent((data as { content?: string })?.content ?? "");
   };
 
   return (
@@ -430,11 +469,15 @@ function AISuggestButton({ restaurantId }: { restaurantId: string }) {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2"><Sparkles className="h-5 w-5 text-amber-500" /> Sugestões de cardápio</DialogTitle>
+            <DialogTitle className="flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-amber-500" /> Sugestões de cardápio
+            </DialogTitle>
           </DialogHeader>
           <div className="min-h-[200px] max-h-[60vh] overflow-y-auto bg-muted/40 p-4 rounded-md text-sm whitespace-pre-wrap">
             {loading ? (
-              <div className="flex items-center gap-2 text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" /> Gerando sugestões…</div>
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Loader2 className="h-4 w-4 animate-spin" /> Gerando sugestões…
+              </div>
             ) : content || <span className="text-muted-foreground">Sem conteúdo</span>}
           </div>
           <DialogFooter>
@@ -444,32 +487,5 @@ function AISuggestButton({ restaurantId }: { restaurantId: string }) {
         </DialogContent>
       </Dialog>
     </>
-  );
-}
-
-function AIDescriptionButton({ productName, price, onResult }: { productName: string; price: string; onResult: (s: string) => void }) {
-  const [loading, setLoading] = useState(false);
-
-  const generate = async () => {
-    if (!productName.trim()) return toast.error("Preencha o nome do produto primeiro");
-    setLoading(true);
-    const { data, error } = await supabase.functions.invoke("ai-menu-suggestions", {
-      body: { mode: "description", context: { name: productName, price } },
-    });
-    setLoading(false);
-    if (error) return toast.error(error.message);
-    if ((data as any)?.error) return toast.error((data as any).error);
-    const text = ((data as any)?.content ?? "").trim();
-    if (text) {
-      onResult(text);
-      toast.success("Descrição gerada");
-    }
-  };
-
-  return (
-    <Button type="button" variant="ghost" size="sm" onClick={generate} disabled={loading} className="h-7 text-xs">
-      {loading ? <Loader2 className="h-3 w-3 animate-spin mr-1" /> : <Sparkles className="h-3 w-3 mr-1 text-amber-500" />}
-      Gerar com IA
-    </Button>
   );
 }
