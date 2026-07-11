@@ -248,19 +248,29 @@ export async function fetchOrder(input: {
 }
 
 /**
- * Verifica a assinatura de um webhook do PagBank.
- * Regra oficial: HMAC-SHA256 com o access_token + "-" + rawBody exato.
- * Comparação em tempo constante. NÃO usar JSON.stringify(request.body).
+ * Verifica a assinatura oficial de um webhook do PagBank.
+ *
+ * Regra oficial documentada pelo PagBank:
+ *   expected = SHA-256( access_token + "-" + raw_body ) em hexadecimal
+ *
+ * Não é HMAC. É um digest SHA-256 simples sobre a concatenação
+ * `access_token + "-" + payload_bruto`. O `access_token` do lojista é o
+ * segredo compartilhado — não há chave separada.
+ *
+ * O corpo DEVE ser o buffer bruto exato recebido no request; nunca
+ * `JSON.stringify()` de um objeto já interpretado.
+ *
+ * Comparação em tempo constante para evitar ataques de timing.
  */
 export function verifyWebhookSignature(input: {
   accessToken: string;
   rawBody: string;
   signatureHeader: string | null;
 }): boolean {
-  const sig = input.signatureHeader?.trim();
+  const sig = input.signatureHeader?.trim().toLowerCase();
   if (!sig || !input.accessToken) return false;
-  const expected = createHmac("sha256", `${input.accessToken}-`)
-    .update(input.rawBody)
+  const expected = createHash("sha256")
+    .update(`${input.accessToken}-${input.rawBody}`)
     .digest("hex");
   const a = Buffer.from(expected);
   const b = Buffer.from(sig);
