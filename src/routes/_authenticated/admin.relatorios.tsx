@@ -232,15 +232,19 @@ function RelatoriosPage() {
                   </Button>
                 </div>
                 <DashboardGrid cols={4}>
-                  <StatCard label="Faturamento" value={fmtBRL(stats.revenue)} accent="green"
-                    hint={deltaText(stats.revenue, prev.revenue)} />
-                  <StatCard label="Pedidos válidos" value={fmtInt(stats.valid_orders)} accent="orange"
-                    hint={deltaText(stats.valid_orders, prev.valid_orders)} />
-                  <StatCard label="Ticket médio" value={fmtBRL(stats.avg_ticket)} accent="violet" />
+                  <StatCard label="Receita concluída" value={fmtBRL(stats.completed_revenue)} accent="green"
+                    hint={deltaText(stats.completed_revenue, prev.completed_revenue)} />
+                  <StatCard label="Pedidos concluídos" value={fmtInt(stats.completed_orders)} accent="orange"
+                    hint={deltaText(stats.completed_orders, prev.completed_orders)} />
+                  <StatCard label="Ticket médio (concluídos)" value={fmtBRL(stats.avg_ticket_completed)} accent="violet" />
+                  <StatCard label="Valor em aberto" value={fmtBRL(stats.open_amount)} accent="amber"
+                    hint={`${fmtInt(stats.open_orders)} pedidos em operação`} />
+                  <StatCard label="Pedidos válidos (operacionais)" value={fmtInt(stats.valid_orders)} accent="violet"
+                    hint="Confirmados + em preparo + prontos + em rota + entregues" />
                   <StatCard label="Cancelados" value={fmtInt(stats.cancelled_orders)} accent="magenta" />
-                  <StatCard label="Descontos" value={fmtBRL(stats.total_discount)} accent="amber" />
-                  <StatCard label="Taxa de entrega" value={fmtBRL(stats.total_delivery_fee)} accent="violet" />
-                  <StatCard label="Clientes únicos" value={fmtInt(stats.unique_customers)} accent="green" />
+                  <StatCard label="Descontos (concluídos)" value={fmtBRL(stats.total_discount)} accent="amber" />
+                  <StatCard label="Taxa de entrega (concluídos)" value={fmtBRL(stats.total_delivery_fee)} accent="violet" />
+                  <StatCard label="Clientes únicos (concluídos)" value={fmtInt(stats.unique_customers)} accent="green" />
                   <StatCard label="Novos clientes" value={fmtInt(stats.new_customers)} accent="orange" />
                 </DashboardGrid>
 
