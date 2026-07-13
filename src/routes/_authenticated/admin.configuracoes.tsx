@@ -404,13 +404,13 @@ function AreasTab({
   const add = async () => {
     if (!canWrite) return;
     if (!neighborhood.trim()) return toast.error("Bairro obrigatório");
-    let r: string | null = null;
+    let r: string | undefined = undefined;
     if (needsReason) { r = guardReason(); if (!r) return; }
     setSaving(true);
     const { error } = await supabase.rpc("create_delivery_area", {
       p_restaurant_id: restaurantId,
       p_neighborhood: neighborhood.trim(),
-      p_city: null,
+      p_city: undefined,
       p_fee: Number(fee) || 0,
       p_min_order: Number(minOrder) || 0,
       p_estimated_minutes: Number(minutes) || 30,
@@ -425,16 +425,16 @@ function AreasTab({
   const remove = async (id: string) => {
     if (!canWrite) return;
     if (!confirm("Arquivar bairro?")) return;
-    let r: string | null = null;
+    let r: string | undefined = undefined;
     if (needsReason) { r = guardReason(); if (!r) return; }
-    const { error } = await supabase.rpc("archive_delivery_area", { p_area_id: id, p_reason: r });
+    const { error } = await supabase.rpc("archive_delivery_area", { p_area_id: id, p_reason: r as any });
     if (error) return toast.error(errorMessage(error.message, error.message));
     onSaved();
   };
 
   const toggle = async (a: DeliveryArea) => {
     if (!canWrite) return;
-    let r: string | null = null;
+    let r: string | undefined = undefined;
     if (needsReason) { r = guardReason(); if (!r) return; }
     const { error } = await supabase.rpc("set_delivery_area_active", {
       p_area_id: a.id,
@@ -457,7 +457,7 @@ function AreasTab({
   const importPicked = async () => {
     if (!canWrite) return;
     if (picked.size === 0) return toast.error("Selecione pelo menos um bairro");
-    let r: string | null = null;
+    let r: string | undefined = undefined;
     if (needsReason) { r = guardReason(); if (!r) return; }
     const rows = Array.from(picked).map((name) => ({
       neighborhood: name,
