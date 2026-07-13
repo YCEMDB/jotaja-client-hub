@@ -47,7 +47,10 @@ export function MotionReveal({
     );
   }
 
-  const variants: Record<MotionRevealVariant, { hidden: Record<string, unknown>; show: Record<string, unknown> }> = {
+  const variants: Record<
+    MotionRevealVariant,
+    { hidden: Record<string, unknown>; show: Record<string, unknown> }
+  > = {
     fade: {
       hidden: { opacity: 0 },
       show: { opacity: 1 },
