@@ -4393,6 +4393,25 @@ export type Database = {
         Args: { p_id: string; p_reason?: string }
         Returns: undefined
       }
+      archive_delivery_area: {
+        Args: { p_area_id: string; p_reason?: string }
+        Returns: {
+          city: string | null
+          estimated_minutes: number | null
+          fee: number
+          id: string
+          is_active: boolean | null
+          min_order: number | null
+          neighborhood: string
+          restaurant_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "delivery_areas"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       archive_option_group: {
         Args: { p_id: string; p_reason?: string }
         Returns: undefined
@@ -4517,6 +4536,33 @@ export type Database = {
           p_station_id?: string
         }
         Returns: string
+      }
+      create_delivery_area: {
+        Args: {
+          p_city: string
+          p_estimated_minutes: number
+          p_fee: number
+          p_min_order: number
+          p_neighborhood: string
+          p_reason?: string
+          p_restaurant_id: string
+        }
+        Returns: {
+          city: string | null
+          estimated_minutes: number | null
+          fee: number
+          id: string
+          is_active: boolean | null
+          min_order: number | null
+          neighborhood: string
+          restaurant_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "delivery_areas"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       create_driver: {
         Args: {
@@ -4989,6 +5035,25 @@ export type Database = {
       }
       get_stock_overview: { Args: { p_restaurant_id: string }; Returns: Json }
       get_table_map: { Args: { p_restaurant_id: string }; Returns: Json }
+      import_delivery_areas: {
+        Args: { p_reason?: string; p_restaurant_id: string; p_rows: Json }
+        Returns: {
+          city: string | null
+          estimated_minutes: number | null
+          fee: number
+          id: string
+          is_active: boolean | null
+          min_order: number | null
+          neighborhood: string
+          restaurant_id: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "delivery_areas"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       is_restaurant_driver: {
         Args: { _restaurant_id: string; _uid: string }
         Returns: boolean
@@ -5360,6 +5425,25 @@ export type Database = {
         Args: { p_provider: string; p_reason: string; p_restaurant_id: string }
         Returns: Json
       }
+      set_delivery_area_active: {
+        Args: { p_active: boolean; p_area_id: string; p_reason?: string }
+        Returns: {
+          city: string | null
+          estimated_minutes: number | null
+          fee: number
+          id: string
+          is_active: boolean | null
+          min_order: number | null
+          neighborhood: string
+          restaurant_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "delivery_areas"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       set_driver_status: {
         Args: {
           p_driver_id: string
@@ -5461,6 +5545,33 @@ export type Database = {
           p_station_id?: string
         }
         Returns: undefined
+      }
+      update_delivery_area: {
+        Args: {
+          p_area_id: string
+          p_city: string
+          p_estimated_minutes: number
+          p_fee: number
+          p_min_order: number
+          p_neighborhood: string
+          p_reason?: string
+        }
+        Returns: {
+          city: string | null
+          estimated_minutes: number | null
+          fee: number
+          id: string
+          is_active: boolean | null
+          min_order: number | null
+          neighborhood: string
+          restaurant_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "delivery_areas"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       update_driver: {
         Args: {
