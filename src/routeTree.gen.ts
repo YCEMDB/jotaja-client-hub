@@ -46,6 +46,7 @@ import { Route as PedidoOrderIdRouteImport } from './routes/pedido.$orderId'
 import { Route as MesaTokenRouteImport } from './routes/mesa.$token'
 import { Route as LojaSlugRouteImport } from './routes/loja.$slug'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
+import { Route as DevMotionRouteImport } from './routes/dev.motion'
 import { Route as ComparativoComandahubVsSaiposRouteImport } from './routes/comparativo.comandahub-vs-saipos'
 import { Route as ComparativoComandahubVsPlanilhaRouteImport } from './routes/comparativo.comandahub-vs-planilha'
 import { Route as ComparativoComandahubVsGoomerRouteImport } from './routes/comparativo.comandahub-vs-goomer'
@@ -285,6 +286,11 @@ const LojaSlugRoute = LojaSlugRouteImport.update({
 const EmailUnsubscribeRoute = EmailUnsubscribeRouteImport.update({
   id: '/email/unsubscribe',
   path: '/email/unsubscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DevMotionRoute = DevMotionRouteImport.update({
+  id: '/dev/motion',
+  path: '/dev/motion',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ComparativoComandahubVsSaiposRoute =
@@ -641,6 +647,7 @@ export interface FileRoutesByFullPath {
   '/comparativo/comandahub-vs-goomer': typeof ComparativoComandahubVsGoomerRoute
   '/comparativo/comandahub-vs-planilha': typeof ComparativoComandahubVsPlanilhaRoute
   '/comparativo/comandahub-vs-saipos': typeof ComparativoComandahubVsSaiposRoute
+  '/dev/motion': typeof DevMotionRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/loja/$slug': typeof LojaSlugRoute
   '/mesa/$token': typeof MesaTokenRoute
@@ -733,6 +740,7 @@ export interface FileRoutesByTo {
   '/comparativo/comandahub-vs-goomer': typeof ComparativoComandahubVsGoomerRoute
   '/comparativo/comandahub-vs-planilha': typeof ComparativoComandahubVsPlanilhaRoute
   '/comparativo/comandahub-vs-saipos': typeof ComparativoComandahubVsSaiposRoute
+  '/dev/motion': typeof DevMotionRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/loja/$slug': typeof LojaSlugRoute
   '/mesa/$token': typeof MesaTokenRoute
@@ -828,6 +836,7 @@ export interface FileRoutesById {
   '/comparativo/comandahub-vs-goomer': typeof ComparativoComandahubVsGoomerRoute
   '/comparativo/comandahub-vs-planilha': typeof ComparativoComandahubVsPlanilhaRoute
   '/comparativo/comandahub-vs-saipos': typeof ComparativoComandahubVsSaiposRoute
+  '/dev/motion': typeof DevMotionRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/loja/$slug': typeof LojaSlugRoute
   '/mesa/$token': typeof MesaTokenRoute
@@ -922,6 +931,7 @@ export interface FileRouteTypes {
     | '/comparativo/comandahub-vs-goomer'
     | '/comparativo/comandahub-vs-planilha'
     | '/comparativo/comandahub-vs-saipos'
+    | '/dev/motion'
     | '/email/unsubscribe'
     | '/loja/$slug'
     | '/mesa/$token'
@@ -1014,6 +1024,7 @@ export interface FileRouteTypes {
     | '/comparativo/comandahub-vs-goomer'
     | '/comparativo/comandahub-vs-planilha'
     | '/comparativo/comandahub-vs-saipos'
+    | '/dev/motion'
     | '/email/unsubscribe'
     | '/loja/$slug'
     | '/mesa/$token'
@@ -1108,6 +1119,7 @@ export interface FileRouteTypes {
     | '/comparativo/comandahub-vs-goomer'
     | '/comparativo/comandahub-vs-planilha'
     | '/comparativo/comandahub-vs-saipos'
+    | '/dev/motion'
     | '/email/unsubscribe'
     | '/loja/$slug'
     | '/mesa/$token'
@@ -1203,6 +1215,7 @@ export interface RootRouteChildren {
   ComparativoComandahubVsGoomerRoute: typeof ComparativoComandahubVsGoomerRoute
   ComparativoComandahubVsPlanilhaRoute: typeof ComparativoComandahubVsPlanilhaRoute
   ComparativoComandahubVsSaiposRoute: typeof ComparativoComandahubVsSaiposRoute
+  DevMotionRoute: typeof DevMotionRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
   LojaSlugRoute: typeof LojaSlugRoute
   MesaTokenRoute: typeof MesaTokenRoute
@@ -1483,6 +1496,13 @@ declare module '@tanstack/react-router' {
       path: '/email/unsubscribe'
       fullPath: '/email/unsubscribe'
       preLoaderRoute: typeof EmailUnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dev/motion': {
+      id: '/dev/motion'
+      path: '/dev/motion'
+      fullPath: '/dev/motion'
+      preLoaderRoute: typeof DevMotionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/comparativo/comandahub-vs-saipos': {
@@ -2014,6 +2034,7 @@ const rootRouteChildren: RootRouteChildren = {
   ComparativoComandahubVsGoomerRoute: ComparativoComandahubVsGoomerRoute,
   ComparativoComandahubVsPlanilhaRoute: ComparativoComandahubVsPlanilhaRoute,
   ComparativoComandahubVsSaiposRoute: ComparativoComandahubVsSaiposRoute,
+  DevMotionRoute: DevMotionRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
   LojaSlugRoute: LojaSlugRoute,
   MesaTokenRoute: MesaTokenRoute,
