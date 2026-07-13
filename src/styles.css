@@ -589,3 +589,180 @@
   }
 }
 
+/* =====================================================================
+ * MESIVO — FUNDAÇÃO GLOBAL (Onda A) — TOKENS ADITIVOS
+ * ---------------------------------------------------------------------
+ * Estes tokens são ADITIVOS. Não substituem os tokens Sunset Blaze
+ * existentes. As rotas legadas continuam usando os tokens acima.
+ * Contextos visuais são aplicados apenas via [data-theme="..."] no
+ * shell correspondente — nunca globalmente em html/body nesta onda.
+ * ===================================================================== */
+
+:root {
+  /* --- Paleta Mesivo (marketing) --- */
+  --mesivo-cream:      #FFF8EE;
+  --mesivo-warm-white: #FFFDFA;
+  --mesivo-peach:      #FFE7D5;
+  --mesivo-tomato:     #F0522D;
+  --mesivo-orange:     #FF6B35;
+  --mesivo-mango:      #FFB82E;
+  --mesivo-leaf:       #2F7D5B;
+  --mesivo-leaf-soft:  #E5F3EA;
+  --mesivo-coffee:     #34241D;
+  --mesivo-text:       #2A211D;
+  --mesivo-muted:      #70645E;
+  --mesivo-border:     #ECDDD3;
+  --mesivo-white:      #FFFFFF;
+
+  /* --- Tipografia funcional --- */
+  --font-ui: "Manrope", system-ui, -apple-system, BlinkMacSystemFont,
+             "Segoe UI", sans-serif;
+
+  /* --- Motion --- */
+  --dur-fast: 140ms;
+  --dur-base: 200ms;
+  --dur-slow: 320ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in:  cubic-bezier(0.4, 0, 1, 1);
+
+  /* --- Semantic tokens (fallback = valores atuais / seguros) --- */
+  /* Superfícies */
+  --surface:          var(--background);
+  --surface-1:        var(--card);
+  --surface-2:        var(--muted);
+  --surface-3:        var(--secondary);
+  --surface-elevated: var(--popover);
+  --overlay:          oklch(0.12 0.025 25 / 0.5);
+  --hairline:         var(--border);
+  --hairline-strong:  var(--ink);
+
+  /* Texto */
+  --fg-hi:     var(--ink);
+  --fg:        var(--foreground);
+  --fg-mid:    var(--muted-foreground);
+  --fg-low:    oklch(0.55 0.02 40);
+  --fg-invert: var(--primary-foreground);
+
+  /* Marca semântica */
+  --accent-hover:  oklch(0.63 0.24 38);
+  --accent-active: oklch(0.55 0.26 38);
+  --accent-soft:   oklch(0.96 0.04 40);
+  --accent-glow:   oklch(0.69 0.22 38 / 0.35);
+  --accent-ink:    var(--primary-foreground);
+
+  /* Estados */
+  --success-soft: oklch(0.94 0.06 150);
+  --warning-soft: oklch(0.96 0.09 80);
+  --danger:       var(--destructive);
+  --danger-soft:  oklch(0.94 0.06 25);
+  --info:         oklch(0.6 0.15 240);
+  --info-soft:    oklch(0.94 0.04 240);
+}
+
+/* ---------------------------------------------------------------------
+ * Contexto: MARKETING — creme + coral, aplicado no PublicShell novo
+ * ------------------------------------------------------------------- */
+[data-theme="marketing"] {
+  --surface:          var(--mesivo-cream);
+  --surface-1:        var(--mesivo-warm-white);
+  --surface-2:        var(--mesivo-peach);
+  --surface-3:        var(--mesivo-leaf-soft);
+  --surface-elevated: var(--mesivo-white);
+  --hairline:         var(--mesivo-border);
+  --hairline-strong:  var(--mesivo-coffee);
+
+  --fg-hi:     var(--mesivo-coffee);
+  --fg:        var(--mesivo-text);
+  --fg-mid:    var(--mesivo-muted);
+  --fg-low:    #9A8A82;
+  --fg-invert: var(--mesivo-white);
+
+  --accent:        var(--mesivo-tomato);
+  --accent-hover:  #D9421F;
+  --accent-active: #B33518;
+  --accent-soft:   var(--mesivo-peach);
+  --accent-glow:   rgb(240 82 45 / 0.35);
+  --accent-ink:    var(--mesivo-white);
+
+  color: var(--fg);
+  background-color: var(--surface);
+  font-family: var(--font-ui);
+}
+
+[data-theme="marketing"] h1,
+[data-theme="marketing"] h2,
+[data-theme="marketing"] h3,
+[data-theme="marketing"] h4,
+[data-theme="marketing"] h5,
+[data-theme="marketing"] h6 {
+  font-family: var(--font-display);
+  color: var(--fg-hi);
+  letter-spacing: -0.03em;
+}
+
+/* ---------------------------------------------------------------------
+ * Contexto: APP — neutro claro operacional (não aplicado nesta onda)
+ * ------------------------------------------------------------------- */
+[data-theme="app"] {
+  --surface:          var(--background);
+  --surface-1:        var(--card);
+  --surface-2:        var(--muted);
+  --surface-3:        var(--secondary);
+  --fg-hi:            var(--ink);
+  --fg:               var(--foreground);
+  --fg-mid:           var(--muted-foreground);
+  --accent:           var(--primary);
+  --accent-ink:       var(--primary-foreground);
+}
+
+/* ---------------------------------------------------------------------
+ * Contexto: TRANSACTIONAL — cardápio/mesa/motoboy (não usado nesta onda)
+ * ------------------------------------------------------------------- */
+[data-theme="transactional"] {
+  --surface:   var(--background);
+  --surface-1: var(--card);
+  --fg-hi:     var(--ink);
+  --fg:        var(--foreground);
+  --accent:    var(--primary);
+  --accent-ink: var(--primary-foreground);
+  font-family: var(--font-ui);
+}
+
+/* ---------------------------------------------------------------------
+ * Utilities novos (aditivos)
+ * ------------------------------------------------------------------- */
+@utility font-ui {
+  font-family: var(--font-ui);
+}
+@utility bg-surface   { background-color: var(--surface); }
+@utility bg-surface-1 { background-color: var(--surface-1); }
+@utility bg-surface-2 { background-color: var(--surface-2); }
+@utility bg-surface-3 { background-color: var(--surface-3); }
+@utility text-fg      { color: var(--fg); }
+@utility text-fg-hi   { color: var(--fg-hi); }
+@utility text-fg-mid  { color: var(--fg-mid); }
+@utility text-fg-low  { color: var(--fg-low); }
+@utility border-hairline        { border-color: var(--hairline); }
+@utility border-hairline-strong { border-color: var(--hairline-strong); }
+
+/* Skip link acessível reutilizável */
+.mesivo-skip-link {
+  position: absolute;
+  top: -100px;
+  left: 12px;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  background: var(--mesivo-coffee);
+  color: var(--mesivo-white);
+  border-radius: 8px;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  text-decoration: none;
+  transition: top var(--dur-fast) var(--ease-out);
+}
+.mesivo-skip-link:focus {
+  top: 12px;
+  outline: 3px solid var(--mesivo-mango);
+  outline-offset: 2px;
+}
+
