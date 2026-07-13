@@ -150,16 +150,16 @@ function ProtoMotoboy() {
 
               <div className="moto-actions">
                 <button type="button" aria-label="Abrir endereço no mapa">
-                  🗺 Abrir no mapa
+                  <IconMap size={16} /> Abrir no mapa
                 </button>
                 <button type="button" aria-label="Ligar para o cliente">
-                  📞 Ligar
+                  <IconPhone size={16} /> Ligar
                 </button>
                 <button type="button" className="moto-primary">
-                  ✅ Confirmar entrega
+                  <IconCheck size={16} /> Confirmar entrega
                 </button>
                 <button type="button" className="moto-danger">
-                  ⚠ Informar problema
+                  <IconAlert size={16} /> Informar problema
                 </button>
               </div>
             </article>
