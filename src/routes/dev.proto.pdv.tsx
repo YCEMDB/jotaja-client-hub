@@ -146,7 +146,7 @@ function ProtoPdv() {
       <div className="pdv-mob">
         <header className="app-mob-topbar" aria-label="PDV">
           <button className="app-mob-topbar-icon" aria-label="Abrir menu">
-            ☰
+            <IconMenu size={20} />
           </button>
           <div className="app-mob-topbar-l">
             <div>
@@ -156,9 +156,13 @@ function ProtoPdv() {
           </div>
         </header>
 
+        <div className="demo-badge-slot">
+          <span className="demo-badge">Dados demonstrativos</span>
+        </div>
+
         <div className="pdv-mob-search">
           <div className="pdv-mob-search-input" role="search">
-            <span aria-hidden>🔎</span> Buscar produto
+            <IconSearch size={16} /> Buscar produto
           </div>
         </div>
 
@@ -175,7 +179,7 @@ function ProtoPdv() {
             <div key={n} className={"pdv-prod" + (avail === "out" ? " out" : "")}>
               {avail === "out" && <span className="pdv-prod-badge">Esgotado</span>}
               <div className={"pdv-prod-img" + (avail === "no-img" ? " no-img" : "")}>
-                {avail === "no-img" && <span aria-hidden>🖼</span>}
+                {avail === "no-img" && <IconImage size={22} />}
               </div>
               <div className="pdv-prod-name">{n}</div>
               <div className="pdv-prod-price">R$ {p}</div>
