@@ -129,7 +129,7 @@ function PdvPage() {
         p_payment: payment,
         p_delivery_fee: type === "delivery" ? Number(deliveryFee) : 0,
         p_discount: Number(discount),
-        p_notes: notes || null,
+        p_notes: notes || "",
         p_delivery_address: null,
         p_items: cart.map(l => ({
           product_id: l.product_id,
