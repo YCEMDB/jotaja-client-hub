@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 import { Bell, CheckCircle2, Clock, Package, Utensils } from "lucide-react";
 import {
   AnimatedNotification,
@@ -16,6 +16,10 @@ import {
 } from "@/components/motion";
 
 export const Route = createFileRoute("/dev/motion")({
+  // Rota só existe em desenvolvimento. Em produção, 404 antes de qualquer render.
+  beforeLoad: () => {
+    if (!import.meta.env.DEV) throw notFound();
+  },
   head: () => ({
     meta: [
       { title: "Motion Playground — Mesivo" },
