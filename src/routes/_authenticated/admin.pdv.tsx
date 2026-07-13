@@ -280,6 +280,13 @@ function PdvPage() {
             <Label>Desconto (R$)</Label>
             <Input type="number" step="0.01" value={discount} onChange={e => setDiscount(Number(e.target.value))} className="border-2 border-ink" />
           </div>
+          {discount > 0 && (
+            <div>
+              <Label>Motivo do desconto *</Label>
+              <Input value={discountReason} onChange={e => setDiscountReason(e.target.value)} placeholder="Ex: cortesia gerente" className="border-2 border-ink" />
+              <p className="text-xs text-ink/60 mt-1">Registrado em auditoria. Apenas owner/manager.</p>
+            </div>
+          )}
           <div>
             <Label>Observações</Label>
             <Textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2} className="border-2 border-ink" />
