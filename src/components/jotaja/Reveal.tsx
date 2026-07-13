@@ -1,8 +1,20 @@
-import { motion, useReducedMotion, type Variants, type HTMLMotionProps } from "motion/react";
+import { motion, type Variants, type HTMLMotionProps } from "motion/react";
 import type { ReactNode } from "react";
+import { useHydrated } from "@/components/motion/useHydrated";
+import { useReducedMotionSafe } from "@/components/motion/useReducedMotionSafe";
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
 
+/**
+ * SSR-safe reveal wrapper.
+ *
+ * Motion's SSR emits inline `opacity`/`transform` styles for `initial`, but
+ * on the client under Reduced Motion the same `motion.div` mounts without
+ * those styles — a hydration mismatch. We hold `initial={false}` on the
+ * first client render (structurally identical to the server output — no
+ * inline animation styles either side) and only enable the entry animation
+ * after hydration.
+ */
 export function Reveal({
   children,
   delay = 0,
@@ -19,12 +31,14 @@ export function Reveal({
   as?: "div" | "section" | "li" | "article" | "header";
   amount?: number;
 } & Omit<HTMLMotionProps<"div">, "children">) {
-  const reduce = useReducedMotion();
+  const hydrated = useHydrated();
+  const reduce = useReducedMotionSafe();
   const Comp = motion[as] as typeof motion.div;
+  const animate = hydrated && !reduce;
   return (
     <Comp
-      initial={reduce ? false : { opacity: 0, y }}
-      whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+      initial={animate ? { opacity: 0, y } : false}
+      whileInView={animate ? { opacity: 1, y: 0 } : undefined}
       viewport={{ once: true, amount }}
       transition={{ duration: 0.55, ease: easeOut, delay }}
       className={className}
@@ -53,13 +67,14 @@ export function Stagger({
   className?: string;
   amount?: number;
 }) {
-  const reduce = useReducedMotion();
-  if (reduce) return <div className={className}>{children}</div>;
+  const hydrated = useHydrated();
+  const reduce = useReducedMotionSafe();
+  const animate = hydrated && !reduce;
   return (
     <motion.div
       variants={containerVariants}
-      initial="hidden"
-      whileInView="show"
+      initial={animate ? "hidden" : false}
+      whileInView={animate ? "show" : undefined}
       viewport={{ once: true, amount }}
       className={className}
     >
@@ -75,10 +90,15 @@ export function StaggerItem({
   children: ReactNode;
   className?: string;
 }) {
-  const reduce = useReducedMotion();
-  if (reduce) return <div className={className}>{children}</div>;
+  const hydrated = useHydrated();
+  const reduce = useReducedMotionSafe();
+  const animate = hydrated && !reduce;
   return (
-    <motion.div variants={itemVariants} className={className}>
+    <motion.div
+      variants={animate ? itemVariants : undefined}
+      initial={animate ? undefined : false}
+      className={className}
+    >
       {children}
     </motion.div>
   );

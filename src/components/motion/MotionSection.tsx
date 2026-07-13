@@ -1,4 +1,5 @@
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { useReducedMotionSafe } from "./useReducedMotionSafe";
 import type { ReactNode } from "react";
 import { dur, easeOut, shift } from "./motion-tokens";
 
@@ -23,7 +24,7 @@ export function MotionSection({
   as?: "section" | "div";
   "aria-label"?: string;
 }) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const MotionTag = _as === "section" ? motion.section : motion.div;
   return (
     <MotionTag

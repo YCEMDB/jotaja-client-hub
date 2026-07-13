@@ -1,6 +1,7 @@
 import { ArrowRight, Check, Bell, CheckCircle2, Utensils, Package, Bike } from "lucide-react";
 import { useEffect, useRef } from "react";
-import { motion, useMotionValue, useReducedMotion, useSpring, useInView } from "motion/react";
+import { motion, useMotionValue, useSpring, useInView } from "motion/react";
+import { useReducedMotionSafe } from "@/components/motion/useReducedMotionSafe";
 import { Button } from "@/components/ui/button";
 import { LeadFormDialog } from "./LeadFormDialog";
 import markUrl from "@/assets/mesivo-mark.svg";
@@ -178,7 +179,7 @@ export function Hero() {
  * Anima apenas transform/opacity; pausa fora da viewport.
  */
 function HeroBackground() {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const fine = usePointerFine();
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { amount: 0.1 });

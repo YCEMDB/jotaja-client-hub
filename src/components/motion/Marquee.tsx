@@ -1,6 +1,7 @@
-import { useReducedMotion } from "motion/react";
 import type { ReactNode } from "react";
 import { usePointerFine } from "./usePointerFine";
+import { useReducedMotionSafe } from "./useReducedMotionSafe";
+
 
 /**
  * Marquee — faixa horizontal em loop contínuo.
@@ -24,7 +25,7 @@ export function Marquee({
   className?: string;
   ariaLabel?: string;
 }) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const pointerFine = usePointerFine();
 
   if (reduce) {

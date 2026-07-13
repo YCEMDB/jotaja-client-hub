@@ -1,4 +1,5 @@
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { useReducedMotionSafe } from "./useReducedMotionSafe";
 import type { CSSProperties, ElementType, ReactNode } from "react";
 import { dur, easeOut, heroSequence, shift } from "./motion-tokens";
 
@@ -36,7 +37,7 @@ export function MotionText({
   step = heroSequence.titleLineStep,
   ariaLabel,
 }: Props) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const HeadingTag = as as ElementType;
 
   const label =

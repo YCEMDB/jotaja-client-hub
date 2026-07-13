@@ -1,12 +1,13 @@
 import {
   motion,
   useMotionValue,
-  useReducedMotion,
   useSpring,
   type HTMLMotionProps,
 } from "motion/react";
 import { forwardRef, type ReactNode } from "react";
 import { usePointerFine } from "./usePointerFine";
+import { useReducedMotionSafe } from "./useReducedMotionSafe";
+
 
 type Props = Omit<HTMLMotionProps<"button">, "children" | "ref"> & {
   children: ReactNode;
@@ -27,7 +28,7 @@ export const MagneticButton = forwardRef<HTMLButtonElement, Props>(function Magn
   { children, strength = 4, onMouseMove, onMouseLeave, style, ...rest },
   ref,
 ) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const fine = usePointerFine();
   const enabled = !reduce && fine;
 

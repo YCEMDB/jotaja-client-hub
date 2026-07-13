@@ -1,4 +1,5 @@
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { useReducedMotionSafe } from "./useReducedMotionSafe";
 import type { CSSProperties, ReactNode } from "react";
 import { dur, easeOut, heroSequence } from "./motion-tokens";
 
@@ -22,7 +23,7 @@ export function MotionMockup({
   delay?: number;
   ariaLabel?: string;
 }) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const style: CSSProperties = {
     perspective: reduce ? undefined : "1200px",
   };
@@ -61,7 +62,7 @@ export function MotionMockupLayer({
   depth?: 0 | 1 | 2 | 3;
   delay?: number;
 }) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const y = [12, 16, 20, 24][depth];
   return (
     <motion.div

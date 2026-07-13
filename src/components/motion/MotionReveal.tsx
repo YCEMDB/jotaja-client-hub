@@ -1,4 +1,5 @@
-import { motion, useReducedMotion, type HTMLMotionProps } from "motion/react";
+import { motion, type HTMLMotionProps } from "motion/react";
+import { useReducedMotionSafe } from "./useReducedMotionSafe";
 import type { ElementType, ReactNode } from "react";
 import { dur, easeOut, shift } from "./motion-tokens";
 
@@ -29,7 +30,7 @@ export function MotionReveal({
   className,
   ...rest
 }: Props) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const Comp = motion[as] as ElementType;
 
   if (reduce) {
