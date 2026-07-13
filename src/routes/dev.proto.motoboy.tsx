@@ -60,7 +60,7 @@ function ProtoMotoboy() {
               </button>
             </div>
             <button className="moto-profile-btn" aria-label="Perfil">
-              👤
+              <IconUser size={18} />
             </button>
           </div>
         </header>
