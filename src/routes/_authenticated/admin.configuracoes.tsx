@@ -49,7 +49,7 @@ type DeliveryArea = {
 };
 
 function ConfigPage() {
-  const { restaurantId } = useAuth();
+  const { restaurantId, roles, user } = useAuth();
   const [r, setR] = useState<Restaurant | null>(null);
   const [areas, setAreas] = useState<DeliveryArea[]>([]);
   const [loading, setLoading] = useState(true);
@@ -70,6 +70,13 @@ function ConfigPage() {
 
   if (!restaurantId) return <AdminPageLayout title="Configurações"><p className="text-ink/60">Configure seu restaurante primeiro.</p></AdminPageLayout>;
   if (loading || !r) return <AdminPageLayout title="Configurações"><p className="text-ink/60">Carregando…</p></AdminPageLayout>;
+
+  const isOwnerNative = !!user && r.owner_id === user.id;
+  const isManagerNative = roles.includes("manager");
+  const isNativeAdmin = isOwnerNative || isManagerNative;
+  const isSuperAdmin = roles.includes("super_admin");
+  const canWriteAreas = isNativeAdmin || isSuperAdmin;
+  const needsReason = !isNativeAdmin && isSuperAdmin;
 
   return (
     <AdminPageLayout
