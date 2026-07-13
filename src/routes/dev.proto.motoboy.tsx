@@ -130,15 +130,17 @@ function ProtoMotoboy() {
 
               <div className="moto-card-meta">
                 <span>
-                  📍 <b>2,4 km</b>
+                  <IconPin size={14} /> <b>2,4 km</b>
                 </span>
                 <span>
-                  ⏱ ETA <b>12 min</b>
+                  <IconClock size={14} /> ETA <b>12 min</b>
                 </span>
                 <span>
-                  💵 Cobrar <b>R$ 96,50</b>
+                  <IconMoney size={14} /> Cobrar <b>R$ 96,50</b>
                 </span>
-                <span>💳 Pix pago</span>
+                <span>
+                  <IconCard size={14} /> Pix pago
+                </span>
               </div>
 
               <div className="moto-card-note">
