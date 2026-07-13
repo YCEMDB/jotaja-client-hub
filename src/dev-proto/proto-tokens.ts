@@ -205,31 +205,39 @@ export const PROTO_CSS = `
 
 /* --- Landing responsive (mobile-first for < 768px) --- */
 @media (max-width: 767px){
-  .mkt-container{padding:0 18px}
-  .mkt-header-inner{padding:12px 0}
+  .mkt-container{padding:0 18px;width:100%;min-width:0;max-width:100%}
+  .mkt-header-inner{padding:12px 0;gap:8px}
   .mkt-nav{display:none}
   .mkt-header-cta{display:none}
   .mkt-menu-btn{display:inline-flex}
-  .mkt-hero{padding:28px 0 44px}
-  .mkt-hero-grid{grid-template-columns:1fr;gap:28px}
-  .mkt-h1{font-size:30px;line-height:1.05;margin:14px 0 14px;word-wrap:break-word;overflow-wrap:break-word;hyphens:auto}
-  .mkt-sub{font-size:16px}
-  .mkt-cta-row .mkt-btn-lg{flex:1;justify-content:center;padding:14px 16px;font-size:15px}
-  .mkt-hero-stage{height:auto;min-height:380px;padding-top:16px}
-  .mkt-mockup-dashboard{position:relative;width:100%;top:0;left:0;transform:none;filter:drop-shadow(0 18px 30px rgba(52,36,29,.18))}
-  .mkt-mockup-phone{position:absolute;right:8px;bottom:-8px;width:150px;transform:rotate(4deg)}
-  .mkt-badge-float{font-size:11px;padding:6px 10px}
-  .mkt-badge-mango{top:-6px;right:8px}
-  .mkt-badge-leaf{display:none}
+  .mkt-hero{padding:24px 0 40px;overflow:visible}
+  .mkt-hero-grid{grid-template-columns:1fr;gap:24px;width:100%;min-width:0}
+  .mkt-hero-grid > div{min-width:0;width:100%;max-width:100%}
+  .mkt-h1{font-size:30px;line-height:1.05;margin:14px 0;word-wrap:break-word;overflow-wrap:break-word;hyphens:auto;width:100%;max-width:100%}
+  .mkt-sub{font-size:16px;max-width:100%;width:100%}
+  .mkt-cta-row{flex-direction:column;flex-wrap:nowrap;gap:10px;margin-top:22px;width:100%}
+  .mkt-cta-row .mkt-btn-lg{width:100%;flex:none;justify-content:center;padding:14px 16px;font-size:15px;min-width:0}
+  .mkt-benefits{flex-direction:column;gap:8px;margin-top:18px}
+  .mkt-benefits span{font-size:13.5px}
+  .mkt-hero-stage{position:relative;height:auto;min-height:0;padding:8px 0 40px;width:100%;max-width:100%;overflow:visible}
+  .mkt-mockup-dashboard{position:relative;width:100%;top:0;left:0;transform:none;filter:drop-shadow(0 18px 30px rgba(52,36,29,.18));max-width:100%}
+  .mkt-mockup-phone{position:relative;right:auto;bottom:auto;width:60%;max-width:220px;margin:16px auto 0;transform:none;display:block}
+  .mkt-badge-float{position:static;display:inline-flex;align-items:center;font-size:11px;padding:6px 10px;margin:10px 8px 0 0}
+  .mkt-badge-mango,.mkt-badge-leaf{top:auto;right:auto;bottom:auto;left:auto}
   .mkt-flowlines{display:none}
-  .mkt-section{padding:56px 0}
+  .mkt-section{padding:48px 0}
   .mkt-two-col{grid-template-columns:1fr;gap:32px}
   .mkt-feature-bento{grid-template-columns:1fr;grid-auto-rows:auto}
   .mkt-feature-card, .mkt-feature-lg, .mkt-feature-wide, .mkt-feature-coral{grid-column:span 1;grid-row:auto;min-height:200px}
-  .mkt-cta-final-inner{flex-direction:column;align-items:flex-start}
-  .mkt-cta-final-inner .flex{width:100%;flex-direction:column}
-  .mkt-cta-final-inner .flex .mkt-btn{width:100%;justify-content:center}
+  .mkt-cta-final-inner{flex-direction:column;align-items:stretch;gap:18px}
+  .mkt-cta-final-inner > div:last-child{width:100%;flex-direction:column;display:flex;gap:10px}
+  .mkt-cta-final-inner .mkt-btn{width:100%;justify-content:center}
   .mkt-footer-inner{flex-direction:column;align-items:flex-start;gap:12px}
+}
+/* Small tablets keep hero grid stacked to avoid squeezing */
+@media (min-width:768px) and (max-width:899px){
+  .mkt-hero-grid{grid-template-columns:1fr;gap:32px}
+  .mkt-hero-stage{height:auto;min-height:420px}
 }
 
 /* ================= APP (DASHBOARD / PDV) ================= */
