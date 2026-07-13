@@ -391,12 +391,12 @@ function AreasTab({
     return fallback;
   };
 
-  const guardReason = (): string | null => {
-    if (!needsReason) return null;
+  const guardReason = (): string | undefined => {
+    if (!needsReason) return undefined;
     const trimmed = reason.trim();
     if (trimmed.replace(/\s/g, "").length < 5) {
       toast.error("Informe um motivo com pelo menos 5 caracteres para operar via suporte.");
-      return null;
+      return undefined;
     }
     return trimmed;
   };
@@ -410,7 +410,7 @@ function AreasTab({
     const { error } = await supabase.rpc("create_delivery_area", {
       p_restaurant_id: restaurantId,
       p_neighborhood: neighborhood.trim(),
-      p_city: undefined,
+      p_city: "",
       p_fee: Number(fee) || 0,
       p_min_order: Number(minOrder) || 0,
       p_estimated_minutes: Number(minutes) || 30,
