@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { PROTO_CSS } from "@/dev-proto/proto-tokens";
+import { IconImage, IconMenu, IconSearch } from "@/dev-proto/proto-icons";
 
 export const Route = createFileRoute("/dev/proto/pdv")({
   component: ProtoPdv,
