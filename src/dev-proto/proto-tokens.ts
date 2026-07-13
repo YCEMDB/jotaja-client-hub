@@ -438,7 +438,7 @@ export const PROTO_CSS = `
 .pdv-sheet-cta{background:var(--tomato);color:#FFF8EE;border:none;padding:16px;margin:0 20px 16px;border-radius:14px;font-family:var(--mono);font-weight:800;font-size:15px;cursor:pointer}
 
 /* ================= TRANSACIONAL (CARDÁPIO PÚBLICO) ================= */
-[data-theme="tx-proto"] { background:#FAFAF7; min-height:100vh; font-family:'Hind',sans-serif; }
+[data-theme="tx-proto"] { background:#FAFAF7; min-height:100vh; font-family:'Hind',sans-serif; --cart-bar-height:76px; }
 .tx-root { min-height:100vh; max-width: 480px; margin: 0 auto; background:#fff; position:relative; }
 .tx-cover { height: 220px; position:relative; overflow:hidden; }
 .tx-cover-img{position:absolute;inset:0;background-size:cover;background-position:center;}
