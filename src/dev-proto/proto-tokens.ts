@@ -125,7 +125,7 @@ export const PROTO_CSS = `
 .pm-items { padding:6px 10px 10px; display:flex; flex-direction:column; gap:6px; }
 .pm-item { display:grid; grid-template-columns: 44px 1fr auto; gap:8px; align-items:center; padding:6px; border:1px solid var(--hair); border-radius:10px; background:#FFFDFA; }
 .pm-thumb { width:44px; height:44px; border-radius:8px; background: linear-gradient(135deg, #FFB82E, #F0522D); position:relative;}
-.pm-thumb:after{content:"🍔";position:absolute;inset:0;display:grid;place-items:center;font-size:20px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.3));}
+.pm-thumb:after{content:"";position:absolute;inset:6px;border-radius:6px;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.35),transparent 55%),linear-gradient(135deg,#8B3E1B,#5B2612);}
 .pm-title { font-size:11.5px; font-weight:700; color:var(--coffee); }
 .pm-desc { font-size:10px; color:var(--muted); }
 .pm-price { font-size:11.5px; font-weight:800; color:var(--tomato); font-family:var(--mono);}
