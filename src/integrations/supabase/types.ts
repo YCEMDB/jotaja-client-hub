@@ -5100,22 +5100,42 @@ export type Database = {
         Args: { p_reason: string; p_restaurant_id: string }
         Returns: Json
       }
-      payment_apply_provider_event: {
-        Args: {
-          p_amount: number
-          p_external_event_id: string
-          p_failure_code: string
-          p_failure_message: string
-          p_new_status: Database["public"]["Enums"]["financial_payment_status"]
-          p_paid_at: string
-          p_payload_hash: string
-          p_provider: string
-          p_provider_payment_id: string
-          p_provider_status_raw: string
-          p_source: string
-        }
-        Returns: Json
-      }
+      payment_apply_provider_event:
+        | {
+            Args: {
+              p_amount: number
+              p_external_event_id: string
+              p_failure_code: string
+              p_failure_message: string
+              p_new_status: Database["public"]["Enums"]["financial_payment_status"]
+              p_paid_at: string
+              p_payload_hash: string
+              p_provider: string
+              p_provider_payment_id: string
+              p_provider_status_raw: string
+              p_source: string
+            }
+            Returns: Json
+          }
+        | {
+            Args: {
+              p_amount: number
+              p_expected_currency?: string
+              p_expected_reference_id?: string
+              p_expected_restaurant_id?: string
+              p_external_event_id: string
+              p_failure_code: string
+              p_failure_message: string
+              p_new_status: Database["public"]["Enums"]["financial_payment_status"]
+              p_paid_at: string
+              p_payload_hash: string
+              p_provider: string
+              p_provider_payment_id: string
+              p_provider_status_raw: string
+              p_source: string
+            }
+            Returns: Json
+          }
       payment_create_pending: {
         Args: {
           p_amount: number
