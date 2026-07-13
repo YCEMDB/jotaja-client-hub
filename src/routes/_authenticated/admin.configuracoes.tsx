@@ -33,6 +33,15 @@ export const Route = createFileRoute("/_authenticated/admin/configuracoes")({
   head: () => ({ meta: [{ title: "Configurações — Mesivo" }] }),
 });
 
+// PagBank fica disponível apenas em restaurantes de demonstração/sandbox.
+// Enquanto a homologação de produção não é liberada, restaurantes reais
+// só veem Mercado Pago.
+const PAGBANK_DEMO_RESTAURANT_IDS = new Set<string>([
+  "b982094d-016d-4b95-af95-0105d79fd197", // Sandbox PagBank — Teste
+]);
+const isPagbankDemoRestaurant = (id: string | null | undefined) =>
+  !!id && PAGBANK_DEMO_RESTAURANT_IDS.has(id);
+
 const DAYS = [
   { key: "mon", label: "Segunda" },
   { key: "tue", label: "Terça" },
