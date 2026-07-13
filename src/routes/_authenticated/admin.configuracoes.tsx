@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useSupportContext } from "@/hooks/useSupportContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -50,6 +51,7 @@ type DeliveryArea = {
 
 function ConfigPage() {
   const { restaurantId, roles, user } = useAuth();
+  const support = useSupportContext();
   const [r, setR] = useState<Restaurant | null>(null);
   const [areas, setAreas] = useState<DeliveryArea[]>([]);
   const [loading, setLoading] = useState(true);
@@ -75,8 +77,13 @@ function ConfigPage() {
   const isManagerNative = roles.includes("manager");
   const isNativeAdmin = isOwnerNative || isManagerNative;
   const isSuperAdmin = roles.includes("super_admin");
-  const canWriteAreas = isNativeAdmin || isSuperAdmin;
-  const needsReason = !isNativeAdmin && isSuperAdmin;
+  // Super Admin só escreve com sessão administrative ATIVA para este restaurante.
+  const hasAdminSupport =
+    support.active &&
+    support.level === "administrative" &&
+    support.restaurantId === restaurantId;
+  const canWriteAreas = isNativeAdmin || (isSuperAdmin && hasAdminSupport);
+  const needsReason = !isNativeAdmin && isSuperAdmin && hasAdminSupport;
 
   return (
     <AdminPageLayout
