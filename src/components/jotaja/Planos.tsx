@@ -1,7 +1,28 @@
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Reveal, Stagger, StaggerItem } from "./Reveal";
+import {
+  MotionSection,
+  MotionReveal,
+  MotionStagger,
+  MotionStaggerItem,
+} from "@/components/motion";
 
+/**
+ * Planos — Onda 3.
+ *
+ * Auditoria de conteúdo:
+ * - Removidos recursos ainda não disponíveis publicamente na plataforma:
+ *   "Múltiplas unidades", "API e integrações", "Gerente de sucesso dedicado"
+ *   e "Áreas de entrega e motoboys" com nível de automação não confirmado.
+ * - Mantidos apenas recursos que existem hoje na Mesivo (cardápio digital,
+ *   pedidos online, PDV / caixa, cupons, cardápio ilimitado, painel único,
+ *   suporte).
+ * - Preços, teste grátis e CTAs são apresentados como referência inicial —
+ *   caso os valores oficiais mudem, atualize aqui em vez de duplicar em
+ *   páginas SEO.
+ *
+ * Paleta: sem violet / magenta / roxo SaaS. Destaque em laranja-coral.
+ */
 const plans = [
   {
     name: "Starter",
@@ -9,89 +30,95 @@ const plans = [
     desc: "Para quem está começando o delivery próprio.",
     features: [
       "Cardápio digital ilimitado",
-      "Pedidos online via link",
-      "Pix e cartão na entrega",
+      "Pedidos online via link exclusivo",
+      "Pagamento por Pix e cartão",
       "1 usuário",
       "Suporte por e-mail",
     ],
-    cta: "Começar grátis",
+    cta: "Começar agora",
     highlighted: false,
   },
   {
     name: "Pro",
     price: "R$ 199",
-    desc: "Operação completa para restaurantes em crescimento.",
+    desc: "Operação completa para restaurantes em ritmo diário.",
     features: [
       "Tudo do Starter",
+      "PDV integrado (salão, mesas, balcão)",
       "Cupons e promoções",
-      "Áreas de entrega e motoboys",
-      "Relatórios avançados",
+      "Relatórios diários da operação",
       "Até 5 usuários",
       "Suporte prioritário no WhatsApp",
     ],
-    cta: "Testar 14 dias grátis",
+    cta: "Testar Pro",
     highlighted: true,
   },
   {
     name: "Business",
     price: "R$ 399",
-    desc: "Para redes e restaurantes de alto volume.",
+    desc: "Para restaurantes com maior volume por dia.",
     features: [
       "Tudo do Pro",
-      "Múltiplas unidades",
-      "API e integrações",
       "Usuários ilimitados",
-      "Gerente de sucesso dedicado",
+      "Fluxos de delivery e retirada",
+      "Suporte prioritário estendido",
     ],
-    cta: "Falar com vendas",
+    cta: "Falar com o time",
     highlighted: false,
   },
 ];
 
 export function Planos() {
   return (
-    <section id="planos" className="py-24 md:py-32 bg-secondary border-y border-border">
+    <MotionSection
+      id="planos"
+      className="py-24 md:py-32 bg-secondary border-y border-border"
+      aria-label="Planos e preços"
+    >
       <div className="container mx-auto px-6">
-        <Reveal className="max-w-2xl mx-auto text-center">
-          <span className="text-xs font-semibold uppercase tracking-widest text-primary">
+        <MotionReveal className="max-w-2xl mx-auto text-center">
+          <span className="text-xs font-semibold uppercase tracking-widest text-brand-orange">
             Planos
           </span>
-          <h2 className="mt-3 text-3xl md:text-4xl font-bold tracking-tight">
+          <h2 className="mt-3 font-display text-3xl md:text-5xl text-ink tracking-tight uppercase leading-[0.95]">
             Preços simples, sem surpresa.
           </h2>
-          <p className="mt-4 text-muted-foreground">
+          <p className="mt-4 text-ink/70">
             Mensalidade fixa, sem comissão por venda. Cancele quando quiser.
           </p>
-        </Reveal>
+        </MotionReveal>
 
-        <Stagger className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto">
+        <MotionStagger
+          className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto"
+          delay={0.05}
+        >
           {plans.map((plan) => (
-            <StaggerItem
+            <MotionStaggerItem
               key={plan.name}
-              className={`relative rounded-2xl p-7 flex flex-col h-full ${
-                plan.highlighted
-                  ? "bg-card border-2 border-primary shadow-blue"
-                  : "bg-card border border-border shadow-xs"
+              className={`relative rounded-2xl p-7 flex flex-col h-full bg-card border-2 border-ink shadow-brutal ${
+                plan.highlighted ? "ring-2 ring-brand-orange ring-offset-2 ring-offset-secondary" : ""
               }`}
             >
               {plan.highlighted && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-semibold">
-                  Mais escolhido
+                <div
+                  className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-brand-orange text-ink text-xs font-bold border-2 border-ink shadow-brutal"
+                >
+                  Recomendado
                 </div>
               )}
               <div>
-                <h3 className="text-base font-semibold tracking-tight">{plan.name}</h3>
-                <p className="mt-1 text-xs text-muted-foreground">{plan.desc}</p>
+                <h3 className="font-display text-xl text-ink tracking-tight">{plan.name}</h3>
+                <p className="mt-1 text-xs text-ink/60">{plan.desc}</p>
               </div>
               <div className="mt-5 flex items-baseline gap-1">
-                <span className="text-4xl font-bold tracking-tight">{plan.price}</span>
-                <span className="text-sm text-muted-foreground">/mês</span>
+                <span className="font-display text-4xl text-ink tracking-tight">{plan.price}</span>
+                <span className="text-sm text-ink/60">/mês</span>
               </div>
               <Button
-                className={`mt-6 w-full rounded-lg font-semibold ${
+                className={`mt-6 w-full rounded-lg font-semibold border-2 border-ink shadow-brutal ${
                   plan.highlighted
-                    ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-blue"
-                    : "bg-foreground text-background hover:bg-foreground/90"
+                    ? "bg-brand-orange text-ink hover:bg-brand-orange/90"
+                    : "bg-ink text-background hover:bg-ink/90"
                 }`}
                 asChild
               >
@@ -100,15 +127,19 @@ export function Planos() {
               <ul className="mt-7 space-y-3 flex-1">
                 {plan.features.map((f) => (
                   <li key={f} className="flex items-start gap-2.5 text-sm">
-                    <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                    <span className="text-foreground/80">{f}</span>
+                    <Check
+                      className="w-4 h-4 text-brand-orange mt-0.5 flex-shrink-0"
+                      strokeWidth={2.5}
+                      aria-hidden="true"
+                    />
+                    <span className="text-ink/80">{f}</span>
                   </li>
                 ))}
               </ul>
-            </StaggerItem>
+            </MotionStaggerItem>
           ))}
-        </Stagger>
+        </MotionStagger>
       </div>
-    </section>
+    </MotionSection>
   );
 }
