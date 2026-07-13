@@ -63,6 +63,7 @@ import { Route as AceitarConviteTokenRouteImport } from './routes/aceitar-convit
 import { Route as SuperSuperIndexRouteImport } from './routes/_super/super.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
+import { Route as DevProtoLandingRouteImport } from './routes/dev.proto.landing'
 import { Route as ApiPublicMercadopagoWebhookRouteImport } from './routes/api/public/mercadopago-webhook'
 import { Route as ApiPublic_domainCheckRouteImport } from './routes/api/public/__domain-check'
 import { Route as SuperSuperPlanosRouteImport } from './routes/_super/super.planos'
@@ -385,6 +386,11 @@ const LovableEmailSuppressionRoute = LovableEmailSuppressionRouteImport.update({
   path: '/lovable/email/suppression',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DevProtoLandingRoute = DevProtoLandingRouteImport.update({
+  id: '/dev/proto/landing',
+  path: '/dev/proto/landing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicMercadopagoWebhookRoute =
   ApiPublicMercadopagoWebhookRouteImport.update({
     id: '/api/public/mercadopago-webhook',
@@ -683,6 +689,7 @@ export interface FileRoutesByFullPath {
   '/super/planos': typeof SuperSuperPlanosRoute
   '/api/public': typeof ApiPublic_domainCheckRoute
   '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
+  '/dev/proto/landing': typeof DevProtoLandingRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/super/': typeof SuperSuperIndexRoute
@@ -776,6 +783,7 @@ export interface FileRoutesByTo {
   '/super/planos': typeof SuperSuperPlanosRoute
   '/api/public': typeof ApiPublic_domainCheckRoute
   '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
+  '/dev/proto/landing': typeof DevProtoLandingRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/super': typeof SuperSuperIndexRoute
@@ -872,6 +880,7 @@ export interface FileRoutesById {
   '/_super/super/planos': typeof SuperSuperPlanosRoute
   '/api/public/__domain-check': typeof ApiPublic_domainCheckRoute
   '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
+  '/dev/proto/landing': typeof DevProtoLandingRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_super/super/': typeof SuperSuperIndexRoute
@@ -967,6 +976,7 @@ export interface FileRouteTypes {
     | '/super/planos'
     | '/api/public'
     | '/api/public/mercadopago-webhook'
+    | '/dev/proto/landing'
     | '/lovable/email/suppression'
     | '/admin/'
     | '/super/'
@@ -1060,6 +1070,7 @@ export interface FileRouteTypes {
     | '/super/planos'
     | '/api/public'
     | '/api/public/mercadopago-webhook'
+    | '/dev/proto/landing'
     | '/lovable/email/suppression'
     | '/admin'
     | '/super'
@@ -1155,6 +1166,7 @@ export interface FileRouteTypes {
     | '/_super/super/planos'
     | '/api/public/__domain-check'
     | '/api/public/mercadopago-webhook'
+    | '/dev/proto/landing'
     | '/lovable/email/suppression'
     | '/_authenticated/admin/'
     | '/_super/super/'
@@ -1225,6 +1237,7 @@ export interface RootRouteChildren {
   BlogIndexRoute: typeof BlogIndexRoute
   ApiPublic_domainCheckRoute: typeof ApiPublic_domainCheckRoute
   ApiPublicMercadopagoWebhookRoute: typeof ApiPublicMercadopagoWebhookRoute
+  DevProtoLandingRoute: typeof DevProtoLandingRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   ApiPublicHooksCommunicationWorkerRoute: typeof ApiPublicHooksCommunicationWorkerRoute
   ApiPublicPagbankCallbackRoute: typeof ApiPublicPagbankCallbackRoute
@@ -1615,6 +1628,13 @@ declare module '@tanstack/react-router' {
       path: '/lovable/email/suppression'
       fullPath: '/lovable/email/suppression'
       preLoaderRoute: typeof LovableEmailSuppressionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dev/proto/landing': {
+      id: '/dev/proto/landing'
+      path: '/dev/proto/landing'
+      fullPath: '/dev/proto/landing'
+      preLoaderRoute: typeof DevProtoLandingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/mercadopago-webhook': {
@@ -2044,6 +2064,7 @@ const rootRouteChildren: RootRouteChildren = {
   BlogIndexRoute: BlogIndexRoute,
   ApiPublic_domainCheckRoute: ApiPublic_domainCheckRoute,
   ApiPublicMercadopagoWebhookRoute: ApiPublicMercadopagoWebhookRoute,
+  DevProtoLandingRoute: DevProtoLandingRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   ApiPublicHooksCommunicationWorkerRoute:
     ApiPublicHooksCommunicationWorkerRoute,
