@@ -1,4 +1,5 @@
-import { motion, useReducedMotion, type Variants } from "motion/react";
+import { motion, type Variants } from "motion/react";
+import { useReducedMotionSafe } from "./useReducedMotionSafe";
 import type { ElementType, ReactNode } from "react";
 import { dur, easeOut, shift, stagger } from "./motion-tokens";
 
@@ -24,7 +25,7 @@ export function MotionStagger({
   gap?: number;
   as?: "div" | "ul" | "ol" | "section";
 }) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const Comp = motion[as] as ElementType;
 
   if (reduce) {
@@ -66,7 +67,7 @@ export function MotionStaggerItem({
   className?: string;
   as?: "div" | "li" | "article";
 }) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const Comp = motion[as] as ElementType;
   if (reduce) {
     const Plain = as as ElementType;
