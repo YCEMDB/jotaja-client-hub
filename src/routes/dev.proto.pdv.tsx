@@ -248,23 +248,28 @@ function ProtoPdv() {
             onClick={() => setSheetOpen(false)}
           />
           <div
+            ref={sheetRef}
             className="pdv-sheet"
             style={{ display: "flex" }}
             role="dialog"
             aria-modal="true"
-            aria-label="Pedido em andamento"
+            aria-labelledby="pdv-sheet-title"
+            tabIndex={-1}
             onKeyDown={(e) => {
               if (e.key === "Escape") setSheetOpen(false);
             }}
           >
             <div className="pdv-sheet-handle" />
             <div className="pdv-sheet-h">
-              <div className="pdv-sheet-h-t">Pedido #0827 · Salão</div>
+              <div id="pdv-sheet-title" className="pdv-sheet-h-t">
+                Pedido #0827 · Salão
+              </div>
               <button
+                ref={closeRef}
                 type="button"
                 className="pdv-sheet-close"
                 onClick={() => setSheetOpen(false)}
-                aria-label="Fechar"
+                aria-label="Fechar pedido"
               >
                 ×
               </button>
