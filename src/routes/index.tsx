@@ -13,6 +13,7 @@ import { CTA } from "@/components/jotaja/CTA";
 import { Footer } from "@/components/jotaja/Footer";
 import { WhatsAppFloat } from "@/components/jotaja/WhatsAppFloat";
 import { ScrollProgress } from "@/components/motion";
+import { MotionConfig } from "motion/react";
 
 const SITE_URL = "https://comandahub.online";
 const TITLE = "Mesivo | Gestão completa para restaurantes";
