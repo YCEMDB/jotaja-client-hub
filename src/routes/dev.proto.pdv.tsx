@@ -220,11 +220,14 @@ function ProtoPdv() {
         </div>
 
         <button
+          ref={fabRef}
           type="button"
           className="pdv-mob-fab"
           data-empty={itemCount === 0}
           disabled={itemCount === 0}
           aria-label={`Ver pedido, ${itemCount} itens, total R$ 141,83`}
+          aria-haspopup="dialog"
+          aria-expanded={sheetOpen}
           onClick={() => setSheetOpen(true)}
         >
           <span className="pdv-mob-fab-l">
