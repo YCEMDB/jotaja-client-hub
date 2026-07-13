@@ -201,16 +201,21 @@ export const verifyMercadoPago = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { supabase } = context;
 
-    // RLS valida acesso: se não for da equipe, retorna vazio
-    const { data: secret, error: secretErr } = await supabase
-      .from("restaurant_secrets")
-      .select("mp_access_token")
-      .eq("restaurant_id", data.restaurantId)
-      .maybeSingle();
+    // Enforce access via SECURITY DEFINER RPC (returns configured/status only)
+    const { data: status, error: statusErr } = await supabase.rpc("restaurant_mp_token_status", {
+      p_restaurant_id: data.restaurantId,
+    });
+    if (statusErr) return { ok: false as const, error: "Sem acesso a este restaurante" };
+    if (!(status as { configured?: boolean })?.configured)
+      return { ok: false as const, error: "Nenhum Access Token configurado" };
 
-    if (secretErr) return { ok: false as const, error: "Erro ao ler credenciais" };
-    const token = secret?.mp_access_token?.trim();
+    // Fetch decrypted token server-side only
+    const { data: tokenData } = await supabaseAdmin.rpc("admin_get_restaurant_mp_token", {
+      p_restaurant_id: data.restaurantId,
+    });
+    const token = ((tokenData as string | null) ?? "").trim();
     if (!token) return { ok: false as const, error: "Nenhum Access Token configurado" };
+
 
     try {
       const res = await fetch("https://api.mercadopago.com/users/me", {
