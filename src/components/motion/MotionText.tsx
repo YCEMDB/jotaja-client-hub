@@ -73,4 +73,4 @@ export function MotionText({
   );
 }
 
-export const motionTextShift = shift;
+
