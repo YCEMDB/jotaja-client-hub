@@ -1212,7 +1212,7 @@ function ActivePaymentProviderCard({ r, onSaved }: { r: Restaurant; onSaved: () 
           Escolha qual conta será usada para gerar QR Codes Pix no cardápio. Somente uma pode estar ativa por vez.
         </p>
       </div>
-      <div className="grid gap-2 sm:grid-cols-2">
+      <div className={`grid gap-2 ${isPagbankDemoRestaurant(r.id) ? "sm:grid-cols-2" : ""}`}>
         <button
           type="button"
           onClick={() => setValue("mercado_pago")}
@@ -1221,14 +1221,16 @@ function ActivePaymentProviderCard({ r, onSaved }: { r: Restaurant; onSaved: () 
           <p className="font-medium">Mercado Pago</p>
           <p className="text-xs text-muted-foreground">Conexão via Access Token do lojista.</p>
         </button>
-        <button
-          type="button"
-          onClick={() => setValue("pagbank")}
-          className={`text-left border rounded-lg p-3 transition ${value === "pagbank" ? "border-primary ring-2 ring-primary/40" : "hover:border-primary/50"}`}
-        >
-          <p className="font-medium">PagBank</p>
-          <p className="text-xs text-muted-foreground">Conexão via OAuth (PagBank Connect).</p>
-        </button>
+        {isPagbankDemoRestaurant(r.id) && (
+          <button
+            type="button"
+            onClick={() => setValue("pagbank")}
+            className={`text-left border rounded-lg p-3 transition ${value === "pagbank" ? "border-primary ring-2 ring-primary/40" : "hover:border-primary/50"}`}
+          >
+            <p className="font-medium">PagBank</p>
+            <p className="text-xs text-muted-foreground">Conexão via OAuth (PagBank Connect).</p>
+          </button>
+        )}
       </div>
       {dirty && (
         <>
