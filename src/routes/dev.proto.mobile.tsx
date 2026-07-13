@@ -1,5 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PROTO_CSS } from "@/dev-proto/proto-tokens";
+import {
+  IconMenu,
+  IconArrow,
+  IconSearch,
+  IconCheck,
+  IconClock,
+  IconMoney,
+  IconPackage,
+} from "@/dev-proto/proto-icons";
 
 export const Route = createFileRoute("/dev/proto/mobile")({
   component: ProtoMobile,
