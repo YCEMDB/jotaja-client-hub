@@ -50,6 +50,7 @@ type DeliveryArea = {
 
 function ConfigPage() {
   const { restaurantId, roles, user } = useAuth();
+  const support = useSupportContext();
   const [r, setR] = useState<Restaurant | null>(null);
   const [areas, setAreas] = useState<DeliveryArea[]>([]);
   const [loading, setLoading] = useState(true);
