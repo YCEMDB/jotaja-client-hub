@@ -516,7 +516,7 @@ function AreasTab({ areas, restaurantId, onSaved }: { areas: DeliveryArea[]; res
 
 function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
   const [token, setToken] = useState("");
-  const [savedToken, setSavedToken] = useState<string | null>(null);
+  const [hasSavedToken, setHasSavedToken] = useState(false);
   const [pubKey, setPubKey] = useState(r.mp_public_key ?? "");
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -534,14 +534,10 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
 
   const reload = async () => {
     setLoading(true);
-    const { data } = await supabase
-      .from("restaurant_secrets")
-      .select("mp_access_token")
-      .eq("restaurant_id", r.id)
-      .maybeSingle();
-    const t = data?.mp_access_token ?? null;
-    setSavedToken(t);
-    setToken(t ?? "");
+    const { data } = await supabase.rpc("restaurant_mp_token_status", { p_restaurant_id: r.id });
+    const status = (data as { configured?: boolean } | null) ?? null;
+    setHasSavedToken(!!status?.configured);
+    setToken("");
     setLoading(false);
   };
 
@@ -549,10 +545,10 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
 
   // Auto-validar quando já existe token salvo
   useEffect(() => {
-    if (savedToken) void runTest(true);
+    if (hasSavedToken) void runTest(true);
     else setAccount(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [savedToken]);
+  }, [hasSavedToken]);
 
   const runTest = async (silent = false) => {
     setTesting(true);
@@ -576,40 +572,48 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
 
   const save = async () => {
     setSaving(true);
-    const trimmedToken = token.trim() || null;
-    const [{ error: pubErr }, { error: secErr }] = await Promise.all([
-      supabase.from("restaurants").update({
-        mp_public_key: pubKey.trim() || null,
-      }).eq("id", r.id),
-      supabase.from("restaurant_secrets").upsert({
-        restaurant_id: r.id,
-        mp_access_token: trimmedToken,
-        updated_at: new Date().toISOString(),
-      }, { onConflict: "restaurant_id" }),
-    ]);
+    const trimmedToken = token.trim();
+    const { error: pubErr } = await supabase.from("restaurants").update({
+      mp_public_key: pubKey.trim() || null,
+    }).eq("id", r.id);
+    let secErr: { message: string } | null = null;
+    if (trimmedToken.length > 0) {
+      const { data: secRes, error: rpcErr } = await supabase.rpc("set_restaurant_integration_secret", {
+        p_restaurant_id: r.id,
+        p_provider: "mercadopago",
+        p_value: trimmedToken,
+      });
+      if (rpcErr) secErr = { message: rpcErr.message };
+      else if (!(secRes as { ok?: boolean } | null)?.ok) secErr = { message: "Falha ao salvar credencial" };
+    }
     setSaving(false);
     const error = pubErr ?? secErr;
     if (error) return toast.error(error.message);
     toast.success("Credenciais salvas");
-    setSavedToken(trimmedToken);
+    setToken("");
+    if (trimmedToken.length > 0) setHasSavedToken(true);
     onSaved();
-    if (trimmedToken) void runTest();
+    if (trimmedToken.length > 0) void runTest();
   };
 
   const disconnect = async () => {
     if (!confirm("Remover a conexão com o Mercado Pago? Pedidos via PIX serão pausados.")) return;
     setSaving(true);
-    const { error } = await supabase
-      .from("restaurant_secrets")
-      .upsert({ restaurant_id: r.id, mp_access_token: null, updated_at: new Date().toISOString() }, { onConflict: "restaurant_id" });
+    const { error } = await supabase.rpc("set_restaurant_integration_secret", {
+      p_restaurant_id: r.id,
+      p_provider: "mercadopago",
+      p_value: null as unknown as string,
+    });
     setSaving(false);
     if (error) return toast.error(error.message);
     setToken("");
-    setSavedToken(null);
+    setHasSavedToken(false);
     setAccount(null);
     toast.success("Mercado Pago desconectado");
     onSaved();
   };
+
+
 
   const copyWebhook = async () => {
     try {
