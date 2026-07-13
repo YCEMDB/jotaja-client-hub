@@ -139,20 +139,25 @@ function PdvPage() {
           option_item_ids: [],
         })),
         p_idempotency_key: idemKey,
-      });
+        p_discount_reason: discount > 0 ? discountReason.trim() : null,
+      } as any);
       if (error) throw error;
-      const created = data as { order_number?: number; idempotent?: boolean } | null;
+      const created = data as { order_number?: number; idempotent?: boolean; delivery_fee?: number; discount?: number } | null;
       toast.success(
         created?.idempotent
           ? `Pedido #${created.order_number} já existia (retry idempotente)`
           : `Pedido #${created?.order_number} criado!`
       );
-      setCart([]); setCustomer({ name: "", phone: "" }); setDeliveryFee(0); setDiscount(0); setNotes("");
+      setCart([]); setCustomer({ name: "", phone: "" }); setDeliveryFee(0); setDiscount(0); setDiscountReason(""); setNotes("");
       setIdemKey(crypto.randomUUID());
     } catch (e: any) {
       const msg = e?.message || "";
       if (msg.includes("plan_limit_reached")) {
         toast.error("Você atingiu o limite mensal de pedidos do seu plano. Faça upgrade em Configurações.");
+      } else if (msg.includes("discount_requires_manager")) {
+        toast.error("Somente owner/manager pode aplicar desconto manual.");
+      } else if (msg.includes("discount_reason_required")) {
+        toast.error("Informe o motivo do desconto (mín. 3 caracteres).");
       } else if (msg.includes("forbidden")) {
         toast.error("Sem permissão para criar pedidos neste restaurante.");
       } else if (msg.includes("empty_cart")) {
