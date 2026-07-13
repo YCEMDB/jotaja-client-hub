@@ -5059,6 +5059,10 @@ export type Database = {
         Args: { p_conversation_id: string }
         Returns: undefined
       }
+      mark_order_paid_manual: {
+        Args: { p_order_id: string }
+        Returns: undefined
+      }
       merge_commands: {
         Args: { p_source_command_id: string; p_target_command_id: string }
         Returns: undefined
