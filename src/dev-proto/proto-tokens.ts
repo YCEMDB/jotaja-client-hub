@@ -24,7 +24,7 @@ export const PROTO_CSS = `
 /* ============= Demo data badge (persistent, discreto) ============= */
 .demo-badge{position:fixed;right:12px;top:max(12px,env(safe-area-inset-top));z-index:60;background:rgba(32,33,31,.86);color:#FDE6D6;font-family:var(--mono);font-weight:600;font-size:10.5px;letter-spacing:.04em;padding:5px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(6px);text-transform:uppercase;pointer-events:none;user-select:none}
 .demo-badge:before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--mango);margin-right:8px;vertical-align:1px;box-shadow:0 0 0 3px rgba(255,184,46,.25)}
-@media (max-width:767px){ .demo-badge{top:auto;bottom:max(12px,env(safe-area-inset-bottom));right:12px;left:auto} }
+@media (max-width:767px){ .demo-badge{top:auto;bottom:calc(78px + env(safe-area-inset-bottom));right:12px;left:auto;font-size:10px;padding:4px 9px} }
 
 /* ================= MARKETING ================= */
 .mkt-root { background: var(--cream); min-height:100vh; overflow-x:hidden; }
