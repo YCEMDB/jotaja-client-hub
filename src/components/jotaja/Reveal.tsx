@@ -1,9 +1,20 @@
 import { motion, type Variants, type HTMLMotionProps } from "motion/react";
 import type { ReactNode } from "react";
+import { useHydrated } from "@/components/motion/useHydrated";
 import { useReducedMotionSafe } from "@/components/motion/useReducedMotionSafe";
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
 
+/**
+ * SSR-safe reveal wrapper.
+ *
+ * Motion's SSR path emits inline styles (opacity/transform) that don't
+ * always match the client's first render — particularly when the OS has
+ * Reduced Motion enabled, since motion.div omits those styles on the
+ * client. To eliminate the hydration mismatch, we render a plain element
+ * during SSR and the first client render, then swap in the animated
+ * motion.div after hydration.
+ */
 export function Reveal({
   children,
   delay = 0,
@@ -20,7 +31,14 @@ export function Reveal({
   as?: "div" | "section" | "li" | "article" | "header";
   amount?: number;
 } & Omit<HTMLMotionProps<"div">, "children">) {
+  const hydrated = useHydrated();
   const reduce = useReducedMotionSafe();
+
+  if (!hydrated) {
+    const Tag = as as "div";
+    return <Tag className={className}>{children}</Tag>;
+  }
+
   const Comp = motion[as] as typeof motion.div;
   return (
     <Comp
@@ -54,8 +72,9 @@ export function Stagger({
   className?: string;
   amount?: number;
 }) {
+  const hydrated = useHydrated();
   const reduce = useReducedMotionSafe();
-  if (reduce) return <div className={className}>{children}</div>;
+  if (!hydrated || reduce) return <div className={className}>{children}</div>;
   return (
     <motion.div
       variants={containerVariants}
@@ -76,8 +95,9 @@ export function StaggerItem({
   children: ReactNode;
   className?: string;
 }) {
+  const hydrated = useHydrated();
   const reduce = useReducedMotionSafe();
-  if (reduce) return <div className={className}>{children}</div>;
+  if (!hydrated || reduce) return <div className={className}>{children}</div>;
   return (
     <motion.div variants={itemVariants} className={className}>
       {children}
