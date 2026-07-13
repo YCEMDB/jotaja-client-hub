@@ -53,22 +53,19 @@ export const createPixPayment = createServerFn({ method: "POST" })
       };
     }
 
-    const [{ data: secret }, { data: restRow }] = await Promise.all([
-      supabaseAdmin
-        .from("restaurant_secrets")
-        .select("mp_access_token")
-        .eq("restaurant_id", order.restaurant_id)
-        .maybeSingle(),
+    const [{ data: tokenData }, { data: restRow }] = await Promise.all([
+      supabaseAdmin.rpc("admin_get_restaurant_mp_token", { p_restaurant_id: order.restaurant_id }),
       supabaseAdmin
         .from("restaurants")
         .select("name")
         .eq("id", order.restaurant_id)
         .maybeSingle(),
     ]);
-    const rest = { mp_access_token: secret?.mp_access_token ?? null, name: restRow?.name ?? "" };
+    const rest = { mp_access_token: (tokenData as string | null) ?? null, name: restRow?.name ?? "" };
 
     if (!rest.mp_access_token)
       return { ok: false, error: "Restaurante não configurou Mercado Pago" };
+
 
     const expiresAt = new Date(Date.now() + 30 * 60 * 1000);
 
