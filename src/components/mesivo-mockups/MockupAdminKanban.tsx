@@ -2,10 +2,10 @@ import { DEMO_ORDERS } from "./demo-data";
 import { OperationalBadge } from "@/components/mesivo-graphics/OperationalBadge";
 
 const COLS: { key: DEMO_ORDERS_KEY; label: string }[] = [
-  { key: "novo",       label: "Novos" },
+  { key: "novo", label: "Novos" },
   { key: "produzindo", label: "Produzindo" },
-  { key: "pronto",     label: "Prontos" },
-  { key: "entregue",   label: "Entregues" },
+  { key: "pronto", label: "Prontos" },
+  { key: "entregue", label: "Entregues" },
 ];
 type DEMO_ORDERS_KEY = "novo" | "produzindo" | "pronto" | "entregue";
 

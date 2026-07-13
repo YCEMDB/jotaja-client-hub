@@ -17,20 +17,32 @@ export function MockupCaixa({ className }: { className?: string }) {
       }}
     >
       <header style={{ marginBottom: 12 }}>
-        <h4 style={{ margin: 0, fontFamily: "var(--font-display)", color: "var(--fg-hi)" }}>Caixa demo</h4>
-        <p style={{ margin: "2px 0 0", color: "var(--fg-mid)", fontSize: 13 }}>Aberto com {DEMO_CASH.aberto}</p>
+        <h4 style={{ margin: 0, fontFamily: "var(--font-display)", color: "var(--fg-hi)" }}>
+          Caixa demo
+        </h4>
+        <p style={{ margin: "2px 0 0", color: "var(--fg-mid)", fontSize: 13 }}>
+          Aberto com {DEMO_CASH.aberto}
+        </p>
       </header>
       <dl style={{ margin: 0, display: "grid", gap: 8 }}>
         {DEMO_CASH.entradas.map((e) => (
-          <div key={e.label} style={{ display: "flex", justifyContent: "space-between", fontSize: 14 }}>
+          <div
+            key={e.label}
+            style={{ display: "flex", justifyContent: "space-between", fontSize: 14 }}
+          >
             <dt>{e.label}</dt>
             <dd style={{ margin: 0, fontWeight: 700, color: "var(--mesivo-leaf)" }}>+ {e.value}</dd>
           </div>
         ))}
         {DEMO_CASH.saidas.map((s) => (
-          <div key={s.label} style={{ display: "flex", justifyContent: "space-between", fontSize: 14 }}>
+          <div
+            key={s.label}
+            style={{ display: "flex", justifyContent: "space-between", fontSize: 14 }}
+          >
             <dt>{s.label}</dt>
-            <dd style={{ margin: 0, fontWeight: 700, color: "var(--mesivo-tomato)" }}>− {s.value}</dd>
+            <dd style={{ margin: 0, fontWeight: 700, color: "var(--mesivo-tomato)" }}>
+              − {s.value}
+            </dd>
           </div>
         ))}
         <div

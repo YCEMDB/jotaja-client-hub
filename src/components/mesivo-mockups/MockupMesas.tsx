@@ -1,9 +1,9 @@
 import { DEMO_TABLES } from "./demo-data";
 
 const COLOR: Record<string, { bg: string; fg: string; label: string }> = {
-  livre:       { bg: "var(--mesivo-leaf-soft)", fg: "var(--mesivo-leaf)",   label: "Livre" },
-  ocupada:     { bg: "var(--mesivo-peach)",     fg: "var(--mesivo-tomato)", label: "Ocupada" },
-  aguardando:  { bg: "var(--warning-soft)",     fg: "#8A5A00",              label: "Aguardando" },
+  livre: { bg: "var(--mesivo-leaf-soft)", fg: "var(--mesivo-leaf)", label: "Livre" },
+  ocupada: { bg: "var(--mesivo-peach)", fg: "var(--mesivo-tomato)", label: "Ocupada" },
+  aguardando: { bg: "var(--warning-soft)", fg: "#8A5A00", label: "Aguardando" },
 };
 
 /** MockupMesas — grade de mesas com estado. Estático. */
@@ -45,9 +45,7 @@ export function MockupMesas({ className }: { className?: string }) {
             <div style={{ color: c.fg, fontSize: 11, fontWeight: 700, textTransform: "uppercase" }}>
               {c.label}
             </div>
-            {t.ticket ? (
-              <div style={{ fontSize: 12, color: "var(--fg)" }}>{t.ticket}</div>
-            ) : null}
+            {t.ticket ? <div style={{ fontSize: 12, color: "var(--fg)" }}>{t.ticket}</div> : null}
           </div>
         );
       })}

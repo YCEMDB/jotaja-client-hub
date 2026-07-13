@@ -14,10 +14,38 @@ export type DemoOrder = {
 };
 
 export const DEMO_ORDERS: DemoOrder[] = [
-  { id: "d1", code: "#241", customer: "Cliente Balcão",  items: "1x Combo Demo",     total: "R$ 42,90", status: "novo" },
-  { id: "d2", code: "#242", customer: "Cliente Mesa 04", items: "2x Pizza Demo",     total: "R$ 89,80", status: "produzindo" },
-  { id: "d3", code: "#243", customer: "Cliente Delivery", items: "1x Burger Demo",   total: "R$ 34,50", status: "pronto" },
-  { id: "d4", code: "#244", customer: "Cliente Retirada", items: "3x Bebida Demo",   total: "R$ 21,00", status: "entregue" },
+  {
+    id: "d1",
+    code: "#241",
+    customer: "Cliente Balcão",
+    items: "1x Combo Demo",
+    total: "R$ 42,90",
+    status: "novo",
+  },
+  {
+    id: "d2",
+    code: "#242",
+    customer: "Cliente Mesa 04",
+    items: "2x Pizza Demo",
+    total: "R$ 89,80",
+    status: "produzindo",
+  },
+  {
+    id: "d3",
+    code: "#243",
+    customer: "Cliente Delivery",
+    items: "1x Burger Demo",
+    total: "R$ 34,50",
+    status: "pronto",
+  },
+  {
+    id: "d4",
+    code: "#244",
+    customer: "Cliente Retirada",
+    items: "3x Bebida Demo",
+    total: "R$ 21,00",
+    status: "entregue",
+  },
 ];
 
 export type DemoMenuItem = {
@@ -28,9 +56,24 @@ export type DemoMenuItem = {
 };
 
 export const DEMO_MENU: DemoMenuItem[] = [
-  { id: "m1", name: "Prato Demonstração 1", description: "Ingredientes demonstrativos, sem preço real.", price: "R$ 29,90" },
-  { id: "m2", name: "Prato Demonstração 2", description: "Somente para visualização de layout.",         price: "R$ 34,90" },
-  { id: "m3", name: "Prato Demonstração 3", description: "Conteúdo fictício para prototipagem.",         price: "R$ 39,90" },
+  {
+    id: "m1",
+    name: "Prato Demonstração 1",
+    description: "Ingredientes demonstrativos, sem preço real.",
+    price: "R$ 29,90",
+  },
+  {
+    id: "m2",
+    name: "Prato Demonstração 2",
+    description: "Somente para visualização de layout.",
+    price: "R$ 34,90",
+  },
+  {
+    id: "m3",
+    name: "Prato Demonstração 3",
+    description: "Conteúdo fictício para prototipagem.",
+    price: "R$ 39,90",
+  },
 ];
 
 export type DemoTable = {
@@ -42,11 +85,11 @@ export type DemoTable = {
 
 export const DEMO_TABLES: DemoTable[] = [
   { id: "t1", number: 1, status: "livre" },
-  { id: "t2", number: 2, status: "ocupada",    ticket: "R$ 78,50" },
+  { id: "t2", number: 2, status: "ocupada", ticket: "R$ 78,50" },
   { id: "t3", number: 3, status: "aguardando", ticket: "R$ 24,00" },
-  { id: "t4", number: 4, status: "ocupada",    ticket: "R$ 132,00" },
+  { id: "t4", number: 4, status: "ocupada", ticket: "R$ 132,00" },
   { id: "t5", number: 5, status: "livre" },
-  { id: "t6", number: 6, status: "ocupada",    ticket: "R$ 46,00" },
+  { id: "t6", number: 6, status: "ocupada", ticket: "R$ 46,00" },
 ];
 
 export const DEMO_KDS = [
@@ -58,18 +101,16 @@ export const DEMO_KDS = [
 export const DEMO_CASH = {
   aberto: "R$ 350,00 (valor demonstrativo)",
   entradas: [
-    { label: "Dinheiro",   value: "R$ 240,00" },
-    { label: "Pix",        value: "R$ 512,30" },
-    { label: "Cartão",     value: "R$ 189,90" },
+    { label: "Dinheiro", value: "R$ 240,00" },
+    { label: "Pix", value: "R$ 512,30" },
+    { label: "Cartão", value: "R$ 189,90" },
   ],
-  saidas: [
-    { label: "Fornecedor demo", value: "R$ 68,00" },
-  ],
+  saidas: [{ label: "Fornecedor demo", value: "R$ 68,00" }],
   saldo: "R$ 1.224,20 (demonstrativo)",
 };
 
 export const DEMO_REPORT_ROWS = [
-  { label: "Pedidos (demo)",    value: "42" },
+  { label: "Pedidos (demo)", value: "42" },
   { label: "Ticket médio (demo)", value: "R$ 46,80" },
   { label: "Cancelamentos (demo)", value: "1" },
 ];

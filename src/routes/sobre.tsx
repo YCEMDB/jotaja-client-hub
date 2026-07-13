@@ -29,17 +29,17 @@ function Sobre() {
         <article className="prose prose-neutral prose-headings:tracking-tight prose-h1:text-4xl md:prose-h1:text-5xl prose-h1:font-bold prose-h2:text-2xl md:prose-h2:text-3xl prose-h2:mt-12 prose-a:text-primary hover:prose-a:underline">
           <h1>Sobre o Mesivo</h1>
           <p className="lead">
-            Somos uma plataforma brasileira que ajuda restaurantes, pizzarias,
-            hamburguerias e lanchonetes a venderem direto pelo WhatsApp e
-            cardápio digital — sem comissão por pedido.
+            Somos uma plataforma brasileira que ajuda restaurantes, pizzarias, hamburguerias e
+            lanchonetes a venderem direto pelo WhatsApp e cardápio digital — sem comissão por
+            pedido.
           </p>
 
           <h2>Nossa missão</h2>
           <p>
-            Devolver ao dono do restaurante o controle sobre o próprio negócio.
-            Acreditamos que ninguém deveria pagar até 27% de comissão para vender
-            a própria comida. Por isso construímos uma plataforma simples,
-            bonita e robusta, que coloca o restaurante no centro.
+            Devolver ao dono do restaurante o controle sobre o próprio negócio. Acreditamos que
+            ninguém deveria pagar até 27% de comissão para vender a própria comida. Por isso
+            construímos uma plataforma simples, bonita e robusta, que coloca o restaurante no
+            centro.
           </p>
 
           <h2>O que fazemos</h2>
@@ -53,22 +53,28 @@ function Sobre() {
 
           <h2>Nossos valores</h2>
           <ul>
-            <li><strong>Autonomia</strong> — o restaurante é dono dos próprios clientes.</li>
-            <li><strong>Transparência</strong> — preços claros, sem letrinha miúda.</li>
-            <li><strong>Simplicidade</strong> — qualquer atendente consegue usar.</li>
-            <li><strong>Brasilidade</strong> — feito por quem conhece o dia a dia daqui.</li>
+            <li>
+              <strong>Autonomia</strong> — o restaurante é dono dos próprios clientes.
+            </li>
+            <li>
+              <strong>Transparência</strong> — preços claros, sem letrinha miúda.
+            </li>
+            <li>
+              <strong>Simplicidade</strong> — qualquer atendente consegue usar.
+            </li>
+            <li>
+              <strong>Brasilidade</strong> — feito por quem conhece o dia a dia daqui.
+            </li>
           </ul>
 
           <h2>Quem usa o Mesivo</h2>
           <p>
-            Hoje atendemos centenas de restaurantes em todo o Brasil — de
-            operações de bairro a redes com várias unidades. Pizzarias,
-            hamburguerias, açaiterias, marmitarias, japoneses, food trucks e
-            muito mais.
+            Hoje atendemos centenas de restaurantes em todo o Brasil — de operações de bairro a
+            redes com várias unidades. Pizzarias, hamburguerias, açaiterias, marmitarias, japoneses,
+            food trucks e muito mais.
           </p>
         </article>
       </Container>
     </PublicShell>
   );
 }
-

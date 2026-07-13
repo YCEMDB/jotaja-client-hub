@@ -37,7 +37,9 @@ export function MockupPhoneCardapio({ className }: { className?: string }) {
           >
             <div style={{ fontWeight: 700, color: "var(--fg-hi)", fontSize: 13 }}>{m.name}</div>
             <div style={{ color: "var(--fg-mid)", fontSize: 12 }}>{m.description}</div>
-            <div style={{ marginTop: 4, color: "var(--mesivo-tomato)", fontWeight: 800 }}>{m.price}</div>
+            <div style={{ marginTop: 4, color: "var(--mesivo-tomato)", fontWeight: 800 }}>
+              {m.price}
+            </div>
           </article>
         ))}
       </div>
