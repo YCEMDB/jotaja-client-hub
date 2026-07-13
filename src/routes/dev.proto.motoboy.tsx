@@ -1,6 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { PROTO_CSS } from "@/dev-proto/proto-tokens";
+import {
+  IconUser,
+  IconMap,
+  IconPhone,
+  IconCheck,
+  IconAlert,
+  IconPackage,
+  IconPin,
+  IconClock,
+  IconMoney,
+  IconCard,
+} from "@/dev-proto/proto-icons";
 
 export const Route = createFileRoute("/dev/proto/motoboy")({
   component: ProtoMotoboy,
@@ -48,10 +60,14 @@ function ProtoMotoboy() {
               </button>
             </div>
             <button className="moto-profile-btn" aria-label="Perfil">
-              👤
+              <IconUser size={18} />
             </button>
           </div>
         </header>
+
+        <div className="demo-badge-slot">
+          <span className="demo-badge">Dados demonstrativos</span>
+        </div>
 
         {/* Summary */}
         <section className="moto-summary" aria-label="Resumo do turno">
@@ -114,15 +130,17 @@ function ProtoMotoboy() {
 
               <div className="moto-card-meta">
                 <span>
-                  📍 <b>2,4 km</b>
+                  <IconPin size={14} /> <b>2,4 km</b>
                 </span>
                 <span>
-                  ⏱ ETA <b>12 min</b>
+                  <IconClock size={14} /> ETA <b>12 min</b>
                 </span>
                 <span>
-                  💵 Cobrar <b>R$ 96,50</b>
+                  <IconMoney size={14} /> Cobrar <b>R$ 96,50</b>
                 </span>
-                <span>💳 Pix pago</span>
+                <span>
+                  <IconCard size={14} /> Pix pago
+                </span>
               </div>
 
               <div className="moto-card-note">
@@ -132,16 +150,16 @@ function ProtoMotoboy() {
 
               <div className="moto-actions">
                 <button type="button" aria-label="Abrir endereço no mapa">
-                  🗺 Abrir no mapa
+                  <IconMap size={16} /> Abrir no mapa
                 </button>
                 <button type="button" aria-label="Ligar para o cliente">
-                  📞 Ligar
+                  <IconPhone size={16} /> Ligar
                 </button>
                 <button type="button" className="moto-primary">
-                  ✅ Confirmar entrega
+                  <IconCheck size={16} /> Confirmar entrega
                 </button>
                 <button type="button" className="moto-danger">
-                  ⚠ Informar problema
+                  <IconAlert size={16} /> Informar problema
                 </button>
               </div>
             </article>
@@ -187,21 +205,25 @@ function ProtoMotoboy() {
 
               <div className="moto-card-meta">
                 <span>
-                  📍 <b>3,1 km</b>
+                  <IconPin size={14} /> <b>3,1 km</b>
                 </span>
                 <span>
-                  ⏱ ETA <b>18 min</b>
+                  <IconClock size={14} /> ETA <b>18 min</b>
                 </span>
                 <span>
-                  💵 Cobrar <b>R$ 128,00</b>
+                  <IconMoney size={14} /> Cobrar <b>R$ 128,00</b>
                 </span>
-                <span>💳 Dinheiro</span>
+                <span>
+                  <IconCard size={14} /> Dinheiro
+                </span>
               </div>
 
               <div className="moto-actions">
-                <button type="button">🗺 Abrir no mapa</button>
+                <button type="button" aria-label="Abrir endereço no mapa">
+                  <IconMap size={16} /> Abrir no mapa
+                </button>
                 <button type="button" className="moto-primary">
-                  📦 Confirmar retirada
+                  <IconPackage size={16} /> Confirmar retirada
                 </button>
               </div>
             </article>
@@ -267,9 +289,6 @@ function ProtoMotoboy() {
         </div>
       </nav>
 
-      <div className="demo-badge" aria-hidden>
-        Dados demonstrativos
-      </div>
     </div>
   );
 }

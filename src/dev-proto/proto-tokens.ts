@@ -21,10 +21,15 @@ export const PROTO_CSS = `
   text-rendering: optimizeLegibility;
 }
 
-/* ============= Demo data badge (persistent, discreto) ============= */
-.demo-badge{position:fixed;right:12px;top:max(12px,env(safe-area-inset-top));z-index:60;background:rgba(32,33,31,.86);color:#FDE6D6;font-family:var(--mono);font-weight:600;font-size:10.5px;letter-spacing:.04em;padding:5px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(6px);text-transform:uppercase;pointer-events:none;user-select:none}
-.demo-badge:before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--mango);margin-right:8px;vertical-align:1px;box-shadow:0 0 0 3px rgba(255,184,46,.25)}
-@media (max-width:767px){ .demo-badge{top:auto;bottom:calc(78px + env(safe-area-inset-bottom));right:12px;left:auto;font-size:10px;padding:4px 9px} }
+/* ============= Demo data badge (inline chip, never fixed over CTA/FAB) ============= */
+.demo-badge{display:inline-flex;align-items:center;background:rgba(32,33,31,.86);color:#FDE6D6;font-family:var(--mono);font-weight:600;font-size:10.5px;letter-spacing:.04em;padding:5px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);text-transform:uppercase;pointer-events:none;user-select:none;line-height:1}
+.demo-badge:before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--mango);margin-right:8px;box-shadow:0 0 0 3px rgba(255,184,46,.25)}
+/* Desktop-only floating badge (marketing landing) */
+.demo-badge.demo-floating{position:fixed;right:12px;top:max(12px,env(safe-area-inset-top));z-index:60;backdrop-filter:blur(6px)}
+@media (max-width:1023px){ .demo-badge.demo-floating{display:none} }
+/* Header-inline badge slot */
+.demo-badge-slot{padding:10px 16px 0;display:flex;justify-content:flex-end}
+@media (min-width:768px){ .demo-badge-slot{padding:12px 24px 0} }
 
 /* ================= MARKETING ================= */
 .mkt-root { background: var(--cream); min-height:100vh; overflow-x:hidden; }
@@ -120,7 +125,7 @@ export const PROTO_CSS = `
 .pm-items { padding:6px 10px 10px; display:flex; flex-direction:column; gap:6px; }
 .pm-item { display:grid; grid-template-columns: 44px 1fr auto; gap:8px; align-items:center; padding:6px; border:1px solid var(--hair); border-radius:10px; background:#FFFDFA; }
 .pm-thumb { width:44px; height:44px; border-radius:8px; background: linear-gradient(135deg, #FFB82E, #F0522D); position:relative;}
-.pm-thumb:after{content:"🍔";position:absolute;inset:0;display:grid;place-items:center;font-size:20px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.3));}
+.pm-thumb:after{content:"";position:absolute;inset:6px;border-radius:6px;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.35),transparent 55%),linear-gradient(135deg,#8B3E1B,#5B2612);}
 .pm-title { font-size:11.5px; font-weight:700; color:var(--coffee); }
 .pm-desc { font-size:10px; color:var(--muted); }
 .pm-price { font-size:11.5px; font-weight:800; color:var(--tomato); font-family:var(--mono);}
@@ -200,31 +205,39 @@ export const PROTO_CSS = `
 
 /* --- Landing responsive (mobile-first for < 768px) --- */
 @media (max-width: 767px){
-  .mkt-container{padding:0 18px}
-  .mkt-header-inner{padding:12px 0}
+  .mkt-container{padding:0 18px;width:100%;min-width:0;max-width:100%}
+  .mkt-header-inner{padding:12px 0;gap:8px}
   .mkt-nav{display:none}
   .mkt-header-cta{display:none}
   .mkt-menu-btn{display:inline-flex}
-  .mkt-hero{padding:28px 0 44px}
-  .mkt-hero-grid{grid-template-columns:1fr;gap:28px}
-  .mkt-h1{font-size:30px;line-height:1.05;margin:14px 0 14px;word-wrap:break-word;overflow-wrap:break-word;hyphens:auto}
-  .mkt-sub{font-size:16px}
-  .mkt-cta-row .mkt-btn-lg{flex:1;justify-content:center;padding:14px 16px;font-size:15px}
-  .mkt-hero-stage{height:auto;min-height:380px;padding-top:16px}
-  .mkt-mockup-dashboard{position:relative;width:100%;top:0;left:0;transform:none;filter:drop-shadow(0 18px 30px rgba(52,36,29,.18))}
-  .mkt-mockup-phone{position:absolute;right:8px;bottom:-8px;width:150px;transform:rotate(4deg)}
-  .mkt-badge-float{font-size:11px;padding:6px 10px}
-  .mkt-badge-mango{top:-6px;right:8px}
-  .mkt-badge-leaf{display:none}
+  .mkt-hero{padding:24px 0 40px;overflow:visible}
+  .mkt-hero-grid{grid-template-columns:1fr;gap:24px;width:100%;min-width:0}
+  .mkt-hero-grid > div{min-width:0;width:100%;max-width:100%}
+  .mkt-h1{font-size:30px;line-height:1.05;margin:14px 0;word-wrap:break-word;overflow-wrap:break-word;hyphens:auto;width:100%;max-width:100%}
+  .mkt-sub{font-size:16px;max-width:100%;width:100%}
+  .mkt-cta-row{flex-direction:column;flex-wrap:nowrap;gap:10px;margin-top:22px;width:100%}
+  .mkt-cta-row .mkt-btn-lg{width:100%;flex:none;justify-content:center;padding:14px 16px;font-size:15px;min-width:0}
+  .mkt-benefits{flex-direction:column;gap:8px;margin-top:18px}
+  .mkt-benefits span{font-size:13.5px}
+  .mkt-hero-stage{position:relative;height:auto;min-height:0;padding:8px 0 40px;width:100%;max-width:100%;overflow:visible}
+  .mkt-mockup-dashboard{position:relative;width:100%;top:0;left:0;transform:none;filter:drop-shadow(0 18px 30px rgba(52,36,29,.18));max-width:100%}
+  .mkt-mockup-phone{position:relative;right:auto;bottom:auto;width:60%;max-width:220px;margin:16px auto 0;transform:none;display:block}
+  .mkt-badge-float{position:static;display:inline-flex;align-items:center;font-size:11px;padding:6px 10px;margin:10px 8px 0 0}
+  .mkt-badge-mango,.mkt-badge-leaf{top:auto;right:auto;bottom:auto;left:auto}
   .mkt-flowlines{display:none}
-  .mkt-section{padding:56px 0}
+  .mkt-section{padding:48px 0}
   .mkt-two-col{grid-template-columns:1fr;gap:32px}
   .mkt-feature-bento{grid-template-columns:1fr;grid-auto-rows:auto}
   .mkt-feature-card, .mkt-feature-lg, .mkt-feature-wide, .mkt-feature-coral{grid-column:span 1;grid-row:auto;min-height:200px}
-  .mkt-cta-final-inner{flex-direction:column;align-items:flex-start}
-  .mkt-cta-final-inner .flex{width:100%;flex-direction:column}
-  .mkt-cta-final-inner .flex .mkt-btn{width:100%;justify-content:center}
+  .mkt-cta-final-inner{flex-direction:column;align-items:stretch;gap:18px}
+  .mkt-cta-final-inner > div:last-child{width:100%;flex-direction:column;display:flex;gap:10px}
+  .mkt-cta-final-inner .mkt-btn{width:100%;justify-content:center}
   .mkt-footer-inner{flex-direction:column;align-items:flex-start;gap:12px}
+}
+/* Small tablets keep hero grid stacked to avoid squeezing */
+@media (min-width:768px) and (max-width:899px){
+  .mkt-hero-grid{grid-template-columns:1fr;gap:32px}
+  .mkt-hero-stage{height:auto;min-height:420px}
 }
 
 /* ================= APP (DASHBOARD / PDV) ================= */
@@ -324,6 +337,18 @@ export const PROTO_CSS = `
   .app-bottom-nav{display:block}
   .app-content{padding-bottom:24px}
 }
+/* Tablet 768–1023: compact — sidebar hidden, KPIs 2×2, panels stacked */
+@media (min-width: 768px) and (max-width: 1023px){
+  .app-shell{grid-template-columns:1fr}
+  .app-side{display:none}
+  .app-topbar{display:none}
+  .app-mob-topbar{display:flex}
+  .app-content{padding:18px 20px}
+  .app-kpi-grid{grid-template-columns:1fr 1fr;gap:12px}
+  .app-two-col{grid-template-columns:1fr;gap:14px}
+  .app-bottom-nav{display:block}
+  .app-content{padding-bottom:24px}
+}
 
 /* PDV desktop */
 .pdv-shell { display:grid; grid-template-columns: 260px 1fr 340px; height:100vh; }
@@ -387,10 +412,17 @@ export const PROTO_CSS = `
 .pdv-mob-fab-l{display:flex;align-items:center;gap:12px;min-width:0}
 .pdv-mob-fab-c{background:var(--tomato);color:#fff;min-width:26px;height:26px;padding:0 8px;border-radius:999px;display:grid;place-items:center;font-size:12px;font-weight:800;font-family:var(--mono)}
 .pdv-mob-fab-total{font-family:var(--mono);font-weight:800;font-size:15px}
-@media (max-width:767px){
+@media (max-width:1023px){
   .pdv-shell{display:none}
   .pdv-mob{display:flex}
   .pdv-mob-fab{display:flex}
+}
+/* Tablet PDV 768–1023: 3-col product grid, wider search hit area */
+@media (min-width:768px) and (max-width:1023px){
+  .pdv-mob-grid{grid-template-columns:1fr 1fr 1fr;gap:14px;padding:16px 24px 140px}
+  .pdv-mob-search{padding:16px 24px 0}
+  .pdv-mob-cats-strip{padding:12px 24px 14px}
+  .pdv-mob-fab{left:24px;right:24px}
 }
 
 /* Bottom sheet (Ver pedido) */
@@ -406,7 +438,7 @@ export const PROTO_CSS = `
 .pdv-sheet-cta{background:var(--tomato);color:#FFF8EE;border:none;padding:16px;margin:0 20px 16px;border-radius:14px;font-family:var(--mono);font-weight:800;font-size:15px;cursor:pointer}
 
 /* ================= TRANSACIONAL (CARDÁPIO PÚBLICO) ================= */
-[data-theme="tx-proto"] { background:#FAFAF7; min-height:100vh; font-family:'Hind',sans-serif; }
+[data-theme="tx-proto"] { background:#FAFAF7; min-height:100vh; font-family:'Hind',sans-serif; --cart-bar-height:76px; }
 .tx-root { min-height:100vh; max-width: 480px; margin: 0 auto; background:#fff; position:relative; }
 .tx-cover { height: 220px; position:relative; overflow:hidden; }
 .tx-cover-img{position:absolute;inset:0;background-size:cover;background-position:center;}
@@ -440,7 +472,7 @@ export const PROTO_CSS = `
 .tx-tab.on { color:#111; font-weight:800; border-bottom-color:#23303A; }
 .tx-tabs-fade{position:absolute;right:0;top:0;bottom:0;width:36px;background:linear-gradient(90deg,transparent,#fff);pointer-events:none}
 
-.tx-list { padding:12px 20px 120px; }
+.tx-list { padding:12px 20px calc(var(--cart-bar-height) + env(safe-area-inset-bottom) + 40px); }
 .tx-cat-h { font-family:'Archivo Black'; font-size:15px; color:#111; margin:20px 0 10px; }
 .tx-item { display:grid; grid-template-columns: 1fr 90px; gap:14px; padding:14px 0; border-bottom:1px solid #F0F0EA; }
 .tx-item.out{opacity:.5}

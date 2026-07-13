@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { PROTO_CSS } from "@/dev-proto/proto-tokens";
+import { IconImage, IconMenu, IconSearch } from "@/dev-proto/proto-icons";
 
 export const Route = createFileRoute("/dev/proto/pdv")({
   component: ProtoPdv,
@@ -71,13 +72,16 @@ function ProtoPdv() {
         </aside>
 
         <div className="pdv-main-col">
-          <div className="pdv-search">🔎 Buscar produto ou atalho (F3)</div>
+          <div className="pdv-search">
+            <IconSearch size={15} style={{ marginRight: 8, verticalAlign: -2 }} />
+            Buscar produto ou atalho (F3)
+          </div>
           <div className="pdv-prods">
             {PROD.map(([n, p, avail]) => (
               <div key={n} className={"pdv-prod" + (avail === "out" ? " out" : "")}>
                 {avail === "out" && <span className="pdv-prod-badge">Esgotado</span>}
                 <div className={"pdv-prod-img" + (avail === "no-img" ? " no-img" : "")}>
-                  {avail === "no-img" && <span aria-hidden>🖼</span>}
+                  {avail === "no-img" && <IconImage size={22} />}
                 </div>
                 <div className="pdv-prod-name">{n}</div>
                 <div className="pdv-prod-price">R$ {p}</div>
@@ -142,7 +146,7 @@ function ProtoPdv() {
       <div className="pdv-mob">
         <header className="app-mob-topbar" aria-label="PDV">
           <button className="app-mob-topbar-icon" aria-label="Abrir menu">
-            ☰
+            <IconMenu size={20} />
           </button>
           <div className="app-mob-topbar-l">
             <div>
@@ -152,9 +156,13 @@ function ProtoPdv() {
           </div>
         </header>
 
+        <div className="demo-badge-slot">
+          <span className="demo-badge">Dados demonstrativos</span>
+        </div>
+
         <div className="pdv-mob-search">
           <div className="pdv-mob-search-input" role="search">
-            <span aria-hidden>🔎</span> Buscar produto
+            <IconSearch size={16} /> Buscar produto
           </div>
         </div>
 
@@ -171,7 +179,7 @@ function ProtoPdv() {
             <div key={n} className={"pdv-prod" + (avail === "out" ? " out" : "")}>
               {avail === "out" && <span className="pdv-prod-badge">Esgotado</span>}
               <div className={"pdv-prod-img" + (avail === "no-img" ? " no-img" : "")}>
-                {avail === "no-img" && <span aria-hidden>🖼</span>}
+                {avail === "no-img" && <IconImage size={22} />}
               </div>
               <div className="pdv-prod-name">{n}</div>
               <div className="pdv-prod-price">R$ {p}</div>
@@ -281,9 +289,9 @@ function ProtoPdv() {
         </>
       )}
 
-      <div className="demo-badge" aria-hidden>
+      <span className="demo-badge demo-floating" aria-hidden>
         Dados demonstrativos
-      </div>
+      </span>
     </div>
   );
 }
