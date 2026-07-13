@@ -156,16 +156,16 @@ export const syncPixPayment = createServerFn({ method: "POST" })
 
     if (!order.mp_payment_id) return { ok: false, status: "no_payment" };
 
-    const { data: secret } = await supabaseAdmin
-      .from("restaurant_secrets")
-      .select("mp_access_token")
-      .eq("restaurant_id", order.restaurant_id)
-      .maybeSingle();
-    if (!secret?.mp_access_token) return { ok: false, status: "no_token" };
+    const { data: tokenData } = await supabaseAdmin.rpc("admin_get_restaurant_mp_token", {
+      p_restaurant_id: order.restaurant_id,
+    });
+    const mpToken = (tokenData as string | null) ?? null;
+    if (!mpToken) return { ok: false, status: "no_token" };
 
     const res = await fetch(`https://api.mercadopago.com/v1/payments/${order.mp_payment_id}`, {
-      headers: { Authorization: `Bearer ${secret.mp_access_token}` },
+      headers: { Authorization: `Bearer ${mpToken}` },
     });
+
     if (!res.ok) return { ok: false, status: "mp_error" };
     const p: any = await res.json();
     const s = p?.status as string;
