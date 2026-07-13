@@ -1,5 +1,6 @@
-import { motion, useReducedMotion, type Variants, type HTMLMotionProps } from "motion/react";
+import { motion, type Variants, type HTMLMotionProps } from "motion/react";
 import type { ReactNode } from "react";
+import { useReducedMotionSafe } from "@/components/motion/useReducedMotionSafe";
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
 
@@ -19,7 +20,7 @@ export function Reveal({
   as?: "div" | "section" | "li" | "article" | "header";
   amount?: number;
 } & Omit<HTMLMotionProps<"div">, "children">) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const Comp = motion[as] as typeof motion.div;
   return (
     <Comp
@@ -53,7 +54,7 @@ export function Stagger({
   className?: string;
   amount?: number;
 }) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   if (reduce) return <div className={className}>{children}</div>;
   return (
     <motion.div
@@ -75,7 +76,7 @@ export function StaggerItem({
   children: ReactNode;
   className?: string;
 }) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   if (reduce) return <div className={className}>{children}</div>;
   return (
     <motion.div variants={itemVariants} className={className}>
