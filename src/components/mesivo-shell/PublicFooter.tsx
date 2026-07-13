@@ -32,7 +32,7 @@ const COLS: FooterCol[] = [
     links: [
       { label: "Perguntas frequentes", to: "/perguntas-frequentes" },
       { label: "Glossário",            to: "/glossario" },
-      { label: "Termos",               to: "/termos" as const },
+      { label: "Termos",               to: "/termos" },
       { label: "Privacidade",          to: "/privacidade" },
     ],
   },
