@@ -167,11 +167,20 @@ export const fetchStock = (restaurantId: string, r: ReportRange) =>
   });
 
 export function translateReportError(err: unknown): string {
-  const raw = err instanceof Error ? err.message : String(err);
+  let raw = "";
+  if (err instanceof Error) {
+    raw = err.message;
+  } else if (err && typeof err === "object") {
+    const e = err as { message?: unknown; details?: unknown; hint?: unknown; code?: unknown };
+    raw = [e.message, e.details, e.hint, e.code].filter((v) => typeof v === "string" && v).join(" — ");
+    if (!raw) { try { raw = JSON.stringify(err); } catch { raw = ""; } }
+  } else if (err != null) {
+    raw = String(err);
+  }
   const m = raw.toLowerCase();
   if (m.includes("invalid_date_range")) return "Intervalo de datas inválido.";
   if (m.includes("date_range_too_large")) return "Intervalo excede o máximo permitido (400 dias).";
-  if (m.includes("report_access_forbidden")) return "Sem permissão para consultar relatórios deste restaurante.";
+  if (m.includes("report_access_forbidden") || m === "forbidden" || m.includes("\"forbidden\"")) return "Sem permissão para consultar relatórios deste restaurante. Se estiver em modo suporte, verifique se a sessão está ativa.";
   if (m.includes("restaurant_not_found")) return "Restaurante não encontrado.";
   if (m.includes("not_authenticated") || m.includes("unauthorized")) return "Sessão expirada. Faça login novamente.";
   if (m.includes("support_session")) return "Sessão de suporte inativa. Abra uma sessão para consultar dados.";
