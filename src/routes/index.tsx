@@ -12,6 +12,7 @@ import { FAQ } from "@/components/jotaja/FAQ";
 import { CTA } from "@/components/jotaja/CTA";
 import { Footer } from "@/components/jotaja/Footer";
 import { WhatsAppFloat } from "@/components/jotaja/WhatsAppFloat";
+import { ScrollProgress } from "@/components/motion";
 
 const SITE_URL = "https://comandahub.online";
 const TITLE = "Mesivo | Gestão completa para restaurantes";
@@ -64,6 +65,7 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <ScrollProgress />
       <Header />
       <main>
         <Hero />
