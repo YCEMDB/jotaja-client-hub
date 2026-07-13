@@ -207,7 +207,7 @@ export const PROTO_CSS = `
   .mkt-menu-btn{display:inline-flex}
   .mkt-hero{padding:28px 0 44px}
   .mkt-hero-grid{grid-template-columns:1fr;gap:28px}
-  .mkt-h1{font-size:36px;margin:14px 0 14px;}
+  .mkt-h1{font-size:30px;line-height:1.05;margin:14px 0 14px;word-wrap:break-word;overflow-wrap:break-word;hyphens:auto}
   .mkt-sub{font-size:16px}
   .mkt-cta-row .mkt-btn-lg{flex:1;justify-content:center;padding:14px 16px;font-size:15px}
   .mkt-hero-stage{height:auto;min-height:380px;padding-top:16px}
