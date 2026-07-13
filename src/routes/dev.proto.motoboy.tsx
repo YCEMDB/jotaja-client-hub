@@ -65,6 +65,10 @@ function ProtoMotoboy() {
           </div>
         </header>
 
+        <div className="demo-badge-slot">
+          <span className="demo-badge">Dados demonstrativos</span>
+        </div>
+
         {/* Summary */}
         <section className="moto-summary" aria-label="Resumo do turno">
           <div className="moto-summary-card">
