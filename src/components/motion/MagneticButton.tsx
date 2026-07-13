@@ -3,11 +3,12 @@ import {
   useMotionValue,
   useReducedMotion,
   useSpring,
+  type HTMLMotionProps,
 } from "motion/react";
-import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
+import { forwardRef, type ReactNode } from "react";
 import { usePointerFine } from "./usePointerFine";
 
-type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
+type Props = Omit<HTMLMotionProps<"button">, "children" | "ref"> & {
   children: ReactNode;
   /** Deslocamento máximo em px. Padrão 4 (limite 5). */
   strength?: number;
