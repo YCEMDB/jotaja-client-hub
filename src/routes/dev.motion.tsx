@@ -56,14 +56,7 @@ const NOTIFICATIONS: NotificationItem[] = [
   },
 ];
 
-const CHIPS = [
-  "Salão",
-  "Mesas",
-  "Balcão",
-  "Retirada",
-  "Delivery",
-  "Cardápio digital",
-];
+const CHIPS = ["Salão", "Mesas", "Balcão", "Retirada", "Delivery", "Cardápio digital"];
 
 function MotionPlayground() {
   return (
@@ -83,8 +76,7 @@ function MotionPlayground() {
           lines={[
             "CONTROLE O SALÃO.",
             <span key="l2">
-              ACELERE CADA{" "}
-              <span className="text-gradient-sunset">PEDIDO</span>.
+              ACELERE CADA <span className="text-gradient-sunset">PEDIDO</span>.
             </span>,
           ]}
         />
@@ -94,9 +86,8 @@ function MotionPlayground() {
           delay={0.7}
           className="mt-6 max-w-xl text-lg text-muted-foreground"
         >
-          Fluxo, entrada de pedidos e continuidade da operação em uma linguagem
-          de movimento única. Esta página valida os primitivos antes da
-          aplicação na landing.
+          Fluxo, entrada de pedidos e continuidade da operação em uma linguagem de movimento única.
+          Esta página valida os primitivos antes da aplicação na landing.
         </MotionReveal>
 
         <MotionStagger delay={0.85} className="mt-8 flex flex-wrap gap-3">
@@ -133,18 +124,20 @@ function MotionPlayground() {
               </span>
             </div>
             <div className="grid grid-cols-[180px_1fr] min-h-[280px]">
-              <MotionMockupLayer depth={1} delay={0.15} className="bg-muted p-4 border-r-2 border-ink">
+              <MotionMockupLayer
+                depth={1}
+                delay={0.15}
+                className="bg-muted p-4 border-r-2 border-ink"
+              >
                 <div className="space-y-2">
-                  {["Pedidos", "Mesas", "Cardápio", "Caixa", "Relatórios"].map(
-                    (s) => (
-                      <div
-                        key={s}
-                        className="rounded-md px-3 py-2 text-sm bg-card border border-border font-medium"
-                      >
-                        {s}
-                      </div>
-                    ),
-                  )}
+                  {["Pedidos", "Mesas", "Cardápio", "Caixa", "Relatórios"].map((s) => (
+                    <div
+                      key={s}
+                      className="rounded-md px-3 py-2 text-sm bg-card border border-border font-medium"
+                    >
+                      {s}
+                    </div>
+                  ))}
                 </div>
               </MotionMockupLayer>
               <MotionMockupLayer depth={2} delay={0.3} className="p-4 space-y-3">
@@ -161,9 +154,7 @@ function MotionPlayground() {
                       <div className="font-display text-sm">{r.n}</div>
                       <div className="text-xs text-muted-foreground">{r.t}</div>
                     </div>
-                    <span className="text-xs font-semibold text-brand-orange">
-                      {r.s}
-                    </span>
+                    <span className="text-xs font-semibold text-brand-orange">{r.s}</span>
                   </div>
                 ))}
               </MotionMockupLayer>
@@ -202,8 +193,7 @@ function MotionPlayground() {
             Elementos em <span className="text-gradient-sunset">stagger</span>
           </h2>
           <p className="mt-3 text-muted-foreground max-w-xl">
-            Um único observer por seção controla a entrada dos filhos em
-            cascata coordenada.
+            Um único observer por seção controla a entrada dos filhos em cascata coordenada.
           </p>
         </MotionReveal>
 
@@ -231,16 +221,10 @@ function MotionPlayground() {
 
       {/* REVEAL VARIANTS ---------------------------------------------- */}
       <MotionSection className="container max-w-6xl mx-auto pb-24">
-        <h2 className="font-display text-3xl mb-6 text-ink">
-          Variantes de reveal
-        </h2>
+        <h2 className="font-display text-3xl mb-6 text-ink">Variantes de reveal</h2>
         <div className="grid gap-4 md:grid-cols-5">
           {(["fade", "up", "mask", "clip-x", "clip-y"] as const).map((v) => (
-            <MotionReveal
-              key={v}
-              variant={v}
-              className="card-brand p-4 text-center font-display"
-            >
+            <MotionReveal key={v} variant={v} className="card-brand p-4 text-center font-display">
               {v}
             </MotionReveal>
           ))}

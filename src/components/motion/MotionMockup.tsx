@@ -32,16 +32,8 @@ export function MotionMockup({
       aria-label={ariaLabel}
       className={className}
       style={style}
-      initial={
-        reduce
-          ? { opacity: 0 }
-          : { opacity: 0, y: 24, rotateX: 6, scale: 0.985 }
-      }
-      whileInView={
-        reduce
-          ? { opacity: 1 }
-          : { opacity: 1, y: 0, rotateX: 0, scale: 1 }
-      }
+      initial={reduce ? { opacity: 0 } : { opacity: 0, y: 24, rotateX: 6, scale: 0.985 }}
+      whileInView={reduce ? { opacity: 1 } : { opacity: 1, y: 0, rotateX: 0, scale: 1 }}
       viewport={{ once: true, amount: 0.25 }}
       transition={{
         duration: reduce ? dur.reduced : 0.9,

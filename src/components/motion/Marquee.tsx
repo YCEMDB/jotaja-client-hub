@@ -58,13 +58,8 @@ export function Marquee({
           } as React.CSSProperties
         }
       >
-        <div style={{ display: "flex", gap: "2rem", paddingRight: "2rem" }}>
-          {children}
-        </div>
-        <div
-          aria-hidden="true"
-          style={{ display: "flex", gap: "2rem", paddingRight: "2rem" }}
-        >
+        <div style={{ display: "flex", gap: "2rem", paddingRight: "2rem" }}>{children}</div>
+        <div aria-hidden="true" style={{ display: "flex", gap: "2rem", paddingRight: "2rem" }}>
           {children}
         </div>
       </div>

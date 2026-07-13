@@ -78,9 +78,7 @@ export function AnimatedNotification({
             {n.icon ? <span className="notification-icon">{n.icon}</span> : null}
             <div>
               <div className="notification-title">{n.title}</div>
-              {n.description ? (
-                <div className="notification-desc">{n.description}</div>
-              ) : null}
+              {n.description ? <div className="notification-desc">{n.description}</div> : null}
             </div>
           </motion.div>
         ))}
