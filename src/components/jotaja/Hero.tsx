@@ -1,12 +1,6 @@
 import { ArrowRight, Check, Bell, CreditCard, Utensils, Package } from "lucide-react";
 import { useEffect, useRef } from "react";
-import {
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useSpring,
-  useInView,
-} from "motion/react";
+import { motion, useMotionValue, useReducedMotion, useSpring, useInView } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { LeadFormDialog } from "./LeadFormDialog";
 import markUrl from "@/assets/mesivo-mark.svg";
@@ -69,8 +63,8 @@ export function Hero() {
           className="flex justify-center mb-8"
         >
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border-2 border-ink/15 bg-background/70 backdrop-blur text-[11px] font-bold uppercase tracking-[0.18em] text-ink/70">
-            <span className="w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse" />
-            A plataforma completa para restaurantes
+            <span className="w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse" />A plataforma
+            completa para restaurantes
           </span>
         </MotionReveal>
 
@@ -96,9 +90,8 @@ export function Hero() {
               amount={0.3}
               className="mt-8 max-w-xl text-lg md:text-xl text-ink/75 leading-relaxed"
             >
-              Centralize pedidos, mesas, comandas, cardápio digital, caixa, cozinha,
-              entregas e clientes em uma plataforma criada para a rotina real do seu
-              restaurante.
+              Centralize pedidos, mesas, comandas, cardápio digital, caixa, cozinha, entregas e
+              clientes em uma plataforma criada para a rotina real do seu restaurante.
             </MotionReveal>
 
             <MotionReveal
@@ -134,17 +127,12 @@ export function Hero() {
               amount={0.3}
               className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-ink/60 font-semibold"
             >
-              {["14 dias grátis", "sem cartão de crédito", "cancele quando quiser"].map(
-                (item) => (
-                  <div key={item} className="flex items-center gap-1.5">
-                    <Check
-                      className="w-3.5 h-3.5 text-brand-orange"
-                      strokeWidth={3}
-                    />
-                    <span>{item}</span>
-                  </div>
-                ),
-              )}
+              {["14 dias grátis", "sem cartão de crédito", "cancele quando quiser"].map((item) => (
+                <div key={item} className="flex items-center gap-1.5">
+                  <Check className="w-3.5 h-3.5 text-brand-orange" strokeWidth={3} />
+                  <span>{item}</span>
+                </div>
+              ))}
             </MotionReveal>
           </div>
 
@@ -219,15 +207,9 @@ function HeroBackground() {
       <motion.div
         style={{ x: fine && !reduce ? sx : 0, y: fine && !reduce ? sy : 0 }}
         animate={
-          loop
-            ? { scale: [1, 1.06, 1], opacity: [0.55, 0.75, 0.55] }
-            : { scale: 1, opacity: 0.55 }
+          loop ? { scale: [1, 1.06, 1], opacity: [0.55, 0.75, 0.55] } : { scale: 1, opacity: 0.55 }
         }
-        transition={
-          loop
-            ? { duration: 9, ease: "easeInOut", repeat: Infinity }
-            : { duration: 0 }
-        }
+        transition={loop ? { duration: 9, ease: "easeInOut", repeat: Infinity } : { duration: 0 }}
         className="absolute -top-24 -right-24 w-[38rem] h-[38rem] rounded-full blur-3xl"
       >
         <div
@@ -246,14 +228,10 @@ function HeroBackground() {
           y: fine && !reduce ? sy.get() * -0.4 : 0,
         }}
         animate={
-          loop
-            ? { scale: [1, 1.08, 1], opacity: [0.35, 0.5, 0.35] }
-            : { scale: 1, opacity: 0.35 }
+          loop ? { scale: [1, 1.08, 1], opacity: [0.35, 0.5, 0.35] } : { scale: 1, opacity: 0.35 }
         }
         transition={
-          loop
-            ? { duration: 12, ease: "easeInOut", repeat: Infinity, delay: 0.6 }
-            : { duration: 0 }
+          loop ? { duration: 12, ease: "easeInOut", repeat: Infinity, delay: 0.6 } : { duration: 0 }
         }
         className="absolute -bottom-32 -left-24 w-[32rem] h-[32rem] rounded-full blur-3xl"
       >
@@ -296,9 +274,7 @@ function ProductMockup() {
           className="flex items-center gap-2 px-4 py-3 border-b border-ink/10 bg-background/60"
         >
           <img src={markUrl} alt="" className="h-6 w-auto" />
-          <span className="font-display text-lg tracking-tight text-ink lowercase">
-            mesivo
-          </span>
+          <span className="font-display text-lg tracking-tight text-ink lowercase">mesivo</span>
           <span className="ml-auto text-[10px] font-bold text-ink/50 uppercase tracking-wider">
             Painel
           </span>
@@ -315,29 +291,19 @@ function ProductMockup() {
             { label: "Em preparo", color: "bg-brand-orange", count: 2 },
             { label: "Prontos", color: "bg-success", count: 1 },
           ].map((col, ci) => (
-            <div
-              key={col.label}
-              className="rounded-lg border border-ink/10 bg-background p-2"
-            >
+            <div key={col.label} className="rounded-lg border border-ink/10 bg-background p-2">
               <div className="flex items-center gap-1.5 mb-2">
                 <span className={`w-2 h-2 rounded-full ${col.color}`} />
                 <span className="text-[10px] font-bold uppercase tracking-wider text-ink/70">
                   {col.label}
                 </span>
-                <span className="ml-auto text-[10px] font-bold text-ink/50">
-                  {col.count}
-                </span>
+                <span className="ml-auto text-[10px] font-bold text-ink/50">{col.count}</span>
               </div>
               <div className="space-y-1.5">
                 {Array.from({ length: col.count }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="rounded-md border border-ink/10 p-2 bg-secondary/30"
-                  >
+                  <div key={i} className="rounded-md border border-ink/10 p-2 bg-secondary/30">
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-[10px] font-bold text-ink">
-                        #{100 + ci * 10 + i}
-                      </span>
+                      <span className="text-[10px] font-bold text-ink">#{100 + ci * 10 + i}</span>
                       <span className="text-[9px] text-ink/50">{5 + i}min</span>
                     </div>
                     <div className="h-1 rounded bg-ink/10 w-3/4" />
