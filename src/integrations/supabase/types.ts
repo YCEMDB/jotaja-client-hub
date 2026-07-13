@@ -5443,6 +5443,7 @@ export type Database = {
         }
         Returns: number
       }
+      unaccent_immutable: { Args: { "": string }; Returns: string }
       unaccent_safe: { Args: { t: string }; Returns: string }
       unassign_driver: {
         Args: { p_order_id: string; p_reason?: string }
