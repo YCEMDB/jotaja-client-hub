@@ -113,47 +113,51 @@ function PdvPage() {
   const subtotal = cart.reduce((s, l) => s + l.unit_price * l.quantity, 0);
   const total = Math.max(0, subtotal + (type === "delivery" ? Number(deliveryFee) : 0) - Number(discount));
 
+  const [idemKey, setIdemKey] = useState<string>(() => crypto.randomUUID());
+
   const submit = async () => {
     if (!restaurantId) return;
     if (cart.length === 0) return toast.error("Adicione produtos");
     if (!customer.name.trim() || !customer.phone.trim()) return toast.error("Informe nome e telefone do cliente");
     setSaving(true);
     try {
-      const { data: order, error } = await supabase.from("orders").insert({
-        restaurant_id: restaurantId,
-        customer_name: customer.name.trim(),
-        customer_phone: customer.phone.trim(),
-        type,
-        payment,
-        status: "confirmed",
-        payment_status: payment === "cash" ? "pending" : "paid",
-        subtotal,
-        delivery_fee: type === "delivery" ? Number(deliveryFee) : 0,
-        discount: Number(discount),
-        total,
-        notes: notes || null,
-        source: "manual",
-      }).select("id,order_number").single();
+      const { data, error } = await supabase.rpc("create_pos_order", {
+        p_restaurant_id: restaurantId,
+        p_customer_name: customer.name.trim(),
+        p_customer_phone: customer.phone.trim(),
+        p_type: type,
+        p_payment: payment,
+        p_delivery_fee: type === "delivery" ? Number(deliveryFee) : 0,
+        p_discount: Number(discount),
+        p_notes: notes || "",
+        p_delivery_address: null,
+        p_items: cart.map(l => ({
+          product_id: l.product_id,
+          quantity: l.quantity,
+          notes: l.notes || null,
+          option_item_ids: [],
+        })),
+        p_idempotency_key: idemKey,
+      });
       if (error) throw error;
-
-      const items = cart.map(l => ({
-        order_id: order.id,
-        product_id: l.product_id,
-        product_name: l.name,
-        quantity: l.quantity,
-        unit_price: l.unit_price,
-        subtotal: l.unit_price * l.quantity,
-        notes: l.notes || null,
-      }));
-      const { error: itemsErr } = await supabase.from("order_items").insert(items);
-      if (itemsErr) throw itemsErr;
-
-      toast.success(`Pedido #${order.order_number} criado!`);
+      const created = data as { order_number?: number; idempotent?: boolean } | null;
+      toast.success(
+        created?.idempotent
+          ? `Pedido #${created.order_number} já existia (retry idempotente)`
+          : `Pedido #${created?.order_number} criado!`
+      );
       setCart([]); setCustomer({ name: "", phone: "" }); setDeliveryFee(0); setDiscount(0); setNotes("");
+      setIdemKey(crypto.randomUUID());
     } catch (e: any) {
       const msg = e?.message || "";
       if (msg.includes("plan_limit_reached")) {
         toast.error("Você atingiu o limite mensal de pedidos do seu plano. Faça upgrade em Configurações.");
+      } else if (msg.includes("forbidden")) {
+        toast.error("Sem permissão para criar pedidos neste restaurante.");
+      } else if (msg.includes("empty_cart")) {
+        toast.error("Carrinho vazio.");
+      } else if (msg.includes("invalid_customer")) {
+        toast.error("Cliente inválido.");
       } else {
         toast.error(msg || "Erro ao salvar pedido");
       }
@@ -161,6 +165,7 @@ function PdvPage() {
       setSaving(false);
     }
   };
+
 
   return (
     <PageContainer padded={false} className="pt-6 md:pt-8 pb-8 grid lg:grid-cols-[1fr_400px] gap-4">

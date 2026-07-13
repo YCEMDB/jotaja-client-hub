@@ -2343,6 +2343,7 @@ export type Database = {
           pix_qr_code: string | null
           pix_qr_code_base64: string | null
           pix_txid: string | null
+          pos_idempotency_key: string | null
           restaurant_id: string
           source: string
           status: Database["public"]["Enums"]["order_status"]
@@ -2385,6 +2386,7 @@ export type Database = {
           pix_qr_code?: string | null
           pix_qr_code_base64?: string | null
           pix_txid?: string | null
+          pos_idempotency_key?: string | null
           restaurant_id: string
           source?: string
           status?: Database["public"]["Enums"]["order_status"]
@@ -2427,6 +2429,7 @@ export type Database = {
           pix_qr_code?: string | null
           pix_qr_code_base64?: string | null
           pix_txid?: string | null
+          pos_idempotency_key?: string | null
           restaurant_id?: string
           source?: string
           status?: Database["public"]["Enums"]["order_status"]
@@ -3253,17 +3256,26 @@ export type Database = {
       }
       restaurant_secrets: {
         Row: {
-          mp_access_token: string | null
+          mp_access_token_encrypted: string | null
+          mp_environment: string | null
+          mp_last_rotated_at: string | null
+          mp_last_rotated_by: string | null
           restaurant_id: string
           updated_at: string
         }
         Insert: {
-          mp_access_token?: string | null
+          mp_access_token_encrypted?: string | null
+          mp_environment?: string | null
+          mp_last_rotated_at?: string | null
+          mp_last_rotated_by?: string | null
           restaurant_id: string
           updated_at?: string
         }
         Update: {
-          mp_access_token?: string | null
+          mp_access_token_encrypted?: string | null
+          mp_environment?: string | null
+          mp_last_rotated_at?: string | null
+          mp_last_rotated_by?: string | null
           restaurant_id?: string
           updated_at?: string
         }
@@ -4288,6 +4300,10 @@ export type Database = {
         Args: { p_id: string; p_reason: string }
         Returns: Json
       }
+      admin_get_restaurant_mp_token: {
+        Args: { p_restaurant_id: string }
+        Returns: string
+      }
       admin_reactivate_restaurant: {
         Args: { p_reason: string; p_restaurant_id: string }
         Returns: Json
@@ -4537,6 +4553,22 @@ export type Database = {
           p_reason?: string
         }
         Returns: string
+      }
+      create_pos_order: {
+        Args: {
+          p_customer_name: string
+          p_customer_phone: string
+          p_delivery_address: Json
+          p_delivery_fee: number
+          p_discount: number
+          p_idempotency_key?: string
+          p_items: Json
+          p_notes: string
+          p_payment: string
+          p_restaurant_id: string
+          p_type: string
+        }
+        Returns: Json
       }
       create_product: {
         Args: {
@@ -5287,6 +5319,10 @@ export type Database = {
         Args: { p_reason: string; p_restaurant_id: string }
         Returns: Json
       }
+      restaurant_mp_token_status: {
+        Args: { p_restaurant_id: string }
+        Returns: Json
+      }
       restore_category: {
         Args: { p_id: string; p_reason?: string }
         Returns: undefined
@@ -5359,6 +5395,10 @@ export type Database = {
       set_product_recipe: {
         Args: { p_items: Json; p_product_id: string; p_reason?: string }
         Returns: number
+      }
+      set_restaurant_integration_secret: {
+        Args: { p_provider: string; p_restaurant_id: string; p_value: string }
+        Returns: Json
       }
       set_settings_health: {
         Args: {

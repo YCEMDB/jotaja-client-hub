@@ -65,16 +65,16 @@ export const Route = createFileRoute("/api/public/mercadopago-webhook")({
             .maybeSingle();
           if (!order) return new Response("order not found", { status: 200 });
 
-          const { data: secret } = await supabaseAdmin
-            .from("restaurant_secrets")
-            .select("mp_access_token")
-            .eq("restaurant_id", order.restaurant_id)
-            .maybeSingle();
-          if (!secret?.mp_access_token) return new Response("no token", { status: 200 });
+          const { data: tokenData } = await supabaseAdmin.rpc("admin_get_restaurant_mp_token", {
+            p_restaurant_id: order.restaurant_id,
+          });
+          const mpToken = (tokenData as string | null) ?? null;
+          if (!mpToken) return new Response("no token", { status: 200 });
 
           const mp = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
-            headers: { Authorization: `Bearer ${secret.mp_access_token}` },
+            headers: { Authorization: `Bearer ${mpToken}` },
           });
+
           const payment: any = await mp.json();
           if (!mp.ok) return new Response("mp fetch failed", { status: 200 });
 
