@@ -205,21 +205,25 @@ function ProtoMotoboy() {
 
               <div className="moto-card-meta">
                 <span>
-                  📍 <b>3,1 km</b>
+                  <IconPin size={14} /> <b>3,1 km</b>
                 </span>
                 <span>
-                  ⏱ ETA <b>18 min</b>
+                  <IconClock size={14} /> ETA <b>18 min</b>
                 </span>
                 <span>
-                  💵 Cobrar <b>R$ 128,00</b>
+                  <IconMoney size={14} /> Cobrar <b>R$ 128,00</b>
                 </span>
-                <span>💳 Dinheiro</span>
+                <span>
+                  <IconCard size={14} /> Dinheiro
+                </span>
               </div>
 
               <div className="moto-actions">
-                <button type="button">🗺 Abrir no mapa</button>
+                <button type="button" aria-label="Abrir endereço no mapa">
+                  <IconMap size={16} /> Abrir no mapa
+                </button>
                 <button type="button" className="moto-primary">
-                  📦 Confirmar retirada
+                  <IconPackage size={16} /> Confirmar retirada
                 </button>
               </div>
             </article>
