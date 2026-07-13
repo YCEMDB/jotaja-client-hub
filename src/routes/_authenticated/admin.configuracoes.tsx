@@ -735,10 +735,11 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
           {saving ? "Salvando…" : "Salvar credenciais"}
         </Button>
         {tokenChanged && hasSavedToken && (
-          <Button variant="outline" onClick={() => { setToken(hasSavedToken ?? ""); }} disabled={saving}>
+          <Button variant="outline" onClick={() => { setToken(""); }} disabled={saving}>
             Cancelar
           </Button>
         )}
+
       </div>
     </Card>
     </div>
