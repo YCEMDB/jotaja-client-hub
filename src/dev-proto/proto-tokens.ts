@@ -347,7 +347,7 @@ export const PROTO_CSS = `
   .app-kpi-grid{grid-template-columns:1fr 1fr;gap:12px}
   .app-two-col{grid-template-columns:1fr;gap:14px}
   .app-bottom-nav{display:block}
-  .app-content{padding-bottom:24px}
+  .app-content{padding-bottom:calc(80px + env(safe-area-inset-bottom))}
 }
 
 /* PDV desktop */
