@@ -3,13 +3,19 @@ import { PROTO_CSS } from "@/dev-proto/proto-tokens";
 
 export const Route = createFileRoute("/dev/proto/cardapio")({
   component: ProtoCardapio,
-  head: () => ({ meta: [{ title: "Proto · Cardápio Público (dev)" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({
+    meta: [{ title: "Proto · Cardápio Público (dev)" }, { name: "robots", content: "noindex" }],
+  }),
 });
 
 const CATS = ["Mais pedidos", "Burgers", "Combos", "Bebidas", "Sobremesas", "Porções"];
 
 const ITEMS = [
-  ["Smash duplo", "Dois blends 90g, cheddar, cebola caramelizada, molho da casa no pão brioche.", "34,90"],
+  [
+    "Smash duplo",
+    "Dois blends 90g, cheddar, cebola caramelizada, molho da casa no pão brioche.",
+    "34,90",
+  ],
   ["Cheddar bacon", "Blend 180g, cheddar cremoso, bacon crocante, alface e tomate.", "38,50"],
   ["Veggie da praça", "Hambúrguer de grão-de-bico, muçarela, tomate seco e rúcula.", "29,00"],
   ["Chorizo argentino", "Blend picanha 200g, chimichurri e queijo prato derretido.", "45,00"],
@@ -19,7 +25,16 @@ function ProtoCardapio() {
   return (
     <div data-theme="tx-proto">
       <style dangerouslySetInnerHTML={{ __html: PROTO_CSS }} />
-      <div className="tx-root" style={{ maxWidth: 430, margin: "0 auto", background: "#fff", minHeight: "100vh", position: "relative" }}>
+      <div
+        className="tx-root"
+        style={{
+          maxWidth: 430,
+          margin: "0 auto",
+          background: "#fff",
+          minHeight: "100vh",
+          position: "relative",
+        }}
+      >
         <div className="tx-cover">
           <div className="tx-cover-txt">
             <div className="tx-cover-eyebrow">Delivery · Retirada · Mesa</div>
@@ -41,7 +56,9 @@ function ProtoCardapio() {
 
         <div className="tx-tabs">
           {CATS.map((c, i) => (
-            <div key={c} className={"tx-tab " + (i === 1 ? "on" : "")}>{c}</div>
+            <div key={c} className={"tx-tab " + (i === 1 ? "on" : "")}>
+              {c}
+            </div>
           ))}
         </div>
 
@@ -69,7 +86,10 @@ function ProtoCardapio() {
                 <div className="tx-item-d">{d}</div>
                 <div className="tx-item-p">R$ {p}</div>
               </div>
-              <div className="tx-item-img tx-item-plus" style={{ background: "linear-gradient(135deg, #E88C3B, #B85E2E)" }} />
+              <div
+                className="tx-item-img tx-item-plus"
+                style={{ background: "linear-gradient(135deg, #E88C3B, #B85E2E)" }}
+              />
             </div>
           ))}
         </div>
