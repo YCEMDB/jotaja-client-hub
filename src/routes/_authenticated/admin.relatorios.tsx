@@ -22,7 +22,7 @@ import { orderStatusLabel, orderTypeLabel, paymentLabel } from "@/lib/labels";
 
 export const Route = createFileRoute("/_authenticated/admin/relatorios")({
   component: RelatoriosGated,
-  head: () => ({ meta: [{ title: "Relatórios — Comandex" }] }),
+  head: () => ({ meta: [{ title: "Relatórios — Mesivo" }] }),
 });
 
 function RelatoriosGated() {

@@ -14,7 +14,7 @@ import { PageContainer } from "@/components/ds";
 
 export const Route = createFileRoute("/_authenticated/admin/pdv")({
   component: PdvGated,
-  head: () => ({ meta: [{ title: "PDV Manual — Comandex" }] }),
+  head: () => ({ meta: [{ title: "PDV Manual — Mesivo" }] }),
 });
 
 function PdvGated() {

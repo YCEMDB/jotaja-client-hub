@@ -21,7 +21,7 @@ import { AdminPageLayout, EmptyState } from "@/components/ds";
 
 export const Route = createFileRoute("/_authenticated/admin/cupons")({
   component: CuponsGated,
-  head: () => ({ meta: [{ title: "Cupons — Comandex" }] }),
+  head: () => ({ meta: [{ title: "Cupons — Mesivo" }] }),
 });
 
 function CuponsGated() {

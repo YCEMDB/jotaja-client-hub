@@ -45,7 +45,7 @@ function QrCodePage() {
       <h2>Passo a passo</h2>
       <ol>
         <li>
-          Crie sua conta no Comandex e cadastre os produtos com foto e preço.
+          Crie sua conta no Mesivo e cadastre os produtos com foto e preço.
         </li>
         <li>
           Vá em <strong>Configurações → QR Code</strong> e clique em "Gerar".

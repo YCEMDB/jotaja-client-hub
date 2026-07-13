@@ -9,7 +9,7 @@ import { AuthShell } from "@/components/ds";
 
 export const Route = createFileRoute("/aceitar-convite/$token")({
   component: AcceptInvitePage,
-  head: () => ({ meta: [{ title: "Aceitar convite · Comandex" }] }),
+  head: () => ({ meta: [{ title: "Aceitar convite · Mesivo" }] }),
 });
 
 function AcceptInvitePage() {

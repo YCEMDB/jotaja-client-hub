@@ -238,7 +238,7 @@
 
   .transition-smooth { transition: var(--transition-smooth); }
 
-  /* === Identidade visual Comandex — utilitários de gradiente reutilizáveis === */
+  /* === Identidade visual Mesivo — utilitários de gradiente reutilizáveis === */
 
   /* Borda com gradiente sunset (mesma do logo). Aplica em qualquer container. */
   .border-gradient-sunset {

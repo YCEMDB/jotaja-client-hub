@@ -27,7 +27,7 @@ import { ArchiveConfirmDialog } from "@/components/menu/ArchiveConfirmDialog";
 
 export const Route = createFileRoute("/_authenticated/admin/cardapio")({
   component: CardapioPage,
-  head: () => ({ meta: [{ title: "Cardápio — Comandex" }] }),
+  head: () => ({ meta: [{ title: "Cardápio — Mesivo" }] }),
 });
 
 type Category = {

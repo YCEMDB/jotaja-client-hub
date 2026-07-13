@@ -54,7 +54,7 @@ import {
 
 export const Route = createFileRoute("/_authenticated/admin/")({
   component: Dashboard,
-  head: () => ({ meta: [{ title: "Painel — Comandex" }] }),
+  head: () => ({ meta: [{ title: "Painel — Mesivo" }] }),
 });
 
 const COLORS = ["#ff6b35", "#e84393", "#7c5cff", "#f7931e", "#10b981", "#1a1a1a"];

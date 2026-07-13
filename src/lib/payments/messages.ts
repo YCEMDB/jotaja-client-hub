@@ -41,7 +41,7 @@ export const PAYMENT_MESSAGES: Record<string, string> = {
 
   // Configuração externa ainda pendente
   missing_credentials:
-    "A integração PagBank do COMANDAHUB ainda está pendente de configuração pelo administrador.",
+    "A integração PagBank do MESIVO ainda está pendente de configuração pelo administrador.",
 };
 
 export function translatePaymentError(err: unknown): string {

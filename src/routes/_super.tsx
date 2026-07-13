@@ -70,7 +70,7 @@ function SuperBody({
         </div>
         {!collapsed && (
           <div className="leading-none">
-            <div className="font-display text-lg tracking-tight">Comandex</div>
+            <div className="font-display text-lg tracking-tight">Mesivo</div>
             <div className="text-[10px] uppercase tracking-[0.2em] text-brand-violet mt-1 font-bold">super-admin</div>
           </div>
         )}

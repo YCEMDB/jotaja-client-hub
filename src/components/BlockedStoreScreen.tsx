@@ -7,7 +7,7 @@ export function BlockedStoreScreen({ restaurantName, reason }: { restaurantName:
   const { signOut } = useAuth();
   const whatsapp = "5527992877008"; // Ghabriel
   const msg = encodeURIComponent(
-    `Olá! Sou da loja "${restaurantName}" e meu acesso ao Comandex foi bloqueado. Quero regularizar o pagamento.`,
+    `Olá! Sou da loja "${restaurantName}" e meu acesso ao Mesivo foi bloqueado. Quero regularizar o pagamento.`,
   );
 
   return (

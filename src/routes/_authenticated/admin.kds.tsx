@@ -18,7 +18,7 @@ import { paymentLabel, orderTypeLabel } from "@/lib/labels";
 
 export const Route = createFileRoute("/_authenticated/admin/kds")({
   component: KDSPage,
-  head: () => ({ meta: [{ title: "KDS — Centro de Operações — Comandex" }] }),
+  head: () => ({ meta: [{ title: "KDS — Centro de Operações — Mesivo" }] }),
   errorComponent: ({ error, reset }) => {
     const err = error as Error;
     return (

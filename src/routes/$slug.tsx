@@ -56,8 +56,8 @@ export const Route = createFileRoute("/$slug")({
     );
   },
   head: ({ params }) => {
-    const title = `${params.slug} — Cardápio digital | Comandex`;
-    const description = `Faça seu pedido online no ${params.slug}. Cardápio digital, pagamento via Pix e entrega rápida pela Comandex.`;
+    const title = `${params.slug} — Cardápio digital | Mesivo`;
+    const description = `Faça seu pedido online no ${params.slug}. Cardápio digital, pagamento via Pix e entrega rápida pela Mesivo.`;
     return {
       meta: [
         { title },

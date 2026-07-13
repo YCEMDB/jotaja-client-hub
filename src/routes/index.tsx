@@ -13,11 +13,10 @@ import { CTA } from "@/components/jotaja/CTA";
 import { Footer } from "@/components/jotaja/Footer";
 import { WhatsAppFloat } from "@/components/jotaja/WhatsAppFloat";
 
-const SITE_URL = "https://jotaja-client-hub.lovable.app";
-const OG_IMAGE = `${SITE_URL}/og-comandahub.jpg`;
-const TITLE = "Comandex — Plataforma de delivery próprio para restaurantes | Sem comissão";
+const SITE_URL = "https://comandahub.online";
+const TITLE = "Mesivo | Gestão completa para restaurantes";
 const DESCRIPTION =
-  "Aumente vendas, automatize a operação e reduza custos. Cardápio digital, pedidos online, gestão e relatórios em tempo real. Teste grátis 14 dias, sem cartão.";
+  "Centralize pedidos, mesas, comandas, cardápio digital, delivery, retirada, caixa e cozinha em uma plataforma criada para a rotina real do seu restaurante.";
 
 export const Route = createFileRoute("/")({
   beforeLoad: async () => {
@@ -35,18 +34,13 @@ export const Route = createFileRoute("/")({
     meta: [
       { title: TITLE },
       { name: "description", content: DESCRIPTION },
-      { name: "keywords", content: "delivery próprio, cardápio digital, sistema para restaurante, pedidos online, sem comissão, gestão de restaurante, pix instantâneo, plataforma delivery" },
+      { name: "keywords", content: "gestão de restaurante, cardápio digital, pedidos online, comandas digitais, controle de mesas, sistema para restaurante, delivery próprio, PDV, caixa, cozinha, KDS" },
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
       { property: "og:url", content: SITE_URL },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: OG_IMAGE },
-      { property: "og:image:width", content: "1200" },
-      { property: "og:image:height", content: "630" },
-      { property: "og:image:alt", content: "Comandex — Plataforma de delivery próprio para restaurantes" },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
-      { name: "twitter:image", content: OG_IMAGE },
     ],
     links: [{ rel: "canonical", href: SITE_URL }],
     scripts: [
@@ -55,22 +49,11 @@ export const Route = createFileRoute("/")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "SoftwareApplication",
-          name: "Comandex",
+          name: "Mesivo",
           applicationCategory: "BusinessApplication",
           operatingSystem: "Web",
           description: DESCRIPTION,
           url: SITE_URL,
-          image: OG_IMAGE,
-          offers: {
-            "@type": "Offer",
-            price: "99.00",
-            priceCurrency: "BRL",
-          },
-          aggregateRating: {
-            "@type": "AggregateRating",
-            ratingValue: "4.9",
-            ratingCount: "1200",
-          },
         }),
       },
     ],

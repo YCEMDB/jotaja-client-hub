@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-label="Mesivo">
+  <title>Mesivo</title>
+  <defs>
+    <linearGradient id="mesivoGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFB020"/>
+      <stop offset="55%" stop-color="#FF7650"/>
+      <stop offset="100%" stop-color="#FF6534"/>
+    </linearGradient>
+  </defs>
+  <!-- Ink rounded square base -->
+  <rect x="2" y="2" width="60" height="60" rx="16" fill="#111318"/>
+  <!-- M formed by three connected blocks (pedido -> produção -> entrega) -->
+  <!-- Left column (pedido recebido) -->
+  <rect x="12" y="18" width="8" height="28" rx="4" fill="url(#mesivoGrad)"/>
+  <!-- Right column (entrega) -->
+  <rect x="44" y="18" width="8" height="28" rx="4" fill="url(#mesivoGrad)"/>
+  <!-- V bridge (produção — dois braços conectando) -->
+  <path d="M20 18 L32 40 L44 18" stroke="url(#mesivoGrad)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Center dot (fluxo em movimento) -->
+  <circle cx="32" cy="46" r="3" fill="#FFF7EF"/>
+</svg>

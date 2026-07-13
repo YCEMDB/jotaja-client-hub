@@ -12,7 +12,7 @@ export const Route = createFileRoute("/reset-password")({
   component: ResetPasswordPage,
   head: () => ({
     meta: [
-      { title: "Redefinir senha — Comandex" },
+      { title: "Redefinir senha — Mesivo" },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),

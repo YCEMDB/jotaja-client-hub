@@ -13,7 +13,7 @@ import { AdminPageLayout, Section, SectionHeader } from "@/components/ds";
 
 export const Route = createFileRoute("/_authenticated/admin/operacoes")({
   component: OperacoesPage,
-  head: () => ({ meta: [{ title: "Operações — Comandex" }] }),
+  head: () => ({ meta: [{ title: "Operações — Mesivo" }] }),
 });
 
 type Ops = {

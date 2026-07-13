@@ -51,7 +51,7 @@ import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/admin/estoque")({
   component: EstoqueGated,
-  head: () => ({ meta: [{ title: "Estoque — Comandex" }] }),
+  head: () => ({ meta: [{ title: "Estoque — Mesivo" }] }),
 });
 
 function EstoqueGated() {

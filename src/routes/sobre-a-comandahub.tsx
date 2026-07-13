@@ -2,16 +2,16 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ContentLayout } from "@/components/jotaja/ContentLayout";
 
 const URL = "https://comandahub.online/sobre-a-comandahub";
-const TITLE = "Sobre a Comandex — O que é, para quem é e como funciona";
-const DESC = "Conheça a Comandex: plataforma brasileira de cardápio digital e gestão de restaurantes sem comissão. O que é, para quem é, missão, diferenciais e histórico.";
+const TITLE = "Sobre a Mesivo — O que é, para quem é e como funciona";
+const DESC = "Conheça a Mesivo: plataforma brasileira de cardápio digital e gestão de restaurantes sem comissão. O que é, para quem é, missão, diferenciais e histórico.";
 
 const qa = [
   {
-    q: "O que é a Comandex?",
-    a: "A Comandex é uma plataforma brasileira de cardápio digital, comandas digitais e gestão de pedidos para restaurantes, pizzarias, hamburguerias, lanchonetes, açaiterias e bares. Reúne pedidos (delivery, retirada e mesa via QR Code), pagamento online por PIX e cartão (Mercado Pago) e painel em tempo real em um único produto. Cobra mensalidade fixa, sem comissão por pedido, mantendo o cliente como do restaurante.",
+    q: "O que é a Mesivo?",
+    a: "A Mesivo é uma plataforma brasileira de cardápio digital, comandas digitais e gestão de pedidos para restaurantes, pizzarias, hamburguerias, lanchonetes, açaiterias e bares. Reúne pedidos (delivery, retirada e mesa via QR Code), pagamento online por PIX e cartão (Mercado Pago) e painel em tempo real em um único produto. Cobra mensalidade fixa, sem comissão por pedido, mantendo o cliente como do restaurante.",
   },
   {
-    q: "Para quem é a Comandex?",
+    q: "Para quem é a Mesivo?",
     a: "Para qualquer operação que vende comida ou bebida — de uma hamburgueria caseira que recebe pedidos pelo Instagram até pizzarias com 10 garçons e 20 mesas. Funciona para uma unidade ou múltiplas lojas, com painel mobile-first que roda em qualquer smartphone.",
   },
 ];
@@ -69,7 +69,7 @@ export const Route = createFileRoute("/sobre-a-comandahub")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Organization",
-          name: "Comandex",
+          name: "Mesivo",
           url: "https://comandahub.online",
           logo: "https://comandahub.online/apple-touch-icon.png",
           description: qa[0].a,
@@ -99,20 +99,20 @@ function SobrePage() {
   return (
     <ContentLayout width="wide">
       <header>
-        <h1>Sobre a Comandex</h1>
+        <h1>Sobre a Mesivo</h1>
         <p className="lead">
-          A Comandex é uma plataforma brasileira que devolve autonomia aos restaurantes: cada pedido, cada cliente e cada real ficam com quem cozinha.
+          A Mesivo é uma plataforma brasileira que devolve autonomia aos restaurantes: cada pedido, cada cliente e cada real ficam com quem cozinha.
         </p>
       </header>
 
       <main>
         <section>
-          <h2>O que é a Comandex?</h2>
+          <h2>O que é a Mesivo?</h2>
           <p>{qa[0].a}</p>
         </section>
 
         <section>
-          <h2>Para quem é a Comandex?</h2>
+          <h2>Para quem é a Mesivo?</h2>
           <p>{qa[1].a}</p>
         </section>
 
@@ -163,7 +163,7 @@ function SobrePage() {
         <section>
           <h2>Histórico do produto</h2>
           <p>
-            A Comandex nasceu da frustração de restaurantes brasileiros com comissões abusivas e ferramentas caras importadas. Construída por uma equipe que trabalhou no chão de operação de restaurantes, é desenhada para o realismo do dia a dia: internet instável, equipe rotativa, margens apertadas.
+            A Mesivo nasceu da frustração de restaurantes brasileiros com comissões abusivas e ferramentas caras importadas. Construída por uma equipe que trabalhou no chão de operação de restaurantes, é desenhada para o realismo do dia a dia: internet instável, equipe rotativa, margens apertadas.
           </p>
           <p>
             O foco é simplicidade brutal: funcionar em qualquer smartphone, com botões grandes, fluxos óbvios e suporte humano em português.

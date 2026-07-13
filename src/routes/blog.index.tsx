@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ContentLayout } from "@/components/jotaja/ContentLayout";
 
 const URL = "https://comandahub.online/blog";
-const TITLE = "Blog Comandex — guias e tutoriais para restaurantes";
+const TITLE = "Blog Mesivo — guias e tutoriais para restaurantes";
 const DESC =
   "Conteúdo prático sobre cardápio digital, sistema de pedidos, WhatsApp, QR Code e alternativas ao iFood para donos de restaurante.";
 
@@ -44,17 +44,17 @@ const posts = [
   },
   {
     to: "/comparativo/comandahub-vs-goomer",
-    title: "Comandex vs Goomer",
+    title: "Mesivo vs Goomer",
     desc: "Cardápio digital + delivery: qual escolher?",
   },
   {
     to: "/comparativo/comandahub-vs-anota-ai",
-    title: "Comandex vs Anota.ai",
+    title: "Mesivo vs Anota.ai",
     desc: "Plataforma completa ou bot de WhatsApp?",
   },
   {
     to: "/comparativo/comandahub-vs-saipos",
-    title: "Comandex vs Saipos",
+    title: "Mesivo vs Saipos",
     desc: "ERP grande ou delivery próprio enxuto?",
   },
   {
@@ -87,7 +87,7 @@ export const Route = createFileRoute("/blog/")({
 function BlogIndex() {
   return (
     <ContentLayout width="wide">
-      <h1>Blog Comandex</h1>
+      <h1>Blog Mesivo</h1>
       <p className="lead">
         Guias práticos para donos de restaurante venderem mais sem depender de
         marketplace.

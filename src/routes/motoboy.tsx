@@ -23,8 +23,8 @@ export const Route = createFileRoute("/motoboy")({
   component: MotoboyApp,
   head: () => ({
     meta: [
-      { title: "Motoboy — Comandex" },
-      { name: "description", content: "App do motoboy Comandex — pedidos, rotas e ganhos." },
+      { title: "Motoboy — Mesivo" },
+      { name: "description", content: "App do motoboy Mesivo — pedidos, rotas e ganhos." },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { name: "theme-color", content: "#ff6b35" },
       { name: "robots", content: "noindex" },

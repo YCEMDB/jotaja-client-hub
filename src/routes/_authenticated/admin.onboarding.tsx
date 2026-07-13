@@ -13,7 +13,7 @@ import { AdminPageLayout, Section } from "@/components/ds";
 
 export const Route = createFileRoute("/_authenticated/admin/onboarding")({
   component: Onboarding,
-  head: () => ({ meta: [{ title: "Configurar restaurante — Comandex" }] }),
+  head: () => ({ meta: [{ title: "Configurar restaurante — Mesivo" }] }),
 });
 
 const schema = z.object({

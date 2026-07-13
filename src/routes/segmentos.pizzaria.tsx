@@ -4,7 +4,7 @@ import { ContentLayout } from "@/components/jotaja/ContentLayout";
 const URL = "https://comandahub.online/segmentos/pizzaria";
 const TITLE = "Sistema de pedidos para pizzaria: cardápio digital + delivery";
 const DESC =
-  "Comandex para pizzaria: cardápio digital com sabores divididos, broto/grande, borda recheada, PIX e gestão de entregadores. Sem comissão.";
+  "Mesivo para pizzaria: cardápio digital com sabores divididos, broto/grande, borda recheada, PIX e gestão de entregadores. Sem comissão.";
 
 export const Route = createFileRoute("/segmentos/pizzaria")({
   head: () => ({
@@ -27,7 +27,7 @@ function PizzariaPage() {
       <h1>Sistema de pedidos para pizzaria</h1>
       <p className="lead">
         Pizzaria tem regras únicas: tamanho, sabores divididos, borda, adicionais
-        por andar. O Comandex foi pensado para resolver isso sem gambiarra e
+        por andar. O Mesivo foi pensado para resolver isso sem gambiarra e
         sem comissão por pedido.
       </p>
 
@@ -66,7 +66,7 @@ function PizzariaPage() {
 
       <h2>Delivery próprio sem iFood</h2>
       <p>
-        Comissão de 27% destrói margem de pizzaria. Com o Comandex você
+        Comissão de 27% destrói margem de pizzaria. Com o Mesivo você
         recebe o pedido direto, paga PIX na hora e despacha pelo seu
         entregador. Veja por que somos uma{" "}
         <Link to="/alternativa-ifood">alternativa ao iFood</Link>.

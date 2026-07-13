@@ -2,7 +2,7 @@ import type { GeoFAQ, GeoPageProps, GeoSection } from "@/components/jotaja/GeoPa
 
 // Shared FAQs reusable across pages
 export const COMMON_FAQS: GeoFAQ[] = [
-  { q: "A Comandex cobra comissão por pedido?", a: "Não. Você paga apenas a mensalidade fixa. 100% do valor dos pedidos cai direto na sua conta." },
+  { q: "A Mesivo cobra comissão por pedido?", a: "Não. Você paga apenas a mensalidade fixa. 100% do valor dos pedidos cai direto na sua conta." },
   { q: "Tem fidelidade ou multa por cancelamento?", a: "Não. Cancele quando quiser pelo painel, sem multa." },
   { q: "Quanto tempo leva para começar a usar?", a: "Em média 30 minutos: cadastro, personalização, cardápio e link no ar." },
   { q: "Funciona no celular?", a: "Sim. Painel e cardápio são 100% responsivos e funcionam como app (PWA)." },
@@ -31,11 +31,11 @@ const paragraphs = (paras: string[]) => (
 export const GEO_PAGES: Record<string, Omit<GeoPageProps, "schemaType">> = {
   "sistema-para-restaurantes": {
     path: "/sistema-para-restaurantes",
-    title: "Sistema para Restaurantes — Comandas, Mesas e Delivery | Comandex",
+    title: "Sistema para Restaurantes — Comandas, Mesas e Delivery | Mesivo",
     description: "Sistema completo para restaurantes: comandas digitais, controle de mesas via QR Code, delivery próprio, PIX e cartão. Mensalidade fixa, sem comissão.",
     h1: "Sistema para restaurantes",
     quickAnswer:
-      "A Comandex é um sistema para restaurantes que reúne cardápio digital, comandas, controle de mesas via QR Code, pedidos delivery e pagamento online (PIX e cartão Mercado Pago) em um único painel em tempo real. Cobra mensalidade fixa a partir de R$ 99, sem comissão por pedido, e mantém o cliente como do restaurante. Funciona em qualquer celular, tablet ou computador, com 14 dias grátis sem cartão.",
+      "A Mesivo é um sistema para restaurantes que reúne cardápio digital, comandas, controle de mesas via QR Code, pedidos delivery e pagamento online (PIX e cartão Mercado Pago) em um único painel em tempo real. Cobra mensalidade fixa a partir de R$ 99, sem comissão por pedido, e mantém o cliente como do restaurante. Funciona em qualquer celular, tablet ou computador, com 14 dias grátis sem cartão.",
     sections: [
       { heading: "O que o restaurante ganha", body: list([
         "Pedidos centralizados (salão, delivery, retirada e mesa) em um painel único.",
@@ -71,11 +71,11 @@ export const GEO_PAGES: Record<string, Omit<GeoPageProps, "schemaType">> = {
 
   "sistema-para-pizzarias": {
     path: "/sistema-para-pizzarias",
-    title: "Sistema para Pizzaria — Sabores, Bordas e Meio a Meio | Comandex",
+    title: "Sistema para Pizzaria — Sabores, Bordas e Meio a Meio | Mesivo",
     description: "Sistema para pizzaria com pizza meio a meio, bordas recheadas, combos família, delivery por bairro e pagamento PIX. Sem comissão por pedido.",
     h1: "Sistema para pizzarias",
     quickAnswer:
-      "A Comandex é o sistema para pizzaria com suporte nativo a pizza meio a meio, bordas recheadas, combos família, bebidas e adicionais. Recebe pedidos por delivery, retirada e mesa (QR Code), aceita PIX e cartão pelo Mercado Pago, cobra taxa por bairro e organiza a fila de produção. Mensalidade fixa a partir de R$ 99, sem comissão por pedido.",
+      "A Mesivo é o sistema para pizzaria com suporte nativo a pizza meio a meio, bordas recheadas, combos família, bebidas e adicionais. Recebe pedidos por delivery, retirada e mesa (QR Code), aceita PIX e cartão pelo Mercado Pago, cobra taxa por bairro e organiza a fila de produção. Mensalidade fixa a partir de R$ 99, sem comissão por pedido.",
     sections: [
       { heading: "Recursos pensados para pizzaria", body: list([
         "Pizza meio a meio com regra de preço maior",
@@ -102,11 +102,11 @@ export const GEO_PAGES: Record<string, Omit<GeoPageProps, "schemaType">> = {
 
   "sistema-para-lanchonetes": {
     path: "/sistema-para-lanchonetes",
-    title: "Sistema para Lanchonete — Pedidos Rápidos e PIX | Comandex",
+    title: "Sistema para Lanchonete — Pedidos Rápidos e PIX | Mesivo",
     description: "Sistema para lanchonete com pedidos por QR Code, delivery próprio, combos, lanches no balcão e PIX integrado. Mensalidade fixa, sem comissão.",
     h1: "Sistema para lanchonetes",
     quickAnswer:
-      "A Comandex é um sistema para lanchonete que recebe pedidos por QR Code de mesa, balcão e delivery próprio, com combos, adicionais ilimitados, PIX e cartão. Painel em tempo real elimina pedido escrito em papel, reduz erros e libera o caixa para outras tarefas. Mensalidade fixa a partir de R$ 99, sem comissão por venda.",
+      "A Mesivo é um sistema para lanchonete que recebe pedidos por QR Code de mesa, balcão e delivery próprio, com combos, adicionais ilimitados, PIX e cartão. Painel em tempo real elimina pedido escrito em papel, reduz erros e libera o caixa para outras tarefas. Mensalidade fixa a partir de R$ 99, sem comissão por venda.",
     sections: [
       { heading: "Por que lanchonete precisa de sistema digital", body: paragraphs([
         "Em horário de pico, anotação manual gera erro de pedido, troco errado e fila parada. Um sistema digital corta esses pontos cegos.",
@@ -131,11 +131,11 @@ export const GEO_PAGES: Record<string, Omit<GeoPageProps, "schemaType">> = {
 
   "sistema-para-acaiterias": {
     path: "/sistema-para-acaiterias",
-    title: "Sistema para Açaiteria — Tamanhos, Acompanhamentos e PIX | Comandex",
+    title: "Sistema para Açaiteria — Tamanhos, Acompanhamentos e PIX | Mesivo",
     description: "Sistema para açaiteria com tamanhos (300/500/700ml), acompanhamentos ilimitados, delivery e pagamento PIX. Mensalidade fixa, sem comissão.",
     h1: "Sistema para açaiterias",
     quickAnswer:
-      "A Comandex é o sistema para açaiteria com cadastro de tamanhos (300ml, 500ml, 700ml, 1L), acompanhamentos pagos e gratuitos, combos família, delivery por bairro e pagamento PIX. Painel mostra cada pedido em tempo real para o operador montar o copo correto sem erro. Mensalidade fixa a partir de R$ 99/mês.",
+      "A Mesivo é o sistema para açaiteria com cadastro de tamanhos (300ml, 500ml, 700ml, 1L), acompanhamentos pagos e gratuitos, combos família, delivery por bairro e pagamento PIX. Painel mostra cada pedido em tempo real para o operador montar o copo correto sem erro. Mensalidade fixa a partir de R$ 99/mês.",
     sections: [
       { heading: "Por que açaiteria precisa de cardápio digital", body: paragraphs([
         "Açaí tem muita variação: tamanho, base (açaí puro, com banana, zero), e dezenas de complementos. Anotar isso na mão é fonte garantida de erro.",
@@ -159,11 +159,11 @@ export const GEO_PAGES: Record<string, Omit<GeoPageProps, "schemaType">> = {
 
   "sistema-para-bares": {
     path: "/sistema-para-bares",
-    title: "Sistema para Bar — Comanda Digital e Mesas | Comandex",
+    title: "Sistema para Bar — Comanda Digital e Mesas | Mesivo",
     description: "Sistema para bar com comanda digital por mesa, controle de garçons, fechamento dividido e PIX. Mensalidade fixa, sem comissão por pedido.",
     h1: "Sistema para bares",
     quickAnswer:
-      "A Comandex é o sistema para bar com comanda digital por mesa via QR Code, lançamento por garçom (login individual), divisão de conta por pessoa, fechamento parcial e pagamento por PIX/cartão. Substitui comanda de papel, evita perda de pedido e dá relatório de produto mais vendido por turno. Mensalidade fixa a partir de R$ 99.",
+      "A Mesivo é o sistema para bar com comanda digital por mesa via QR Code, lançamento por garçom (login individual), divisão de conta por pessoa, fechamento parcial e pagamento por PIX/cartão. Substitui comanda de papel, evita perda de pedido e dá relatório de produto mais vendido por turno. Mensalidade fixa a partir de R$ 99.",
     sections: [
       { heading: "Comanda digital substitui papel", body: paragraphs([
         "Comanda perdida = prejuízo direto. Com comanda digital, cada pedido fica registrado no nome da mesa e do garçom, com horário e valor.",
@@ -188,11 +188,11 @@ export const GEO_PAGES: Record<string, Omit<GeoPageProps, "schemaType">> = {
 
   "sistema-para-hamburguerias": {
     path: "/sistema-para-hamburguerias",
-    title: "Sistema para Hamburgueria — Combos, Ponto e Adicionais | Comandex",
+    title: "Sistema para Hamburgueria — Combos, Ponto e Adicionais | Mesivo",
     description: "Sistema para hamburgueria com combos, ponto da carne, adicionais ilimitados, delivery próprio e PIX. Sem comissão, mensalidade fixa.",
     h1: "Sistema para hamburguerias",
     quickAnswer:
-      "A Comandex é o sistema para hamburgueria com combos (burger + batata + bebida), ponto da carne obrigatório, adicionais ilimitados (bacon, cheddar, molhos), upsell automático, delivery por bairro e PIX integrado. Aumenta ticket médio em 20-30% só com sugestão no fluxo. Mensalidade fixa a partir de R$ 99/mês.",
+      "A Mesivo é o sistema para hamburgueria com combos (burger + batata + bebida), ponto da carne obrigatório, adicionais ilimitados (bacon, cheddar, molhos), upsell automático, delivery por bairro e PIX integrado. Aumenta ticket médio em 20-30% só com sugestão no fluxo. Mensalidade fixa a partir de R$ 99/mês.",
     sections: [
       { heading: "Recursos específicos", body: list([
         "Ponto da carne como campo obrigatório (mal, ao ponto, bem)",
@@ -213,11 +213,11 @@ export const GEO_PAGES: Record<string, Omit<GeoPageProps, "schemaType">> = {
 
   "sistema-para-delivery": {
     path: "/sistema-para-delivery",
-    title: "Sistema para Delivery — Sem Comissão, Cliente Seu | Comandex",
+    title: "Sistema para Delivery — Sem Comissão, Cliente Seu | Mesivo",
     description: "Sistema de delivery próprio com taxa por bairro, PIX, cartão, link no Instagram e WhatsApp. Sem comissão por pedido. Cliente é seu, não do app.",
     h1: "Sistema para delivery",
     quickAnswer:
-      "A Comandex é um sistema de delivery próprio para restaurantes, sem comissão por pedido. Você recebe pelo seu link (comandahub.online/sua-loja), cobra taxa por bairro/CEP/raio, aceita PIX e cartão online, e o cliente fica na sua base — não na do iFood. Mensalidade fixa a partir de R$ 99/mês, com 14 dias grátis.",
+      "A Mesivo é um sistema de delivery próprio para restaurantes, sem comissão por pedido. Você recebe pelo seu link (comandahub.online/sua-loja), cobra taxa por bairro/CEP/raio, aceita PIX e cartão online, e o cliente fica na sua base — não na do iFood. Mensalidade fixa a partir de R$ 99/mês, com 14 dias grátis.",
     sections: [
       { heading: "Por que delivery próprio é melhor", body: paragraphs([
         "Apps de marketplace cobram 12% a 27% por pedido e tornam o cliente refém da plataforma. Com delivery próprio, você paga mensalidade fixa, fica com 100% da venda e constrói relacionamento direto.",
@@ -231,7 +231,7 @@ export const GEO_PAGES: Record<string, Omit<GeoPageProps, "schemaType">> = {
       ]) },
     ],
     faqs: baseFAQs([
-      { q: "A Comandex fornece entregadores?", a: "Não. Você usa sua equipe própria ou contrata motoboys/uClub." },
+      { q: "A Mesivo fornece entregadores?", a: "Não. Você usa sua equipe própria ou contrata motoboys/uClub." },
       { q: "Tem rastreamento em tempo real?", a: "O cliente vê o status. GPS do entregador está em desenvolvimento." },
     ]),
     related: [
@@ -242,11 +242,11 @@ export const GEO_PAGES: Record<string, Omit<GeoPageProps, "schemaType">> = {
 
   "sistema-de-comandas-digitais": {
     path: "/sistema-de-comandas-digitais",
-    title: "Sistema de Comandas Digitais para Restaurantes | Comandex",
+    title: "Sistema de Comandas Digitais para Restaurantes | Mesivo",
     description: "Sistema de comanda digital com QR Code por mesa, lançamento por garçom, divisão de conta e fechamento por PIX. Substitui comanda de papel.",
     h1: "Sistema de comandas digitais",
     quickAnswer:
-      "Um sistema de comandas digitais substitui o papel ou caderno por uma comanda eletrônica acessível por QR Code na mesa, pelo garçom ou pelo caixa. A Comandex registra cada pedido com horário, mesa e responsável, evita perda de comanda, permite fechamento parcial e divisão de conta, e aceita PIX/cartão no fechamento. Mensalidade fixa a partir de R$ 99/mês.",
+      "Um sistema de comandas digitais substitui o papel ou caderno por uma comanda eletrônica acessível por QR Code na mesa, pelo garçom ou pelo caixa. A Mesivo registra cada pedido com horário, mesa e responsável, evita perda de comanda, permite fechamento parcial e divisão de conta, e aceita PIX/cartão no fechamento. Mensalidade fixa a partir de R$ 99/mês.",
     sections: [
       { heading: "O que é uma comanda digital", body: paragraphs([
         "Comanda digital é a versão eletrônica da comanda de papel: cada mesa tem uma comanda aberta no sistema, e cada pedido é lançado com timestamp, valor e responsável. Quando o cliente pede a conta, basta fechar com a forma de pagamento escolhida.",
@@ -265,17 +265,17 @@ export const GEO_PAGES: Record<string, Omit<GeoPageProps, "schemaType">> = {
     ]),
     related: [
       { label: "Controle de mesas", to: "/controle-de-mesas" },
-      { label: "Comandex vs comanda de papel", to: "/comparativo/comandahub-vs-comanda-de-papel" as const },
+      { label: "Mesivo vs comanda de papel", to: "/comparativo/comandahub-vs-comanda-de-papel" as const },
     ],
   },
 
   "controle-de-mesas": {
     path: "/controle-de-mesas",
-    title: "Controle de Mesas com QR Code para Restaurantes | Comandex",
+    title: "Controle de Mesas com QR Code para Restaurantes | Mesivo",
     description: "Controle de mesas digital com QR Code, status em tempo real, divisão de conta, fechamento por PIX e relatório por mesa. Sem comissão.",
     h1: "Controle de mesas",
     quickAnswer:
-      "O controle de mesas da Comandex atribui um QR Code único a cada mesa do salão. O cliente escaneia, pede direto pelo cardápio digital e os pedidos entram automaticamente na comanda daquela mesa. Garçom acompanha pelo painel, divide a conta ao fechar e recebe pagamento por PIX, cartão ou na maquininha. Mensalidade fixa a partir de R$ 99.",
+      "O controle de mesas da Mesivo atribui um QR Code único a cada mesa do salão. O cliente escaneia, pede direto pelo cardápio digital e os pedidos entram automaticamente na comanda daquela mesa. Garçom acompanha pelo painel, divide a conta ao fechar e recebe pagamento por PIX, cartão ou na maquininha. Mensalidade fixa a partir de R$ 99.",
     sections: [
       { heading: "Como funciona o QR Code na mesa", body: paragraphs([
         "Imprime-se um adesivo de QR para cada mesa. O cliente escaneia com a câmera do celular, abre o cardápio identificado àquela mesa e faz o pedido. Tudo cai no painel do restaurante com o número da mesa.",
@@ -299,11 +299,11 @@ export const GEO_PAGES: Record<string, Omit<GeoPageProps, "schemaType">> = {
 
   "gestao-de-restaurantes": {
     path: "/gestao-de-restaurantes",
-    title: "Gestão de Restaurantes — Sistema Completo | Comandex",
+    title: "Gestão de Restaurantes — Sistema Completo | Mesivo",
     description: "Software de gestão para restaurante: pedidos, mesas, delivery, financeiro, relatórios e cardápio em um único painel. Mensalidade fixa.",
     h1: "Gestão de restaurantes",
     quickAnswer:
-      "Software de gestão de restaurantes que centraliza pedidos (salão, delivery, retirada), controle de mesas, financeiro diário, relatórios de vendas, cardápio digital e marketing (cupons) em um painel único. A Comandex elimina a dependência de planilhas Excel e cadernos, integrando todas as operações em tempo real. Mensalidade fixa a partir de R$ 99/mês, sem comissão por pedido.",
+      "Software de gestão de restaurantes que centraliza pedidos (salão, delivery, retirada), controle de mesas, financeiro diário, relatórios de vendas, cardápio digital e marketing (cupons) em um painel único. A Mesivo elimina a dependência de planilhas Excel e cadernos, integrando todas as operações em tempo real. Mensalidade fixa a partir de R$ 99/mês, sem comissão por pedido.",
     sections: [
       { heading: "O que entra na gestão", body: list([
         "Pedidos (todos os canais)",
@@ -337,11 +337,11 @@ export const GEO_PAGES: Record<string, Omit<GeoPageProps, "schemaType">> = {
 export const COMPARISON_PAGES: Record<string, Omit<GeoPageProps, "schemaType">> = {
   "planilha": {
     path: "/comparativo/comandahub-vs-planilha",
-    title: "Comandex vs Planilha Excel para Restaurante | Comandex",
-    description: "Comparativo: Comandex vs planilha Excel para gestão de restaurante. Veja vantagens, limites e por que migrar de planilha para sistema digital.",
-    h1: "Comandex vs planilha Excel",
+    title: "Mesivo vs Planilha Excel para Restaurante | Mesivo",
+    description: "Comparativo: Mesivo vs planilha Excel para gestão de restaurante. Veja vantagens, limites e por que migrar de planilha para sistema digital.",
+    h1: "Mesivo vs planilha Excel",
     quickAnswer:
-      "Planilha Excel funciona para um restaurante muito pequeno, mas falha em pedidos simultâneos, controle em tempo real e integração com pagamento. A Comandex substitui a planilha com painel ao vivo, pedidos centralizados, PIX integrado e relatórios automáticos — pelo preço de R$ 99/mês fixo, sem comissão por pedido.",
+      "Planilha Excel funciona para um restaurante muito pequeno, mas falha em pedidos simultâneos, controle em tempo real e integração com pagamento. A Mesivo substitui a planilha com painel ao vivo, pedidos centralizados, PIX integrado e relatórios automáticos — pelo preço de R$ 99/mês fixo, sem comissão por pedido.",
     sections: [
       { heading: "Onde a planilha falha", body: list([
         "Não atualiza em tempo real entre cozinha e caixa",
@@ -350,7 +350,7 @@ export const COMPARISON_PAGES: Record<string, Omit<GeoPageProps, "schemaType">> 
         "Não integra PIX/cartão",
         "Backup depende de você (perdeu o arquivo, perdeu o dia)",
       ]) },
-      { heading: "Onde a Comandex ganha", body: list([
+      { heading: "Onde a Mesivo ganha", body: list([
         "Pedidos em tempo real com som de alerta",
         "PIX integrado (cai na sua conta em segundos)",
         "Backup automático em nuvem",
@@ -359,18 +359,18 @@ export const COMPARISON_PAGES: Record<string, Omit<GeoPageProps, "schemaType">> 
       ]) },
     ],
     faqs: baseFAQs([
-      { q: "Eu importo minha planilha?", a: "Você pode enviar a planilha e o time da Comandex cadastra o cardápio para você no onboarding." },
+      { q: "Eu importo minha planilha?", a: "Você pode enviar a planilha e o time da Mesivo cadastra o cardápio para você no onboarding." },
     ]),
     breadcrumbs: [{ name: "Comparativos", path: "/comparativo/comandahub-vs-planilha" }].slice(0, 0),
   },
 
   "caderno": {
     path: "/comparativo/comandahub-vs-caderno",
-    title: "Comandex vs Caderno de Pedidos | Comandex",
-    description: "Comparativo: Comandex vs caderno de anotação. Veja por que caderno gera erros, perdas e por que migrar para sistema de comandas digitais.",
-    h1: "Comandex vs caderno de pedidos",
+    title: "Mesivo vs Caderno de Pedidos | Mesivo",
+    description: "Comparativo: Mesivo vs caderno de anotação. Veja por que caderno gera erros, perdas e por que migrar para sistema de comandas digitais.",
+    h1: "Mesivo vs caderno de pedidos",
     quickAnswer:
-      "Anotar pedido em caderno é fonte garantida de erro, perda e retrabalho: letra ilegível, página rasgada, fechamento manual demorado. A Comandex substitui o caderno com comanda digital por mesa e por garçom, lançamento em segundos pelo celular e fechamento de caixa automático ao final do dia. R$ 99/mês fixo.",
+      "Anotar pedido em caderno é fonte garantida de erro, perda e retrabalho: letra ilegível, página rasgada, fechamento manual demorado. A Mesivo substitui o caderno com comanda digital por mesa e por garçom, lançamento em segundos pelo celular e fechamento de caixa automático ao final do dia. R$ 99/mês fixo.",
     sections: [
       { heading: "Problemas do caderno", body: list([
         "Letra ilegível na cozinha = pedido errado",
@@ -379,7 +379,7 @@ export const COMPARISON_PAGES: Record<string, Omit<GeoPageProps, "schemaType">> 
         "Não dá relatório por garçom nem por produto",
         "Sem backup",
       ]) },
-      { heading: "Como a Comandex resolve", body: list([
+      { heading: "Como a Mesivo resolve", body: list([
         "Pedido lançado no celular do garçom em segundos",
         "Cozinha vê o pedido em telão, sem letra ilegível",
         "Comanda digital não some",
@@ -394,11 +394,11 @@ export const COMPARISON_PAGES: Record<string, Omit<GeoPageProps, "schemaType">> 
 
   "comanda-de-papel": {
     path: "/comparativo/comandahub-vs-comanda-de-papel",
-    title: "Comandex vs Comanda de Papel | Comandex",
-    description: "Comparativo: Comandex vs comanda de papel. Veja por que comanda digital evita perdas, agiliza atendimento e reduz erros de fechamento.",
-    h1: "Comandex vs comanda de papel",
+    title: "Mesivo vs Comanda de Papel | Mesivo",
+    description: "Comparativo: Mesivo vs comanda de papel. Veja por que comanda digital evita perdas, agiliza atendimento e reduz erros de fechamento.",
+    h1: "Mesivo vs comanda de papel",
     quickAnswer:
-      "Comanda de papel some, molha, rasga e exige soma manual na hora de fechar. A comanda digital da Comandex é uma comanda eletrônica por mesa, atualizada em tempo real, com divisão automática de conta, fechamento por PIX e relatório por garçom e turno. R$ 99/mês fixo, sem comissão.",
+      "Comanda de papel some, molha, rasga e exige soma manual na hora de fechar. A comanda digital da Mesivo é uma comanda eletrônica por mesa, atualizada em tempo real, com divisão automática de conta, fechamento por PIX e relatório por garçom e turno. R$ 99/mês fixo, sem comissão.",
     sections: [
       { heading: "Comparativo direto", body: list([
         "Perda de comanda: papel = comum / digital = impossível",
@@ -415,15 +415,15 @@ export const COMPARISON_PAGES: Record<string, Omit<GeoPageProps, "schemaType">> 
 
   "controle-manual": {
     path: "/comparativo/comandahub-vs-controle-manual",
-    title: "Comandex vs Controle Manual de Restaurante | Comandex",
-    description: "Comparativo: Comandex vs controle manual (papel, caderno, planilha). Veja quanto tempo e dinheiro você perde com controle analógico.",
-    h1: "Comandex vs controle manual",
+    title: "Mesivo vs Controle Manual de Restaurante | Mesivo",
+    description: "Comparativo: Mesivo vs controle manual (papel, caderno, planilha). Veja quanto tempo e dinheiro você perde com controle analógico.",
+    h1: "Mesivo vs controle manual",
     quickAnswer:
-      "Controle manual (caderno + planilha + comanda de papel + WhatsApp solto) custa horas por dia e gera erro silencioso de caixa. A Comandex unifica pedidos, mesas, delivery e pagamento em um painel, com fechamento automático e relatório de vendas. Mensalidade fixa de R$ 99/mês, 14 dias grátis.",
+      "Controle manual (caderno + planilha + comanda de papel + WhatsApp solto) custa horas por dia e gera erro silencioso de caixa. A Mesivo unifica pedidos, mesas, delivery e pagamento em um painel, com fechamento automático e relatório de vendas. Mensalidade fixa de R$ 99/mês, 14 dias grátis.",
     sections: [
       { heading: "Quanto tempo o controle manual consome", body: paragraphs([
         "Anotar pedido, soma de conta, troco, fechamento de caixa, conferência de PIX no celular do dono — em média 2 a 3 horas por dia em um restaurante pequeno.",
-        "Com a Comandex esse trabalho cai para minutos: fechamento de caixa é automático, PIX bate sozinho e relatório sai pronto.",
+        "Com a Mesivo esse trabalho cai para minutos: fechamento de caixa é automático, PIX bate sozinho e relatório sai pronto.",
       ]) },
     ],
     faqs: baseFAQs([
@@ -457,7 +457,7 @@ const SEGMENT_SERVICE: Record<string, { name: string; serviceType: string; audie
 };
 
 const HOWTO_STANDARD = {
-  name: "Como começar a usar a Comandex em 4 passos",
+  name: "Como começar a usar a Mesivo em 4 passos",
   description: "Setup completo do cardápio digital ao primeiro pedido em até 30 minutos.",
   steps: [
     { name: "Cadastro gratuito", text: "Crie sua conta em comandahub.online/auth com email. Sem cartão de crédito, 14 dias grátis." },
@@ -488,8 +488,8 @@ for (const key of Object.keys(GEO_PAGES)) {
 // Tabelas comparativas reais (<table>) por comparativo.
 const COMPARISON_TABLES: Record<string, GeoPageProps["comparisonTable"]> = {
   "planilha": {
-    caption: "Comandex vs Planilha Excel",
-    headers: ["Critério", "Planilha Excel", "Comandex"],
+    caption: "Mesivo vs Planilha Excel",
+    headers: ["Critério", "Planilha Excel", "Mesivo"],
     rows: [
       ["Atualização em tempo real", "Não (manual)", "Sim, instantânea"],
       ["Alerta sonoro de pedido novo", "Não", "Sim"],
@@ -501,8 +501,8 @@ const COMPARISON_TABLES: Record<string, GeoPageProps["comparisonTable"]> = {
     ],
   },
   "caderno": {
-    caption: "Comandex vs Caderno de pedidos",
-    headers: ["Critério", "Caderno", "Comandex"],
+    caption: "Mesivo vs Caderno de pedidos",
+    headers: ["Critério", "Caderno", "Mesivo"],
     rows: [
       ["Risco de pedido errado por letra ruim", "Alto", "Zero (registro digital)"],
       ["Perda de comanda", "Comum", "Impossível"],
@@ -513,8 +513,8 @@ const COMPARISON_TABLES: Record<string, GeoPageProps["comparisonTable"]> = {
     ],
   },
   "comanda-de-papel": {
-    caption: "Comandex vs Comanda de papel",
-    headers: ["Critério", "Comanda de papel", "Comandex"],
+    caption: "Mesivo vs Comanda de papel",
+    headers: ["Critério", "Comanda de papel", "Mesivo"],
     rows: [
       ["Perda de comanda", "Comum", "Impossível"],
       ["Soma da conta", "Manual", "Automática"],
@@ -525,8 +525,8 @@ const COMPARISON_TABLES: Record<string, GeoPageProps["comparisonTable"]> = {
     ],
   },
   "controle-manual": {
-    caption: "Comandex vs Controle manual (caderno + planilha + WhatsApp)",
-    headers: ["Critério", "Controle manual", "Comandex"],
+    caption: "Mesivo vs Controle manual (caderno + planilha + WhatsApp)",
+    headers: ["Critério", "Controle manual", "Mesivo"],
     rows: [
       ["Horas/dia consumidas", "2 a 3 horas", "Minutos"],
       ["Erro silencioso de caixa", "Frequente", "Zerado"],
