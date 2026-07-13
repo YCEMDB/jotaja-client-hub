@@ -331,7 +331,7 @@ function CaixaRow({ label, value, ok }: { label: string; value: string; ok: bool
           fontWeight: 700,
         }}
       >
-        {ok ? "✓ conciliado" : "contar"}
+        {ok ? "conciliado" : "contar"}
       </span>
     </div>
   );
