@@ -3,7 +3,9 @@ import { PROTO_CSS } from "@/dev-proto/proto-tokens";
 
 export const Route = createFileRoute("/dev/proto/pdv")({
   component: ProtoPdv,
-  head: () => ({ meta: [{ title: "Proto · PDV Mesivo (dev)" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({
+    meta: [{ title: "Proto · PDV Mesivo (dev)" }, { name: "robots", content: "noindex" }],
+  }),
 });
 
 const CATS = [
@@ -16,10 +18,18 @@ const CATS = [
 ];
 
 const PROD = [
-  ["Smash duplo", "34,90"], ["Cheddar bacon", "38,50"], ["Veggie", "29,00"],
-  ["Kids", "22,00"], ["BBQ Ranch", "36,00"], ["Duplo pão preto", "41,00"],
-  ["Frango crispy", "32,50"], ["Costela smoked", "44,00"], ["Fish burger", "35,00"],
-  ["Chorizo argentino", "45,00"], ["Buffalo picante", "33,50"], ["Trufado", "48,00"],
+  ["Smash duplo", "34,90"],
+  ["Cheddar bacon", "38,50"],
+  ["Veggie", "29,00"],
+  ["Kids", "22,00"],
+  ["BBQ Ranch", "36,00"],
+  ["Duplo pão preto", "41,00"],
+  ["Frango crispy", "32,50"],
+  ["Costela smoked", "44,00"],
+  ["Fish burger", "35,00"],
+  ["Chorizo argentino", "45,00"],
+  ["Buffalo picante", "33,50"],
+  ["Trufado", "48,00"],
 ];
 
 function ProtoPdv() {
@@ -43,7 +53,7 @@ function ProtoPdv() {
 
         {/* Produtos */}
         <div className="pdv-main-col">
-          <div className="pdv-search">🔎  Buscar produto ou atalho (F3)</div>
+          <div className="pdv-search">🔎 Buscar produto ou atalho (F3)</div>
           <div className="pdv-prods">
             {PROD.map(([n, p]) => (
               <div key={n} className="pdv-prod">
@@ -90,9 +100,18 @@ function ProtoPdv() {
           </div>
 
           <div className="pdv-cart-totals">
-            <div className="pdv-tot-row"><span>Subtotal</span><span>R$ 149,30</span></div>
-            <div className="pdv-tot-row"><span>Desconto (5%)</span><span>-R$ 7,47</span></div>
-            <div className="pdv-tot-row"><span>Taxa de entrega</span><span>R$ 0,00</span></div>
+            <div className="pdv-tot-row">
+              <span>Subtotal</span>
+              <span>R$ 149,30</span>
+            </div>
+            <div className="pdv-tot-row">
+              <span>Desconto (5%)</span>
+              <span>-R$ 7,47</span>
+            </div>
+            <div className="pdv-tot-row">
+              <span>Taxa de entrega</span>
+              <span>R$ 0,00</span>
+            </div>
             <div className="pdv-tot-final">
               <span className="pdv-tot-final-l">Total</span>
               <span className="pdv-tot-final-v">R$ 141,83</span>
