@@ -77,8 +77,12 @@ function ProtoLanding() {
             <div className="mkt-mockup-phone">
               <PhoneMenuMockup />
             </div>
-            <div className="mkt-badge-float mkt-badge-mango">🍔 Novo pedido · Mesa 07</div>
-            <div className="mkt-badge-float mkt-badge-leaf">✓ Entregue em 24 min</div>
+            <div className="mkt-badge-float mkt-badge-mango">
+              <IconBell size={13} style={{ marginRight: 6 }} /> Novo pedido · Mesa 07
+            </div>
+            <div className="mkt-badge-float mkt-badge-leaf">
+              <IconCheck size={13} style={{ marginRight: 6 }} /> Entregue em 24 min
+            </div>
           </div>
         </div>
       </section>
