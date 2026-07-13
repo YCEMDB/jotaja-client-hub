@@ -376,7 +376,6 @@ function PedidosPage() {
       if (!previous) return; // no-op: nada a remover
       const { error } = await supabase.rpc("unassign_driver", {
         p_order_id: selected.id,
-        p_reason: null,
       });
       if (error) return toast.error(error.message);
       setSelected({ ...selected, driver_id: null });
