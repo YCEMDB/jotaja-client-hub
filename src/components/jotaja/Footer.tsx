@@ -11,7 +11,7 @@ export function Footer() {
               <Logo size="md" />
             </Link>
             <p className="mt-4 text-sm text-muted-foreground max-w-xs leading-relaxed">
-              A plataforma de delivery próprio para restaurantes que querem crescer com autonomia.
+              A plataforma completa para o seu restaurante centralizar pedidos, salão, cardápio, caixa e gestão em um único lugar.
             </p>
           </div>
 
