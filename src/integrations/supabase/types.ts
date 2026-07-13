@@ -4300,6 +4300,10 @@ export type Database = {
         Args: { p_id: string; p_reason: string }
         Returns: Json
       }
+      admin_get_restaurant_mp_token: {
+        Args: { p_restaurant_id: string }
+        Returns: string
+      }
       admin_reactivate_restaurant: {
         Args: { p_reason: string; p_restaurant_id: string }
         Returns: Json
