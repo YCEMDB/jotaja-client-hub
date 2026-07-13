@@ -72,7 +72,10 @@ function ProtoPdv() {
         </aside>
 
         <div className="pdv-main-col">
-          <div className="pdv-search">🔎 Buscar produto ou atalho (F3)</div>
+          <div className="pdv-search">
+            <IconSearch size={15} style={{ marginRight: 8, verticalAlign: -2 }} />
+            Buscar produto ou atalho (F3)
+          </div>
           <div className="pdv-prods">
             {PROD.map(([n, p, avail]) => (
               <div key={n} className={"pdv-prod" + (avail === "out" ? " out" : "")}>
