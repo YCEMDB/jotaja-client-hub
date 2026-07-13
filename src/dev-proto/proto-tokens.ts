@@ -309,9 +309,9 @@ export const PROTO_CSS = `
 .app-mob-topbar-sub{font-size:11px;color:var(--stone);font-family:var(--mono);font-weight:500}
 .app-mob-topbar-actions{display:flex;gap:8px;align-items:center;flex-shrink:0}
 
-.app-bottom-nav{display:none;position:sticky;bottom:0;background:#fff;border-top:1px solid var(--line);padding:8px 0 max(10px,env(safe-area-inset-bottom));z-index:20}
+.app-bottom-nav{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:8px 0 max(10px,env(safe-area-inset-bottom));z-index:40}
 .app-bottom-nav-inner{display:grid;grid-template-columns:repeat(5,1fr);gap:2px}
-.app-bottom-nav-item{background:transparent;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;color:var(--stone);font-size:10.5px;font-family:var(--mono);font-weight:600;cursor:pointer}
+.app-bottom-nav-item{background:transparent;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;color:var(--stone);font-size:10.5px;font-family:var(--mono);font-weight:600;cursor:pointer;min-width:0}
 .app-bottom-nav-item.on{color:var(--tomato)}
 .app-bottom-nav-item svg{width:22px;height:22px}
 
