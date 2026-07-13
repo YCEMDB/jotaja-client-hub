@@ -1,17 +1,5 @@
-import {
-  LayoutGrid,
-  Clock3,
-  ClipboardList,
-  Truck,
-  Gauge,
-  Wallet,
-} from "lucide-react";
-import {
-  MotionSection,
-  MotionText,
-  MotionStagger,
-  MotionStaggerItem,
-} from "@/components/motion";
+import { LayoutGrid, Clock3, ClipboardList, Truck, Gauge, Wallet } from "lucide-react";
+import { MotionSection, MotionText, MotionStagger, MotionStaggerItem } from "@/components/motion";
 
 /**
  * Benefícios Qualitativos — substitui a antiga seção "Depoimentos".
@@ -87,8 +75,8 @@ export function Depoimentos() {
             ]}
           />
           <p className="mt-6 text-lg text-ink/70 max-w-2xl leading-relaxed">
-            Benefícios que aparecem já nos primeiros dias de uso — sem prometer
-            números que dependem do seu contexto.
+            Benefícios que aparecem já nos primeiros dias de uso — sem prometer números que dependem
+            do seu contexto.
           </p>
         </div>
 

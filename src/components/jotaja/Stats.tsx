@@ -42,10 +42,7 @@ export function Stats() {
         ariaLabel="Canais operacionais atendidos pela Mesivo"
       >
         {canais.map(({ label, icon: Icon }) => (
-          <span
-            key={label}
-            className="inline-flex items-center gap-3 px-3 py-2 whitespace-nowrap"
-          >
+          <span key={label} className="inline-flex items-center gap-3 px-3 py-2 whitespace-nowrap">
             <span
               aria-hidden="true"
               className="w-9 h-9 grid place-items-center rounded-lg bg-background/10 border border-background/20 text-brand-orange"
@@ -55,7 +52,10 @@ export function Stats() {
             <span className="font-display text-2xl md:text-3xl leading-none tracking-tight">
               {label}
             </span>
-            <span aria-hidden="true" className="ml-4 text-background/25 font-display text-2xl md:text-3xl">
+            <span
+              aria-hidden="true"
+              className="ml-4 text-background/25 font-display text-2xl md:text-3xl"
+            >
               ·
             </span>
           </span>

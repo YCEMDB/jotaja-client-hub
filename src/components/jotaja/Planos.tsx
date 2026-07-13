@@ -1,11 +1,6 @@
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  MotionSection,
-  MotionReveal,
-  MotionStagger,
-  MotionStaggerItem,
-} from "@/components/motion";
+import { MotionSection, MotionReveal, MotionStagger, MotionStaggerItem } from "@/components/motion";
 
 /**
  * Planos — Onda 3.
@@ -96,13 +91,13 @@ export function Planos() {
             <MotionStaggerItem
               key={plan.name}
               className={`relative rounded-2xl p-7 flex flex-col h-full bg-card border-2 border-ink shadow-brutal ${
-                plan.highlighted ? "ring-2 ring-brand-orange ring-offset-2 ring-offset-secondary" : ""
+                plan.highlighted
+                  ? "ring-2 ring-brand-orange ring-offset-2 ring-offset-secondary"
+                  : ""
               }`}
             >
               {plan.highlighted && (
-                <div
-                  className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-brand-orange text-ink text-xs font-bold border-2 border-ink shadow-brutal"
-                >
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-brand-orange text-ink text-xs font-bold border-2 border-ink shadow-brutal">
                   Recomendado
                 </div>
               )}

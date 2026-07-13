@@ -47,12 +47,48 @@ type Step = {
 };
 
 const steps: Step[] = [
-  { key: "pendente", label: "Pendente", desc: "Pedido recebido, aguardando confirmação.", icon: Clock, tone: "amber" },
-  { key: "confirmado", label: "Confirmado", desc: "Restaurante confirmou e enviou para produção.", icon: CheckCircle2, tone: "orange" },
-  { key: "preparo", label: "Em preparo", desc: "Cozinha está executando o pedido.", icon: UtensilsCrossed, tone: "orange" },
-  { key: "pronto", label: "Pronto", desc: "Pronto para retirada ou saída para entrega.", icon: Package, tone: "amber" },
-  { key: "saiu", label: "Saiu para entrega", desc: "A caminho do cliente.", icon: Bike, tone: "orange" },
-  { key: "entregue", label: "Entregue", desc: "Ciclo do pedido concluído.", icon: PackageCheck, tone: "green" },
+  {
+    key: "pendente",
+    label: "Pendente",
+    desc: "Pedido recebido, aguardando confirmação.",
+    icon: Clock,
+    tone: "amber",
+  },
+  {
+    key: "confirmado",
+    label: "Confirmado",
+    desc: "Restaurante confirmou e enviou para produção.",
+    icon: CheckCircle2,
+    tone: "orange",
+  },
+  {
+    key: "preparo",
+    label: "Em preparo",
+    desc: "Cozinha está executando o pedido.",
+    icon: UtensilsCrossed,
+    tone: "orange",
+  },
+  {
+    key: "pronto",
+    label: "Pronto",
+    desc: "Pronto para retirada ou saída para entrega.",
+    icon: Package,
+    tone: "amber",
+  },
+  {
+    key: "saiu",
+    label: "Saiu para entrega",
+    desc: "A caminho do cliente.",
+    icon: Bike,
+    tone: "orange",
+  },
+  {
+    key: "entregue",
+    label: "Entregue",
+    desc: "Ciclo do pedido concluído.",
+    icon: PackageCheck,
+    tone: "green",
+  },
 ];
 
 const toneClasses: Record<Step["tone"], { chip: string; ring: string; text: string }> = {
@@ -92,8 +128,8 @@ export function ComoFunciona() {
           />
           <MotionReveal delay={0.15}>
             <p className="mt-6 text-lg text-ink/70 max-w-2xl leading-relaxed">
-              Cada pedido percorre um caminho definido no painel. Cancelamentos
-              ficam registrados como ramificação — nunca escondem o fluxo real.
+              Cada pedido percorre um caminho definido no painel. Cancelamentos ficam registrados
+              como ramificação — nunca escondem o fluxo real.
             </p>
           </MotionReveal>
         </div>
@@ -151,7 +187,8 @@ function FlowDesktop() {
           y1="30"
           x2="970"
           y2="30"
-          stroke="var(--ink)" strokeOpacity="0.15"
+          stroke="var(--ink)"
+          strokeOpacity="0.15"
           strokeWidth="2"
           strokeDasharray="6 6"
         />
@@ -197,7 +234,16 @@ function FlowDesktop() {
       <div className="mt-14 flex justify-center">
         <div className="flex flex-col items-center gap-3">
           <svg width="2" height="40" aria-hidden="true">
-            <line x1="1" y1="0" x2="1" y2="40" stroke="var(--ink)" strokeOpacity="0.4" strokeWidth="2" strokeDasharray="4 4" />
+            <line
+              x1="1"
+              y1="0"
+              x2="1"
+              y2="40"
+              stroke="var(--ink)"
+              strokeOpacity="0.4"
+              strokeWidth="2"
+              strokeDasharray="4 4"
+            />
           </svg>
           <div className="inline-flex items-center gap-3 rounded-2xl border-2 border-ink bg-background px-5 py-3 shadow-brutal">
             <span
