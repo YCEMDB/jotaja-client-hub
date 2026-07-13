@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PROTO_CSS } from "@/dev-proto/proto-tokens";
+import { IconImage } from "@/dev-proto/proto-icons";
 
 export const Route = createFileRoute("/dev/proto/cardapio")({
   component: ProtoCardapio,
