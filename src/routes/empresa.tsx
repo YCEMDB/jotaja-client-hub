@@ -2,9 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ContentLayout } from "@/components/jotaja/ContentLayout";
 
 const URL = "https://comandahub.online/empresa";
-const TITLE = "Empresa — Comandex";
+const TITLE = "Empresa — Mesivo";
 const DESC =
-  "Informações institucionais do Comandex: razão social, propósito, equipe e como falar com o time comercial e de imprensa.";
+  "Informações institucionais do Mesivo: razão social, propósito, equipe e como falar com o time comercial e de imprensa.";
 
 export const Route = createFileRoute("/empresa")({
   head: () => ({
@@ -26,7 +26,7 @@ function Empresa() {
     <ContentLayout>
       <h1>Empresa</h1>
       <p className="lead">
-        Comandex é uma plataforma de tecnologia para restaurantes
+        Mesivo é uma plataforma de tecnologia para restaurantes
         brasileiros, focada em delivery próprio, cardápio digital e gestão
         de pedidos.
       </p>

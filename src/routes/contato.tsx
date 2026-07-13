@@ -2,9 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ContentLayout } from "@/components/jotaja/ContentLayout";
 
 const URL = "https://comandahub.online/contato";
-const TITLE = "Contato — Comandex";
+const TITLE = "Contato — Mesivo";
 const DESC =
-  "Fale com o time do Comandex: vendas, suporte, parcerias e imprensa. Atendimento humano em português, todos os dias.";
+  "Fale com o time do Mesivo: vendas, suporte, parcerias e imprensa. Atendimento humano em português, todos os dias.";
 
 export const Route = createFileRoute("/contato")({
   head: () => ({
@@ -32,12 +32,12 @@ function Contato() {
 
       <h2>WhatsApp comercial</h2>
       <p>
-        Quer entender se o Comandex serve para o seu restaurante?
+        Quer entender se o Mesivo serve para o seu restaurante?
         Chame no WhatsApp e a gente conversa sem compromisso.
       </p>
       <p>
         <a
-          href="https://wa.me/5511999999999?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20o%20Comandex"
+          href="https://wa.me/5511999999999?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20o%20Mesivo"
           target="_blank"
           rel="noopener noreferrer"
         >

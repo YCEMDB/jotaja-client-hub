@@ -37,7 +37,7 @@ export const Route = createFileRoute("/cardapio-digital")({
               name: "Quanto custa um cardápio digital?",
               acceptedAnswer: {
                 "@type": "Answer",
-                text: "Plataformas variam de gratuitas (com limitações) até R$ 200/mês. O Comandex oferece cardápio digital sem comissão por venda a partir de planos acessíveis.",
+                text: "Plataformas variam de gratuitas (com limitações) até R$ 200/mês. O Mesivo oferece cardápio digital sem comissão por venda a partir de planos acessíveis.",
               },
             },
             {
@@ -126,7 +126,7 @@ function CardapioDigitalPage() {
             <td>Você não fica com seu cliente; margem comprimida</td>
           </tr>
           <tr>
-            <td>Plataforma própria (Comandex)</td>
+            <td>Plataforma própria (Mesivo)</td>
             <td>Mensalidade fixa, 0% de comissão</td>
             <td>Você gerencia o crescimento</td>
           </tr>
@@ -153,7 +153,7 @@ function CardapioDigitalPage() {
 
       <h2>Como criar seu cardápio digital sem comissão</h2>
       <p>
-        O Comandex é a plataforma de delivery próprio que une cardápio digital,
+        O Mesivo é a plataforma de delivery próprio que une cardápio digital,
         pedido online, PIX instantâneo e gestão num único painel — sem cobrar
         comissão por venda. Veja por que somos a{" "}
         <Link to="/alternativa-ifood">melhor alternativa ao iFood</Link> e como
@@ -191,7 +191,7 @@ function CardapioDigitalPage() {
       </p>
       <h3>Posso usar minha própria marca?</h3>
       <p>
-        Sim, no Comandex o cardápio fica em <code>sua-loja.comandahub.online</code>{" "}
+        Sim, no Mesivo o cardápio fica em <code>sua-loja.comandahub.online</code>{" "}
         ou em domínio próprio, com sua logo e cores.
       </p>
 

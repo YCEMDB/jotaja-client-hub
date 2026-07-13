@@ -17,13 +17,13 @@ const AdminWelcomeEmail = ({
 }: Props) => (
   <Html lang="pt-BR" dir="ltr">
     <Head />
-    <Preview>Você foi adicionado como Super-Admin do Comandex</Preview>
+    <Preview>Você foi adicionado como Super-Admin do Mesivo</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Section style={brandBar}><Text style={brandText}>COMANDEX · ADMIN</Text></Section>
+        <Section style={brandBar}><Text style={brandText}>MESIVO · ADMIN</Text></Section>
         <Heading style={h1}>Olá, {adminName}</Heading>
         <Text style={text}>
-          Você foi adicionado como <strong>Super-Admin</strong> da plataforma Comandex.
+          Você foi adicionado como <strong>Super-Admin</strong> da plataforma Mesivo.
           Use as credenciais abaixo para acessar o painel administrativo. Troque a senha no primeiro acesso.
         </Text>
 
@@ -46,7 +46,7 @@ const AdminWelcomeEmail = ({
 
 export const template = {
   component: AdminWelcomeEmail,
-  subject: 'Você foi adicionado como Super-Admin do Comandex',
+  subject: 'Você foi adicionado como Super-Admin do Mesivo',
   displayName: 'Boas-vindas Super-Admin',
   previewData: {
     adminName: 'João',

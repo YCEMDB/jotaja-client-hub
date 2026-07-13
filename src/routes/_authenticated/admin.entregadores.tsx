@@ -15,7 +15,7 @@ import { AdminPageLayout, EmptyState } from "@/components/ds";
 
 export const Route = createFileRoute("/_authenticated/admin/entregadores")({
   component: EntregadoresGated,
-  head: () => ({ meta: [{ title: "Entregadores — Comandex" }] }),
+  head: () => ({ meta: [{ title: "Entregadores — Mesivo" }] }),
 });
 
 function EntregadoresGated() {

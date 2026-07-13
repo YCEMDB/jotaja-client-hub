@@ -40,7 +40,7 @@ import { FinancialReportsTab } from "@/components/finance/FinancialReportsTab";
 
 export const Route = createFileRoute("/_authenticated/admin/financeiro")({
   component: FinanceiroGated,
-  head: () => ({ meta: [{ title: "Financeiro — Comandex" }] }),
+  head: () => ({ meta: [{ title: "Financeiro — Mesivo" }] }),
 });
 
 function FinanceiroGated() {

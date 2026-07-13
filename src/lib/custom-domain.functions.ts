@@ -142,7 +142,7 @@ export const verifyCustomDomain = createServerFn({ method: "POST" })
       const res = await fetch(target, {
         method: "GET",
         redirect: "manual",
-        headers: { "user-agent": "Comandex-DomainCheck/1.0" },
+        headers: { "user-agent": "Mesivo-DomainCheck/1.0" },
       });
       const marker = res.headers.get("x-comandahub-domain");
       if (marker && marker.toLowerCase() === r.custom_domain.toLowerCase()) {

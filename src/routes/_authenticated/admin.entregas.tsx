@@ -24,7 +24,7 @@ import { DeliveryReports } from "@/components/delivery/DeliveryReports";
 
 export const Route = createFileRoute("/_authenticated/admin/entregas")({
   component: EntregasGated,
-  head: () => ({ meta: [{ title: "Entregas — Comandex" }] }),
+  head: () => ({ meta: [{ title: "Entregas — Mesivo" }] }),
 });
 
 function EntregasGated() {

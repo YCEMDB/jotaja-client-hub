@@ -8,8 +8,8 @@ export const Route = createFileRoute("/suporte")({
   component: SuportePage,
   head: () => ({
     meta: [
-      { title: "Suporte — Comandex" },
-      { name: "description", content: "Suporte técnico do Comandex via WhatsApp, e-mail e central de ajuda." },
+      { title: "Suporte — Mesivo" },
+      { name: "description", content: "Suporte técnico do Mesivo via WhatsApp, e-mail e central de ajuda." },
     ],
   }),
 });
@@ -28,7 +28,7 @@ function SuportePage() {
 
         <div className="grid md:grid-cols-2 gap-6 mb-12">
           <a
-            href={`https://wa.me/${WHATSAPP}?text=Ol%C3%A1!%20Preciso%20de%20ajuda%20com%20o%20Comandex.`}
+            href={`https://wa.me/${WHATSAPP}?text=Ol%C3%A1!%20Preciso%20de%20ajuda%20com%20o%20Mesivo.`}
             target="_blank"
             rel="noreferrer"
             className="block p-8 rounded-2xl bg-gradient-to-br from-brand-orange to-brand-magenta text-background border-2 border-ink shadow-brutal-lg hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"

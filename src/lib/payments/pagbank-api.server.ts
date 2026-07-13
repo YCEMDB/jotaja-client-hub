@@ -142,7 +142,7 @@ export async function exchangeAuthorizationCode(input: {
 }
 
 /**
- * Cria uma cobrança Pix na conta do RESTAURANTE (não da COMANDAHUB).
+ * Cria uma cobrança Pix na conta do RESTAURANTE (não da MESIVO).
  * O dinheiro cai direto na conta PagBank do lojista.
  */
 export type CreatePixResult =

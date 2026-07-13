@@ -10,7 +10,7 @@ export function Calculadora() {
   const economia = useMemo(() => {
     const faturamentoMes = pedidos[0] * ticket[0];
     const comissaoMes = (faturamentoMes * comissao[0]) / 100;
-    const economiaMes = comissaoMes - 99; // mensalidade Comandex
+    const economiaMes = comissaoMes - 99; // mensalidade Mesivo
     const economiaAno = economiaMes * 12;
     return {
       faturamento: faturamentoMes,
@@ -64,7 +64,7 @@ export function Calculadora() {
             <div className="absolute top-0 right-0 w-40 h-40 bg-accent/30 rounded-full blur-3xl" />
             <div className="relative">
               <div className="flex items-center gap-2 mb-2 text-primary-foreground/70 font-semibold uppercase text-xs tracking-wider">
-                <TrendingUp className="w-4 h-4" /> Sua economia com Comandex
+                <TrendingUp className="w-4 h-4" /> Sua economia com Mesivo
               </div>
               <div className="font-display text-6xl lg:text-7xl font-extrabold mb-2 text-accent">
                 {fmt(economia.ano)}
@@ -81,7 +81,7 @@ export function Calculadora() {
                   <span className="font-bold text-destructive">-{fmt(economia.comissao)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="opacity-80">Mensalidade Comandex</span>
+                  <span className="opacity-80">Mensalidade Mesivo</span>
                   <span className="font-bold">R$ 99</span>
                 </div>
                 <div className="flex justify-between text-base pt-3 border-t border-primary-foreground/15">

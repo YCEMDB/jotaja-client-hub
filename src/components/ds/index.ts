@@ -1,5 +1,5 @@
 /**
- * ComandaHub Design System — internal admin surface only.
+ * Mesivo Design System — internal admin surface only.
  *
  * Regras:
  *  - Toda página administrativa (Admin + Super Admin + Auth) usa estes componentes.

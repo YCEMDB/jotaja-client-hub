@@ -47,7 +47,7 @@ export function Footer() {
             {
               title: "Empresa",
               links: [
-                { label: "Sobre a Comandex", href: "/sobre-a-comandahub" },
+                { label: "Sobre a Mesivo", href: "/sobre-a-comandahub" },
                 { label: "Perguntas frequentes", href: "/perguntas-frequentes" },
                 { label: "Blog", href: "/blog" },
                 { label: "Contato", href: "/contato" },
@@ -86,7 +86,7 @@ export function Footer() {
 
         <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} Comandex. Todos os direitos reservados.
+            © {new Date().getFullYear()} Mesivo. Todos os direitos reservados.
           </p>
           <p className="text-xs text-muted-foreground">
             Feito com cuidado para restaurantes brasileiros.

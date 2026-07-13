@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ContentLayout } from "@/components/jotaja/ContentLayout";
 
 const URL = "https://comandahub.online/glossario";
-const TITLE = "Glossário de Gestão de Restaurantes | Comandex";
+const TITLE = "Glossário de Gestão de Restaurantes | Mesivo";
 const DESC =
   "Glossário com 20+ termos essenciais do food service: comanda digital, KDS, ticket médio, dark kitchen, PIX, QR Code de mesa e mais. Definições claras para donos de restaurante.";
 const TODAY = new Date().toISOString().split("T")[0];
@@ -30,7 +30,7 @@ const TERMS: Term[] = [
   { term: "Combo", slug: "combo", definition: "Conjunto de produtos vendidos por preço fechado (ex: hambúrguer + batata + bebida). Aumenta ticket médio e simplifica a escolha do cliente." },
   { term: "Adicional", slug: "adicional", definition: "Item opcional que o cliente acrescenta ao produto principal por valor extra (ex: bacon, cheddar, borda recheada). Pode ser ilimitado ou ter quantidade máxima." },
   { term: "Impressão térmica", slug: "impressao-termica", definition: "Impressão de pedido em impressora 58mm/80mm sem tinta, usando papel termo-sensível. Emite ticket de cozinha e nota de balcão em segundos." },
-  { term: "Onboarding", slug: "onboarding", definition: "Processo guiado de cadastro inicial: criação da conta, personalização da loja, cadastro do cardápio e primeiro pedido. Na Comandex leva em média 30 minutos." },
+  { term: "Onboarding", slug: "onboarding", definition: "Processo guiado de cadastro inicial: criação da conta, personalização da loja, cadastro do cardápio e primeiro pedido. Na Mesivo leva em média 30 minutos." },
   { term: "Multi-loja", slug: "multi-loja", definition: "Funcionalidade que permite gerenciar várias unidades do mesmo restaurante (ou várias marcas) com painéis separados e relatório consolidado." },
   { term: "Fechamento de caixa", slug: "fechamento-caixa", definition: "Conferência diária do total vendido versus formas de pagamento recebidas (PIX, cartão, dinheiro). Em sistema digital é automático; manualmente leva 30-60 minutos." },
   { term: "LGPD", slug: "lgpd", definition: "Lei Geral de Proteção de Dados (Lei 13.709/2018). Define como dados pessoais de clientes (nome, telefone, endereço) devem ser coletados, armazenados e excluídos." },
@@ -61,7 +61,7 @@ const webPage = {
   description: DESC,
   inLanguage: "pt-BR",
   isPartOf: { "@id": "https://comandahub.online/#website" },
-  author: { "@type": "Organization", name: "Equipe Comandex", url: "https://comandahub.online" },
+  author: { "@type": "Organization", name: "Equipe Mesivo", url: "https://comandahub.online" },
   publisher: { "@id": "https://comandahub.online/#organization" },
   reviewedBy: { "@id": "https://comandahub.online/#organization" },
   datePublished: "2024-06-01",
@@ -117,7 +117,7 @@ function GlossarioPage() {
       <header>
         <h1>Glossário de gestão de restaurantes</h1>
         <p className="not-prose mt-2 text-xs text-muted-foreground">
-          Por <strong>Equipe Comandex</strong> · Revisado pela Comandex ·{" "}
+          Por <strong>Equipe Mesivo</strong> · Revisado pela Mesivo ·{" "}
           Atualizado em <time dateTime={TODAY}>{ptToday}</time>
         </p>
       </header>

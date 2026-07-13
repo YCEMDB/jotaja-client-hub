@@ -6,8 +6,8 @@ export const Route = createFileRoute("/sla")({
   component: SLAPage,
   head: () => ({
     meta: [
-      { title: "SLA — Comandex" },
-      { name: "description", content: "Acordo de Nível de Serviço (SLA) do Comandex: disponibilidade, suporte e responsabilidades." },
+      { title: "SLA — Mesivo" },
+      { name: "description", content: "Acordo de Nível de Serviço (SLA) do Mesivo: disponibilidade, suporte e responsabilidades." },
     ],
   }),
 });
@@ -23,7 +23,7 @@ function SLAPage() {
 
         <h2 className="font-display uppercase mt-10">1. Disponibilidade (Uptime)</h2>
         <p>
-          O Comandex se compromete a manter uma disponibilidade mensal de <strong>99,5%</strong> para os planos Starter e Pro, e <strong>99,9%</strong> para o plano Business, excluídas janelas de manutenção programada (sempre comunicadas com 24h de antecedência) e falhas de terceiros (provedores de internet, gateways de pagamento, WhatsApp).
+          O Mesivo se compromete a manter uma disponibilidade mensal de <strong>99,5%</strong> para os planos Starter e Pro, e <strong>99,9%</strong> para o plano Business, excluídas janelas de manutenção programada (sempre comunicadas com 24h de antecedência) e falhas de terceiros (provedores de internet, gateways de pagamento, WhatsApp).
         </p>
 
         <h2 className="font-display uppercase mt-10">2. Suporte</h2>

@@ -30,7 +30,7 @@ export const Route = createFileRoute("/mesa/$token")({
   component: MesaPage,
   head: () => ({
     meta: [
-      { title: "Mesa — Comandex" },
+      { title: "Mesa — Mesivo" },
       { name: "robots", content: "noindex" },
       { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" },
     ],

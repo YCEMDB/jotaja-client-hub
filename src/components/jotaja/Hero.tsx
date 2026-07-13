@@ -62,7 +62,7 @@ export function Hero() {
             </h1>
 
             <p className="mt-10 max-w-xl text-lg md:text-xl text-ink/80 leading-relaxed font-medium">
-              Comandex é o sistema completo de delivery próprio:{" "}
+              Mesivo é o sistema completo de delivery próprio:{" "}
               <span className="bg-brand-amber/50 px-1.5 font-bold text-ink">
                 cardápio digital
               </span>
@@ -125,7 +125,7 @@ export function Hero() {
               </div>
               <img
                 src={heroKanban}
-                alt="Painel de gestão de pedidos do Comandex — kanban com colunas Novos, Em Preparo e Prontos"
+                alt="Painel de gestão de pedidos do Mesivo — kanban com colunas Novos, Em Preparo e Prontos"
                 className="block w-full h-auto"
                 width={1600}
                 height={1024}
@@ -139,7 +139,7 @@ export function Hero() {
             >
               <img
                 src={heroMobile}
-                alt="Cardápio digital do Comandex no celular — loja Bella Pizza com produtos e carrinho"
+                alt="Cardápio digital do Mesivo no celular — loja Bella Pizza com produtos e carrinho"
                 className="block w-full h-auto"
                 width={1024}
                 height={1536}

@@ -25,7 +25,7 @@ export function Segmentos() {
             Feito para <span className="marker-highlight">qualquer delivery</span>
           </h2>
           <p className="text-muted-foreground mt-4 text-lg">
-            Não importa o que você vende — se entrega, Comandex funciona pra você.
+            Não importa o que você vende — se entrega, Mesivo funciona pra você.
           </p>
         </div>
 
