@@ -151,7 +151,7 @@ function FlowDesktop() {
           y1="30"
           x2="970"
           y2="30"
-          stroke="hsl(var(--ink) / 0.15)"
+          stroke="var(--ink)" strokeOpacity="0.15"
           strokeWidth="2"
           strokeDasharray="6 6"
         />
@@ -160,7 +160,7 @@ function FlowDesktop() {
           y1="30"
           x2="970"
           y2="30"
-          stroke="hsl(var(--ink))"
+          stroke="var(--ink)"
           strokeWidth="3"
           strokeLinecap="round"
           initial={{ pathLength: reduce ? 1 : 0 }}
@@ -171,8 +171,8 @@ function FlowDesktop() {
           <motion.circle
             r="6"
             cy="30"
-            fill="hsl(var(--brand-orange))"
-            stroke="hsl(var(--ink))"
+            fill="var(--brand-orange)"
+            stroke="var(--ink)"
             strokeWidth="2"
             initial={{ cx: 30 }}
             animate={{ cx: [30, 970, 970, 30, 30] }}
@@ -197,7 +197,7 @@ function FlowDesktop() {
       <div className="mt-14 flex justify-center">
         <div className="flex flex-col items-center gap-3">
           <svg width="2" height="40" aria-hidden="true">
-            <line x1="1" y1="0" x2="1" y2="40" stroke="hsl(var(--ink) / 0.4)" strokeWidth="2" strokeDasharray="4 4" />
+            <line x1="1" y1="0" x2="1" y2="40" stroke="var(--ink)" strokeOpacity="0.4" strokeWidth="2" strokeDasharray="4 4" />
           </svg>
           <div className="inline-flex items-center gap-3 rounded-2xl border-2 border-ink bg-background px-5 py-3 shadow-brutal">
             <span
