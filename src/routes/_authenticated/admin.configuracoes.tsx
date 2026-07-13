@@ -104,7 +104,7 @@ function ConfigPage() {
         <TabsContent value="geral"><GeralTab r={r} onSaved={load} /></TabsContent>
         <TabsContent value="aparencia"><AparenciaTab r={r} restaurantId={restaurantId} onSaved={load} /></TabsContent>
         <TabsContent value="horarios"><HorariosTab r={r} onSaved={load} /></TabsContent>
-        <TabsContent value="entrega"><AreasTab areas={areas} restaurantId={restaurantId} onSaved={load} /></TabsContent>
+        <TabsContent value="entrega"><AreasTab areas={areas} restaurantId={restaurantId} onSaved={load} canWrite={canWriteAreas} needsReason={needsReason} /></TabsContent>
         <TabsContent value="retirada"><RetiradaTab r={r} onSaved={load} /></TabsContent>
         <TabsContent value="impressao"><FeatureGate feature="auto_print"><ImpressaoTab r={r} onSaved={load} /></FeatureGate></TabsContent>
         <TabsContent value="pagamentos"><FeatureGate feature="online_payment"><PagamentosTab r={r} onSaved={load} /></FeatureGate></TabsContent>
