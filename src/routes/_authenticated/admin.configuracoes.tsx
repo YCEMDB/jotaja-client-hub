@@ -75,8 +75,13 @@ function ConfigPage() {
   const isManagerNative = roles.includes("manager");
   const isNativeAdmin = isOwnerNative || isManagerNative;
   const isSuperAdmin = roles.includes("super_admin");
-  const canWriteAreas = isNativeAdmin || isSuperAdmin;
-  const needsReason = !isNativeAdmin && isSuperAdmin;
+  // Super Admin só escreve com sessão administrative ATIVA para este restaurante.
+  const hasAdminSupport =
+    support.active &&
+    support.level === "administrative" &&
+    support.restaurantId === restaurantId;
+  const canWriteAreas = isNativeAdmin || (isSuperAdmin && hasAdminSupport);
+  const needsReason = !isNativeAdmin && isSuperAdmin && hasAdminSupport;
 
   return (
     <AdminPageLayout
