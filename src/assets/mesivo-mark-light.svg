@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-label="Mesivo">
+  <title>Mesivo</title>
+  <defs>
+    <linearGradient id="mesivoGradLight" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFB020"/>
+      <stop offset="55%" stop-color="#FF7650"/>
+      <stop offset="100%" stop-color="#FF6534"/>
+    </linearGradient>
+  </defs>
+  <!-- Símbolo sem fundo — para uso em UI clara -->
+  <rect x="12" y="18" width="8" height="28" rx="4" fill="url(#mesivoGradLight)"/>
+  <rect x="44" y="18" width="8" height="28" rx="4" fill="url(#mesivoGradLight)"/>
+  <path d="M20 18 L32 40 L44 18" stroke="url(#mesivoGradLight)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <circle cx="32" cy="46" r="3" fill="#111318"/>
+</svg>

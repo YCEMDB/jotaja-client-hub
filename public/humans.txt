@@ -1,14 +1,8 @@
 /* TEAM */
-Equipe: Comandex
+Plataforma: Mesivo
 Site: https://comandahub.online
-Local: Brasil
-
-/* THANKS */
-Aos restaurantes brasileiros que confiam na nossa plataforma para
-servir seus clientes todos os dias.
 
 /* SITE */
-Última atualização: 2026
-Linguagem: Português do Brasil
-Stack: TanStack Start, React, TypeScript, Tailwind CSS, Supabase
-Padrões: HTML5 semântico, Schema.org, WCAG 2.1 AA
+Marca: Mesivo — Gestão completa para restaurantes
+Idioma: pt-BR
+Localização: Brasil
