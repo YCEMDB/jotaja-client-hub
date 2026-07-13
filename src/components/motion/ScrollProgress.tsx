@@ -22,17 +22,18 @@ export function ScrollProgress() {
   return (
     <motion.div
       aria-hidden="true"
+      className="h-[2px] md:h-[3px]"
       style={{
         position: "fixed",
         top: 0,
         left: 0,
         right: 0,
-        height: 3,
         transformOrigin: "0% 50%",
         scaleX,
         background:
-          "linear-gradient(90deg, oklch(0.78 0.17 65), oklch(0.69 0.22 38), oklch(0.62 0.24 0))",
-        zIndex: 60,
+          "linear-gradient(90deg, oklch(0.78 0.17 65), oklch(0.69 0.22 38), oklch(0.62 0.24 25))",
+        // Abaixo do Header (z-50) — indica progresso sem cobrir a barra de navegação.
+        zIndex: 40,
         pointerEvents: "none",
       }}
     />

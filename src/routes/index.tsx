@@ -26,7 +26,7 @@ export const Route = createFileRoute("/")({
       if (slug) {
         throw redirect({ to: "/$slug", params: { slug } });
       }
-    } catch (e: any) {
+    } catch (e: unknown) {
       // Re-throw router redirects; swallow lookup errors so landing still renders.
       if (e && typeof e === "object" && "isRedirect" in e) throw e;
     }
@@ -35,7 +35,11 @@ export const Route = createFileRoute("/")({
     meta: [
       { title: TITLE },
       { name: "description", content: DESCRIPTION },
-      { name: "keywords", content: "gestão de restaurante, cardápio digital, pedidos online, comandas digitais, controle de mesas, sistema para restaurante, delivery próprio, PDV, caixa, cozinha, KDS" },
+      {
+        name: "keywords",
+        content:
+          "gestão de restaurante, cardápio digital, pedidos online, comandas digitais, controle de mesas, sistema para restaurante, delivery próprio, PDV, caixa, cozinha, KDS",
+      },
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
       { property: "og:url", content: SITE_URL },

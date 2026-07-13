@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { LeadFormDialog } from "./LeadFormDialog";
 import { Logo } from "./Logo";
@@ -15,14 +15,42 @@ const navItems: NavItem[] = [
   { label: "FAQ", href: "/#faq" },
 ];
 
+/**
+ * Header — integrado ao Hero no topo (fundo quase transparente) e
+ * consolidado após ~24px de rolagem (fundo translúcido + borda + leve
+ * redução de altura). Sem hide-on-scroll nesta sprint. Mobile mantém
+ * fundo sólido depois da rolagem e menu sempre acessível.
+ */
 export function Header() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const shellClass = scrolled
+    ? "bg-background/85 backdrop-blur-xl border-b border-border/60 shadow-[0_1px_0_0_rgba(0,0,0,0.02)]"
+    : "bg-background/40 backdrop-blur-md border-b border-transparent";
+
+  const rowHeight = scrolled ? "h-16 md:h-20" : "h-20 md:h-24";
 
   return (
-    <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/60">
+    <header
+      className={`sticky top-0 z-50 transition-[background-color,backdrop-filter,border-color,box-shadow] duration-300 ease-out motion-reduce:transition-none ${shellClass}`}
+    >
       <div className="container mx-auto px-4 sm:px-6">
-        <div className="flex items-center justify-between gap-4 h-20 md:h-24">
-          <Link to="/" className="flex items-center group animate-logo-in motion-reduce:animate-none shrink-0 min-w-0">
+        <div
+          className={`flex items-center justify-between gap-4 transition-[height] duration-300 ease-out motion-reduce:transition-none ${rowHeight}`}
+        >
+          <Link
+            to="/"
+            className="flex items-center group animate-logo-in motion-reduce:animate-none shrink-0 min-w-0"
+          >
             <Logo size="sm" className="md:[&_.logo-mark-3d]:h-10 lg:[&_.logo-mark-3d]:h-11" />
           </Link>
 
@@ -73,10 +101,8 @@ export function Header() {
           </button>
         </div>
 
-
         {open && (
-          <div className="lg:hidden pb-4 flex flex-col gap-1 border-t border-border/60 pt-3">
-
+          <div className="lg:hidden pb-4 flex flex-col gap-1 border-t border-border/60 pt-3 bg-background">
             {navItems.map((item) =>
               item.route ? (
                 <Link

@@ -98,14 +98,15 @@
   --brand-magenta: oklch(0.62 0.24 0);
   --brand-violet: oklch(0.5 0.22 290);
 
-  --gradient-primary: linear-gradient(135deg, oklch(0.69 0.22 38), oklch(0.62 0.24 0));
-  --gradient-sunset: linear-gradient(135deg, oklch(0.78 0.17 65) 0%, oklch(0.69 0.22 38) 40%, oklch(0.62 0.24 0) 75%, oklch(0.5 0.22 290) 100%);
+  --gradient-primary: linear-gradient(135deg, oklch(0.69 0.22 38), oklch(0.62 0.19 30));
+  /* Paleta estrutural Mesivo: âmbar → laranja-coral → laranja queimado (sem magenta/violeta). */
+  --gradient-sunset: linear-gradient(135deg, oklch(0.82 0.17 75) 0%, oklch(0.72 0.20 55) 35%, oklch(0.69 0.22 38) 70%, oklch(0.62 0.19 30) 100%);
   --gradient-soft: linear-gradient(180deg, oklch(0.99 0.01 70), oklch(0.96 0.03 40));
-  --gradient-radial: radial-gradient(120% 80% at 50% 0%, oklch(0.95 0.06 40) 0%, oklch(0.985 0.008 70) 60%);
+  --gradient-radial: radial-gradient(120% 80% at 50% 0%, oklch(0.95 0.06 45) 0%, oklch(0.985 0.008 70) 60%);
   --gradient-mesh:
-    radial-gradient(at 20% 20%, oklch(0.78 0.17 65 / 0.35) 0px, transparent 50%),
-    radial-gradient(at 80% 30%, oklch(0.62 0.24 0 / 0.3) 0px, transparent 50%),
-    radial-gradient(at 60% 80%, oklch(0.5 0.22 290 / 0.25) 0px, transparent 50%);
+    radial-gradient(at 20% 20%, oklch(0.82 0.17 75 / 0.32) 0px, transparent 50%),
+    radial-gradient(at 80% 30%, oklch(0.72 0.20 55 / 0.28) 0px, transparent 50%),
+    radial-gradient(at 60% 80%, oklch(0.69 0.22 38 / 0.22) 0px, transparent 50%);
 
   --shadow-xs: 0 1px 2px oklch(0.15 0.02 30 / 0.06);
   --shadow-sm: 0 2px 6px oklch(0.15 0.02 30 / 0.08), 0 1px 2px oklch(0.15 0.02 30 / 0.06);

@@ -1,4 +1,4 @@
-import { ArrowRight, Check, Bell, CreditCard, Utensils, Package } from "lucide-react";
+import { ArrowRight, Check, Bell, CheckCircle2, Utensils, Package, Bike } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { motion, useMotionValue, useReducedMotion, useSpring, useInView } from "motion/react";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,8 @@ import {
   type NotificationItem,
 } from "@/components/motion";
 
+// Sequência operacional real do Mesivo — sem promessa de confirmação
+// automática de pagamento, que não existe no produto neste momento.
 const NOTIFICATIONS: NotificationItem[] = [
   {
     id: "new-order",
@@ -25,25 +27,32 @@ const NOTIFICATIONS: NotificationItem[] = [
     accent: "orange",
   },
   {
+    id: "confirmed",
+    icon: <CheckCircle2 className="w-3.5 h-3.5" />,
+    title: "Pedido confirmado",
+    description: "Mesa 08 · #142",
+    accent: "amber",
+  },
+  {
     id: "in-prep",
     icon: <Utensils className="w-3.5 h-3.5" />,
     title: "Pedido em preparo",
     description: "Cozinha · #142",
-    accent: "amber",
+    accent: "orange",
   },
   {
     id: "ready",
     icon: <Package className="w-3.5 h-3.5" />,
     title: "Pedido pronto",
-    description: "Retirada · #138",
-    accent: "violet",
+    description: "Retirada · #142",
+    accent: "amber",
   },
   {
-    id: "paid",
-    icon: <CreditCard className="w-3.5 h-3.5" />,
-    title: "Pagamento confirmado",
-    description: "Pix · R$ 74,50",
-    accent: "magenta",
+    id: "delivered",
+    icon: <Bike className="w-3.5 h-3.5" />,
+    title: "Pedido entregue",
+    description: "Entrega · #142",
+    accent: "ink",
   },
 ];
 
@@ -187,8 +196,9 @@ function HeroBackground() {
       const rect = el.getBoundingClientRect();
       const nx = (e.clientX - rect.left) / rect.width - 0.5;
       const ny = (e.clientY - rect.top) / rect.height - 0.5;
-      mx.set(nx * 20);
-      my.set(ny * 20);
+      // Deslocamento máximo ~10px — parallax quase imperceptível.
+      mx.set(nx * 10);
+      my.set(ny * 10);
     };
     el.addEventListener("mousemove", onMove);
     return () => el.removeEventListener("mousemove", onMove);
@@ -203,7 +213,7 @@ function HeroBackground() {
       <div className="absolute inset-0 bg-noise opacity-50 mix-blend-overlay" />
       <div className="absolute inset-0 opacity-[0.06] bg-grid" />
 
-      {/* Blob 1 — laranja-coral, parallax cursor */}
+      {/* Blob 1 — laranja-coral (#FF6534 aprox.), parallax sutil */}
       <motion.div
         style={{ x: fine && !reduce ? sx : 0, y: fine && !reduce ? sy : 0 }}
         animate={
@@ -221,12 +231,9 @@ function HeroBackground() {
         />
       </motion.div>
 
-      {/* Blob 2 — magenta/violeta, pulso mais lento */}
+      {/* Blob 2 — âmbar quente (#FFB020 aprox.), pulso mais lento */}
       <motion.div
-        style={{
-          x: fine && !reduce ? sx.get() * -0.4 : 0,
-          y: fine && !reduce ? sy.get() * -0.4 : 0,
-        }}
+        style={{ x: fine && !reduce ? sx : 0, y: fine && !reduce ? sy : 0 }}
         animate={
           loop ? { scale: [1, 1.08, 1], opacity: [0.35, 0.5, 0.35] } : { scale: 1, opacity: 0.35 }
         }
@@ -239,7 +246,7 @@ function HeroBackground() {
           className="w-full h-full rounded-full"
           style={{
             background:
-              "radial-gradient(closest-side, oklch(0.55 0.22 320 / 0.45), transparent 70%)",
+              "radial-gradient(closest-side, oklch(0.82 0.17 75 / 0.45), transparent 70%)",
           }}
         />
       </motion.div>
