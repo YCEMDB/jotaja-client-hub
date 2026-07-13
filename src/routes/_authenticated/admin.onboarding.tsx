@@ -9,7 +9,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Rocket } from "lucide-react";
 import { toast } from "sonner";
-import { isReservedSlug } from "@/lib/reserved-slugs";
 import { AdminPageLayout, Section } from "@/components/ds";
 
 export const Route = createFileRoute("/_authenticated/admin/onboarding")({
@@ -23,6 +22,14 @@ const schema = z.object({
   description: z.string().trim().max(280).optional(),
 });
 
+function translateOnboardingError(msg: string): string {
+  if (msg.includes("invalid_name")) return "Nome inválido (2 a 80 caracteres).";
+  if (msg.includes("invalid_whatsapp")) return "WhatsApp inválido.";
+  if (msg.includes("invalid_description")) return "Descrição muito longa (máx. 280).";
+  if (msg.includes("unauthenticated")) return "Sessão expirada, entre novamente.";
+  return msg || "Não foi possível criar o restaurante.";
+}
+
 function Onboarding() {
   const { user, refreshProfile } = useAuth();
   const nav = useNavigate();
@@ -30,17 +37,6 @@ function Onboarding() {
   const [whatsapp, setWhatsapp] = useState("");
   const [description, setDescription] = useState("");
   const [submitting, setSubmitting] = useState(false);
-
-  async function generateUniqueSlug(base: string): Promise<string> {
-    let candidate = slugify(base) || "loja";
-    if (isReservedSlug(candidate)) candidate = `${candidate}-loja`;
-    for (let i = 0; i < 20; i++) {
-      const try_ = i === 0 ? candidate : `${candidate}-${i + 1}`;
-      const { data } = await supabase.from("restaurants").select("id").eq("slug", try_).maybeSingle();
-      if (!data) return try_;
-    }
-    return `${candidate}-${Date.now().toString(36)}`;
-  }
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,18 +47,16 @@ function Onboarding() {
       return;
     }
     setSubmitting(true);
-    const slug = await generateUniqueSlug(parsed.data.name);
-    const { data, error } = await supabase
-      .from("restaurants")
-      .insert({ owner_id: user.id, slug, ...parsed.data })
-      .select("id")
-      .single();
+    const { error } = await supabase.rpc("create_owned_restaurant", {
+      p_name: parsed.data.name,
+      p_whatsapp: parsed.data.whatsapp,
+      p_description: parsed.data.description ?? undefined,
+    });
     if (error) {
       setSubmitting(false);
-      toast.error(error.message);
+      toast.error(translateOnboardingError(error.message));
       return;
     }
-    await supabase.from("profiles").update({ restaurant_id: data.id }).eq("id", user.id);
     await refreshProfile();
     toast.success("Restaurante criado!");
     nav({ to: "/admin" });
@@ -104,15 +98,4 @@ function Onboarding() {
       </Section>
     </AdminPageLayout>
   );
-}
-
-function slugify(s: string) {
-  return s
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9\s-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-")
-    .slice(0, 40);
 }

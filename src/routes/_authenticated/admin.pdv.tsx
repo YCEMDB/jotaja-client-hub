@@ -49,6 +49,7 @@ function PdvPage() {
   const [payment, setPayment] = useState<"cash" | "pix" | "credit_card" | "debit_card">("cash");
   const [deliveryFee, setDeliveryFee] = useState(0);
   const [discount, setDiscount] = useState(0);
+  const [discountReason, setDiscountReason] = useState("");
   const [notes, setNotes] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -138,20 +139,25 @@ function PdvPage() {
           option_item_ids: [],
         })),
         p_idempotency_key: idemKey,
-      });
+        p_discount_reason: discount > 0 ? discountReason.trim() : null,
+      } as any);
       if (error) throw error;
-      const created = data as { order_number?: number; idempotent?: boolean } | null;
+      const created = data as { order_number?: number; idempotent?: boolean; delivery_fee?: number; discount?: number } | null;
       toast.success(
         created?.idempotent
           ? `Pedido #${created.order_number} já existia (retry idempotente)`
           : `Pedido #${created?.order_number} criado!`
       );
-      setCart([]); setCustomer({ name: "", phone: "" }); setDeliveryFee(0); setDiscount(0); setNotes("");
+      setCart([]); setCustomer({ name: "", phone: "" }); setDeliveryFee(0); setDiscount(0); setDiscountReason(""); setNotes("");
       setIdemKey(crypto.randomUUID());
     } catch (e: any) {
       const msg = e?.message || "";
       if (msg.includes("plan_limit_reached")) {
         toast.error("Você atingiu o limite mensal de pedidos do seu plano. Faça upgrade em Configurações.");
+      } else if (msg.includes("discount_requires_manager")) {
+        toast.error("Somente owner/manager pode aplicar desconto manual.");
+      } else if (msg.includes("discount_reason_required")) {
+        toast.error("Informe o motivo do desconto (mín. 3 caracteres).");
       } else if (msg.includes("forbidden")) {
         toast.error("Sem permissão para criar pedidos neste restaurante.");
       } else if (msg.includes("empty_cart")) {
@@ -274,6 +280,13 @@ function PdvPage() {
             <Label>Desconto (R$)</Label>
             <Input type="number" step="0.01" value={discount} onChange={e => setDiscount(Number(e.target.value))} className="border-2 border-ink" />
           </div>
+          {discount > 0 && (
+            <div>
+              <Label>Motivo do desconto *</Label>
+              <Input value={discountReason} onChange={e => setDiscountReason(e.target.value)} placeholder="Ex: cortesia gerente" className="border-2 border-ink" />
+              <p className="text-xs text-ink/60 mt-1">Registrado em auditoria. Apenas owner/manager.</p>
+            </div>
+          )}
           <div>
             <Label>Observações</Label>
             <Textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2} className="border-2 border-ink" />

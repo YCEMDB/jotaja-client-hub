@@ -4554,6 +4554,10 @@ export type Database = {
         }
         Returns: string
       }
+      create_owned_restaurant: {
+        Args: { p_description?: string; p_name: string; p_whatsapp: string }
+        Returns: Json
+      }
       create_pos_order: {
         Args: {
           p_customer_name: string
@@ -4561,6 +4565,7 @@ export type Database = {
           p_delivery_address: Json
           p_delivery_fee: number
           p_discount: number
+          p_discount_reason?: string
           p_idempotency_key?: string
           p_items: Json
           p_notes: string
