@@ -55,10 +55,17 @@ function ProtoDashboard() {
         <div className="app-main">
           {/* Desktop topbar */}
           <div className="app-topbar">
-            <div className="app-search">🔎 Buscar pedido, cliente, produto…</div>
+            <div className="app-search">
+              <IconSearch size={16} style={{ marginRight: 8, verticalAlign: -3 }} />
+              Buscar pedido, cliente, produto…
+            </div>
             <div className="app-topbar-actions">
-              <div className="app-icon-btn">🔔</div>
-              <div className="app-icon-btn">?</div>
+              <button className="app-icon-btn" aria-label="Notificações">
+                <IconBell size={18} />
+              </button>
+              <button className="app-icon-btn" aria-label="Ajuda">
+                <IconHelp size={18} />
+              </button>
               <div className="app-user">
                 <div className="app-user-av">A</div>Ana
               </div>
