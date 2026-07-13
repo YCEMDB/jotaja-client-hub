@@ -103,7 +103,6 @@ export function PublicFooter() {
             <ul style={{ listStyle: "none", padding: 0, margin: "12px 0 0", display: "grid", gap: 8 }}>
               {col.links.map((l) => (
                 <li key={l.to}>
-                  {/* @ts-expect-error — algumas rotas podem não existir ainda no routeTree */}
                   <Link
                     to={l.to}
                     style={{
@@ -116,6 +115,7 @@ export function PublicFooter() {
                   </Link>
                 </li>
               ))}
+
             </ul>
           </nav>
         ))}
