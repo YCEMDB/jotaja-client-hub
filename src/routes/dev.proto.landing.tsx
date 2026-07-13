@@ -56,7 +56,9 @@ function ProtoLanding() {
               feita pra restaurante de verdade. Do balcão à moto.
             </p>
             <div className="mkt-cta-row">
-              <button className="mkt-btn mkt-btn-primary mkt-btn-lg">Começar agora →</button>
+              <button className="mkt-btn mkt-btn-primary mkt-btn-lg">
+                Começar agora <IconArrow size={16} />
+              </button>
               <button className="mkt-btn mkt-btn-ghost mkt-btn-lg">Ver demonstração</button>
             </div>
             <div className="mkt-benefits">
