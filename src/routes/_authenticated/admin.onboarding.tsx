@@ -50,7 +50,7 @@ function Onboarding() {
     const { error } = await supabase.rpc("create_owned_restaurant", {
       p_name: parsed.data.name,
       p_whatsapp: parsed.data.whatsapp,
-      p_description: parsed.data.description ?? null,
+      p_description: parsed.data.description ?? undefined,
     });
     if (error) {
       setSubmitting(false);
