@@ -63,7 +63,11 @@ import { Route as AceitarConviteTokenRouteImport } from './routes/aceitar-convit
 import { Route as SuperSuperIndexRouteImport } from './routes/_super/super.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
+import { Route as DevProtoPdvRouteImport } from './routes/dev.proto.pdv'
+import { Route as DevProtoMobileRouteImport } from './routes/dev.proto.mobile'
 import { Route as DevProtoLandingRouteImport } from './routes/dev.proto.landing'
+import { Route as DevProtoDashboardRouteImport } from './routes/dev.proto.dashboard'
+import { Route as DevProtoCardapioRouteImport } from './routes/dev.proto.cardapio'
 import { Route as ApiPublicMercadopagoWebhookRouteImport } from './routes/api/public/mercadopago-webhook'
 import { Route as ApiPublic_domainCheckRouteImport } from './routes/api/public/__domain-check'
 import { Route as SuperSuperPlanosRouteImport } from './routes/_super/super.planos'
@@ -386,9 +390,29 @@ const LovableEmailSuppressionRoute = LovableEmailSuppressionRouteImport.update({
   path: '/lovable/email/suppression',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DevProtoPdvRoute = DevProtoPdvRouteImport.update({
+  id: '/dev/proto/pdv',
+  path: '/dev/proto/pdv',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DevProtoMobileRoute = DevProtoMobileRouteImport.update({
+  id: '/dev/proto/mobile',
+  path: '/dev/proto/mobile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DevProtoLandingRoute = DevProtoLandingRouteImport.update({
   id: '/dev/proto/landing',
   path: '/dev/proto/landing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DevProtoDashboardRoute = DevProtoDashboardRouteImport.update({
+  id: '/dev/proto/dashboard',
+  path: '/dev/proto/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DevProtoCardapioRoute = DevProtoCardapioRouteImport.update({
+  id: '/dev/proto/cardapio',
+  path: '/dev/proto/cardapio',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicMercadopagoWebhookRoute =
@@ -689,7 +713,11 @@ export interface FileRoutesByFullPath {
   '/super/planos': typeof SuperSuperPlanosRoute
   '/api/public': typeof ApiPublic_domainCheckRoute
   '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
+  '/dev/proto/cardapio': typeof DevProtoCardapioRoute
+  '/dev/proto/dashboard': typeof DevProtoDashboardRoute
   '/dev/proto/landing': typeof DevProtoLandingRoute
+  '/dev/proto/mobile': typeof DevProtoMobileRoute
+  '/dev/proto/pdv': typeof DevProtoPdvRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/super/': typeof SuperSuperIndexRoute
@@ -783,7 +811,11 @@ export interface FileRoutesByTo {
   '/super/planos': typeof SuperSuperPlanosRoute
   '/api/public': typeof ApiPublic_domainCheckRoute
   '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
+  '/dev/proto/cardapio': typeof DevProtoCardapioRoute
+  '/dev/proto/dashboard': typeof DevProtoDashboardRoute
   '/dev/proto/landing': typeof DevProtoLandingRoute
+  '/dev/proto/mobile': typeof DevProtoMobileRoute
+  '/dev/proto/pdv': typeof DevProtoPdvRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/super': typeof SuperSuperIndexRoute
@@ -880,7 +912,11 @@ export interface FileRoutesById {
   '/_super/super/planos': typeof SuperSuperPlanosRoute
   '/api/public/__domain-check': typeof ApiPublic_domainCheckRoute
   '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
+  '/dev/proto/cardapio': typeof DevProtoCardapioRoute
+  '/dev/proto/dashboard': typeof DevProtoDashboardRoute
   '/dev/proto/landing': typeof DevProtoLandingRoute
+  '/dev/proto/mobile': typeof DevProtoMobileRoute
+  '/dev/proto/pdv': typeof DevProtoPdvRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_super/super/': typeof SuperSuperIndexRoute
@@ -976,7 +1012,11 @@ export interface FileRouteTypes {
     | '/super/planos'
     | '/api/public'
     | '/api/public/mercadopago-webhook'
+    | '/dev/proto/cardapio'
+    | '/dev/proto/dashboard'
     | '/dev/proto/landing'
+    | '/dev/proto/mobile'
+    | '/dev/proto/pdv'
     | '/lovable/email/suppression'
     | '/admin/'
     | '/super/'
@@ -1070,7 +1110,11 @@ export interface FileRouteTypes {
     | '/super/planos'
     | '/api/public'
     | '/api/public/mercadopago-webhook'
+    | '/dev/proto/cardapio'
+    | '/dev/proto/dashboard'
     | '/dev/proto/landing'
+    | '/dev/proto/mobile'
+    | '/dev/proto/pdv'
     | '/lovable/email/suppression'
     | '/admin'
     | '/super'
@@ -1166,7 +1210,11 @@ export interface FileRouteTypes {
     | '/_super/super/planos'
     | '/api/public/__domain-check'
     | '/api/public/mercadopago-webhook'
+    | '/dev/proto/cardapio'
+    | '/dev/proto/dashboard'
     | '/dev/proto/landing'
+    | '/dev/proto/mobile'
+    | '/dev/proto/pdv'
     | '/lovable/email/suppression'
     | '/_authenticated/admin/'
     | '/_super/super/'
@@ -1237,7 +1285,11 @@ export interface RootRouteChildren {
   BlogIndexRoute: typeof BlogIndexRoute
   ApiPublic_domainCheckRoute: typeof ApiPublic_domainCheckRoute
   ApiPublicMercadopagoWebhookRoute: typeof ApiPublicMercadopagoWebhookRoute
+  DevProtoCardapioRoute: typeof DevProtoCardapioRoute
+  DevProtoDashboardRoute: typeof DevProtoDashboardRoute
   DevProtoLandingRoute: typeof DevProtoLandingRoute
+  DevProtoMobileRoute: typeof DevProtoMobileRoute
+  DevProtoPdvRoute: typeof DevProtoPdvRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   ApiPublicHooksCommunicationWorkerRoute: typeof ApiPublicHooksCommunicationWorkerRoute
   ApiPublicPagbankCallbackRoute: typeof ApiPublicPagbankCallbackRoute
@@ -1630,11 +1682,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LovableEmailSuppressionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dev/proto/pdv': {
+      id: '/dev/proto/pdv'
+      path: '/dev/proto/pdv'
+      fullPath: '/dev/proto/pdv'
+      preLoaderRoute: typeof DevProtoPdvRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dev/proto/mobile': {
+      id: '/dev/proto/mobile'
+      path: '/dev/proto/mobile'
+      fullPath: '/dev/proto/mobile'
+      preLoaderRoute: typeof DevProtoMobileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dev/proto/landing': {
       id: '/dev/proto/landing'
       path: '/dev/proto/landing'
       fullPath: '/dev/proto/landing'
       preLoaderRoute: typeof DevProtoLandingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dev/proto/dashboard': {
+      id: '/dev/proto/dashboard'
+      path: '/dev/proto/dashboard'
+      fullPath: '/dev/proto/dashboard'
+      preLoaderRoute: typeof DevProtoDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dev/proto/cardapio': {
+      id: '/dev/proto/cardapio'
+      path: '/dev/proto/cardapio'
+      fullPath: '/dev/proto/cardapio'
+      preLoaderRoute: typeof DevProtoCardapioRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/mercadopago-webhook': {
@@ -2064,7 +2144,11 @@ const rootRouteChildren: RootRouteChildren = {
   BlogIndexRoute: BlogIndexRoute,
   ApiPublic_domainCheckRoute: ApiPublic_domainCheckRoute,
   ApiPublicMercadopagoWebhookRoute: ApiPublicMercadopagoWebhookRoute,
+  DevProtoCardapioRoute: DevProtoCardapioRoute,
+  DevProtoDashboardRoute: DevProtoDashboardRoute,
   DevProtoLandingRoute: DevProtoLandingRoute,
+  DevProtoMobileRoute: DevProtoMobileRoute,
+  DevProtoPdvRoute: DevProtoPdvRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   ApiPublicHooksCommunicationWorkerRoute:
     ApiPublicHooksCommunicationWorkerRoute,
@@ -2081,3 +2165,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
