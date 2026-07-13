@@ -663,13 +663,13 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
           )}
         </div>
         <div className="flex gap-2">
-          {savedToken && (
+          {hasSavedToken && (
             <Button size="sm" variant="outline" onClick={() => runTest()} disabled={testing}>
               {testing ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShieldCheck className="h-4 w-4" />}
               Testar conexão
             </Button>
           )}
-          {savedToken && (
+          {hasSavedToken && (
             <Button size="sm" variant="ghost" onClick={disconnect} disabled={saving} className="text-destructive hover:text-destructive">
               <Unplug className="h-4 w-4" /> Desconectar
             </Button>
@@ -734,8 +734,8 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
         <Button onClick={save} disabled={saving || (!tokenChanged && pubKey.trim() === (r.mp_public_key ?? ""))}>
           {saving ? "Salvando…" : "Salvar credenciais"}
         </Button>
-        {tokenChanged && savedToken && (
-          <Button variant="outline" onClick={() => { setToken(savedToken ?? ""); }} disabled={saving}>
+        {tokenChanged && hasSavedToken && (
+          <Button variant="outline" onClick={() => { setToken(hasSavedToken ?? ""); }} disabled={saving}>
             Cancelar
           </Button>
         )}
