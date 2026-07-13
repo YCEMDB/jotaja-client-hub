@@ -337,6 +337,18 @@ export const PROTO_CSS = `
   .app-bottom-nav{display:block}
   .app-content{padding-bottom:24px}
 }
+/* Tablet 768–1023: compact — sidebar hidden, KPIs 2×2, panels stacked */
+@media (min-width: 768px) and (max-width: 1023px){
+  .app-shell{grid-template-columns:1fr}
+  .app-side{display:none}
+  .app-topbar{display:none}
+  .app-mob-topbar{display:flex}
+  .app-content{padding:18px 20px}
+  .app-kpi-grid{grid-template-columns:1fr 1fr;gap:12px}
+  .app-two-col{grid-template-columns:1fr;gap:14px}
+  .app-bottom-nav{display:block}
+  .app-content{padding-bottom:24px}
+}
 
 /* PDV desktop */
 .pdv-shell { display:grid; grid-template-columns: 260px 1fr 340px; height:100vh; }
