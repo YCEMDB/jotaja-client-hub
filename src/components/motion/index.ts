@@ -1,6 +1,7 @@
 export * from "./motion-tokens";
 export { useHydrated } from "./useHydrated";
 export { usePointerFine } from "./usePointerFine";
+export { useReducedMotionSafe } from "./useReducedMotionSafe";
 export { MotionReveal, type MotionRevealVariant } from "./MotionReveal";
 export { MotionStagger, MotionStaggerItem } from "./MotionStagger";
 export { MotionSection } from "./MotionSection";

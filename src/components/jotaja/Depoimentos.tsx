@@ -1,119 +1,105 @@
-import { Star, Quote } from "lucide-react";
+import { LayoutGrid, Clock3, ClipboardList, Truck, Gauge, Wallet } from "lucide-react";
+import { MotionSection, MotionText, MotionStagger, MotionStaggerItem } from "@/components/motion";
 
-type Tone = "orange" | "magenta" | "amber" | "violet" | "ink" | "card";
-type Item = { quote: string; name: string; role: string; tone: Tone; size: "sm" | "md" | "lg" };
-
-const items: Item[] = [
+/**
+ * Benefícios Qualitativos — substitui a antiga seção "Depoimentos".
+ *
+ * Auditoria (Onda 3): os depoimentos anteriores citavam pessoas, restaurantes
+ * e métricas sem lastro verificável. Foram removidos por completo. Enquanto
+ * não houver casos autorizados e assinados, esta seção comunica benefícios
+ * qualitativos reais da plataforma, sem números fabricados nem prova social
+ * fictícia.
+ *
+ * Se e quando existirem casos reais autorizados, esta seção pode voltar a
+ * ser `Depoimentos` — mas cada depoimento precisa ter autorização escrita,
+ * identificação verdadeira e dados verificáveis.
+ */
+const beneficios = [
   {
-    quote: "Saímos do iFood e em 3 meses dobramos o faturamento. O painel é simples e o suporte é rápido demais.",
-    name: "Marcelo Andrade", role: "Burger House · SP",
-    tone: "ink", size: "lg",
+    icon: LayoutGrid,
+    title: "Operação centralizada",
+    desc: "Salão, mesas, balcão, retirada e delivery em um único painel — sem alternar entre ferramentas.",
   },
   {
-    quote: "Pix em 2s mudou meu fluxo de caixa.",
-    name: "Camila Rocha", role: "Bella Pizza · RJ",
-    tone: "orange", size: "sm",
+    icon: Clock3,
+    title: "Menos retrabalho",
+    desc: "Pedidos entram uma única vez e seguem para cozinha, caixa e entrega automaticamente.",
   },
   {
-    quote: "Migrei numa quarta. Sexta já tinha 40 pedidos pelo link próprio.",
-    name: "Rafael Mendes", role: "Sabor & Cia · BH",
-    tone: "amber", size: "md",
+    icon: ClipboardList,
+    title: "Acompanhamento claro",
+    desc: "Cada pedido tem um status visível para equipe e cliente, do recebimento à entrega.",
   },
   {
-    quote: "Cardápio digital nota 1000. Cliente comenta como ficou bonito.",
-    name: "Patrícia Lima", role: "Sushi do Bairro · POA",
-    tone: "card", size: "sm",
+    icon: Truck,
+    title: "Salão e delivery no mesmo fluxo",
+    desc: "Comandas, mesas e entregas convivem sem misturar filas, prioridades ou cobranças.",
   },
   {
-    quote: "Os cupons aumentaram o ticket médio em 23%. Sério.",
-    name: "Diego Albuquerque", role: "Empório Verde · Curitiba",
-    tone: "magenta", size: "md",
+    icon: Gauge,
+    title: "Visão diária da operação",
+    desc: "Volume por canal, tempo de preparo e ticket médio disponíveis assim que fecham no caixa.",
   },
   {
-    quote: "Finalmente meu CRM é meu. Não fico mais refém de quem segura meus dados de cliente.",
-    name: "Fernanda Couto", role: "Pão & Cia · Salvador",
-    tone: "violet", size: "md",
+    icon: Wallet,
+    title: "Pedidos e caixa em um só lugar",
+    desc: "Fechamento diário integrado ao histórico de pedidos, sem planilhas paralelas.",
   },
 ];
 
-const TONE: Record<Tone, string> = {
-  orange: "bg-brand-orange text-ink",
-  magenta: "bg-brand-magenta text-background",
-  amber: "bg-brand-amber text-ink",
-  violet: "bg-brand-violet text-background",
-  ink: "bg-ink text-background",
-  card: "bg-card text-ink",
-};
-
-const STAR_TONE: Record<Tone, string> = {
-  orange: "text-ink",
-  magenta: "text-brand-amber",
-  amber: "text-brand-magenta",
-  violet: "text-brand-amber",
-  ink: "text-brand-orange",
-  card: "text-brand-orange",
-};
-
 export function Depoimentos() {
   return (
-    <section id="depoimentos" className="relative bg-background py-24 md:py-32 overflow-hidden">
+    <MotionSection
+      id="beneficios"
+      className="relative bg-background py-24 md:py-32 overflow-hidden"
+      aria-label="Benefícios de usar a Mesivo"
+    >
       <div className="container mx-auto px-6 relative">
-        <div className="grid lg:grid-cols-[1.1fr_1fr] gap-10 items-end mb-12">
-          <div>
-            <div className="inline-flex items-center gap-2 mb-4">
-              <span className="h-2 w-2 rounded-full bg-brand-amber" />
-              <span className="text-[11px] uppercase tracking-[0.2em] font-bold text-ink/60">
-                05 — Quem já fez a virada
-              </span>
-            </div>
-            <h2 className="font-display text-ink uppercase leading-[0.85] tracking-[-0.04em] text-[clamp(2.25rem,6vw,5rem)]">
-              Restaurantes que
-              <br />
-              <span className="text-gradient-sunset">dispensaram</span>
-              <br />
-              o intermediário.
-            </h2>
+        <div className="max-w-3xl mb-14">
+          <div className="inline-flex items-center gap-2 mb-4">
+            <span className="h-2 w-2 rounded-full bg-brand-orange" aria-hidden="true" />
+            <span className="text-[11px] uppercase tracking-[0.2em] font-bold text-ink/60">
+              04 — Por que Mesivo
+            </span>
           </div>
-          <div className="text-ink/60 max-w-md">
-            <div className="flex gap-1 text-brand-orange mb-2">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} className="w-5 h-5 fill-current" />
-              ))}
-            </div>
-            <p className="text-sm font-semibold text-ink">
-              4.9 de 5 — média entre +1.247 lojas ativas em 2026.
-            </p>
-            <p className="text-xs text-ink/50 mt-1">
-              Avaliações coletadas pelo nosso onboarding pós-30-dias.
-            </p>
-          </div>
+          <MotionText
+            as="h2"
+            className="font-display text-ink uppercase leading-[0.85] tracking-[-0.04em] text-[clamp(2.25rem,6vw,5rem)]"
+            ariaLabel="Uma plataforma pensada para a rotina real do restaurante"
+            lines={[
+              <>Uma plataforma</>,
+              <>pensada para a</>,
+              <>
+                <span className="text-gradient-sunset">rotina real</span> do restaurante.
+              </>,
+            ]}
+          />
+          <p className="mt-6 text-lg text-ink/70 max-w-2xl leading-relaxed">
+            Benefícios que aparecem já nos primeiros dias de uso — sem prometer números que dependem
+            do seu contexto.
+          </p>
         </div>
 
-        {/* Masonry */}
-        <div className="columns-1 sm:columns-2 lg:columns-3 gap-5 [&>*]:mb-5">
-          {items.map((t, i) => (
-            <figure
-              key={i}
-              className={`break-inside-avoid rounded-2xl border-2 border-ink p-6 shadow-brutal hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all relative ${TONE[t.tone]} ${
-                t.size === "lg" ? "py-10" : t.size === "md" ? "py-7" : "py-6"
-              }`}
+        <MotionStagger className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {beneficios.map(({ icon: Icon, title, desc }) => (
+            <MotionStaggerItem
+              key={title}
+              className="group rounded-2xl border-2 border-ink bg-card p-6 shadow-brutal transition-[transform,box-shadow] duration-200 motion-safe:hover:-translate-y-[3px] motion-safe:hover:shadow-brutal-lg"
             >
-              <Quote className={`w-6 h-6 mb-3 ${STAR_TONE[t.tone]}`} fill="currentColor" />
-              <blockquote
-                className={`font-display tracking-tight leading-[1.05] ${
-                  t.size === "lg" ? "text-2xl md:text-3xl" : t.size === "md" ? "text-xl md:text-2xl" : "text-lg"
-                }`}
+              <div
+                aria-hidden="true"
+                className="w-11 h-11 grid place-items-center rounded-xl bg-brand-orange/15 border-2 border-ink text-brand-orange mb-4"
               >
-                "{t.quote}"
-              </blockquote>
-              <figcaption className="mt-6 pt-4 border-t-2 border-current/15">
-                <div className="font-bold text-sm">{t.name}</div>
-                <div className="text-xs opacity-70 font-medium">{t.role}</div>
-              </figcaption>
-            </figure>
+                <Icon className="w-5 h-5" strokeWidth={2.5} />
+              </div>
+              <h3 className="font-display text-xl md:text-2xl text-ink leading-tight tracking-tight">
+                {title}
+              </h3>
+              <p className="mt-3 text-sm text-ink/70 leading-relaxed">{desc}</p>
+            </MotionStaggerItem>
           ))}
-        </div>
+        </MotionStagger>
       </div>
-    </section>
+    </MotionSection>
   );
 }
