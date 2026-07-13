@@ -46,7 +46,39 @@ const CART_ITEMS: [string, string, number][] = [
 
 function ProtoPdv() {
   const [sheetOpen, setSheetOpen] = useState(false);
+  const fabRef = useRef<HTMLButtonElement | null>(null);
+  const sheetRef = useRef<HTMLDivElement | null>(null);
+  const closeRef = useRef<HTMLButtonElement | null>(null);
   const itemCount = CART_ITEMS.reduce((a, [, , q]) => a + q, 0);
+
+  useEffect(() => {
+    if (!sheetOpen) return;
+    const prev = document.activeElement as HTMLElement | null;
+    closeRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+      const root = sheetRef.current;
+      if (!root) return;
+      const focusables = root.querySelectorAll<HTMLElement>(
+        'button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])',
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      (prev ?? fabRef.current)?.focus?.();
+    };
+  }, [sheetOpen]);
 
   return (
     <div data-theme="app-proto">
