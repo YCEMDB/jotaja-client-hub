@@ -40,7 +40,5 @@ export default defineConfig({
   tanstackStart: {
     server: { entry: "server" },
   },
-  vite: {
-    plugins: [stripTsdSourceAttribute()],
-  },
+  plugins: [stripTsdSourceAttribute()],
 });
