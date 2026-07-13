@@ -270,7 +270,12 @@ function MobPdv() {
           <IconMenu size={20} />
         </div>
         <div className="mob-pdv-search">
-          <div className="mob-pdv-search-i" style={{display:"flex",alignItems:"center",gap:8}}><IconSearch size={16} /> Buscar produto</div>
+          <div
+            className="mob-pdv-search-i"
+            style={{ display: "flex", alignItems: "center", gap: 8 }}
+          >
+            <IconSearch size={16} /> Buscar produto
+          </div>
         </div>
         <div className="mob-pdv-cats">
           <span className="on">Burgers</span>
@@ -384,21 +389,27 @@ function MobPedido() {
         </div>
         <div className="mob-pedido-steps">
           <div className="mob-pedido-step done">
-            <div className="mob-pedido-step-i"><IconCheck size={14} /></div>
+            <div className="mob-pedido-step-i">
+              <IconCheck size={14} />
+            </div>
             <div>
               <div className="mob-pedido-step-t">Recebido</div>
               <div className="mob-pedido-step-h">19:04 · pagamento aprovado</div>
             </div>
           </div>
           <div className="mob-pedido-step done">
-            <div className="mob-pedido-step-i"><IconCheck size={14} /></div>
+            <div className="mob-pedido-step-i">
+              <IconCheck size={14} />
+            </div>
             <div>
               <div className="mob-pedido-step-t">Preparando</div>
               <div className="mob-pedido-step-h">19:08 · na cozinha</div>
             </div>
           </div>
           <div className="mob-pedido-step active">
-            <div className="mob-pedido-step-i" aria-hidden="true">3</div>
+            <div className="mob-pedido-step-i" aria-hidden="true">
+              3
+            </div>
             <div>
               <div className="mob-pedido-step-t">Saiu para entrega</div>
               <div className="mob-pedido-step-h">19:22 · com Bruno</div>
@@ -464,9 +475,15 @@ function MobMoto() {
             Vila Madalena · 2,4 km
           </div>
           <div className="mob-moto-card-meta">
-            <span style={{display:"inline-flex",alignItems:"center",gap:4}}><IconClock size={13} /> 12 min</span>
-            <span style={{display:"inline-flex",alignItems:"center",gap:4}}><IconMoney size={13} /> R$ 8,00</span>
-            <span style={{display:"inline-flex",alignItems:"center",gap:4}}><IconPackage size={13} /> 1 sacola</span>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+              <IconClock size={13} /> 12 min
+            </span>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+              <IconMoney size={13} /> R$ 8,00
+            </span>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+              <IconPackage size={13} /> 1 sacola
+            </span>
           </div>
         </div>
 

@@ -288,7 +288,6 @@ function ProtoMotoboy() {
           </button>
         </div>
       </nav>
-
     </div>
   );
 }
