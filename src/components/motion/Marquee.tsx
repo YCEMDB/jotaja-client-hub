@@ -1,4 +1,4 @@
-import { useReducedMotion } from "motion/react";
+// replaced by useReducedMotionSafe from "motion/react";
 import type { ReactNode } from "react";
 import { usePointerFine } from "./usePointerFine";
 
@@ -24,7 +24,7 @@ export function Marquee({
   className?: string;
   ariaLabel?: string;
 }) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const pointerFine = usePointerFine();
 
   if (reduce) {

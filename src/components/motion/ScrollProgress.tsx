@@ -1,4 +1,5 @@
-import { motion, useReducedMotion, useScroll, useSpring } from "motion/react";
+import { motion, useScroll, useSpring } from "motion/react";
+import { useReducedMotionSafe } from "./useReducedMotionSafe";
 
 /**
  * ScrollProgress — barra fina laranja no topo, indicando progresso da
@@ -9,7 +10,7 @@ import { motion, useReducedMotion, useScroll, useSpring } from "motion/react";
  * - Não deve ser usada no painel administrativo.
  */
 export function ScrollProgress() {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 140,

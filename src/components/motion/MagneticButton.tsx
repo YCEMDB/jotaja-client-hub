@@ -1,4 +1,5 @@
 import {
+import { useReducedMotionSafe } from "./useReducedMotionSafe";
   motion,
   useMotionValue,
   useReducedMotion,
@@ -27,7 +28,7 @@ export const MagneticButton = forwardRef<HTMLButtonElement, Props>(function Magn
   { children, strength = 4, onMouseMove, onMouseLeave, style, ...rest },
   ref,
 ) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const fine = usePointerFine();
   const enabled = !reduce && fine;
 

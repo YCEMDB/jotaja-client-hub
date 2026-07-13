@@ -1,4 +1,5 @@
-import { AnimatePresence, motion, useInView, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion, useInView } from "motion/react";
+import { useReducedMotionSafe } from "./useReducedMotionSafe";
 import { useEffect, useRef, useState } from "react";
 import { dur, easeOut } from "./motion-tokens";
 
@@ -30,7 +31,7 @@ export function AnimatedNotification({
   className?: string;
   maxVisible?: 1 | 2;
 }) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { amount: 0.3 });
   const [index, setIndex] = useState(0);
