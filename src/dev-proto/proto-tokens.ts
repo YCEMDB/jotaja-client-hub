@@ -273,8 +273,8 @@ export const PROTO_CSS = `
 .app-btn { background:var(--tomato); color:#FFF8EE; border:none; padding:9px 16px; border-radius:10px; font-size:13.5px; font-weight:600; cursor:pointer; font-family:var(--mono);}
 .app-btn-ghost { background:#fff; border:1px solid var(--line); color:var(--slate); padding:9px 14px; border-radius:10px; font-size:13.5px; font-family:var(--mono); font-weight:600;}
 
-.app-kpi-grid { display:grid; grid-template-columns: repeat(4, 1fr); gap:14px; margin-bottom:20px; }
-.app-kpi { background:#fff; border:1px solid var(--line); border-radius:14px; padding:16px 18px; }
+.app-kpi-grid { display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap:14px; margin-bottom:20px; }
+.app-kpi { background:#fff; border:1px solid var(--line); border-radius:14px; padding:16px 18px; min-width:0; overflow:hidden; }
 .app-kpi-l { font-size:12px; color:var(--stone); text-transform:uppercase; letter-spacing:.05em; font-family:var(--mono); font-weight:600;}
 .app-kpi-v { font-family:var(--mono); font-weight:800; font-size:26px; color:var(--ink); margin:6px 0 4px; letter-spacing:-.01em;}
 .app-kpi-d { font-size:12px; font-weight:700; font-family:var(--mono);}
