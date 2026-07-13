@@ -1,6 +1,19 @@
 # Turno 6 — Integração PagBank (MVP Pix)
 
-**Status:** ✅ Estrutura completa entregue · ⏸ **DEFERRED**: teste E2E real com credenciais oficiais do PagBank (aplicação, homologação, conta lojista).
+**Status final:** ✅ **ENCERRADO — STRUCTURAL + INTEGRATION PASS (Sandbox).**
+Cobertura pipeline canônico, OAuth Connect, criação de Pix, webhook assinado, idempotência, reconciliação e rejeições estruturadas — todos validados em Sandbox por script server-side com identidade `service_role`.
+
+**Gates externos ainda DEFERRED / BLOCKED** (não bloqueiam RC2, bloqueiam release em produção):
+- Pagamento humano de um Pix Sandbox — **DEFERRED**
+- Webhook originado oficialmente pelo PagBank — **DEFERRED**
+- Reconciliação externa após pagamento — **DEFERRED**
+- Homologação PagBank Connect — **BLOCKED (externo)**
+- Credenciais de produção (`PAGBANK_PROD_CLIENT_ID/SECRET/TOKEN`) — **BLOCKED (externo)**
+
+Nenhuma ativação de produção foi executada nesta rodada.
+
+**C3b — Divergências de webhook (última correção do turno):** ✅ **PASS**.
+`public.payment_apply_provider_event` reescrita: `RAISE EXCEPTION` só para falha técnica (`invalid_provider`); divergências de negócio (`payment_not_found`, `payment_amount_mismatch`, `payment_reference_mismatch`, `payment_currency_mismatch`, `payment_restaurant_mismatch`, `order_cancelled`) persistem em `payment_webhook_events(result='rejected', error_code, processed_at)` e retornam JSON estruturado `{processed, applied, duplicate, error_code}`. Evento repetido rejeitado é retornado como `duplicate=true` sem side effects. Cobertura reexecutada 7/7 cenários; typecheck/build 0/0.
 
 ---
 
