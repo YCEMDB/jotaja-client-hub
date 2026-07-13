@@ -64,6 +64,7 @@ import { Route as SuperSuperIndexRouteImport } from './routes/_super/super.index
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
 import { Route as DevProtoPdvRouteImport } from './routes/dev.proto.pdv'
+import { Route as DevProtoMotoboyRouteImport } from './routes/dev.proto.motoboy'
 import { Route as DevProtoMobileRouteImport } from './routes/dev.proto.mobile'
 import { Route as DevProtoLandingRouteImport } from './routes/dev.proto.landing'
 import { Route as DevProtoDashboardRouteImport } from './routes/dev.proto.dashboard'
@@ -395,6 +396,11 @@ const DevProtoPdvRoute = DevProtoPdvRouteImport.update({
   path: '/dev/proto/pdv',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DevProtoMotoboyRoute = DevProtoMotoboyRouteImport.update({
+  id: '/dev/proto/motoboy',
+  path: '/dev/proto/motoboy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DevProtoMobileRoute = DevProtoMobileRouteImport.update({
   id: '/dev/proto/mobile',
   path: '/dev/proto/mobile',
@@ -717,6 +723,7 @@ export interface FileRoutesByFullPath {
   '/dev/proto/dashboard': typeof DevProtoDashboardRoute
   '/dev/proto/landing': typeof DevProtoLandingRoute
   '/dev/proto/mobile': typeof DevProtoMobileRoute
+  '/dev/proto/motoboy': typeof DevProtoMotoboyRoute
   '/dev/proto/pdv': typeof DevProtoPdvRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
@@ -815,6 +822,7 @@ export interface FileRoutesByTo {
   '/dev/proto/dashboard': typeof DevProtoDashboardRoute
   '/dev/proto/landing': typeof DevProtoLandingRoute
   '/dev/proto/mobile': typeof DevProtoMobileRoute
+  '/dev/proto/motoboy': typeof DevProtoMotoboyRoute
   '/dev/proto/pdv': typeof DevProtoPdvRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
@@ -916,6 +924,7 @@ export interface FileRoutesById {
   '/dev/proto/dashboard': typeof DevProtoDashboardRoute
   '/dev/proto/landing': typeof DevProtoLandingRoute
   '/dev/proto/mobile': typeof DevProtoMobileRoute
+  '/dev/proto/motoboy': typeof DevProtoMotoboyRoute
   '/dev/proto/pdv': typeof DevProtoPdvRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
@@ -1016,6 +1025,7 @@ export interface FileRouteTypes {
     | '/dev/proto/dashboard'
     | '/dev/proto/landing'
     | '/dev/proto/mobile'
+    | '/dev/proto/motoboy'
     | '/dev/proto/pdv'
     | '/lovable/email/suppression'
     | '/admin/'
@@ -1114,6 +1124,7 @@ export interface FileRouteTypes {
     | '/dev/proto/dashboard'
     | '/dev/proto/landing'
     | '/dev/proto/mobile'
+    | '/dev/proto/motoboy'
     | '/dev/proto/pdv'
     | '/lovable/email/suppression'
     | '/admin'
@@ -1214,6 +1225,7 @@ export interface FileRouteTypes {
     | '/dev/proto/dashboard'
     | '/dev/proto/landing'
     | '/dev/proto/mobile'
+    | '/dev/proto/motoboy'
     | '/dev/proto/pdv'
     | '/lovable/email/suppression'
     | '/_authenticated/admin/'
@@ -1289,6 +1301,7 @@ export interface RootRouteChildren {
   DevProtoDashboardRoute: typeof DevProtoDashboardRoute
   DevProtoLandingRoute: typeof DevProtoLandingRoute
   DevProtoMobileRoute: typeof DevProtoMobileRoute
+  DevProtoMotoboyRoute: typeof DevProtoMotoboyRoute
   DevProtoPdvRoute: typeof DevProtoPdvRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   ApiPublicHooksCommunicationWorkerRoute: typeof ApiPublicHooksCommunicationWorkerRoute
@@ -1687,6 +1700,13 @@ declare module '@tanstack/react-router' {
       path: '/dev/proto/pdv'
       fullPath: '/dev/proto/pdv'
       preLoaderRoute: typeof DevProtoPdvRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dev/proto/motoboy': {
+      id: '/dev/proto/motoboy'
+      path: '/dev/proto/motoboy'
+      fullPath: '/dev/proto/motoboy'
+      preLoaderRoute: typeof DevProtoMotoboyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dev/proto/mobile': {
@@ -2148,6 +2168,7 @@ const rootRouteChildren: RootRouteChildren = {
   DevProtoDashboardRoute: DevProtoDashboardRoute,
   DevProtoLandingRoute: DevProtoLandingRoute,
   DevProtoMobileRoute: DevProtoMobileRoute,
+  DevProtoMotoboyRoute: DevProtoMotoboyRoute,
   DevProtoPdvRoute: DevProtoPdvRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   ApiPublicHooksCommunicationWorkerRoute:

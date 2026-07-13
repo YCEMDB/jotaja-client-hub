@@ -8,7 +8,7 @@ export const Route = createFileRoute("/dev/proto/dashboard")({
   }),
 });
 
-const NAV = [
+const NAV: [string, string][] = [
   ["Início", "on"],
   ["Pedidos", ""],
   ["PDV", ""],
@@ -26,7 +26,8 @@ function ProtoDashboard() {
     <div data-theme="app-proto">
       <style dangerouslySetInnerHTML={{ __html: PROTO_CSS }} />
       <div className="app-shell">
-        <aside className="app-side">
+        {/* Desktop sidebar */}
+        <aside className="app-side" aria-label="Navegação lateral">
           <div className="app-side-brand">
             <div className="app-side-brand-mark">M</div>
             <div>
@@ -51,6 +52,7 @@ function ProtoDashboard() {
         </aside>
 
         <div className="app-main">
+          {/* Desktop topbar */}
           <div className="app-topbar">
             <div className="app-search">🔎 Buscar pedido, cliente, produto…</div>
             <div className="app-topbar-actions">
@@ -61,6 +63,41 @@ function ProtoDashboard() {
               </div>
             </div>
           </div>
+
+          {/* Mobile topbar — visible below 768px only (CSS-gated) */}
+          <header className="app-mob-topbar" aria-label="Barra superior móvel">
+            <button className="app-mob-topbar-icon" aria-label="Abrir menu">
+              ☰
+            </button>
+            <div className="app-mob-topbar-l">
+              <div>
+                <div className="app-mob-topbar-title">Início</div>
+                <div className="app-mob-topbar-sub">Burger da Praça</div>
+              </div>
+            </div>
+            <div className="app-mob-topbar-actions">
+              <button className="app-mob-topbar-icon" aria-label="Notificações">
+                🔔
+              </button>
+              <button className="app-mob-topbar-icon" aria-label="Perfil">
+                <span
+                  style={{
+                    width: 26,
+                    height: 26,
+                    borderRadius: "50%",
+                    background: "var(--tomato)",
+                    color: "#fff",
+                    display: "grid",
+                    placeItems: "center",
+                    fontSize: 12,
+                    fontWeight: 700,
+                  }}
+                >
+                  A
+                </span>
+              </button>
+            </div>
+          </header>
 
           <div className="app-content">
             <div className="app-page-head">
@@ -118,12 +155,14 @@ function ProtoDashboard() {
                 </div>
                 <DonutChart />
                 <div style={{ marginTop: 14, display: "flex", flexDirection: "column", gap: 8 }}>
-                  {[
-                    ["Salão", "42%", "var(--tomato)"],
-                    ["Delivery", "34%", "var(--mango)"],
-                    ["Balcão", "18%", "var(--leaf)"],
-                    ["Retirada", "6%", "var(--coffee)"],
-                  ].map(([k, v, c]) => (
+                  {(
+                    [
+                      ["Salão", "42%", "var(--tomato)"],
+                      ["Delivery", "34%", "var(--mango)"],
+                      ["Balcão", "18%", "var(--leaf)"],
+                      ["Retirada", "6%", "var(--coffee)"],
+                    ] as const
+                  ).map(([k, v, c]) => (
                     <div
                       key={k}
                       style={{
@@ -131,6 +170,7 @@ function ProtoDashboard() {
                         justifyContent: "space-between",
                         fontSize: 13,
                         alignItems: "center",
+                        fontFamily: "var(--mono)",
                       }}
                     >
                       <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -139,12 +179,12 @@ function ProtoDashboard() {
                             width: 10,
                             height: 10,
                             borderRadius: 3,
-                            background: c as string,
+                            background: c,
                           }}
                         />
                         {k}
                       </span>
-                      <strong style={{ color: "#20211F" }}>{v}</strong>
+                      <strong style={{ color: "var(--ink)", fontWeight: 800 }}>{v}</strong>
                     </div>
                   ))}
                 </div>
@@ -155,17 +195,27 @@ function ProtoDashboard() {
               <div className="app-panel">
                 <div className="app-panel-h">
                   <div className="app-panel-t">Pedidos recentes</div>
-                  <span style={{ fontSize: 12, color: "#696B64" }}>Atualizado agora</span>
+                  <span
+                    style={{
+                      fontSize: 12,
+                      color: "var(--stone)",
+                      fontFamily: "var(--mono)",
+                    }}
+                  >
+                    Atualizado agora
+                  </span>
                 </div>
                 <div>
-                  {[
-                    ["#0821", "Mesa 07 · Salão", "R$ 148,00", "Preparando", "prep"],
-                    ["#0822", "Rua das Flores, 240", "R$ 96,50", "Saiu p/ entrega", "saiu"],
-                    ["#0823", "Balcão", "R$ 42,00", "Entregue", "ok"],
-                    ["#0824", "Mesa 12 · Salão", "R$ 218,90", "Novo", "novo"],
-                    ["#0825", "Delivery · iFood", "R$ 74,00", "Preparando", "prep"],
-                    ["#0826", "Retirada · João", "R$ 39,90", "Novo", "novo"],
-                  ].map(([id, cli, val, st, cls]) => (
+                  {(
+                    [
+                      ["#0821", "Mesa 07 · Salão", "R$ 148,00", "Preparando", "prep"],
+                      ["#0822", "Rua das Flores, 240", "R$ 96,50", "Saiu p/ entrega", "saiu"],
+                      ["#0823", "Balcão", "R$ 42,00", "Entregue", "ok"],
+                      ["#0824", "Mesa 12 · Salão", "R$ 218,90", "Novo", "novo"],
+                      ["#0825", "Delivery · iFood", "R$ 74,00", "Preparando", "prep"],
+                      ["#0826", "Retirada · João", "R$ 39,90", "Novo", "novo"],
+                    ] as const
+                  ).map(([id, cli, val, st, cls]) => (
                     <div key={id} className="app-order-row">
                       <span className="app-order-id">{id}</span>
                       <span className="app-order-cli">{cli}</span>
@@ -193,30 +243,29 @@ function ProtoDashboard() {
                       padding: "3px 8px",
                       borderRadius: 999,
                       fontWeight: 700,
+                      fontFamily: "var(--mono)",
                     }}
                   >
                     Operando
                   </span>
                 </div>
                 <div className="app-caixa-list">
-                  <div className="app-caixa-item">
-                    <span>PagBank · Pix</span>
-                    <strong style={{ color: "#20211F" }}>R$ 1.284,00</strong>
-                    <span style={{ fontSize: 11, color: "var(--leaf)" }}>✓ conciliado</span>
-                  </div>
-                  <div className="app-caixa-item">
-                    <span>Mercado Pago</span>
-                    <strong style={{ color: "#20211F" }}>R$ 986,50</strong>
-                    <span style={{ fontSize: 11, color: "var(--leaf)" }}>✓ conciliado</span>
-                  </div>
-                  <div className="app-caixa-item">
-                    <span>Dinheiro</span>
-                    <strong style={{ color: "#20211F" }}>R$ 342,00</strong>
-                    <span style={{ fontSize: 11, color: "#8B5A00" }}>contar</span>
-                  </div>
-                  <div className="app-caixa-item" style={{ background: "#20211F", color: "#fff" }}>
+                  <CaixaRow label="PagBank · Pix" value="R$ 1.284,00" ok />
+                  <CaixaRow label="Mercado Pago" value="R$ 986,50" ok />
+                  <CaixaRow label="Dinheiro" value="R$ 342,00" ok={false} />
+                  <div
+                    className="app-caixa-item"
+                    style={{ background: "var(--ink)", color: "#fff" }}
+                  >
                     <span style={{ fontFamily: "'Archivo Black'" }}>Total</span>
-                    <strong style={{ color: "#fff", fontFamily: "'Archivo Black'", fontSize: 18 }}>
+                    <strong
+                      style={{
+                        color: "#fff",
+                        fontFamily: "var(--mono)",
+                        fontWeight: 800,
+                        fontSize: 18,
+                      }}
+                    >
                       R$ 2.612,50
                     </strong>
                     <span />
@@ -233,10 +282,116 @@ function ProtoDashboard() {
               </div>
             </div>
           </div>
+
+          {/* Mobile bottom nav — visible below 768px only */}
+          <nav className="app-bottom-nav" aria-label="Navegação inferior">
+            <div className="app-bottom-nav-inner">
+              <BottomNavItem label="Início" icon="home" on />
+              <BottomNavItem label="Pedidos" icon="orders" />
+              <BottomNavItem label="PDV" icon="pdv" />
+              <BottomNavItem label="Mesas" icon="tables" />
+              <BottomNavItem label="Menu" icon="more" />
+            </div>
+          </nav>
         </div>
+      </div>
+
+      <div className="demo-badge" aria-hidden>
+        Dados demonstrativos
       </div>
     </div>
   );
+}
+
+function CaixaRow({ label, value, ok }: { label: string; value: string; ok: boolean }) {
+  return (
+    <div className="app-caixa-item">
+      <span>{label}</span>
+      <strong style={{ color: "var(--ink)", fontFamily: "var(--mono)", fontWeight: 800 }}>
+        {value}
+      </strong>
+      <span
+        style={{
+          fontSize: 11,
+          color: ok ? "var(--leaf)" : "#8B5A00",
+          fontFamily: "var(--mono)",
+          fontWeight: 700,
+        }}
+      >
+        {ok ? "✓ conciliado" : "contar"}
+      </span>
+    </div>
+  );
+}
+
+function BottomNavItem({
+  label,
+  icon,
+  on = false,
+}: {
+  label: string;
+  icon: "home" | "orders" | "pdv" | "tables" | "more";
+  on?: boolean;
+}) {
+  return (
+    <button
+      className={"app-bottom-nav-item" + (on ? " on" : "")}
+      aria-current={on ? "page" : undefined}
+    >
+      <NavIcon name={icon} />
+      {label}
+    </button>
+  );
+}
+
+function NavIcon({ name }: { name: "home" | "orders" | "pdv" | "tables" | "more" }) {
+  const stroke = "currentColor";
+  const w = 2;
+  switch (name) {
+    case "home":
+      return (
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+          <path
+            d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1v-9.5Z"
+            stroke={stroke}
+            strokeWidth={w}
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+    case "orders":
+      return (
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+          <rect x="4" y="4" width="16" height="16" rx="3" stroke={stroke} strokeWidth={w} />
+          <path d="M8 9h8M8 13h8M8 17h5" stroke={stroke} strokeWidth={w} strokeLinecap="round" />
+        </svg>
+      );
+    case "pdv":
+      return (
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+          <rect x="3" y="6" width="18" height="12" rx="2" stroke={stroke} strokeWidth={w} />
+          <path d="M7 10h10M7 14h6" stroke={stroke} strokeWidth={w} strokeLinecap="round" />
+        </svg>
+      );
+    case "tables":
+      return (
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+          <rect x="3" y="8" width="18" height="4" rx="1" stroke={stroke} strokeWidth={w} />
+          <path
+            d="M6 12v6M18 12v6M9 12v3M15 12v3"
+            stroke={stroke}
+            strokeWidth={w}
+            strokeLinecap="round"
+          />
+        </svg>
+      );
+    case "more":
+      return (
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+          <path d="M4 7h16M4 12h16M4 17h16" stroke={stroke} strokeWidth={w} strokeLinecap="round" />
+        </svg>
+      );
+  }
 }
 
 function KpiCard({
@@ -297,20 +452,19 @@ function FaturamentoChart() {
         />
       ))}
       {bars.map((h, i) => (
-        <g key={i}>
-          <rect
-            x={20 + i * 38}
-            y={200 - h * 1.4}
-            width="24"
-            height={h * 1.4}
-            rx="4"
-            fill="url(#bar-g)"
-            opacity={i === 11 ? 1 : 0.85}
-          />
-        </g>
+        <rect
+          key={i}
+          x={20 + i * 38}
+          y={200 - h * 1.4}
+          width="24"
+          height={h * 1.4}
+          rx="4"
+          fill="url(#bar-g)"
+          opacity={i === 11 ? 1 : 0.85}
+        />
       ))}
       {["08h", "10h", "12h", "14h", "16h", "18h", "20h", "22h"].map((l, i) => (
-        <text key={l} x={20 + i * 60} y="216" fontSize="10" fill="#8A8C84">
+        <text key={l} x={20 + i * 60} y="216" fontSize="10" fill="#8A8C84" fontFamily="Manrope">
           {l}
         </text>
       ))}
@@ -330,7 +484,11 @@ function DonutChart() {
   const cx = 100;
   const cy = 100;
   return (
-    <svg viewBox="0 0 200 200" style={{ height: 160, display: "block", margin: "0 auto" }}>
+    <svg
+      viewBox="0 0 200 200"
+      style={{ height: 160, display: "block", margin: "0 auto" }}
+      aria-label="Distribuição por canal"
+    >
       {seg.map((s, i) => {
         const start = acc;
         acc += s.p;
@@ -354,13 +512,21 @@ function DonutChart() {
         x={cx}
         y={cy - 2}
         textAnchor="middle"
-        fontFamily="Archivo Black"
-        fontSize="18"
+        fontFamily="Manrope"
+        fontWeight={800}
+        fontSize="20"
         fill="#20211F"
       >
         78
       </text>
-      <text x={cx} y={cy + 14} textAnchor="middle" fontSize="10" fill="#8A8C84">
+      <text
+        x={cx}
+        y={cy + 14}
+        textAnchor="middle"
+        fontSize="10"
+        fill="#8A8C84"
+        fontFamily="Manrope"
+      >
         pedidos
       </text>
     </svg>

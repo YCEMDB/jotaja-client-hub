@@ -15,7 +15,7 @@ function ProtoLanding() {
 
       {/* Header */}
       <header className="mkt-header">
-        <div className="mkt-container flex items-center justify-between py-5">
+        <div className="mkt-container mkt-header-inner">
           <div className="flex items-center gap-2">
             <MesivoMark />
             <span className="mkt-brand">Mesivo</span>
@@ -27,10 +27,13 @@ function ProtoLanding() {
             <a>Blog</a>
             <a>Contato</a>
           </nav>
-          <div className="flex items-center gap-3">
+          <div className="mkt-header-cta flex items-center gap-3">
             <a className="mkt-link">Entrar</a>
             <button className="mkt-btn mkt-btn-primary">Criar conta grátis</button>
           </div>
+          <button className="mkt-menu-btn" aria-label="Abrir menu">
+            <span aria-hidden>≡</span>
+          </button>
         </div>
       </header>
 
@@ -39,7 +42,7 @@ function ProtoLanding() {
         <div className="mkt-container mkt-hero-grid">
           <div>
             <span className="mkt-eyebrow">
-              <span className="mkt-dot" /> Food-tech brasileira · Sandbox aberto
+              <span className="mkt-dot" /> Feito para a rotina real de restaurantes
             </span>
             <h1 className="mkt-h1">
               O sistema que <em>conecta</em> salão,
@@ -55,16 +58,10 @@ function ProtoLanding() {
               <button className="mkt-btn mkt-btn-primary mkt-btn-lg">Começar agora →</button>
               <button className="mkt-btn mkt-btn-ghost mkt-btn-lg">Ver demonstração</button>
             </div>
-            <div className="mkt-social">
-              <div className="mkt-avatars">
-                <span style={{ background: "#F0522D" }}>A</span>
-                <span style={{ background: "#FFB82E", color: "#34241D" }}>M</span>
-                <span style={{ background: "#2F7D5B" }}>R</span>
-                <span style={{ background: "#34241D" }}>+</span>
-              </div>
-              <div>
-                <strong>+320 restaurantes</strong> testando a nova onda Mesivo
-              </div>
+            <div className="mkt-benefits">
+              <span>14 dias grátis</span>
+              <span>Sem cartão</span>
+              <span>Migração assistida</span>
             </div>
           </div>
 
@@ -111,7 +108,7 @@ function ProtoLanding() {
         </div>
       </section>
 
-      {/* Problema → Solução (sticky start) */}
+      {/* Problema → Solução */}
       <section className="mkt-section">
         <div className="mkt-container">
           <div className="mkt-two-col">
@@ -130,15 +127,13 @@ function ProtoLanding() {
                 <span className="mkt-tag">A solução</span>
                 <span className="mkt-tag mkt-tag-leaf">Uma só plataforma</span>
               </div>
-              <div className="mkt-flow-diagram">
-                <FlowDiagram />
-              </div>
+              <FlowDiagram />
             </div>
           </div>
         </div>
       </section>
 
-      {/* Feature grid with big mockups */}
+      {/* Feature grid */}
       <section className="mkt-section mkt-section-cream">
         <div className="mkt-container">
           <h2 className="mkt-h2 mkt-center">Tudo o que sua operação precisa, sem cola de apps.</h2>
@@ -184,15 +179,13 @@ function ProtoLanding() {
               <p className="mkt-feature-body">
                 Fechamento com trilha auditável, evento por evento.
               </p>
-              <div className="mkt-caixa-mini">
-                <CaixaMini />
-              </div>
+              <CaixaMini />
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA final on coffee */}
+      {/* CTA final */}
       <section className="mkt-cta-final">
         <div className="mkt-container mkt-cta-final-inner">
           <div>
@@ -207,7 +200,7 @@ function ProtoLanding() {
       </section>
 
       <footer className="mkt-footer">
-        <div className="mkt-container flex items-center justify-between py-8">
+        <div className="mkt-container mkt-footer-inner">
           <div className="flex items-center gap-2 opacity-90">
             <MesivoMark small /> <span>Mesivo · 2026</span>
           </div>
@@ -223,11 +216,11 @@ function ProtoLanding() {
   );
 }
 
-/* ---------- inline SVG assets (isolated) ---------- */
-function MesivoMark({ small = false }: { small?: boolean }) {
+/* ---------- inline SVG assets ---------- */
+export function MesivoMark({ small = false }: { small?: boolean }) {
   const s = small ? 22 : 28;
   return (
-    <svg width={s} height={s} viewBox="0 0 32 32" fill="none">
+    <svg width={s} height={s} viewBox="0 0 32 32" fill="none" aria-label="Mesivo">
       <rect x="1" y="1" width="30" height="30" rx="9" fill="#F0522D" />
       <path
         d="M8 22V10l4 6 4-6v12M20 10v12M20 10c3 0 5 2 5 5s-2 5-5 5"
@@ -302,12 +295,14 @@ function DashMockup() {
             <Kpi label="Tempo médio" value="21 min" delta="-3 min" tone="leaf" />
           </div>
           <div className="dm-orders">
-            {[
-              ["#0821", "Mesa 07", "Preparando", "coral"],
-              ["#0822", "Delivery · Rua das Flores", "Saiu", "mango"],
-              ["#0823", "Balcão", "Entregue", "leaf"],
-              ["#0824", "Mesa 12", "Novo", "coffee"],
-            ].map(([id, o, s, tone]) => (
+            {(
+              [
+                ["#0821", "Mesa 07", "Preparando", "coral"],
+                ["#0822", "Delivery · Rua das Flores", "Saiu", "mango"],
+                ["#0823", "Balcão", "Entregue", "leaf"],
+                ["#0824", "Mesa 12", "Novo", "coffee"],
+              ] as const
+            ).map(([id, o, s, tone]) => (
               <div key={id} className="dm-order">
                 <div className="dm-order-id">{id}</div>
                 <div className="dm-order-orig">{o}</div>
@@ -363,14 +358,16 @@ function PhoneMenuMockup() {
         ))}
       </div>
       <div className="pm-items">
-        {[
-          ["Smash duplo", "R$ 34,90"],
-          ["Cheddar bacon", "R$ 38,50"],
-          ["Veggie", "R$ 29,00"],
-        ].map(([n, p]) => (
+        {(
+          [
+            ["Smash duplo", "R$ 34,90"],
+            ["Cheddar bacon", "R$ 38,50"],
+            ["Veggie", "R$ 29,00"],
+          ] as const
+        ).map(([n, p]) => (
           <div key={n} className="pm-item">
             <div className="pm-thumb" />
-            <div className="pm-info">
+            <div>
               <div className="pm-title">{n}</div>
               <div className="pm-desc">Pão brioche · molho da casa</div>
             </div>
@@ -384,7 +381,7 @@ function PhoneMenuMockup() {
 }
 
 function FlowDiagram() {
-  const nodes = [
+  const nodes: [string, string][] = [
     ["Salão", "#F0522D"],
     ["Cozinha", "#FFB82E"],
     ["Balcão", "#2F7D5B"],
@@ -392,8 +389,16 @@ function FlowDiagram() {
     ["Motoboy", "#F0522D"],
     ["Cliente", "#FFB82E"],
   ];
+  const positions: [number, number][] = [
+    [90, 60],
+    [260, 60],
+    [430, 60],
+    [90, 200],
+    [260, 200],
+    [430, 200],
+  ];
   return (
-    <svg viewBox="0 0 520 260" width="100%">
+    <svg viewBox="0 0 520 260" width="100%" aria-label="Fluxo Mesivo">
       <defs>
         <marker
           id="arr"
@@ -407,14 +412,16 @@ function FlowDiagram() {
           <path d="M0,0 L10,5 L0,10 z" fill="#34241D" />
         </marker>
       </defs>
-      {[
-        [90, 60, 260, 60],
-        [260, 60, 430, 60],
-        [90, 200, 260, 200],
-        [260, 200, 430, 200],
-        [90, 60, 90, 200],
-        [430, 60, 430, 200],
-      ].map(([x1, y1, x2, y2], i) => (
+      {(
+        [
+          [90, 60, 260, 60],
+          [260, 60, 430, 60],
+          [90, 200, 260, 200],
+          [260, 200, 430, 200],
+          [90, 60, 90, 200],
+          [430, 60, 430, 200],
+        ] as const
+      ).map(([x1, y1, x2, y2], i) => (
         <line
           key={i}
           x1={x1}
@@ -429,18 +436,10 @@ function FlowDiagram() {
         />
       ))}
       {nodes.map(([label, c], i) => {
-        const positions = [
-          [90, 60],
-          [260, 60],
-          [430, 60],
-          [90, 200],
-          [260, 200],
-          [430, 200],
-        ];
         const [cx, cy] = positions[i];
         return (
           <g key={label}>
-            <circle cx={cx} cy={cy} r="34" fill="#FFFDFA" stroke={c as string} strokeWidth="2.2" />
+            <circle cx={cx} cy={cy} r="34" fill="#FFFDFA" stroke={c} strokeWidth="2.2" />
             <text
               x={cx}
               y={cy + 4}
