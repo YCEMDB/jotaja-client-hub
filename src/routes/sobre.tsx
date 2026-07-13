@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ContentLayout } from "@/components/jotaja/ContentLayout";
+import { PublicShell } from "@/components/mesivo-shell";
+import { Container } from "@/components/mesivo-ui";
 
 const URL = "https://comandahub.online/sobre";
 const TITLE = "Sobre o Mesivo — plataforma de delivery próprio";
@@ -23,46 +24,51 @@ export const Route = createFileRoute("/sobre")({
 
 function Sobre() {
   return (
-    <ContentLayout>
-      <h1>Sobre o Mesivo</h1>
-      <p className="lead">
-        Somos uma plataforma brasileira que ajuda restaurantes, pizzarias,
-        hamburguerias e lanchonetes a venderem direto pelo WhatsApp e
-        cardápio digital — sem comissão por pedido.
-      </p>
+    <PublicShell>
+      <Container size="md" style={{ paddingBlock: "clamp(40px, 8vw, 80px)" }}>
+        <article className="prose prose-neutral prose-headings:tracking-tight prose-h1:text-4xl md:prose-h1:text-5xl prose-h1:font-bold prose-h2:text-2xl md:prose-h2:text-3xl prose-h2:mt-12 prose-a:text-primary hover:prose-a:underline">
+          <h1>Sobre o Mesivo</h1>
+          <p className="lead">
+            Somos uma plataforma brasileira que ajuda restaurantes, pizzarias,
+            hamburguerias e lanchonetes a venderem direto pelo WhatsApp e
+            cardápio digital — sem comissão por pedido.
+          </p>
 
-      <h2>Nossa missão</h2>
-      <p>
-        Devolver ao dono do restaurante o controle sobre o próprio negócio.
-        Acreditamos que ninguém deveria pagar até 27% de comissão para vender
-        a própria comida. Por isso construímos uma plataforma simples,
-        bonita e robusta, que coloca o restaurante no centro.
-      </p>
+          <h2>Nossa missão</h2>
+          <p>
+            Devolver ao dono do restaurante o controle sobre o próprio negócio.
+            Acreditamos que ninguém deveria pagar até 27% de comissão para vender
+            a própria comida. Por isso construímos uma plataforma simples,
+            bonita e robusta, que coloca o restaurante no centro.
+          </p>
 
-      <h2>O que fazemos</h2>
-      <ul>
-        <li>Cardápio digital responsivo, com QR Code e link próprio.</li>
-        <li>Recebimento de pedidos pelo WhatsApp e painel em tempo real.</li>
-        <li>Gestão de produtos, categorias, adicionais e variações.</li>
-        <li>Métricas, relatórios e exportação de dados para o dono decidir.</li>
-        <li>Suporte humano, em português, por humanos que entendem do setor.</li>
-      </ul>
+          <h2>O que fazemos</h2>
+          <ul>
+            <li>Cardápio digital responsivo, com QR Code e link próprio.</li>
+            <li>Recebimento de pedidos pelo WhatsApp e painel em tempo real.</li>
+            <li>Gestão de produtos, categorias, adicionais e variações.</li>
+            <li>Métricas, relatórios e exportação de dados para o dono decidir.</li>
+            <li>Suporte humano, em português, por humanos que entendem do setor.</li>
+          </ul>
 
-      <h2>Nossos valores</h2>
-      <ul>
-        <li><strong>Autonomia</strong> — o restaurante é dono dos próprios clientes.</li>
-        <li><strong>Transparência</strong> — preços claros, sem letrinha miúda.</li>
-        <li><strong>Simplicidade</strong> — qualquer atendente consegue usar.</li>
-        <li><strong>Brasilidade</strong> — feito por quem conhece o dia a dia daqui.</li>
-      </ul>
+          <h2>Nossos valores</h2>
+          <ul>
+            <li><strong>Autonomia</strong> — o restaurante é dono dos próprios clientes.</li>
+            <li><strong>Transparência</strong> — preços claros, sem letrinha miúda.</li>
+            <li><strong>Simplicidade</strong> — qualquer atendente consegue usar.</li>
+            <li><strong>Brasilidade</strong> — feito por quem conhece o dia a dia daqui.</li>
+          </ul>
 
-      <h2>Quem usa o Mesivo</h2>
-      <p>
-        Hoje atendemos centenas de restaurantes em todo o Brasil — de
-        operações de bairro a redes com várias unidades. Pizzarias,
-        hamburguerias, açaiterias, marmitarias, japoneses, food trucks e
-        muito mais.
-      </p>
-    </ContentLayout>
+          <h2>Quem usa o Mesivo</h2>
+          <p>
+            Hoje atendemos centenas de restaurantes em todo o Brasil — de
+            operações de bairro a redes com várias unidades. Pizzarias,
+            hamburguerias, açaiterias, marmitarias, japoneses, food trucks e
+            muito mais.
+          </p>
+        </article>
+      </Container>
+    </PublicShell>
   );
 }
+
