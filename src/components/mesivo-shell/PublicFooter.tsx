@@ -12,8 +12,8 @@ const COLS: FooterCol[] = [
   {
     title: "Produto",
     links: [
-      { label: "Cardápio digital",    to: "/cardapio-digital" },
-      { label: "Controle de mesas",   to: "/controle-de-mesas" },
+      { label: "Cardápio digital", to: "/cardapio-digital" },
+      { label: "Controle de mesas", to: "/controle-de-mesas" },
       { label: "Gestão do restaurante", to: "/gestao-de-restaurantes" },
       { label: "Alternativa ao iFood", to: "/alternativa-ifood" },
     ],
@@ -21,19 +21,19 @@ const COLS: FooterCol[] = [
   {
     title: "Empresa",
     links: [
-      { label: "Sobre",   to: "/sobre" },
+      { label: "Sobre", to: "/sobre" },
       { label: "Empresa", to: "/empresa" },
       { label: "Contato", to: "/contato" },
-      { label: "Blog",    to: "/blog" },
+      { label: "Blog", to: "/blog" },
     ],
   },
   {
     title: "Suporte",
     links: [
       { label: "Perguntas frequentes", to: "/perguntas-frequentes" },
-      { label: "Glossário",            to: "/glossario" },
-      { label: "Termos",               to: "/termos" },
-      { label: "Privacidade",          to: "/privacidade" },
+      { label: "Glossário", to: "/glossario" },
+      { label: "Termos", to: "/termos" },
+      { label: "Privacidade", to: "/privacidade" },
     ],
   },
 ];
@@ -81,8 +81,8 @@ export function PublicFooter() {
               maxWidth: "36ch",
             }}
           >
-            Plataforma brasileira para restaurantes centralizarem pedidos, mesas,
-            cardápio digital, delivery, caixa e gestão em um único lugar.
+            Plataforma brasileira para restaurantes centralizarem pedidos, mesas, cardápio digital,
+            delivery, caixa e gestão em um único lugar.
           </p>
         </div>
 
@@ -100,7 +100,9 @@ export function PublicFooter() {
             >
               {col.title}
             </h3>
-            <ul style={{ listStyle: "none", padding: 0, margin: "12px 0 0", display: "grid", gap: 8 }}>
+            <ul
+              style={{ listStyle: "none", padding: 0, margin: "12px 0 0", display: "grid", gap: 8 }}
+            >
               {col.links.map((l) => (
                 <li key={l.to}>
                   <Link
@@ -115,7 +117,6 @@ export function PublicFooter() {
                   </Link>
                 </li>
               ))}
-
             </ul>
           </nav>
         ))}

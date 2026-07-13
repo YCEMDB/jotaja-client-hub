@@ -26,7 +26,14 @@ export function MesivoMark({ size = 40, className, decorative = false }: MesivoM
       xmlns="http://www.w3.org/2000/svg"
     >
       <defs>
-        <linearGradient id={`${gid}-g`} x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          id={`${gid}-g`}
+          x1="0"
+          y1="0"
+          x2="48"
+          y2="48"
+          gradientUnits="userSpaceOnUse"
+        >
           <stop offset="0" stopColor="#FFB82E" />
           <stop offset="0.55" stopColor="#FF6B35" />
           <stop offset="1" stopColor="#F0522D" />

@@ -71,7 +71,9 @@ export function PublicHeader() {
                   to={item.to}
                   className="rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-[var(--mesivo-peach)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--mesivo-tomato)]"
                   style={{ color: "var(--mesivo-coffee)", fontFamily: "var(--font-ui)" }}
-                  activeProps={{ style: { color: "var(--mesivo-tomato)", fontFamily: "var(--font-ui)" } }}
+                  activeProps={{
+                    style: { color: "var(--mesivo-tomato)", fontFamily: "var(--font-ui)" },
+                  }}
                 >
                   {item.label}
                 </Link>

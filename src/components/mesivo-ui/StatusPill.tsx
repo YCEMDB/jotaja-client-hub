@@ -7,12 +7,12 @@ type StatusPillProps = {
 };
 
 const TONE = {
-  neutral: { bg: "var(--surface-2)",     fg: "var(--fg-hi)" },
-  success: { bg: "var(--success-soft)",  fg: "var(--mesivo-leaf)" },
-  warning: { bg: "var(--warning-soft)",  fg: "#8A5A00" },
-  danger:  { bg: "var(--danger-soft)",   fg: "#8A1A1A" },
-  info:    { bg: "var(--info-soft)",     fg: "#0F4C81" },
-  accent:  { bg: "var(--mesivo-peach)",  fg: "var(--mesivo-tomato)" },
+  neutral: { bg: "var(--surface-2)", fg: "var(--fg-hi)" },
+  success: { bg: "var(--success-soft)", fg: "var(--mesivo-leaf)" },
+  warning: { bg: "var(--warning-soft)", fg: "#8A5A00" },
+  danger: { bg: "var(--danger-soft)", fg: "#8A1A1A" },
+  info: { bg: "var(--info-soft)", fg: "#0F4C81" },
+  accent: { bg: "var(--mesivo-peach)", fg: "var(--mesivo-tomato)" },
 } as const;
 
 /** StatusPill — pill de status usando tokens semânticos. */

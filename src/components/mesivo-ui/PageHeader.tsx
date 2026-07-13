@@ -67,7 +67,10 @@ type SectionHeaderProps = {
 /** SectionHeader — cabeçalho de seção (h2). */
 export function SectionHeader({ eyebrow, title, description, className }: SectionHeaderProps) {
   return (
-    <header className={className} style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 16 }}>
+    <header
+      className={className}
+      style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 16 }}
+    >
       {eyebrow ? (
         <span
           style={{
@@ -94,7 +97,9 @@ export function SectionHeader({ eyebrow, title, description, className }: Sectio
         {title}
       </h2>
       {description ? (
-        <p style={{ margin: 0, color: "var(--fg-mid)", fontFamily: "var(--font-ui)" }}>{description}</p>
+        <p style={{ margin: 0, color: "var(--fg-mid)", fontFamily: "var(--font-ui)" }}>
+          {description}
+        </p>
       ) : null}
     </header>
   );

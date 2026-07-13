@@ -7,8 +7,8 @@ type ConnectionNodeProps = {
 const TONE = {
   orange: { bg: "var(--mesivo-tomato)", fg: "var(--mesivo-white)" },
   coffee: { bg: "var(--mesivo-coffee)", fg: "var(--mesivo-white)" },
-  leaf:   { bg: "var(--mesivo-leaf)",   fg: "var(--mesivo-white)" },
-  mango:  { bg: "var(--mesivo-mango)",  fg: "var(--mesivo-coffee)" },
+  leaf: { bg: "var(--mesivo-leaf)", fg: "var(--mesivo-white)" },
+  mango: { bg: "var(--mesivo-mango)", fg: "var(--mesivo-coffee)" },
 } as const;
 
 /** ConnectionNode — nó operacional (etapa do fluxo de pedidos). SVG puro. */

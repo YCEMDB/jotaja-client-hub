@@ -31,11 +31,19 @@ export function MockupKDS({ className }: { className?: string }) {
         >
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <strong style={{ fontFamily: "var(--font-display)", fontSize: 18 }}>{k.ticket}</strong>
-            <span style={{ fontVariantNumeric: "tabular-nums", opacity: 0.8, fontSize: 13 }}>{k.time}</span>
+            <span style={{ fontVariantNumeric: "tabular-nums", opacity: 0.8, fontSize: 13 }}>
+              {k.time}
+            </span>
           </div>
           <ul style={{ margin: "8px 0 0", padding: 0, listStyle: "none", fontSize: 13 }}>
             {k.items.map((it, i) => (
-              <li key={i} style={{ padding: "3px 0", borderTop: i ? "1px solid rgba(255,255,255,0.14)" : "none" }}>
+              <li
+                key={i}
+                style={{
+                  padding: "3px 0",
+                  borderTop: i ? "1px solid rgba(255,255,255,0.14)" : "none",
+                }}
+              >
                 {it}
               </li>
             ))}

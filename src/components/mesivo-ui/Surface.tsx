@@ -30,10 +30,13 @@ export function Surface({
   ...rest
 }: SurfaceProps) {
   const bg =
-    level === 0 ? "var(--surface)" :
-    level === 1 ? "var(--surface-1)" :
-    level === 2 ? "var(--surface-2)" :
-                  "var(--surface-3)";
+    level === 0
+      ? "var(--surface)"
+      : level === 1
+        ? "var(--surface-1)"
+        : level === 2
+          ? "var(--surface-2)"
+          : "var(--surface-3)";
   return (
     <As
       {...rest}

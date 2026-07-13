@@ -4,11 +4,11 @@ type OperationalBadgeProps = {
 };
 
 const MAP = {
-  novo:       { label: "Novo",       bg: "var(--mesivo-peach)",    fg: "var(--mesivo-tomato)" },
-  produzindo: { label: "Produzindo", bg: "var(--warning-soft)",    fg: "#8A5A00" },
-  pronto:     { label: "Pronto",     bg: "var(--mesivo-leaf-soft)", fg: "var(--mesivo-leaf)" },
-  entregue:   { label: "Entregue",   bg: "var(--info-soft)",       fg: "#0F4C81" },
-  cancelado:  { label: "Cancelado",  bg: "var(--danger-soft)",     fg: "#8A1A1A" },
+  novo: { label: "Novo", bg: "var(--mesivo-peach)", fg: "var(--mesivo-tomato)" },
+  produzindo: { label: "Produzindo", bg: "var(--warning-soft)", fg: "#8A5A00" },
+  pronto: { label: "Pronto", bg: "var(--mesivo-leaf-soft)", fg: "var(--mesivo-leaf)" },
+  entregue: { label: "Entregue", bg: "var(--info-soft)", fg: "#0F4C81" },
+  cancelado: { label: "Cancelado", bg: "var(--danger-soft)", fg: "#8A1A1A" },
 } as const;
 
 /** OperationalBadge — pill de status operacional. Estático. */

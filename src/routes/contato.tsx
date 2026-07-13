@@ -29,14 +29,14 @@ function Contato() {
         <article className="prose prose-neutral prose-headings:tracking-tight prose-h1:text-4xl md:prose-h1:text-5xl prose-h1:font-bold prose-h2:text-2xl md:prose-h2:text-3xl prose-h2:mt-12 prose-a:text-primary hover:prose-a:underline">
           <h1>Fale com a gente</h1>
           <p className="lead">
-            Atendimento humano, em português, pelos canais que você já usa
-            todo dia. Respondemos rápido — geralmente no mesmo dia útil.
+            Atendimento humano, em português, pelos canais que você já usa todo dia. Respondemos
+            rápido — geralmente no mesmo dia útil.
           </p>
 
           <h2>WhatsApp comercial</h2>
           <p>
-            Quer entender se o Mesivo serve para o seu restaurante?
-            Chame no WhatsApp e a gente conversa sem compromisso.
+            Quer entender se o Mesivo serve para o seu restaurante? Chame no WhatsApp e a gente
+            conversa sem compromisso.
           </p>
           <p>
             <a
@@ -63,18 +63,17 @@ function Contato() {
 
           <h2>Horário de atendimento</h2>
           <p>
-            Segunda a sexta, das 9h às 19h. Sábado, das 9h às 13h. Mensagens
-            fora desse horário são respondidas no próximo dia útil.
+            Segunda a sexta, das 9h às 19h. Sábado, das 9h às 13h. Mensagens fora desse horário são
+            respondidas no próximo dia útil.
           </p>
 
           <h2>Já é cliente?</h2>
           <p>
-            Clientes ativos têm canal de suporte prioritário dentro do painel
-            administrativo. Acesse sua loja e clique em "Suporte" no menu.
+            Clientes ativos têm canal de suporte prioritário dentro do painel administrativo. Acesse
+            sua loja e clique em "Suporte" no menu.
           </p>
         </article>
       </Container>
     </PublicShell>
   );
 }
-
