@@ -242,23 +242,3 @@ Não reabrem RC2, salvo se o smoke test revelar regressão crítica:
 
 **Estado final:** desenvolvimento principal do COMANDAHUB **encerrado**. Próxima ação: **deploy controlado + smoke test de produção**.
 
-
-## 14. Débito técnico controlado (não bloqueia RC2, mas deve entrar na fila)
-
-- 12 pontos de DML direto em `admin.configuracoes.tsx` (delivery areas, restaurantes, secrets, etc.) — migrar para RPCs específicas com auditoria.
-- Cupons, entregadores, kitchen stations, estoque (units/suppliers), finance (categorias/centros de custo/lançamentos) — mesmo tratamento.
-- Recomputação retroativa de limites de plano no downgrade.
-- Baterias JWT E2E autenticadas quando um bearer `authenticated` estiver disponível no ambiente.
-- R2 rollback ao vivo em ambiente com privilégios `TRIGGER` no schema `public`.
-
----
-
-## 15. Veredito RC2
-
-**RC2 = STRUCTURAL PASS COM 2 BLOQUEADORES DE RELEASE.**
-
-Toda a superfície de segurança (RLS, tenants, sessões de suporte, feature gates, auditoria, pipeline de pagamentos) está sólida e coerente. O código compila, o build passa, as rotas resolvem, os secrets estão contidos, e os fluxos consolidados dos Turnos 2 → 7 continuam verdes.
-
-Os únicos itens que impedem `production_ready` do lado de dentro são as duas migrações pendentes para RPC (PDV manual e `restaurant_secrets`). Do lado externo, permanecem os gates PagBank já reconhecidos.
-
-**Recomendação:** encerrar RC2 aqui, agendar as duas migrações como próxima frente mínima, e só então liberar produção.
