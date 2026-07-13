@@ -412,10 +412,17 @@ export const PROTO_CSS = `
 .pdv-mob-fab-l{display:flex;align-items:center;gap:12px;min-width:0}
 .pdv-mob-fab-c{background:var(--tomato);color:#fff;min-width:26px;height:26px;padding:0 8px;border-radius:999px;display:grid;place-items:center;font-size:12px;font-weight:800;font-family:var(--mono)}
 .pdv-mob-fab-total{font-family:var(--mono);font-weight:800;font-size:15px}
-@media (max-width:767px){
+@media (max-width:1023px){
   .pdv-shell{display:none}
   .pdv-mob{display:flex}
   .pdv-mob-fab{display:flex}
+}
+/* Tablet PDV 768–1023: 3-col product grid, wider search hit area */
+@media (min-width:768px) and (max-width:1023px){
+  .pdv-mob-grid{grid-template-columns:1fr 1fr 1fr;gap:14px;padding:16px 24px 140px}
+  .pdv-mob-search{padding:16px 24px 0}
+  .pdv-mob-cats-strip{padding:12px 24px 14px}
+  .pdv-mob-fab{left:24px;right:24px}
 }
 
 /* Bottom sheet (Ver pedido) */
