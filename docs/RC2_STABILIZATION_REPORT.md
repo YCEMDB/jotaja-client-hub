@@ -151,9 +151,9 @@ Top-10 do `pg_stat_statements`:
 | 6 | Sessões de suporte | **PASS** |
 | 7 | Feature gates | **PASS** |
 | 8 | Downgrade de plano (estrutural) | **PASS** |
-| 9 | PDV manual (DML direto de orders) | **FAIL** — bloqueador de release |
-| 10 | DML residual `restaurant_secrets.upsert` | **FAIL** — bloqueador de release |
-| 11 | DML residual demais (cupons/entregadores/config/finance) | **DEFERRED** — débito técnico |
+| 9 | PDV manual (DML direto de orders) | **PASS** — hotfix `create_pos_order` |
+| 10 | DML residual `restaurant_secrets.upsert` | **PASS** — hotfix `set_restaurant_integration_secret` + revoke |
+| 11 | DML residual demais (cupons/entregadores/config/finance) | **DEFERRED** — débito técnico (backlog de hardening) |
 | 12 | Fluxos: estoque, cardápio, adicionais, pedidos, caixa, relatórios, onboarding | **PASS** |
 | 13 | Mercado Pago pipeline canônico | **PASS (estrutural)** |
 | 14 | PagBank Sandbox integração | **PASS (estrutural + integração)** |
@@ -166,17 +166,82 @@ Top-10 do `pg_stat_statements`:
 | 21 | Performance queries críticas | **PASS** |
 | 22 | Responsividade + design system | **PASS** (inspeção estática) |
 
-**Totais:** 16 **PASS**, 2 **FAIL**, 3 **DEFERRED (environment)**, 1 **DEFERRED (gates externos)**, 1 **BLOCKED (externo)**.
+**Totais:** 18 **PASS**, 0 **FAIL**, 3 **DEFERRED (environment)**, 2 **DEFERRED (gates externos / débito)**, 1 **BLOCKED (externo)**.
 
 ---
 
-## 13. Bloqueadores para “PRONTO PARA PRODUÇÃO”
+## 13. Veredito final RC2
 
-Antes de virar a chave `production_ready = true`, os seguintes itens **precisam** ser resolvidos:
+- **Internal production readiness:** **PASS**
+- **RC2 internal blockers:** **0**
+- **Overall production readiness:** **READY**, excluindo ativação PagBank produção
+- **PagBank produção:** **BLOCKED BY EXTERNAL HOMOLOGATION/E2E**
 
-1. **PDV manual — RPC obrigatória.** `src/routes/_authenticated/admin.pdv.tsx` cria `orders` + `order_items` direto pelo bundle do cliente. Migrar para uma RPC canônica que reuse `private._menu_price_item` (mesma precificação server-side já usada em `create_public_order`). Sem isso, um operador com acesso ao admin poderia manipular o payload no browser e alterar preço de item.
-2. **`restaurant_secrets` — RPC obrigatória.** `admin.configuracoes.tsx:584` faz `upsert` direto contra `restaurant_secrets`. Migrar para uma RPC administrativa auditada com whitelist de chaves, motivo, e `has_role('owner')` — segue o mesmo padrão de `admin_upsert_setting` já implementado no Turno 2.c.
-3. **Gates externos PagBank (produção):** homologação da aplicação + credenciais `PAGBANK_PROD_*` + primeiro pagamento humano em Sandbox observado ponta-a-ponta.
+Os dois bloqueadores internos identificados na primeira passagem RC2 (PDV manual e `restaurant_secrets.upsert`) foram resolvidos no hotfix subsequente:
+- `public.create_pos_order` (server-side pricing + idempotência) substitui inserts diretos em `orders`/`order_items`.
+- `public.set_restaurant_integration_secret` + `restaurant_mp_token_status` + `admin_get_restaurant_mp_token` substituem qualquer acesso direto a `restaurant_secrets`; tabela com `REVOKE ALL` para `anon`/`authenticated`.
+- `public.mark_order_paid_manual`, `public.assign_driver`, `public.unassign_driver` cobrem as últimas mutações diretas em `orders` no admin.
+- `rg` final: **0** DML direto em `orders`/`order_items`/`restaurant_secrets` no bundle do cliente.
+- `bunx tsgo --noEmit` → exit 0. `bun run build` → exit 0.
+
+---
+
+## 14. Regras obrigatórias para o primeiro release
+
+1. Manter **PagBank produção desativado**.
+2. **Não** cadastrar credenciais PagBank de produção antes da homologação.
+3. **Não** exibir PagBank como opção utilizável em restaurantes de produção.
+4. Preservar Mercado Pago para os restaurantes já configurados.
+5. Executar **backup do banco** antes do deploy.
+6. **Registrar as migrations aplicadas** (lista completa em `supabase/migrations/`).
+7. Publicar em **janela de menor movimento**.
+8. Executar **smoke test** imediatamente após o deploy.
+9. Monitorar erros de **pedido, pagamento, caixa e autenticação**.
+10. Manter **plano de rollback disponível** (restore do backup + revert de migrations).
+
+---
+
+## 15. Smoke test obrigatório pós-publicação
+
+Validar, em produção controlada (restaurante interno + valores mínimos, **sem** pedido real ou cobrança financeira sem controle):
+
+- [ ] Login (email/senha + Google OAuth)
+- [ ] Criação e edição de restaurante
+- [ ] Cardápio público (`/loja/:slug`)
+- [ ] Criação de pedido delivery (fluxo público → `create_public_order`)
+- [ ] Criação de pedido pelo PDV (`create_pos_order`)
+- [ ] Atualização de status do pedido
+- [ ] Atribuição e remoção de entregador (`assign_driver` / `unassign_driver`)
+- [ ] Abertura automática do caixa
+- [ ] Estoque (movimentação + ajuste)
+- [ ] Relatórios (vendas, caixa, financeiro)
+- [ ] Onboarding (checklist)
+- [ ] Mercado Pago (Pix, restaurante já configurado)
+- [ ] Super Admin (listagem, sessão de suporte)
+- [ ] Sessão de suporte (start / stop / auditoria)
+- [ ] Arquivamento e restauração (produtos / categorias)
+- [ ] **Ausência de PagBank produtivo** no checkout de restaurantes de produção
+
+---
+
+## 16. Backlog de hardening (não bloqueia RC2)
+
+Não reabrem RC2, salvo se o smoke test revelar regressão crítica:
+
+- Findings antigos do linter Supabase (`SECURITY DEFINER` executável por `authenticated` em RPCs legadas, functions sem `search_path` fixo).
+- RPCs legadas com `search_path` ainda não padronizado.
+- Testes JWT reais autenticados (adiados por limitação de ambiente).
+- Pagamento humano real no PagBank Sandbox (ponta-a-ponta observado).
+- Webhook oficial do PagBank (endpoint homologado pelo provedor).
+- Reconciliação PagBank externa (comparação com painel PagBank).
+- Homologação da aplicação PagBank Connect (produção).
+- Credenciais `PAGBANK_PROD_*` (produção).
+- ~15 pontos de DML direto residual não crítico (cupons, entregadores cadastro, kitchen stations, stock units/suppliers, finance categories/cost centers/entries) — RLS tenant-scoped, funcional, migrar para RPCs auditadas em ondas seguintes.
+
+---
+
+**Estado final:** desenvolvimento principal do COMANDAHUB **encerrado**. Próxima ação: **deploy controlado + smoke test de produção**.
+
 
 ## 14. Débito técnico controlado (não bloqueia RC2, mas deve entrar na fila)
 
