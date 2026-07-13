@@ -33,7 +33,7 @@ function ProtoLanding() {
             <button className="mkt-btn mkt-btn-primary">Criar conta grátis</button>
           </div>
           <button className="mkt-menu-btn" aria-label="Abrir menu">
-            <span aria-hidden>≡</span>
+            <IconMenu size={20} />
           </button>
         </div>
       </header>
