@@ -75,7 +75,7 @@ function ProtoDashboard() {
           {/* Mobile topbar — visible below 768px only (CSS-gated) */}
           <header className="app-mob-topbar" aria-label="Barra superior móvel">
             <button className="app-mob-topbar-icon" aria-label="Abrir menu">
-              ☰
+              <IconMenu size={20} />
             </button>
             <div className="app-mob-topbar-l">
               <div>
@@ -85,7 +85,7 @@ function ProtoDashboard() {
             </div>
             <div className="app-mob-topbar-actions">
               <button className="app-mob-topbar-icon" aria-label="Notificações">
-                🔔
+                <IconBell size={18} />
               </button>
               <button className="app-mob-topbar-icon" aria-label="Perfil">
                 <span
@@ -107,10 +107,15 @@ function ProtoDashboard() {
             </div>
           </header>
 
+          {/* Inline demo badge — appears just under the topbar so it never covers charts or CTAs */}
+          <div className="demo-badge-slot">
+            <span className="demo-badge">Dados demonstrativos</span>
+          </div>
+
           <div className="app-content">
             <div className="app-page-head">
               <div>
-                <div className="app-page-h">Bom dia, Ana ☕</div>
+                <div className="app-page-h">Bom dia, Ana</div>
                 <div className="app-page-sub">Terça, 14 de janeiro · Turno aberto às 08:12</div>
               </div>
               <div className="flex gap-2">
