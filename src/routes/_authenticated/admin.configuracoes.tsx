@@ -624,9 +624,10 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
     } catch { toast.error("Não foi possível copiar"); }
   };
 
-  const isConnected = !!savedToken && !!account;
-  const isInvalid = !!savedToken && !account && !testing;
-  const tokenChanged = (token.trim() || null) !== savedToken;
+  const isConnected = hasSavedToken && !!account;
+  const isInvalid = hasSavedToken && !account && !testing;
+  const tokenChanged = token.trim().length > 0;
+
 
   return (
     <div className="space-y-5">
