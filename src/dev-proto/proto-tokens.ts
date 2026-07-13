@@ -472,7 +472,7 @@ export const PROTO_CSS = `
 .tx-tab.on { color:#111; font-weight:800; border-bottom-color:#23303A; }
 .tx-tabs-fade{position:absolute;right:0;top:0;bottom:0;width:36px;background:linear-gradient(90deg,transparent,#fff);pointer-events:none}
 
-.tx-list { padding:12px 20px 120px; }
+.tx-list { padding:12px 20px calc(var(--cart-bar-height) + env(safe-area-inset-bottom) + 40px); }
 .tx-cat-h { font-family:'Archivo Black'; font-size:15px; color:#111; margin:20px 0 10px; }
 .tx-item { display:grid; grid-template-columns: 1fr 90px; gap:14px; padding:14px 0; border-bottom:1px solid #F0F0EA; }
 .tx-item.out{opacity:.5}
