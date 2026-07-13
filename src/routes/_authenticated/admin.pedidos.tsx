@@ -363,9 +363,7 @@ function PedidosPage() {
 
 
   const markPaid = async (o: Order) => {
-    const { error } = await supabase.from("orders")
-      .update({ payment_status: "paid", paid_at: new Date().toISOString() })
-      .eq("id", o.id);
+    const { error } = await supabase.rpc("mark_order_paid_manual", { p_order_id: o.id });
     if (error) return toast.error(error.message);
     toast.success("Pagamento confirmado");
     if (selected?.id === o.id) setSelected({ ...o, payment_status: "paid" });
@@ -373,11 +371,25 @@ function PedidosPage() {
 
   const assignDriver = async (driverId: string) => {
     if (!selected) return;
-    const value = driverId === "none" ? null : driverId;
-    const { error } = await supabase.from("orders").update({ driver_id: value }).eq("id", selected.id);
-    if (error) return toast.error(error.message);
-    setSelected({ ...selected, driver_id: value });
-    toast.success(value ? "Entregador atribuído" : "Entregador removido");
+    const previous = selected.driver_id;
+    if (driverId === "none") {
+      if (!previous) return; // no-op: nada a remover
+      const { error } = await supabase.rpc("unassign_driver", {
+        p_order_id: selected.id,
+      });
+      if (error) return toast.error(error.message);
+      setSelected({ ...selected, driver_id: null });
+      toast.success("Entregador removido");
+    } else {
+      if (previous === driverId) return; // no-op
+      const { error } = await supabase.rpc("assign_driver", {
+        p_order_id: selected.id,
+        p_driver_id: driverId,
+      });
+      if (error) return toast.error(error.message);
+      setSelected({ ...selected, driver_id: driverId });
+      toast.success("Entregador atribuído");
+    }
   };
 
   const notifyWhatsApp = (o: Order) => {
