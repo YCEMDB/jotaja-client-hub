@@ -309,9 +309,9 @@ function ProtoDashboard() {
         </div>
       </div>
 
-      <div className="demo-badge" aria-hidden>
+      <span className="demo-badge demo-floating" aria-hidden>
         Dados demonstrativos
-      </div>
+      </span>
     </div>
   );
 }
