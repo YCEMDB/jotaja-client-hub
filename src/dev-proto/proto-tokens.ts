@@ -335,7 +335,7 @@ export const PROTO_CSS = `
   .app-order-row .app-status{grid-area:status;justify-self:start;font-size:10.5px}
   .app-order-row > button{display:none}
   .app-bottom-nav{display:block}
-  .app-content{padding-bottom:24px}
+  .app-content{padding-bottom:calc(80px + env(safe-area-inset-bottom))}
 }
 /* Tablet 768–1023: compact — sidebar hidden, KPIs 2×2, panels stacked */
 @media (min-width: 768px) and (max-width: 1023px){
