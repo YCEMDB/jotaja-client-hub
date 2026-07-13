@@ -323,7 +323,7 @@ export const PROTO_CSS = `
   .app-content{padding:14px}
   .app-page-head{margin-bottom:14px}
   .app-page-h{font-size:20px}
-  .app-kpi-grid{grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+  .app-kpi-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-bottom:14px}
   .app-kpi{padding:12px 14px}
   .app-kpi-v{font-size:20px}
   .app-two-col{grid-template-columns:1fr;gap:12px}
