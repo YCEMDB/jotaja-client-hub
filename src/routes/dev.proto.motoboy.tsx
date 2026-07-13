@@ -289,9 +289,6 @@ function ProtoMotoboy() {
         </div>
       </nav>
 
-      <div className="demo-badge" aria-hidden>
-        Dados demonstrativos
-      </div>
     </div>
   );
 }
