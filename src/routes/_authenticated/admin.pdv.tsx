@@ -49,6 +49,7 @@ function PdvPage() {
   const [payment, setPayment] = useState<"cash" | "pix" | "credit_card" | "debit_card">("cash");
   const [deliveryFee, setDeliveryFee] = useState(0);
   const [discount, setDiscount] = useState(0);
+  const [discountReason, setDiscountReason] = useState("");
   const [notes, setNotes] = useState("");
   const [saving, setSaving] = useState(false);
 
