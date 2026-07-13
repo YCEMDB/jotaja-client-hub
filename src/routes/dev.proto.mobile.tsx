@@ -82,7 +82,7 @@ function MobLanding() {
             </svg>
             <span style={{ fontFamily: "'Archivo Black'", fontSize: 15 }}>Mesivo</span>
           </div>
-          <span style={{ fontSize: 22 }}>≡</span>
+          <IconMenu size={22} />
         </div>
         <div className="mob-landing-hero">
           <span className="mkt-eyebrow" style={{ fontSize: 11 }}>
@@ -92,7 +92,7 @@ function MobLanding() {
             Salão, cozinha e entrega <em>em sintonia</em>.
           </h1>
           <p>Do balcão à moto, um só sistema para o restaurante brasileiro.</p>
-          <button>Criar conta grátis →</button>
+          <button>Criar conta grátis</button>
         </div>
         <div className="mob-landing-mock">
           <div className="dm">
@@ -163,7 +163,7 @@ function MobDashboard() {
         <div className="mob-dash-hdr">
           <div>
             <div style={{ fontSize: 12, color: "#8A8C84" }}>Terça, 14 jan</div>
-            <div className="mob-dash-hdr-t">Bom dia, Ana ☕</div>
+            <div className="mob-dash-hdr-t">Bom dia, Ana</div>
           </div>
           <div className="mob-dash-hdr-av">A</div>
         </div>
@@ -267,10 +267,10 @@ function MobPdv() {
             <div style={{ fontFamily: "'Archivo Black'", fontSize: 15 }}>PDV móvel</div>
             <div style={{ fontSize: 11, color: "#8A8C84" }}>Caixa 01 · Ana</div>
           </div>
-          <span style={{ fontSize: 20 }}>⋯</span>
+          <IconMenu size={20} />
         </div>
         <div className="mob-pdv-search">
-          <div className="mob-pdv-search-i">🔎 Buscar produto</div>
+          <div className="mob-pdv-search-i" style={{display:"flex",alignItems:"center",gap:8}}><IconSearch size={16} /> Buscar produto</div>
         </div>
         <div className="mob-pdv-cats">
           <span className="on">Burgers</span>
@@ -384,21 +384,21 @@ function MobPedido() {
         </div>
         <div className="mob-pedido-steps">
           <div className="mob-pedido-step done">
-            <div className="mob-pedido-step-i">✓</div>
+            <div className="mob-pedido-step-i"><IconCheck size={14} /></div>
             <div>
               <div className="mob-pedido-step-t">Recebido</div>
               <div className="mob-pedido-step-h">19:04 · pagamento aprovado</div>
             </div>
           </div>
           <div className="mob-pedido-step done">
-            <div className="mob-pedido-step-i">✓</div>
+            <div className="mob-pedido-step-i"><IconCheck size={14} /></div>
             <div>
               <div className="mob-pedido-step-t">Preparando</div>
               <div className="mob-pedido-step-h">19:08 · na cozinha</div>
             </div>
           </div>
           <div className="mob-pedido-step active">
-            <div className="mob-pedido-step-i">•</div>
+            <div className="mob-pedido-step-i" aria-hidden="true">3</div>
             <div>
               <div className="mob-pedido-step-t">Saiu para entrega</div>
               <div className="mob-pedido-step-h">19:22 · com Bruno</div>
@@ -464,9 +464,9 @@ function MobMoto() {
             Vila Madalena · 2,4 km
           </div>
           <div className="mob-moto-card-meta">
-            <span>⏱ 12 min</span>
-            <span>💰 R$ 8,00</span>
-            <span>📦 1 sacola</span>
+            <span style={{display:"inline-flex",alignItems:"center",gap:4}}><IconClock size={13} /> 12 min</span>
+            <span style={{display:"inline-flex",alignItems:"center",gap:4}}><IconMoney size={13} /> R$ 8,00</span>
+            <span style={{display:"inline-flex",alignItems:"center",gap:4}}><IconPackage size={13} /> 1 sacola</span>
           </div>
         </div>
 
