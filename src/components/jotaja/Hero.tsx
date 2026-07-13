@@ -1,4 +1,4 @@
-import { ArrowRight, Check, Bell, CreditCard, Utensils, Package } from "lucide-react";
+import { ArrowRight, Check, Bell, CheckCircle2, Utensils, Package, Bike } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { motion, useMotionValue, useReducedMotion, useSpring, useInView } from "motion/react";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,8 @@ import {
   type NotificationItem,
 } from "@/components/motion";
 
+// Sequência operacional real do Mesivo — sem promessa de confirmação
+// automática de pagamento, que não existe no produto neste momento.
 const NOTIFICATIONS: NotificationItem[] = [
   {
     id: "new-order",
@@ -25,25 +27,32 @@ const NOTIFICATIONS: NotificationItem[] = [
     accent: "orange",
   },
   {
+    id: "confirmed",
+    icon: <CheckCircle2 className="w-3.5 h-3.5" />,
+    title: "Pedido confirmado",
+    description: "Mesa 08 · #142",
+    accent: "amber",
+  },
+  {
     id: "in-prep",
     icon: <Utensils className="w-3.5 h-3.5" />,
     title: "Pedido em preparo",
     description: "Cozinha · #142",
-    accent: "amber",
+    accent: "orange",
   },
   {
     id: "ready",
     icon: <Package className="w-3.5 h-3.5" />,
     title: "Pedido pronto",
-    description: "Retirada · #138",
-    accent: "violet",
+    description: "Retirada · #142",
+    accent: "amber",
   },
   {
-    id: "paid",
-    icon: <CreditCard className="w-3.5 h-3.5" />,
-    title: "Pagamento confirmado",
-    description: "Pix · R$ 74,50",
-    accent: "magenta",
+    id: "delivered",
+    icon: <Bike className="w-3.5 h-3.5" />,
+    title: "Pedido entregue",
+    description: "Entrega · #142",
+    accent: "ink",
   },
 ];
 
