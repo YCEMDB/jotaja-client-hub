@@ -772,7 +772,7 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
     <div className="space-y-5">
       <PaymentMethodsCard r={r} onSaved={onSaved} mpConnected={isConnected} />
       <ActivePaymentProviderCard r={r} onSaved={onSaved} />
-      <PagbankIntegrationCard r={r} onSaved={onSaved} />
+      {isPagbankDemoRestaurant(r.id) && <PagbankIntegrationCard r={r} onSaved={onSaved} />}
     <Card className="p-6 space-y-5">
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <div>
