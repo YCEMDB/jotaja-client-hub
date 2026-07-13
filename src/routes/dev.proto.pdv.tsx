@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PROTO_CSS } from "@/dev-proto/proto-tokens";
 import { IconImage, IconMenu, IconSearch } from "@/dev-proto/proto-icons";
 
@@ -46,7 +46,39 @@ const CART_ITEMS: [string, string, number][] = [
 
 function ProtoPdv() {
   const [sheetOpen, setSheetOpen] = useState(false);
+  const fabRef = useRef<HTMLButtonElement | null>(null);
+  const sheetRef = useRef<HTMLDivElement | null>(null);
+  const closeRef = useRef<HTMLButtonElement | null>(null);
   const itemCount = CART_ITEMS.reduce((a, [, , q]) => a + q, 0);
+
+  useEffect(() => {
+    if (!sheetOpen) return;
+    const prev = document.activeElement as HTMLElement | null;
+    closeRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+      const root = sheetRef.current;
+      if (!root) return;
+      const focusables = root.querySelectorAll<HTMLElement>(
+        'button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])',
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      (prev ?? fabRef.current)?.focus?.();
+    };
+  }, [sheetOpen]);
 
   return (
     <div data-theme="app-proto">
@@ -188,11 +220,14 @@ function ProtoPdv() {
         </div>
 
         <button
+          ref={fabRef}
           type="button"
           className="pdv-mob-fab"
           data-empty={itemCount === 0}
           disabled={itemCount === 0}
           aria-label={`Ver pedido, ${itemCount} itens, total R$ 141,83`}
+          aria-haspopup="dialog"
+          aria-expanded={sheetOpen}
           onClick={() => setSheetOpen(true)}
         >
           <span className="pdv-mob-fab-l">
@@ -213,23 +248,28 @@ function ProtoPdv() {
             onClick={() => setSheetOpen(false)}
           />
           <div
+            ref={sheetRef}
             className="pdv-sheet"
             style={{ display: "flex" }}
             role="dialog"
             aria-modal="true"
-            aria-label="Pedido em andamento"
+            aria-labelledby="pdv-sheet-title"
+            tabIndex={-1}
             onKeyDown={(e) => {
               if (e.key === "Escape") setSheetOpen(false);
             }}
           >
             <div className="pdv-sheet-handle" />
             <div className="pdv-sheet-h">
-              <div className="pdv-sheet-h-t">Pedido #0827 · Salão</div>
+              <div id="pdv-sheet-title" className="pdv-sheet-h-t">
+                Pedido #0827 · Salão
+              </div>
               <button
+                ref={closeRef}
                 type="button"
                 className="pdv-sheet-close"
                 onClick={() => setSheetOpen(false)}
-                aria-label="Fechar"
+                aria-label="Fechar pedido"
               >
                 ×
               </button>

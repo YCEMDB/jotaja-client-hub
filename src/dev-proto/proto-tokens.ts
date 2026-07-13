@@ -273,8 +273,8 @@ export const PROTO_CSS = `
 .app-btn { background:var(--tomato); color:#FFF8EE; border:none; padding:9px 16px; border-radius:10px; font-size:13.5px; font-weight:600; cursor:pointer; font-family:var(--mono);}
 .app-btn-ghost { background:#fff; border:1px solid var(--line); color:var(--slate); padding:9px 14px; border-radius:10px; font-size:13.5px; font-family:var(--mono); font-weight:600;}
 
-.app-kpi-grid { display:grid; grid-template-columns: repeat(4, 1fr); gap:14px; margin-bottom:20px; }
-.app-kpi { background:#fff; border:1px solid var(--line); border-radius:14px; padding:16px 18px; }
+.app-kpi-grid { display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap:14px; margin-bottom:20px; }
+.app-kpi { background:#fff; border:1px solid var(--line); border-radius:14px; padding:16px 18px; min-width:0; overflow:hidden; }
 .app-kpi-l { font-size:12px; color:var(--stone); text-transform:uppercase; letter-spacing:.05em; font-family:var(--mono); font-weight:600;}
 .app-kpi-v { font-family:var(--mono); font-weight:800; font-size:26px; color:var(--ink); margin:6px 0 4px; letter-spacing:-.01em;}
 .app-kpi-d { font-size:12px; font-weight:700; font-family:var(--mono);}
@@ -309,9 +309,9 @@ export const PROTO_CSS = `
 .app-mob-topbar-sub{font-size:11px;color:var(--stone);font-family:var(--mono);font-weight:500}
 .app-mob-topbar-actions{display:flex;gap:8px;align-items:center;flex-shrink:0}
 
-.app-bottom-nav{display:none;position:sticky;bottom:0;background:#fff;border-top:1px solid var(--line);padding:8px 0 max(10px,env(safe-area-inset-bottom));z-index:20}
+.app-bottom-nav{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:8px 0 max(10px,env(safe-area-inset-bottom));z-index:40}
 .app-bottom-nav-inner{display:grid;grid-template-columns:repeat(5,1fr);gap:2px}
-.app-bottom-nav-item{background:transparent;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;color:var(--stone);font-size:10.5px;font-family:var(--mono);font-weight:600;cursor:pointer}
+.app-bottom-nav-item{background:transparent;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;color:var(--stone);font-size:10.5px;font-family:var(--mono);font-weight:600;cursor:pointer;min-width:0}
 .app-bottom-nav-item.on{color:var(--tomato)}
 .app-bottom-nav-item svg{width:22px;height:22px}
 
@@ -323,7 +323,7 @@ export const PROTO_CSS = `
   .app-content{padding:14px}
   .app-page-head{margin-bottom:14px}
   .app-page-h{font-size:20px}
-  .app-kpi-grid{grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+  .app-kpi-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-bottom:14px}
   .app-kpi{padding:12px 14px}
   .app-kpi-v{font-size:20px}
   .app-two-col{grid-template-columns:1fr;gap:12px}
@@ -335,7 +335,7 @@ export const PROTO_CSS = `
   .app-order-row .app-status{grid-area:status;justify-self:start;font-size:10.5px}
   .app-order-row > button{display:none}
   .app-bottom-nav{display:block}
-  .app-content{padding-bottom:24px}
+  .app-content{padding-bottom:calc(80px + env(safe-area-inset-bottom))}
 }
 /* Tablet 768–1023: compact — sidebar hidden, KPIs 2×2, panels stacked */
 @media (min-width: 768px) and (max-width: 1023px){
@@ -347,7 +347,7 @@ export const PROTO_CSS = `
   .app-kpi-grid{grid-template-columns:1fr 1fr;gap:12px}
   .app-two-col{grid-template-columns:1fr;gap:14px}
   .app-bottom-nav{display:block}
-  .app-content{padding-bottom:24px}
+  .app-content{padding-bottom:calc(80px + env(safe-area-inset-bottom))}
 }
 
 /* PDV desktop */
