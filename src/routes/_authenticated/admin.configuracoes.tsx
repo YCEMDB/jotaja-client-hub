@@ -327,11 +327,24 @@ function HorariosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
   );
 }
 
-function AreasTab({ areas, restaurantId, onSaved }: { areas: DeliveryArea[]; restaurantId: string; onSaved: () => void }) {
+function AreasTab({
+  areas,
+  restaurantId,
+  onSaved,
+  canWrite,
+  needsReason,
+}: {
+  areas: DeliveryArea[];
+  restaurantId: string;
+  onSaved: () => void;
+  canWrite: boolean;
+  needsReason: boolean;
+}) {
   const [neighborhood, setNeighborhood] = useState("");
   const [fee, setFee] = useState("");
   const [minOrder, setMinOrder] = useState("");
   const [minutes, setMinutes] = useState("");
+  const [reason, setReason] = useState("");
   const [saving, setSaving] = useState(false);
   const [catalog, setCatalog] = useState<Array<{ id: string; city: string; name: string }>>([]);
   const [importOpen, setImportOpen] = useState(false);
@@ -352,30 +365,83 @@ function AreasTab({ areas, restaurantId, onSaved }: { areas: DeliveryArea[]; res
 
   useEffect(() => { loadCatalog(); }, []);
 
+  const errorMessage = (code: string | undefined | null, fallback: string) => {
+    const map: Record<string, string> = {
+      neighborhood_required: "Informe o bairro.",
+      neighborhood_too_long: "Bairro muito longo.",
+      city_too_long: "Cidade muito longa.",
+      fee_invalid: "Taxa inválida.",
+      fee_too_high: "Taxa acima do limite permitido.",
+      fee_precision_invalid: "Use no máximo duas casas decimais na taxa.",
+      min_order_invalid: "Pedido mínimo inválido.",
+      min_order_too_high: "Pedido mínimo acima do limite.",
+      min_order_precision_invalid: "Use no máximo duas casas decimais no pedido mínimo.",
+      estimated_minutes_invalid: "Tempo estimado inválido.",
+      estimated_minutes_too_high: "Tempo estimado muito alto.",
+      neighborhood_already_active: "Já existe um bairro ativo com esse nome.",
+      delivery_area_not_found: "Bairro não encontrado.",
+      restaurant_inactive: "Restaurante inativo.",
+      reason_required: "Motivo obrigatório (mínimo 5 caracteres).",
+      "forbidden: no_active_support_session": "Sem sessão de suporte ativa.",
+      "forbidden: support_level_insufficient": "Suporte precisa ser administrativo.",
+      too_many_rows: "Lote acima do limite (500).",
+      rows_required: "Nenhum bairro selecionado.",
+    };
+    for (const k of Object.keys(map)) if (code && code.startsWith(k)) return map[k];
+    return fallback;
+  };
+
+  const guardReason = (): string | null => {
+    if (!needsReason) return null;
+    const trimmed = reason.trim();
+    if (trimmed.replace(/\s/g, "").length < 5) {
+      toast.error("Informe um motivo com pelo menos 5 caracteres para operar via suporte.");
+      return null;
+    }
+    return trimmed;
+  };
+
   const add = async () => {
+    if (!canWrite) return;
     if (!neighborhood.trim()) return toast.error("Bairro obrigatório");
+    let r: string | null = null;
+    if (needsReason) { r = guardReason(); if (!r) return; }
     setSaving(true);
-    const { error } = await supabase.from("delivery_areas").insert({
-      restaurant_id: restaurantId,
-      neighborhood: neighborhood.trim(),
-      fee: Number(fee) || 0,
-      min_order: Number(minOrder) || 0,
-      estimated_minutes: Number(minutes) || 30,
+    const { error } = await supabase.rpc("create_delivery_area", {
+      p_restaurant_id: restaurantId,
+      p_neighborhood: neighborhood.trim(),
+      p_city: null,
+      p_fee: Number(fee) || 0,
+      p_min_order: Number(minOrder) || 0,
+      p_estimated_minutes: Number(minutes) || 30,
+      p_reason: r,
     });
     setSaving(false);
-    if (error) return toast.error(error.message);
+    if (error) return toast.error(errorMessage(error.message, error.message));
     setNeighborhood(""); setFee(""); setMinOrder(""); setMinutes("");
     onSaved();
   };
 
   const remove = async (id: string) => {
-    if (!confirm("Excluir bairro?")) return;
-    await supabase.from("delivery_areas").delete().eq("id", id);
+    if (!canWrite) return;
+    if (!confirm("Arquivar bairro?")) return;
+    let r: string | null = null;
+    if (needsReason) { r = guardReason(); if (!r) return; }
+    const { error } = await supabase.rpc("archive_delivery_area", { p_area_id: id, p_reason: r });
+    if (error) return toast.error(errorMessage(error.message, error.message));
     onSaved();
   };
 
   const toggle = async (a: DeliveryArea) => {
-    await supabase.from("delivery_areas").update({ is_active: !a.is_active }).eq("id", a.id);
+    if (!canWrite) return;
+    let r: string | null = null;
+    if (needsReason) { r = guardReason(); if (!r) return; }
+    const { error } = await supabase.rpc("set_delivery_area_active", {
+      p_area_id: a.id,
+      p_active: !a.is_active,
+      p_reason: r,
+    });
+    if (error) return toast.error(errorMessage(error.message, error.message));
     onSaved();
   };
 
@@ -389,18 +455,23 @@ function AreasTab({ areas, restaurantId, onSaved }: { areas: DeliveryArea[]; res
   };
 
   const importPicked = async () => {
+    if (!canWrite) return;
     if (picked.size === 0) return toast.error("Selecione pelo menos um bairro");
+    let r: string | null = null;
+    if (needsReason) { r = guardReason(); if (!r) return; }
     const rows = Array.from(picked).map((name) => ({
-      restaurant_id: restaurantId,
       neighborhood: name,
       city: importCity,
       fee: Number(defaultFee) || 0,
       estimated_minutes: Number(defaultEta) || 30,
       min_order: 0,
-      is_active: true,
     }));
-    const { error } = await supabase.from("delivery_areas").insert(rows);
-    if (error) return toast.error(error.message);
+    const { error } = await supabase.rpc("import_delivery_areas", {
+      p_restaurant_id: restaurantId,
+      p_rows: rows as any,
+      p_reason: r,
+    });
+    if (error) return toast.error(errorMessage(error.message, error.message));
     toast.success(`${picked.size} bairro(s) importado(s)! Ajuste a taxa de cada um se precisar.`);
     setPicked(new Set());
     setImportOpen(false);
@@ -410,8 +481,53 @@ function AreasTab({ areas, restaurantId, onSaved }: { areas: DeliveryArea[]; res
   const catalogByCity = catalog.filter((c) => c.city === importCity);
   const existingNames = new Set(areas.map((a) => a.neighborhood.toLowerCase()));
 
+  if (!canWrite) {
+    return (
+      <div className="space-y-4">
+        <Card className="p-6">
+          <h3 className="font-semibold mb-1">Áreas de entrega</h3>
+          <p className="text-sm text-muted-foreground mb-4">
+            Somente o dono ou o gerente da loja podem cadastrar ou alterar bairros e taxas.
+          </p>
+          {areas.length === 0 ? (
+            <p className="text-sm text-muted-foreground">Nenhum bairro cadastrado.</p>
+          ) : (
+            <div className="space-y-2">
+              {areas.map((a) => (
+                <div key={a.id} className="flex items-center gap-3 p-3 border rounded-lg opacity-90">
+                  <div className="flex-1">
+                    <p className="font-medium">{a.neighborhood}{a.city ? <span className="text-xs text-muted-foreground"> · {a.city}</span> : null}</p>
+                    <p className="text-xs text-muted-foreground">
+                      R$ {Number(a.fee).toFixed(2)} · mín R$ {Number(a.min_order).toFixed(2)} · {a.estimated_minutes ?? 30}min
+                      {a.is_active === false && <span className="ml-2 uppercase tracking-wide text-[10px]">inativo</span>}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
+      {needsReason && (
+        <Card className="p-4 border-amber-500/40 bg-amber-500/5">
+          <Label>Motivo da alteração (sessão de suporte)</Label>
+          <Input
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+            placeholder="Ex: ajuste solicitado pelo cliente no ticket #123"
+            className="mt-1"
+          />
+          <p className="text-[11px] text-muted-foreground mt-1">
+            Obrigatório para todas as ações abaixo. Registrado na auditoria.
+          </p>
+        </Card>
+      )}
+
       <Card className="p-6">
         <div className="flex items-start justify-between gap-3 flex-wrap mb-3">
           <div>
