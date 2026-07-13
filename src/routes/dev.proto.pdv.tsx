@@ -81,7 +81,7 @@ function ProtoPdv() {
               <div key={n} className={"pdv-prod" + (avail === "out" ? " out" : "")}>
                 {avail === "out" && <span className="pdv-prod-badge">Esgotado</span>}
                 <div className={"pdv-prod-img" + (avail === "no-img" ? " no-img" : "")}>
-                  {avail === "no-img" && <span aria-hidden>🖼</span>}
+                  {avail === "no-img" && <IconImage size={22} />}
                 </div>
                 <div className="pdv-prod-name">{n}</div>
                 <div className="pdv-prod-price">R$ {p}</div>
