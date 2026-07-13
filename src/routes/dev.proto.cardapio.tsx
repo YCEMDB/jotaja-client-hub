@@ -202,7 +202,7 @@ function ItemRow({ item, accent = false }: { item: Item; accent?: boolean }) {
         }
         aria-hidden
       >
-        {noImg && <span>🖼</span>}
+        {noImg && <IconImage size={24} />}
       </div>
     </div>
   );
