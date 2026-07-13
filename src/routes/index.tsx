@@ -69,22 +69,30 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <ScrollProgress />
-      <Header />
-      <main>
-        <Hero />
-        <Stats />
-        <Bento />
-        <ComoFunciona />
-        <ComparativoIfood />
-        <Depoimentos />
-        <Planos />
-        <FAQ />
-        <CTA />
-      </main>
-      <Footer />
-      <WhatsAppFloat />
-    </div>
+    // reducedMotion="never" impede que a Motion library remova estilos
+    // iniciais (opacity/transform) no cliente quando o usuário tem
+    // Reduced Motion ativo — o que causaria hydration mismatch contra o
+    // HTML do SSR. A preferência do usuário continua sendo respeitada
+    // pelos nossos componentes via useReducedMotionSafe, que trocam para
+    // uma variante de fade curto após a hidratação.
+    <MotionConfig reducedMotion="never">
+      <div className="min-h-screen bg-background text-foreground">
+        <ScrollProgress />
+        <Header />
+        <main>
+          <Hero />
+          <Stats />
+          <Bento />
+          <ComoFunciona />
+          <ComparativoIfood />
+          <Depoimentos />
+          <Planos />
+          <FAQ />
+          <CTA />
+        </main>
+        <Footer />
+        <WhatsAppFloat />
+      </div>
+    </MotionConfig>
   );
 }
