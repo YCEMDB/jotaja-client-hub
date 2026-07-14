@@ -70,8 +70,7 @@ export function LandingHero() {
               </span>
             </MotionReveal>
 
-            <MotionText
-              as="h1"
+            <div
               className="mt-6"
               style={{
                 fontSize: "clamp(2.5rem, 5.7vw, 5.5rem)",
@@ -80,14 +79,19 @@ export function LandingHero() {
                 fontWeight: 750 as unknown as number,
                 color: "var(--fg-hi)",
               }}
-              lines={[
-                "Seu restaurante,",
-                <>
-                  em um <span className="mesivo-accent">só ritmo</span>.
-                </>,
-              ]}
-              ariaLabel="Seu restaurante, em um só ritmo."
-            />
+            >
+              <MotionText
+                as="h1"
+                lines={[
+                  "Seu restaurante,",
+                  <>
+                    em um <span className="mesivo-accent">só ritmo</span>.
+                  </>,
+                ]}
+                ariaLabel="Seu restaurante, em um só ritmo."
+              />
+            </div>
+
 
             <MotionReveal delay={0.2}>
               <p
