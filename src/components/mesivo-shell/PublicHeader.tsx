@@ -3,30 +3,30 @@ import { useEffect, useState } from "react";
 import { Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { MesivoMark } from "@/components/mesivo-graphics/MesivoMark";
+import type { PublicShellVariant } from "./PublicShell";
 
-type NavItem = { label: string; to: string };
+type NavItem = { label: string; href: string; anchor?: boolean };
 
-/**
- * Links validados contra o inventário de rotas existente.
- * Só entram itens que apontam para rotas reais e públicas.
- */
-const navItems: NavItem[] = [
-  { label: "Empresa", to: "/empresa" },
-  { label: "Sobre", to: "/sobre" },
-  { label: "Blog", to: "/blog" },
-  { label: "Contato", to: "/contato" },
+const defaultNav: NavItem[] = [
+  { label: "Empresa", href: "/empresa" },
+  { label: "Sobre", href: "/sobre" },
+  { label: "Blog", href: "/blog" },
+  { label: "Contato", href: "/contato" },
+];
+
+const landingNav: NavItem[] = [
+  { label: "Produto", href: "#produto", anchor: true },
+  { label: "Como funciona", href: "#como-funciona", anchor: true },
+  { label: "Recursos", href: "#recursos", anchor: true },
+  { label: "Planos", href: "#planos", anchor: true },
+  { label: "FAQ", href: "#faq", anchor: true },
 ];
 
 /**
- * PublicHeader — cabeçalho do PublicShell (contexto marketing).
- *
- * - Primeiro render determinístico (scrolled=false).
- * - Listener passivo + cleanup.
- * - Menu mobile via <Sheet> shadcn (reaproveita focus trap, Esc,
- *   scroll lock, restauração de foco).
- * - Sem blur pesado; fundo translúcido apenas após scroll.
+ * PublicHeader — cabeçalho do PublicShell.
+ * variant="landing" troca a nav por âncoras internas da home.
  */
-export function PublicHeader() {
+export function PublicHeader({ variant = "default" }: { variant?: PublicShellVariant }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -37,13 +37,43 @@ export function PublicHeader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const items = variant === "landing" ? landingNav : defaultNav;
+
+  const NavAnchor = ({ item, mobile = false }: { item: NavItem; mobile?: boolean }) => {
+    const className = mobile
+      ? "block rounded-lg px-3 py-3 text-base font-medium"
+      : "rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-[var(--mesivo-peach)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--mesivo-tomato)]";
+    const style = {
+      color: "var(--mesivo-coffee)",
+      fontFamily: "var(--font-ui)",
+    } as const;
+    if (item.anchor) {
+      return (
+        <a href={item.href} className={className} style={style}>
+          {item.label}
+        </a>
+      );
+    }
+    return (
+      <Link
+        to={item.href}
+        className={className}
+        style={style}
+        activeProps={{ style: { ...style, color: "var(--mesivo-tomato)" } }}
+      >
+        {item.label}
+      </Link>
+    );
+  };
+
   return (
     <header
       className="sticky top-0 z-40 w-full transition-colors"
       style={{
         backgroundColor: scrolled
-          ? "color-mix(in oklab, var(--mesivo-cream) 88%, transparent)"
+          ? "color-mix(in oklab, var(--mesivo-cream) 92%, transparent)"
           : "transparent",
+        backdropFilter: scrolled ? "saturate(1.1) blur(6px)" : undefined,
         borderBottom: scrolled ? "1px solid var(--hairline)" : "1px solid transparent",
       }}
     >
@@ -56,47 +86,50 @@ export function PublicHeader() {
           <MesivoMark size={32} />
           <span
             className="text-lg font-bold tracking-tight"
-            style={{ color: "var(--mesivo-coffee)", fontFamily: "var(--font-display)" }}
+            style={{ color: "var(--mesivo-coffee)", fontFamily: "var(--font-ui)" }}
           >
             Mesivo
           </span>
         </Link>
 
-        {/* Nav desktop */}
         <nav aria-label="Navegação principal" className="hidden md:block">
           <ul className="flex items-center gap-1">
-            {navItems.map((item) => (
-              <li key={item.to}>
-                <Link
-                  to={item.to}
-                  className="rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-[var(--mesivo-peach)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--mesivo-tomato)]"
-                  style={{ color: "var(--mesivo-coffee)", fontFamily: "var(--font-ui)" }}
-                  activeProps={{
-                    style: { color: "var(--mesivo-tomato)", fontFamily: "var(--font-ui)" },
-                  }}
-                >
-                  {item.label}
-                </Link>
+            {items.map((item) => (
+              <li key={item.href}>
+                <NavAnchor item={item} />
               </li>
             ))}
           </ul>
         </nav>
 
         <div className="hidden md:block">
-          <Link
-            to="/contato"
-            className="inline-flex h-10 items-center justify-center rounded-full px-5 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--mesivo-mango)] focus-visible:ring-offset-2"
-            style={{
-              backgroundColor: "var(--mesivo-tomato)",
-              color: "var(--mesivo-white)",
-              fontFamily: "var(--font-ui)",
-            }}
-          >
-            Falar com a gente
-          </Link>
+          {variant === "landing" ? (
+            <a
+              href="#cadastro"
+              className="inline-flex h-10 items-center justify-center rounded-full px-5 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--mesivo-mango)] focus-visible:ring-offset-2"
+              style={{
+                backgroundColor: "var(--mesivo-tomato)",
+                color: "var(--mesivo-white)",
+                fontFamily: "var(--font-ui)",
+              }}
+            >
+              Começar grátis
+            </a>
+          ) : (
+            <Link
+              to="/contato"
+              className="inline-flex h-10 items-center justify-center rounded-full px-5 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--mesivo-mango)] focus-visible:ring-offset-2"
+              style={{
+                backgroundColor: "var(--mesivo-tomato)",
+                color: "var(--mesivo-white)",
+                fontFamily: "var(--font-ui)",
+              }}
+            >
+              Falar com a gente
+            </Link>
+          )}
         </div>
 
-        {/* Menu mobile via Sheet (shadcn) */}
         <div className="md:hidden">
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
@@ -117,36 +150,41 @@ export function PublicHeader() {
               <SheetTitle className="sr-only">Menu</SheetTitle>
               <nav aria-label="Navegação principal (mobile)" className="mt-6">
                 <ul className="flex flex-col gap-1">
-                  {navItems.map((item) => (
-                    <li key={item.to}>
+                  {items.map((item) => (
+                    <li key={item.href}>
                       <SheetClose asChild>
-                        <Link
-                          to={item.to}
-                          className="block rounded-lg px-3 py-3 text-base font-medium"
-                          style={{
-                            color: "var(--mesivo-coffee)",
-                            fontFamily: "var(--font-ui)",
-                          }}
-                        >
-                          {item.label}
-                        </Link>
+                        <NavAnchor item={item} mobile />
                       </SheetClose>
                     </li>
                   ))}
                 </ul>
                 <div className="mt-6">
                   <SheetClose asChild>
-                    <Link
-                      to="/contato"
-                      className="inline-flex h-11 w-full items-center justify-center rounded-full px-5 text-sm font-semibold"
-                      style={{
-                        backgroundColor: "var(--mesivo-tomato)",
-                        color: "var(--mesivo-white)",
-                        fontFamily: "var(--font-ui)",
-                      }}
-                    >
-                      Falar com a gente
-                    </Link>
+                    {variant === "landing" ? (
+                      <a
+                        href="#cadastro"
+                        className="inline-flex h-11 w-full items-center justify-center rounded-full px-5 text-sm font-semibold"
+                        style={{
+                          backgroundColor: "var(--mesivo-tomato)",
+                          color: "var(--mesivo-white)",
+                          fontFamily: "var(--font-ui)",
+                        }}
+                      >
+                        Começar grátis
+                      </a>
+                    ) : (
+                      <Link
+                        to="/contato"
+                        className="inline-flex h-11 w-full items-center justify-center rounded-full px-5 text-sm font-semibold"
+                        style={{
+                          backgroundColor: "var(--mesivo-tomato)",
+                          color: "var(--mesivo-white)",
+                          fontFamily: "var(--font-ui)",
+                        }}
+                      >
+                        Falar com a gente
+                      </Link>
+                    )}
                   </SheetClose>
                 </div>
               </nav>
