@@ -901,25 +901,23 @@ function SystemPreview({
         <div>
           <MiniLabel text="FAQ" />
           <div style={{ display: "grid", gap: 8 }}>
-            {[
-              "Preciso de cartão de crédito?",
-              "Funciona no meu tablet?",
-              "Emite nota fiscal?",
-            ].map((q) => (
-              <div
-                key={q}
-                style={{
-                  padding: "12px 14px",
-                  border: "1px solid rgba(26,22,19,0.1)",
-                  borderRadius: 12,
-                  background: "#fff",
-                  fontWeight: 600,
-                  fontSize: corpoRem,
-                }}
-              >
-                {q}
-              </div>
-            ))}
+            {["Preciso de cartão de crédito?", "Funciona no meu tablet?", "Emite nota fiscal?"].map(
+              (q) => (
+                <div
+                  key={q}
+                  style={{
+                    padding: "12px 14px",
+                    border: "1px solid rgba(26,22,19,0.1)",
+                    borderRadius: 12,
+                    background: "#fff",
+                    fontWeight: 600,
+                    fontSize: corpoRem,
+                  }}
+                >
+                  {q}
+                </div>
+              ),
+            )}
           </div>
         </div>
         <div>
@@ -971,9 +969,7 @@ function SystemPreview({
         <MiniLabel text="Português — acentos, cedilha, til, números" />
         <ul style={{ margin: 0, paddingLeft: 20, display: "grid", gap: 4, fontSize: corpoRem }}>
           {PORTUGUES.map((t) => (
-            <li key={t}>
-              {t} — 12,5% · R$ 4.820,00 · #0827 · (Mesa 08) · até 100% de aumento
-            </li>
+            <li key={t}>{t} — 12,5% · R$ 4.820,00 · #0827 · (Mesa 08) · até 100% de aumento</li>
           ))}
         </ul>
       </div>
@@ -1182,11 +1178,11 @@ function EvaluationTable() {
         </tbody>
       </table>
       <p style={{ marginTop: 12, fontSize: 14, lineHeight: 1.6 }}>
-        <strong>Recomendação:</strong> Opção A — Bricolage Grotesque (display) + Manrope
-        (UI/corpo) + Instrument Serif (acento editorial, aparição única por viewport). É a única
-        combinação que entrega personalidade food-tech autoral sem sacrificar legibilidade em
-        português nem performance (~96 kB Latin variável, LCP baixo com <code>font-display:swap</code>
-        e <code>size-adjust</code>). Bricolage tem calor gastronômico que Sora e Plus Jakarta não
+        <strong>Recomendação:</strong> Opção A — Bricolage Grotesque (display) + Manrope (UI/corpo)
+        + Instrument Serif (acento editorial, aparição única por viewport). É a única combinação que
+        entrega personalidade food-tech autoral sem sacrificar legibilidade em português nem
+        performance (~96 kB Latin variável, LCP baixo com <code>font-display:swap</code>e{" "}
+        <code>size-adjust</code>). Bricolage tem calor gastronômico que Sora e Plus Jakarta não
         alcançam, e Manrope preserva os números tabulares do painel. Instrument Serif, restrita a
         marketing, dá uma nota editorial que reforça “restaurante” sem contaminar dados
         operacionais.
