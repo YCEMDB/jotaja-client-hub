@@ -90,7 +90,7 @@ export function RecursosMesivo() {
           }}
         >
           <div
-            className={`grid gap-10 items-center md:gap-14 ${b.reverse ? "md:grid-cols-[1fr_1.05fr]" : "md:grid-cols-[1.05fr_1fr]"}`}
+            className="grid gap-10 items-center md:gap-14 md:grid-cols-2"
             style={{
               maxWidth: 1200,
               marginInline: "auto",
