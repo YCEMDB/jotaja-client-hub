@@ -46,6 +46,7 @@ import { Route as PedidoOrderIdRouteImport } from './routes/pedido.$orderId'
 import { Route as MesaTokenRouteImport } from './routes/mesa.$token'
 import { Route as LojaSlugRouteImport } from './routes/loja.$slug'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
+import { Route as DevTypeLabRouteImport } from './routes/dev.type-lab'
 import { Route as DevMotionRouteImport } from './routes/dev.motion'
 import { Route as ComparativoComandahubVsSaiposRouteImport } from './routes/comparativo.comandahub-vs-saipos'
 import { Route as ComparativoComandahubVsPlanilhaRouteImport } from './routes/comparativo.comandahub-vs-planilha'
@@ -292,6 +293,11 @@ const LojaSlugRoute = LojaSlugRouteImport.update({
 const EmailUnsubscribeRoute = EmailUnsubscribeRouteImport.update({
   id: '/email/unsubscribe',
   path: '/email/unsubscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DevTypeLabRoute = DevTypeLabRouteImport.update({
+  id: '/dev/type-lab',
+  path: '/dev/type-lab',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DevMotionRoute = DevMotionRouteImport.update({
@@ -684,6 +690,7 @@ export interface FileRoutesByFullPath {
   '/comparativo/comandahub-vs-planilha': typeof ComparativoComandahubVsPlanilhaRoute
   '/comparativo/comandahub-vs-saipos': typeof ComparativoComandahubVsSaiposRoute
   '/dev/motion': typeof DevMotionRoute
+  '/dev/type-lab': typeof DevTypeLabRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/loja/$slug': typeof LojaSlugRoute
   '/mesa/$token': typeof MesaTokenRoute
@@ -783,6 +790,7 @@ export interface FileRoutesByTo {
   '/comparativo/comandahub-vs-planilha': typeof ComparativoComandahubVsPlanilhaRoute
   '/comparativo/comandahub-vs-saipos': typeof ComparativoComandahubVsSaiposRoute
   '/dev/motion': typeof DevMotionRoute
+  '/dev/type-lab': typeof DevTypeLabRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/loja/$slug': typeof LojaSlugRoute
   '/mesa/$token': typeof MesaTokenRoute
@@ -885,6 +893,7 @@ export interface FileRoutesById {
   '/comparativo/comandahub-vs-planilha': typeof ComparativoComandahubVsPlanilhaRoute
   '/comparativo/comandahub-vs-saipos': typeof ComparativoComandahubVsSaiposRoute
   '/dev/motion': typeof DevMotionRoute
+  '/dev/type-lab': typeof DevTypeLabRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/loja/$slug': typeof LojaSlugRoute
   '/mesa/$token': typeof MesaTokenRoute
@@ -986,6 +995,7 @@ export interface FileRouteTypes {
     | '/comparativo/comandahub-vs-planilha'
     | '/comparativo/comandahub-vs-saipos'
     | '/dev/motion'
+    | '/dev/type-lab'
     | '/email/unsubscribe'
     | '/loja/$slug'
     | '/mesa/$token'
@@ -1085,6 +1095,7 @@ export interface FileRouteTypes {
     | '/comparativo/comandahub-vs-planilha'
     | '/comparativo/comandahub-vs-saipos'
     | '/dev/motion'
+    | '/dev/type-lab'
     | '/email/unsubscribe'
     | '/loja/$slug'
     | '/mesa/$token'
@@ -1186,6 +1197,7 @@ export interface FileRouteTypes {
     | '/comparativo/comandahub-vs-planilha'
     | '/comparativo/comandahub-vs-saipos'
     | '/dev/motion'
+    | '/dev/type-lab'
     | '/email/unsubscribe'
     | '/loja/$slug'
     | '/mesa/$token'
@@ -1288,6 +1300,7 @@ export interface RootRouteChildren {
   ComparativoComandahubVsPlanilhaRoute: typeof ComparativoComandahubVsPlanilhaRoute
   ComparativoComandahubVsSaiposRoute: typeof ComparativoComandahubVsSaiposRoute
   DevMotionRoute: typeof DevMotionRoute
+  DevTypeLabRoute: typeof DevTypeLabRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
   LojaSlugRoute: typeof LojaSlugRoute
   MesaTokenRoute: typeof MesaTokenRoute
@@ -1574,6 +1587,13 @@ declare module '@tanstack/react-router' {
       path: '/email/unsubscribe'
       fullPath: '/email/unsubscribe'
       preLoaderRoute: typeof EmailUnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dev/type-lab': {
+      id: '/dev/type-lab'
+      path: '/dev/type-lab'
+      fullPath: '/dev/type-lab'
+      preLoaderRoute: typeof DevTypeLabRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dev/motion': {
@@ -2155,6 +2175,7 @@ const rootRouteChildren: RootRouteChildren = {
   ComparativoComandahubVsPlanilhaRoute: ComparativoComandahubVsPlanilhaRoute,
   ComparativoComandahubVsSaiposRoute: ComparativoComandahubVsSaiposRoute,
   DevMotionRoute: DevMotionRoute,
+  DevTypeLabRoute: DevTypeLabRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
   LojaSlugRoute: LojaSlugRoute,
   MesaTokenRoute: MesaTokenRoute,
