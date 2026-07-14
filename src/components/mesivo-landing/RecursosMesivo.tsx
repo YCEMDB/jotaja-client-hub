@@ -90,17 +90,14 @@ export function RecursosMesivo() {
           }}
         >
           <div
+            className={`grid gap-10 items-center md:gap-14 ${b.reverse ? "md:grid-cols-[1fr_1.05fr]" : "md:grid-cols-[1.05fr_1fr]"}`}
             style={{
               maxWidth: 1200,
               marginInline: "auto",
               paddingInline: "clamp(16px, 4vw, 32px)",
-              display: "grid",
-              gridTemplateColumns: "minmax(0, 1fr)",
-              gap: "clamp(32px, 5vw, 56px)",
-              alignItems: "center",
             }}
-            className={b.reverse ? "md:grid-cols-[1fr_1.05fr]" : "md:grid-cols-[1.05fr_1fr]"}
           >
+
             <MotionReveal
               variant="fade"
               style={{ order: b.reverse ? 2 : 1 }}
