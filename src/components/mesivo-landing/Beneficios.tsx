@@ -44,7 +44,7 @@ export function Beneficios() {
           </div>
         </MotionReveal>
 
-        <MotionStagger
+        <div
           style={{
             marginTop: 40,
             display: "grid",
@@ -52,34 +52,39 @@ export function Beneficios() {
             gap: 16,
           }}
         >
-          {beneficios.map((b) => (
-            <MotionStaggerItem key={b.t}>
-              <div
-                style={{
-                  height: "100%",
-                  padding: "22px 24px",
-                  borderRadius: 20,
-                  border: "1px solid var(--hairline)",
-                  backgroundColor: "var(--surface-1)",
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: 17,
-                    fontWeight: 700,
-                    color: "var(--fg-hi)",
-                    letterSpacing: "-0.01em",
-                  }}
-                >
-                  {b.t}
-                </div>
-                <p style={{ marginTop: 8, color: "var(--fg-mid)", fontSize: 14, lineHeight: 1.55 }}>
-                  {b.d}
-                </p>
-              </div>
-            </MotionStaggerItem>
-          ))}
-        </MotionStagger>
+          <MotionStagger>
+            <>
+              {beneficios.map((b) => (
+                <MotionStaggerItem key={b.t}>
+                  <div
+                    style={{
+                      height: "100%",
+                      padding: "22px 24px",
+                      borderRadius: 20,
+                      border: "1px solid var(--hairline)",
+                      backgroundColor: "var(--surface-1)",
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: 17,
+                        fontWeight: 700,
+                        color: "var(--fg-hi)",
+                        letterSpacing: "-0.01em",
+                      }}
+                    >
+                      {b.t}
+                    </div>
+                    <p style={{ marginTop: 8, color: "var(--fg-mid)", fontSize: 14, lineHeight: 1.55 }}>
+                      {b.d}
+                    </p>
+                  </div>
+                </MotionStaggerItem>
+              ))}
+            </>
+          </MotionStagger>
+        </div>
+
       </div>
     </section>
   );
