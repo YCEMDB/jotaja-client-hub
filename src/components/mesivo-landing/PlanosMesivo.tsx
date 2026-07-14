@@ -226,8 +226,10 @@ export function PlanosMesivo() {
               </div>
             </MotionStaggerItem>
           ))}
-        </MotionStagger>
-      </div>
+            </>
+          </MotionStagger>
+        </div>
+
     </section>
   );
 }
