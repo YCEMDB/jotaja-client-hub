@@ -85,7 +85,7 @@ export function PlanosMesivo() {
           </div>
         </MotionReveal>
 
-        <MotionStagger
+        <div
           style={{
             marginTop: 40,
             display: "grid",
@@ -93,6 +93,9 @@ export function PlanosMesivo() {
             gap: 20,
           }}
         >
+          <MotionStagger>
+            <>
+
           {planos.map((p) => (
             <MotionStaggerItem key={p.name}>
               <div
