@@ -1038,7 +1038,7 @@ function ScaleMatrix({ system }: { system: System }) {
         {PESOS.map((w) => (
           <div key={w} style={{ display: "grid", gap: 4 }}>
             <div style={{ fontSize: 11, opacity: 0.6 }}>peso {w}</div>
-            {[...HERO_DESKTOP, ...SECAO_SIZES].map((sz) => (
+            {Array.from(new Set([...HERO_DESKTOP, ...SECAO_SIZES])).map((sz) => (
               <div
                 key={`${w}-${sz}`}
                 style={{
