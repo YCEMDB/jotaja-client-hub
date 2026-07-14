@@ -700,6 +700,36 @@
   letter-spacing: -0.03em;
 }
 
+/* Landing (Onda B1) — Bricolage Grotesque display + Instrument Serif accent.
+ * Escopo restrito ao PublicShell variant="landing" para não afetar
+ * /empresa, /sobre e /contato (que permanecem no display global). */
+[data-theme="marketing"][data-variant="landing"] {
+  --font-display: "Bricolage Grotesque", "Manrope", system-ui, sans-serif;
+  --font-accent: "Instrument Serif", Georgia, serif;
+}
+[data-theme="marketing"][data-variant="landing"] h1,
+[data-theme="marketing"][data-variant="landing"] h2,
+[data-theme="marketing"][data-variant="landing"] h3,
+[data-theme="marketing"][data-variant="landing"] h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+[data-theme="marketing"][data-variant="landing"] :is(h1,h2,h3,h4,h5,h6,p,li,a,button,input,textarea,label,span,strong,em,small,td,th) {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+[data-theme="marketing"][data-variant="landing"] .mesivo-accent {
+  font-family: var(--font-accent);
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: -0.01em;
+}
+[data-theme="marketing"][data-variant="landing"] [id] {
+  scroll-margin-top: 88px;
+}
+
+
 /* ---------------------------------------------------------------------
  * Contexto: APP — neutro claro operacional (não aplicado nesta onda)
  * ------------------------------------------------------------------- */

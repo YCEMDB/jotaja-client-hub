@@ -1,24 +1,24 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { resolveHostToSlug } from "@/lib/custom-domain.functions";
-import { Header } from "@/components/jotaja/Header";
-import { Hero } from "@/components/jotaja/Hero";
-import { Stats } from "@/components/jotaja/Stats";
-import { Bento } from "@/components/jotaja/Bento";
-import { ComoFunciona } from "@/components/jotaja/ComoFunciona";
-import { ComparativoIfood } from "@/components/jotaja/ComparativoIfood";
-import { Depoimentos } from "@/components/jotaja/Depoimentos";
-import { Planos } from "@/components/jotaja/Planos";
-import { FAQ } from "@/components/jotaja/FAQ";
-import { CTA } from "@/components/jotaja/CTA";
-import { Footer } from "@/components/jotaja/Footer";
-import { WhatsAppFloat } from "@/components/jotaja/WhatsAppFloat";
-import { ScrollProgress } from "@/components/motion";
 import { MotionConfig } from "motion/react";
+import { resolveHostToSlug } from "@/lib/custom-domain.functions";
+import { PublicShell } from "@/components/mesivo-shell/PublicShell";
+import { ScrollProgress } from "@/components/motion";
+import { WhatsAppFloat } from "@/components/jotaja/WhatsAppFloat";
+import {
+  LandingHero,
+  ProblemaSolucao,
+  FluxoPedidos,
+  RecursosMesivo,
+  Beneficios,
+  PlanosMesivo,
+  FAQMesivo,
+  CTAFinal,
+} from "@/components/mesivo-landing";
 
 const SITE_URL = "https://comandahub.online";
 const TITLE = "Mesivo | Gestão completa para restaurantes";
 const DESCRIPTION =
-  "Centralize pedidos, mesas, comandas, cardápio digital, delivery, retirada, caixa e cozinha em uma plataforma criada para a rotina real do seu restaurante.";
+  "Cardápio digital, pedidos online, PDV, mesas, comandas, cozinha e caixa sincronizados em tempo real. Sem comissão por venda, com fluxo pensado para a rotina real do restaurante.";
 
 export const Route = createFileRoute("/")({
   beforeLoad: async () => {
@@ -28,7 +28,6 @@ export const Route = createFileRoute("/")({
         throw redirect({ to: "/$slug", params: { slug } });
       }
     } catch (e: unknown) {
-      // Re-throw router redirects; swallow lookup errors so landing still renders.
       if (e && typeof e === "object" && "isRedirect" in e) throw e;
     }
   },
@@ -39,16 +38,28 @@ export const Route = createFileRoute("/")({
       {
         name: "keywords",
         content:
-          "gestão de restaurante, cardápio digital, pedidos online, comandas digitais, controle de mesas, sistema para restaurante, delivery próprio, PDV, caixa, cozinha, KDS",
+          "gestão de restaurante, cardápio digital, pedidos online, comandas, mesas, PDV, cozinha, KDS, caixa, delivery próprio, sistema para restaurante",
       },
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
       { property: "og:url", content: SITE_URL },
       { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
     ],
-    links: [{ rel: "canonical", href: SITE_URL }],
+    links: [
+      { rel: "canonical", href: SITE_URL },
+      // Bricolage Grotesque (display marketing) + Instrument Serif (acento
+      // editorial pontual). Carregados apenas na landing — outras rotas
+      // marketing permanecem no display global.
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Instrument+Serif:ital@0;1&display=swap",
+      },
+    ],
     scripts: [
       {
         type: "application/ld+json",
@@ -69,30 +80,21 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    // reducedMotion="never" impede que a Motion library remova estilos
-    // iniciais (opacity/transform) no cliente quando o usuário tem
-    // Reduced Motion ativo — o que causaria hydration mismatch contra o
-    // HTML do SSR. A preferência do usuário continua sendo respeitada
-    // pelos nossos componentes via useReducedMotionSafe, que trocam para
-    // uma variante de fade curto após a hidratação.
+    // reducedMotion="never" evita hydration mismatch — cada primitivo do
+    // motion/react troca para variantes reduzidas via useReducedMotionSafe.
     <MotionConfig reducedMotion="never">
-      <div className="min-h-screen bg-background text-foreground">
+      <PublicShell variant="landing">
         <ScrollProgress />
-        <Header />
-        <main>
-          <Hero />
-          <Stats />
-          <Bento />
-          <ComoFunciona />
-          <ComparativoIfood />
-          <Depoimentos />
-          <Planos />
-          <FAQ />
-          <CTA />
-        </main>
-        <Footer />
-        <WhatsAppFloat />
-      </div>
+        <LandingHero />
+        <ProblemaSolucao />
+        <FluxoPedidos />
+        <RecursosMesivo />
+        <Beneficios />
+        <PlanosMesivo />
+        <FAQMesivo />
+        <CTAFinal />
+      </PublicShell>
+      <WhatsAppFloat />
     </MotionConfig>
   );
 }
