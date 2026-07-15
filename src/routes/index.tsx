@@ -14,6 +14,7 @@ import {
   FAQMesivo,
   CTAFinal,
 } from "@/components/mesivo-landing";
+import { mesivoFaq } from "@/components/mesivo-landing/faq-data";
 
 const SITE_URL = "https://comandahub.online";
 const TITLE = "Mesivo | Gestão completa para restaurantes";
@@ -62,15 +63,91 @@ export const Route = createFileRoute("/")({
     ],
     scripts: [
       {
+        // Estende o nó #software emitido no root com Offers reais dos planos
+        // (fonte: public.app_plans). Sem AggregateRating/Review — a marca
+        // Mesivo é nova e não há prova social auditável a apresentar.
         type: "application/ld+json",
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "SoftwareApplication",
+          "@id": `${SITE_URL}/#software`,
           name: "Mesivo",
           applicationCategory: "BusinessApplication",
-          operatingSystem: "Web",
-          description: DESCRIPTION,
+          operatingSystem: "Web, iOS, Android (PWA)",
           url: SITE_URL,
+          description: DESCRIPTION,
+          inLanguage: "pt-BR",
+          offers: {
+            "@type": "AggregateOffer",
+            priceCurrency: "BRL",
+            lowPrice: "97.00",
+            highPrice: "397.00",
+            offerCount: 3,
+            offers: [
+              {
+                "@type": "Offer",
+                name: "Starter",
+                price: "97.00",
+                priceCurrency: "BRL",
+                priceSpecification: {
+                  "@type": "UnitPriceSpecification",
+                  price: "97.00",
+                  priceCurrency: "BRL",
+                  billingIncrement: 1,
+                  unitCode: "MON",
+                },
+                category: "SubscriptionNewMember",
+                availability: "https://schema.org/InStock",
+                url: `${SITE_URL}/#planos`,
+              },
+              {
+                "@type": "Offer",
+                name: "Pro",
+                price: "197.00",
+                priceCurrency: "BRL",
+                priceSpecification: {
+                  "@type": "UnitPriceSpecification",
+                  price: "197.00",
+                  priceCurrency: "BRL",
+                  billingIncrement: 1,
+                  unitCode: "MON",
+                },
+                category: "SubscriptionNewMember",
+                availability: "https://schema.org/InStock",
+                url: `${SITE_URL}/#planos`,
+              },
+              {
+                "@type": "Offer",
+                name: "Business",
+                price: "397.00",
+                priceCurrency: "BRL",
+                priceSpecification: {
+                  "@type": "UnitPriceSpecification",
+                  price: "397.00",
+                  priceCurrency: "BRL",
+                  billingIncrement: 1,
+                  unitCode: "MON",
+                },
+                category: "SubscriptionNewMember",
+                availability: "https://schema.org/InStock",
+                url: `${SITE_URL}/#planos`,
+              },
+            ],
+          },
+        }),
+      },
+      {
+        // FAQPage gerado a partir de mesivoFaq (fonte única compartilhada
+        // com FAQMesivo.tsx) — garante paridade 1:1 com o FAQ visível.
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: mesivoFaq.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
         }),
       },
     ],
