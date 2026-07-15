@@ -3,47 +3,48 @@ import { MotionReveal, MotionStagger, MotionStaggerItem } from "@/components/mot
 const planos = [
   {
     name: "Starter",
-    price: "R$ 99",
+    price: "R$ 97",
     per: "/mês",
     desc: "Para quem está começando o delivery próprio.",
     features: [
-      "Cardápio digital ilimitado",
-      "Pedidos online via link exclusivo",
-      "Pagamento por Pix e cartão",
+      "Cardápio digital com link exclusivo",
+      "Até 30 produtos e 10 categorias",
+      "Até 300 pedidos por mês",
       "1 usuário",
-      "Suporte por e-mail",
+      "Áreas de entrega e mensagens transacionais",
     ],
-    cta: "Começar agora",
+    cta: "Começar teste grátis",
     highlighted: false,
   },
   {
     name: "Pro",
-    price: "R$ 199",
+    price: "R$ 197",
     per: "/mês",
     desc: "Operação completa para restaurantes em ritmo diário.",
     features: [
-      "Tudo do Starter",
-      "PDV integrado (salão, mesas, balcão)",
-      "Cupons e promoções",
-      "Relatórios diários da operação",
-      "Até 5 usuários",
-      "Suporte prioritário no WhatsApp",
+      "Tudo do Starter, com limites maiores",
+      "PDV, salão e até 30 mesas",
+      "Estoque, cupons (até 20) e drivers (até 5)",
+      "Pagamento online e impressão automática",
+      "Relatórios avançados e finance básico",
+      "Até 5 usuários e 1.500 pedidos/mês",
     ],
     cta: "Testar Pro grátis",
     highlighted: true,
   },
   {
     name: "Business",
-    price: "R$ 399",
+    price: "R$ 397",
     per: "/mês",
-    desc: "Para restaurantes com maior volume por dia.",
+    desc: "Para redes e restaurantes com alto volume.",
     features: [
-      "Tudo do Pro",
-      "Usuários ilimitados",
-      "Fluxos de delivery e retirada",
-      "Suporte prioritário estendido",
+      "Tudo do Pro, sem limites de uso",
+      "Multi-loja (até 5 unidades)",
+      "Finance DRE e conciliação",
+      "API de integração e receitas de estoque",
+      "Campanhas de marketing e 5 canais de comunicação",
     ],
-    cta: "Falar com o time",
+    cta: "Começar teste grátis",
     highlighted: false,
   },
 ];
@@ -80,7 +81,7 @@ export function PlanosMesivo() {
               Preços simples, <span className="mesivo-accent">sem surpresa</span>.
             </h2>
             <p style={{ marginTop: 12, color: "var(--fg-mid)" }}>
-              Mensalidade fixa, sem comissão por venda. Cancele quando quiser.
+              14 dias grátis em qualquer plano. Mensalidade fixa, sem comissão por venda. Cancele quando quiser.
             </p>
           </div>
         </MotionReveal>
