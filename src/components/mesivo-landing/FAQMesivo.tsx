@@ -13,7 +13,7 @@ const faqs = [
   },
   {
     q: "Quanto tempo leva para começar a receber pedidos?",
-    a: "Em média 30 minutos. Você cadastra os produtos, define a área de entrega e já compartilha o link do seu cardápio.",
+    a: "Você cadastra os produtos, define a área de entrega e já pode compartilhar o link do seu cardápio. Ferramentas de importação ajudam a acelerar o setup.",
   },
   {
     q: "Posso testar antes de pagar?",
