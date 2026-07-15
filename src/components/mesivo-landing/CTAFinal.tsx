@@ -69,8 +69,8 @@ export function CTAFinal() {
               lineHeight: 1.55,
             }}
           >
-            Ative o Mesivo no seu restaurante hoje. Em 30 minutos você já está
-            recebendo pedidos pelo seu link — sem comissão, sem intermediário.
+            Ative o Mesivo no seu restaurante hoje e comece a receber pedidos
+            pelo seu link — sem comissão, sem intermediário.
           </p>
 
           <div
