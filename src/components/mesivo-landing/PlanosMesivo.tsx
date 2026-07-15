@@ -81,7 +81,7 @@ export function PlanosMesivo() {
               Preços simples, <span className="mesivo-accent">sem surpresa</span>.
             </h2>
             <p style={{ marginTop: 12, color: "var(--fg-mid)" }}>
-              Mensalidade fixa, sem comissão por venda. Cancele quando quiser.
+              14 dias grátis em qualquer plano. Mensalidade fixa, sem comissão por venda. Cancele quando quiser.
             </p>
           </div>
         </MotionReveal>
