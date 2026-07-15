@@ -14,6 +14,7 @@ import {
   FAQMesivo,
   CTAFinal,
 } from "@/components/mesivo-landing";
+import { mesivoFaq } from "@/components/mesivo-landing/faq-data";
 
 const SITE_URL = "https://comandahub.online";
 const TITLE = "Mesivo | Gestão completa para restaurantes";
