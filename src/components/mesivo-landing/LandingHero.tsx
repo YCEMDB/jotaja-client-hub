@@ -166,7 +166,7 @@ export function LandingHero() {
             >
               <span>Sem cartão de crédito</span>
               <span aria-hidden>•</span>
-              <span>Setup em 30 minutos</span>
+              <span>Sem comissão por pedido</span>
               <span aria-hidden>•</span>
               <span>Suporte no WhatsApp</span>
             </MotionReveal>
@@ -192,52 +192,6 @@ export function LandingHero() {
           </MotionReveal>
         </div>
 
-        <MotionReveal variant="fade" delay={0.5}>
-          <ul
-            aria-label="Métricas operacionais"
-            style={{
-              marginTop: 24,
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
-              gap: 16,
-              padding: "20px 24px",
-              borderRadius: 20,
-              border: "1px solid var(--hairline)",
-              backgroundColor: "color-mix(in oklab, var(--mesivo-warm-white) 92%, transparent)",
-            }}
-          >
-            {[
-              { k: "1.400+", l: "restaurantes ativos" },
-              { k: "R$ 0", l: "de comissão por pedido" },
-              { k: "30 min", l: "para começar a vender" },
-              { k: "24/7", l: "suporte especializado" },
-            ].map((it) => (
-              <li key={it.l} style={{ textAlign: "center" }}>
-                <div
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "clamp(1.6rem, 2.4vw, 2rem)",
-                    fontWeight: 700,
-                    color: "var(--fg-hi)",
-                    lineHeight: 1,
-                  }}
-                >
-                  {it.k}
-                </div>
-                <div
-                  style={{
-                    marginTop: 6,
-                    fontSize: 12,
-                    color: "var(--fg-mid)",
-                    letterSpacing: "0.02em",
-                  }}
-                >
-                  {it.l}
-                </div>
-              </li>
-            ))}
-          </ul>
-        </MotionReveal>
       </div>
     </section>
   );
