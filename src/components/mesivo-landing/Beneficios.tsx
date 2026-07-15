@@ -2,7 +2,7 @@ import { MotionReveal, MotionStagger, MotionStaggerItem } from "@/components/mot
 
 const beneficios = [
   { t: "Sem comissão por pedido", d: "Mensalidade fixa. O que você vende, você recebe — 100%." },
-  { t: "Setup em 30 minutos", d: "Cadastro guiado, cardápio importável, link pronto pra divulgar." },
+  { t: "Setup guiado", d: "Cadastro passo a passo, cardápio importável, link pronto pra divulgar." },
   { t: "Painel em tempo real", d: "Pedido, mesa, cozinha e caixa no mesmo lugar, no mesmo instante." },
   { t: "Pix e cartão integrados", d: "Recebimento direto na sua conta Mercado Pago, sem intermediário." },
   { t: "Impressão automática", d: "Cupom sai direto na térmica assim que o pedido entra." },
