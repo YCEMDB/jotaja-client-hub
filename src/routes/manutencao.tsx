@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { getMaintenanceStatus } from "@/lib/maintenance.functions";
 
 function maintenanceHtml(message: string): string {
   return `<!doctype html>
