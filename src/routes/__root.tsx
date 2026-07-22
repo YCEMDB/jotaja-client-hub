@@ -6,11 +6,14 @@ import {
   useRouter,
   HeadContent,
   Scripts,
+  redirect,
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/hooks/useAuth";
+import { getMaintenanceStatus, checkCurrentUserIsSuperAdmin } from "@/lib/maintenance.functions";
+
 
 function NotFoundComponent() {
   return (
