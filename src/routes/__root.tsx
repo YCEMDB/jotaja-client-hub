@@ -80,7 +80,28 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  beforeLoad: async ({ location }) => {
+    const path = location.pathname;
+
+    // Rotas que nunca devem ser bloqueadas pela tela de manutenção
+    if (path === "/manutencao") return;
+    if (path.startsWith("/auth")) return;
+    if (path.startsWith("/super")) return;
+
+    const status = await getMaintenanceStatus();
+    if (!status.active) return;
+
+    try {
+      const { isSuperAdmin } = await checkCurrentUserIsSuperAdmin();
+      if (isSuperAdmin) return;
+    } catch {
+      // Usuário não autenticado ou sem permissão: trata como visitante comum
+    }
+
+    throw redirect({ to: "/manutencao" });
+  },
   head: () => ({
+
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
