@@ -27,6 +27,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as PerguntasFrequentesRouteImport } from './routes/perguntas-frequentes'
 import { Route as MotoboyRouteImport } from './routes/motoboy'
+import { Route as ManutencaoRouteImport } from './routes/manutencao'
 import { Route as GlossarioRouteImport } from './routes/glossario'
 import { Route as GestaoDeRestaurantesRouteImport } from './routes/gestao-de-restaurantes'
 import { Route as EmpresaRouteImport } from './routes/empresa'
@@ -200,6 +201,11 @@ const PerguntasFrequentesRoute = PerguntasFrequentesRouteImport.update({
 const MotoboyRoute = MotoboyRouteImport.update({
   id: '/motoboy',
   path: '/motoboy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ManutencaoRoute = ManutencaoRouteImport.update({
+  id: '/manutencao',
+  path: '/manutencao',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GlossarioRoute = GlossarioRouteImport.update({
@@ -658,6 +664,7 @@ export interface FileRoutesByFullPath {
   '/empresa': typeof EmpresaRoute
   '/gestao-de-restaurantes': typeof GestaoDeRestaurantesRoute
   '/glossario': typeof GlossarioRoute
+  '/manutencao': typeof ManutencaoRoute
   '/motoboy': typeof MotoboyRoute
   '/perguntas-frequentes': typeof PerguntasFrequentesRoute
   '/privacidade': typeof PrivacidadeRoute
@@ -758,6 +765,7 @@ export interface FileRoutesByTo {
   '/empresa': typeof EmpresaRoute
   '/gestao-de-restaurantes': typeof GestaoDeRestaurantesRoute
   '/glossario': typeof GlossarioRoute
+  '/manutencao': typeof ManutencaoRoute
   '/motoboy': typeof MotoboyRoute
   '/perguntas-frequentes': typeof PerguntasFrequentesRoute
   '/privacidade': typeof PrivacidadeRoute
@@ -861,6 +869,7 @@ export interface FileRoutesById {
   '/empresa': typeof EmpresaRoute
   '/gestao-de-restaurantes': typeof GestaoDeRestaurantesRoute
   '/glossario': typeof GlossarioRoute
+  '/manutencao': typeof ManutencaoRoute
   '/motoboy': typeof MotoboyRoute
   '/perguntas-frequentes': typeof PerguntasFrequentesRoute
   '/privacidade': typeof PrivacidadeRoute
@@ -963,6 +972,7 @@ export interface FileRouteTypes {
     | '/empresa'
     | '/gestao-de-restaurantes'
     | '/glossario'
+    | '/manutencao'
     | '/motoboy'
     | '/perguntas-frequentes'
     | '/privacidade'
@@ -1063,6 +1073,7 @@ export interface FileRouteTypes {
     | '/empresa'
     | '/gestao-de-restaurantes'
     | '/glossario'
+    | '/manutencao'
     | '/motoboy'
     | '/perguntas-frequentes'
     | '/privacidade'
@@ -1165,6 +1176,7 @@ export interface FileRouteTypes {
     | '/empresa'
     | '/gestao-de-restaurantes'
     | '/glossario'
+    | '/manutencao'
     | '/motoboy'
     | '/perguntas-frequentes'
     | '/privacidade'
@@ -1268,6 +1280,7 @@ export interface RootRouteChildren {
   EmpresaRoute: typeof EmpresaRoute
   GestaoDeRestaurantesRoute: typeof GestaoDeRestaurantesRoute
   GlossarioRoute: typeof GlossarioRoute
+  ManutencaoRoute: typeof ManutencaoRoute
   MotoboyRoute: typeof MotoboyRoute
   PerguntasFrequentesRoute: typeof PerguntasFrequentesRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
@@ -1454,6 +1467,13 @@ declare module '@tanstack/react-router' {
       path: '/motoboy'
       fullPath: '/motoboy'
       preLoaderRoute: typeof MotoboyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/manutencao': {
+      id: '/manutencao'
+      path: '/manutencao'
+      fullPath: '/manutencao'
+      preLoaderRoute: typeof ManutencaoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/glossario': {
@@ -2136,6 +2156,7 @@ const rootRouteChildren: RootRouteChildren = {
   EmpresaRoute: EmpresaRoute,
   GestaoDeRestaurantesRoute: GestaoDeRestaurantesRoute,
   GlossarioRoute: GlossarioRoute,
+  ManutencaoRoute: ManutencaoRoute,
   MotoboyRoute: MotoboyRoute,
   PerguntasFrequentesRoute: PerguntasFrequentesRoute,
   PrivacidadeRoute: PrivacidadeRoute,
@@ -2207,13 +2228,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
