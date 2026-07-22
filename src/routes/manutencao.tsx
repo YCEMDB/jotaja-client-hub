@@ -119,7 +119,7 @@ export const Route = createFileRoute("/manutencao")({
   server: {
     handlers: {
       GET: async () => {
-        const message = "Estamos realizando uma manutenção programada para melhorar ainda mais a sua experiência. Voltaremos em breve.";
+        const { message } = await getMaintenanceStatus();
         return new Response(maintenanceHtml(message), {
           status: 503,
           headers: {
