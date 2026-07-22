@@ -147,7 +147,7 @@ function ConfiguracoesPage() {
                   </div>
                   <Switch
                     checked={maintenanceActive}
-                    onCheckedChange={() => {}}
+                    disabled={togglingMaintenance}
                     aria-label="Modo de manutenção"
                   />
                 </div>
