@@ -181,9 +181,43 @@ function ConfiguracoesPage() {
                     </Button>
                   </div>
                 </div>
+
+                <div className="mt-4 space-y-2 border-t border-border pt-3">
+                  <Label className="text-xs font-semibold">Acesso liberado durante a manutenção</Label>
+                  <p className="text-[11px] text-muted-foreground">
+                    E-mails autorizados a usar o sistema normalmente mesmo com a manutenção ativa
+                    (separe por vírgula). Super admins têm acesso sempre.
+                  </p>
+                  <Textarea
+                    placeholder="pessoa@empresa.com, outra@empresa.com"
+                    value={values.maintenance_bypass_emails ?? ""}
+                    onChange={(e) =>
+                      setValues((v) => ({ ...v, maintenance_bypass_emails: e.target.value }))
+                    }
+                    rows={2}
+                  />
+                  <Textarea
+                    placeholder="Motivo da alteração (mín. 5 caracteres) — auditado"
+                    value={reasons.maintenance_bypass_emails ?? ""}
+                    onChange={(e) =>
+                      setReasons((r) => ({ ...r, maintenance_bypass_emails: e.target.value }))
+                    }
+                    rows={2}
+                  />
+                  <div className="flex items-center justify-end">
+                    <Button
+                      variant="outline"
+                      onClick={() => save("maintenance_bypass_emails")}
+                      disabled={saving === "maintenance_bypass_emails"}
+                    >
+                      {saving === "maintenance_bypass_emails" ? "Salvando…" : "Salvar liberações"}
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
           </Card>
+
 
           {SETTINGS_KEYS.map((s) => (
             <Card key={s.key} className="p-4 space-y-2">
