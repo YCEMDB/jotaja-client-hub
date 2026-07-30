@@ -12,7 +12,7 @@ import {
 import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/hooks/useAuth";
-import { getMaintenanceStatus, checkCurrentUserIsSuperAdmin } from "@/lib/maintenance.functions";
+import { getMaintenanceStatus, checkMaintenanceAccess } from "@/lib/maintenance.functions";
 
 
 function NotFoundComponent() {
@@ -92,8 +92,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     if (!status.active) return;
 
     try {
-      const { isSuperAdmin } = await checkCurrentUserIsSuperAdmin();
-      if (isSuperAdmin) return;
+      // Super admins e usuários com permissão especial continuam acessando
+      const { allowed } = await checkMaintenanceAccess();
+      if (allowed) return;
     } catch {
       // Usuário não autenticado ou sem permissão: trata como visitante comum
     }

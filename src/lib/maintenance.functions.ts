@@ -50,6 +50,45 @@ export const checkCurrentUserIsSuperAdmin = createServerFn({ method: "GET" })
     return { isSuperAdmin: data && data.length > 0 };
   });
 
+/**
+ * Retorna se o usuário autenticado pode usar o sistema mesmo com a manutenção ativa.
+ * Permissão especial = super admin OU e-mail presente em app_settings.maintenance_bypass_emails.
+ */
+export const checkMaintenanceAccess = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data: roles } = await context.supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", context.userId)
+      .eq("role", "super_admin")
+      .limit(1);
+
+    if (roles && roles.length > 0) return { allowed: true, reason: "super_admin" as const };
+
+    const email = String((context.claims as { email?: string })?.email ?? "").trim().toLowerCase();
+    if (!email) return { allowed: false, reason: "no_email" as const };
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: setting } = await supabaseAdmin
+      .from("app_settings")
+      .select("value")
+      .eq("key", "maintenance_bypass_emails")
+      .maybeSingle();
+
+    const raw = typeof setting?.value === "string" ? setting.value : "";
+    const allowlist = raw
+      .split(/[,\n;]+/)
+      .map((e) => e.trim().toLowerCase())
+      .filter(Boolean);
+
+    return {
+      allowed: allowlist.includes(email),
+      reason: "allowlist" as const,
+    };
+  });
+
+
 const setMaintenanceSchema = z.object({
   active: z.boolean(),
   message: z.string().max(500).optional(),
