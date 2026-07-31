@@ -88,13 +88,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     if (path.startsWith("/auth")) return;
     if (path.startsWith("/super")) return;
 
+    // O gate roda apenas no cliente: no SSR não existe sessão do Supabase
+    // (o token fica no localStorage), então super admins e usuários liberados
+    // seriam bloqueados indevidamente ao recarregar a página.
+    if (typeof window === "undefined") return;
+
     const status = await getMaintenanceStatus();
     if (!status.active) return;
 
     try {
-      // Super admins e usuários com permissão especial continuam acessando
-      const { allowed } = await checkMaintenanceAccess();
-      if (allowed) return;
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        // Super admins e usuários com permissão especial continuam acessando
+        const { allowed } = await checkMaintenanceAccess();
+        if (allowed) return;
+      }
     } catch {
       // Usuário não autenticado ou sem permissão: trata como visitante comum
     }
