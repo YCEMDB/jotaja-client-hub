@@ -103,7 +103,7 @@ export const askAdminAssistant = createServerFn({ method: "POST" })
           `Restaurante: ${restaurant.name} (slug: ${restaurant.slug})`,
           `Plano: ${restaurant.plan ?? "—"} | Ativo: ${restaurant.is_active ? "sim" : "não"}`,
           `Modo de funcionamento (horários): ${restaurant.open_mode ?? "—"}`,
-          `Canais: delivery=${restaurant.delivery_enabled ? "on" : "off"}, retirada=${restaurant.pickup_enabled ? "on" : "off"}, salão=${restaurant.dine_in_enabled ? "on" : "off"}`,
+          `Canais: delivery=${restaurant.accepts_delivery ? "on" : "off"}, retirada=${restaurant.accepts_pickup ? "on" : "off"}, salão=${restaurant.accepts_dine_in ? "on" : "off"}`,
           `Provedor de pagamento ativo: ${restaurant.active_payment_provider ?? "—"}`,
           `Fim do teste: ${restaurant.trial_ends_at ?? "—"} | Fim da assinatura: ${restaurant.subscription_ends_at ?? "—"}`,
           `Pedidos hoje: ${orders.length} (${Object.entries(byStatus).map(([k, v]) => `${k}: ${v}`).join(", ") || "nenhum"})`,
