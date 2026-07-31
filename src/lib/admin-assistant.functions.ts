@@ -56,7 +56,7 @@ export const askAdminAssistant = createServerFn({ method: "POST" })
       const { data: restaurant } = await context.supabase
         .from("restaurants")
         .select(
-          "id, name, slug, plan, is_active, open_mode, trial_ends_at, subscription_ends_at, active_payment_provider, delivery_enabled, pickup_enabled, dine_in_enabled",
+          "id, name, slug, plan, is_active, open_mode, trial_ends_at, subscription_ends_at, active_payment_provider, accepts_delivery, accepts_pickup, accepts_dine_in",
         )
         .eq("id", data.restaurantId)
         .maybeSingle();
@@ -68,7 +68,7 @@ export const askAdminAssistant = createServerFn({ method: "POST" })
         const [ordersRes, productsRes, tablesRes, cashRes] = await Promise.all([
           context.supabase
             .from("orders")
-            .select("status, order_type, total")
+            .select("status, type, total")
             .eq("restaurant_id", restaurant.id)
             .gte("created_at", startOfDay.toISOString())
             .limit(500),
@@ -76,7 +76,7 @@ export const askAdminAssistant = createServerFn({ method: "POST" })
             .from("products")
             .select("id", { count: "exact", head: true })
             .eq("restaurant_id", restaurant.id)
-            .eq("is_active", true),
+            .is("archived_at", null),
           context.supabase
             .from("restaurant_tables")
             .select("id", { count: "exact", head: true })
