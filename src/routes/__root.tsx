@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/hooks/useAuth";
 import { getMaintenanceStatus, checkMaintenanceAccess } from "@/lib/maintenance.functions";
+import { supabase } from "@/integrations/supabase/client";
 
 
 function NotFoundComponent() {
