@@ -17,6 +17,7 @@ import {
 import { BlockedStoreScreen } from "@/components/BlockedStoreScreen";
 import { GlobalAnnouncementsBanner } from "@/components/GlobalAnnouncementsBanner";
 import { SupportSessionBanner } from "@/components/SupportSessionBanner";
+import { AdminAssistant } from "@/components/admin/AdminAssistant";
 
 export const Route = createFileRoute("/_authenticated")({
   component: AuthLayout,
@@ -348,6 +349,7 @@ function AuthLayout() {
           <Outlet />
         </div>
       </main>
+      <AdminAssistant />
     </div>
   );
 }
