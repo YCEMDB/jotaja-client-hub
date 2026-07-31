@@ -348,6 +348,7 @@ function AuthLayout() {
           <Outlet />
         </div>
       </main>
+      <AdminAssistant />
     </div>
   );
 }
