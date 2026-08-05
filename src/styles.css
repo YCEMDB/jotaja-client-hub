@@ -3,7 +3,6 @@
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
 
-
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -11,95 +10,54 @@
   --font-sans: "Manrope", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", monospace;
 
-
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 20px;
+  --radius-2xl: 32px;
+  --radius-3xl: 48px;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
-  --color-primary-glow: var(--primary-glow);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
-  --color-accent-soft: var(--accent-soft);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-success: var(--success);
-  --color-success-foreground: var(--success-foreground);
-  --color-warning: var(--warning);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-
-  /* Brand accents — Sunset Blaze */
-  --color-brand-orange: var(--brand-orange);
-  --color-brand-magenta: var(--brand-magenta);
-  --color-brand-violet: var(--brand-violet);
-  --color-brand-amber: var(--brand-amber);
-  --color-ink: var(--ink);
+  
+  --color-deep-forest: #173A34;
+  --color-cream: #F8F5EF;
+  --color-copper: #D87A43;
+  --color-sage: #5F8D67;
+  --color-error: #C44747;
 }
 
 :root {
-  --radius: 0.75rem; /* 12px base */
-
-  /* MESIVO — Deep Forest & Copper (Final Approval) */
-  --background: #F8F5EF; /* Cream */
-  --foreground: #232333; /* Texto */
-  --ink:        #232333;
+  --background: #F8F5EF;
+  --foreground: #232323;
   --deep-forest: #173A34;
-  --copper:      #D87A43;
-  --sage:        #5F8D67;
+  --copper: #D87A43;
+  --sage: #5F8D67;
+  --error: #C44747;
 
-  --card:       #FFFFFF;
-  --card-foreground: #2B2B2B;
-  --popover:    #FFFFFF;
-  --popover-foreground: #2B2B2B;
-
-  --primary:    #173A34; /* Deep Forest */
+  --primary: #173A34;
   --primary-foreground: #F8F5EF;
-  --primary-glow: rgba(23, 58, 52, 0.15);
-
-  --accent:     #D87A43; /* Copper */
+  --accent: #D87A43;
   --accent-foreground: #FFFFFF;
-  --accent-soft: rgba(227, 109, 66, 0.1);
 
-  --secondary:  #FFFFFF;
-  --secondary-foreground: #2B2B2B;
-
-  --muted:      #F0EEEB;
+  --muted: #E5E2DE;
   --muted-foreground: #70645E;
+  --border: rgba(23, 58, 52, 0.08);
 
-  --warning:    #D4A73F;
-  --destructive: #C44747; /* Error */
-  --success:     #3F7D58;
+  --shadow-sm: 0 2px 4px rgba(23, 35, 51, 0.02);
+  --shadow-md: 0 4px 12px rgba(23, 35, 51, 0.04);
+  --shadow-lg: 0 12px 24px rgba(23, 35, 51, 0.06);
+  --shadow-xl: 0 20px 40px rgba(23, 35, 51, 0.08);
+  --shadow-glow: 0 0 40px rgba(216, 122, 67, 0.1);
 
-  --border:     #E5E2DE;
-  --input:      #E5E2DE;
-  --ring:       #E36D42;
-
-  --shadow-xs: 0 1px 2px rgba(23, 35, 51, 0.05);
-  --shadow-sm: 0 2px 4px rgba(23, 35, 51, 0.04);
-  --shadow-md: 0 4px 12px rgba(23, 35, 51, 0.08);
-  --shadow-lg: 0 12px 24px rgba(23, 35, 51, 0.1);
-  --shadow-xl: 0 20px 40px rgba(23, 35, 51, 0.12);
-  --shadow-brutal: 0 0 0 0 transparent;
-  --shadow-glow: 0 12px 32px -8px rgba(216, 122, 67, 0.25);
-
-  --transition-smooth: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-editorial: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 

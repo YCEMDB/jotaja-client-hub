@@ -69,18 +69,18 @@ export function PublicHeader({ variant = "default" }: { variant?: PublicShellVar
 
   return (
     <header
-      className="fixed top-6 left-1/2 z-50 w-[95%] max-w-5xl -translate-x-1/2 transition-all duration-500 px-4 pointer-events-none"
+      className="fixed top-8 left-1/2 z-50 w-full max-w-4xl -translate-x-1/2 transition-all duration-700 px-6 pointer-events-none"
     >
       <div 
-        className="mx-auto flex h-14 items-center justify-between px-6 transition-all duration-500 pointer-events-auto"
+        className="mx-auto flex h-12 items-center justify-between px-6 transition-all duration-700 pointer-events-auto"
         style={{
           backgroundColor: scrolled
-            ? "rgba(255, 255, 255, 0.85)"
-            : "rgba(255, 255, 255, 0.5)",
-          backdropFilter: "blur(20px) saturate(180%)",
-          border: "1px solid rgba(0, 0, 0, 0.08)",
+            ? "rgba(248, 245, 239, 0.8)"
+            : "rgba(248, 245, 239, 0)",
+          backdropFilter: scrolled ? "blur(12px)" : "none",
+          border: scrolled ? "1px solid rgba(23, 58, 52, 0.05)" : "1px solid transparent",
           borderRadius: "999px",
-          boxShadow: scrolled ? "var(--shadow-xl)" : "var(--shadow-lg)",
+          transform: scrolled ? "scale(0.96)" : "scale(1)",
         }}
       >
         <Link

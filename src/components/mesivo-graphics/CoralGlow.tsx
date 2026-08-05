@@ -21,8 +21,8 @@ export function CoralGlow({ size = 480, className, style }: CoralGlowProps) {
     >
       <defs>
         <radialGradient id={`${gid}-r`} cx="50%" cy="50%" r="50%">
-          <stop offset="0" stopColor="var(--accent)" stopOpacity="0.22" />
-          <stop offset="0.6" stopColor="var(--sage)" stopOpacity="0.08" />
+          <stop offset="0" stopColor="var(--copper)" stopOpacity="0.05" />
+          <stop offset="0.6" stopColor="var(--sage)" stopOpacity="0.02" />
           <stop offset="1" stopColor="transparent" stopOpacity="0" />
         </radialGradient>
       </defs>
