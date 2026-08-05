@@ -120,3 +120,34 @@ export const createTestMercadoPagoPix = createServerFn({ method: "POST" })
       amount: 15.00,
     };
   });
+
+/**
+ * Aplica as credenciais Sandbox (já cadastradas em Secrets) ao restaurante,
+ * habilitando o PIX online para testes sem passar pelo OAuth.
+ */
+export const mercadopagoUseSandboxCredentials = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ restaurantId: z.string().uuid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    const token = process.env["MERCADOPAGO_ACCESS_TOKEN_SANDBOX"];
+    const publicKey = process.env["MERCADOPAGO_PUBLIC_KEY_SANDBOX"];
+    if (!token) {
+      return { ok: false as const, error: "Credenciais Sandbox não configuradas." };
+    }
+
+    const { error } = await supabase.rpc("set_restaurant_integration_secret" as any, {
+      p_restaurant_id: data.restaurantId,
+      p_provider: "mercadopago",
+      p_value: token,
+    } as any);
+    if (error) return { ok: false as const, error: error.message };
+
+    await supabase
+      .from("restaurants")
+      .update({ mp_public_key: publicKey ?? null, accept_pix_online: true })
+      .eq("id", data.restaurantId);
+
+    return { ok: true as const };
+  });
+
