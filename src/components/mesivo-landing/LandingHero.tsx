@@ -83,12 +83,12 @@ export function LandingHero() {
               <MotionText
                 as="h1"
                 lines={[
-                  "Seu restaurante,",
+                  "Vamos remodelar o design,",
                   <>
-                    em um <span className="mesivo-accent">só ritmo</span>.
+                    vamos começar pela <span className="mesivo-accent">marcar</span>.
                   </>,
                 ]}
-                ariaLabel="Seu restaurante, em um só ritmo."
+                ariaLabel="Vamos remodelar o design, vamos começar pela marcar."
               />
             </div>
 
@@ -97,15 +97,15 @@ export function LandingHero() {
               <p
                 style={{
                   marginTop: 20,
-                  maxWidth: 540,
+                  maxWidth: 640,
                   fontSize: "clamp(1rem, 1.2vw, 1.15rem)",
                   lineHeight: 1.55,
                   color: "var(--fg-mid)",
                 }}
               >
+                Haja como Design e Gestor de Marketing senior, preciso padronizar paletas, logo etc.
                 Cardápio digital, pedidos online, PDV, mesas, comandas, cozinha e
-                caixa — sincronizados em tempo real. Sem comissão por venda, com
-                fluxo pensado para a rotina de quem opera todos os dias.
+                caixa — sincronizados em tempo real.
               </p>
             </MotionReveal>
 
