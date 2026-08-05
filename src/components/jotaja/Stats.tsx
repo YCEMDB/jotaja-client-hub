@@ -30,10 +30,7 @@ export function Stats() {
       className="relative bg-ink text-background border-y-[3px] border-ink overflow-hidden"
     >
       <div className="absolute inset-0 bg-noise opacity-40 pointer-events-none" />
-      <div className="container mx-auto px-6 pt-8 pb-4 md:pt-10 md:pb-6 relative">
-        <p className="text-center text-xs sm:text-sm uppercase tracking-[0.22em] font-semibold text-background/70">
-          Uma única plataforma para todos os canais do seu restaurante
-        </p>
+      <div className="container mx-auto px-6 pt-10 pb-6 relative">
       </div>
 
       <Marquee
