@@ -93,7 +93,7 @@ export function Planos() {
               key={plan.name}
               className={`relative rounded-2xl p-7 flex flex-col h-full bg-card border-2 border-ink shadow-brutal ${
                 plan.highlighted
-                  ? "ring-2 ring-brand-orange ring-offset-2 ring-offset-secondary"
+                  ? "ring-2 ring-[#E84393] ring-offset-2 ring-offset-secondary"
                   : ""
               }`}
             >
