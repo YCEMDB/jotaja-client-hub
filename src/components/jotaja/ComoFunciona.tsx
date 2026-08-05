@@ -93,7 +93,7 @@ const steps: Step[] = [
 
 const toneClasses: Record<Step["tone"], { chip: string; ring: string; text: string }> = {
   amber: { chip: "bg-brand-amber", ring: "border-ink", text: "text-ink" },
-  orange: { chip: "bg-brand-orange", ring: "border-ink", text: "text-ink" },
+  orange: { chip: "bg-gradient-sunset", ring: "border-ink", text: "text-ink" },
   ink: { chip: "bg-ink", ring: "border-ink", text: "text-background" },
   green: { chip: "bg-emerald-500", ring: "border-ink", text: "text-ink" },
 };
@@ -111,7 +111,7 @@ export function ComoFunciona() {
       <div className="container mx-auto px-6 relative">
         <div className="max-w-3xl mb-16">
           <div className="inline-flex items-center gap-2 mb-4">
-            <span className="h-2 w-2 rounded-full bg-brand-orange" aria-hidden="true" />
+            <span className="h-2 w-2 rounded-full bg-gradient-sunset" aria-hidden="true" />
             <span className="text-[11px] uppercase tracking-[0.2em] font-bold text-ink/60">
               03 — Fluxo do pedido
             </span>
@@ -142,7 +142,7 @@ export function ComoFunciona() {
         <MotionReveal delay={0.1}>
           <div className="mt-10 flex flex-wrap items-center gap-3 text-xs md:text-sm text-ink/70">
             <span className="inline-flex items-center gap-2 rounded-full border-2 border-ink bg-background px-3 py-1.5 shadow-brutal">
-              <span className="h-2 w-2 rounded-full bg-brand-orange" aria-hidden="true" />
+              <span className="h-2 w-2 rounded-full bg-gradient-sunset" aria-hidden="true" />
               Fluxo principal
             </span>
             <span className="inline-flex items-center gap-2 rounded-full border-2 border-ink bg-background px-3 py-1.5 shadow-brutal">
@@ -210,7 +210,7 @@ function FlowDesktop() {
           <motion.circle
             r="6"
             cy="30"
-            fill="var(--brand-orange)"
+            fill="#E84393"
             stroke="var(--ink)"
             strokeWidth="2"
             initial={{ cx: 30 }}

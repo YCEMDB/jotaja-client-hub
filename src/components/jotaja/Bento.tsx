@@ -14,7 +14,7 @@ export function Bento() {
         {/* Kicker + title */}
         <div className="max-w-3xl mb-14">
           <div className="inline-flex items-center gap-2 mb-4">
-            <span className="h-2 w-2 rounded-full bg-brand-orange" />
+            <span className="h-2 w-2 rounded-full bg-gradient-sunset" />
             <span className="text-[11px] uppercase tracking-[0.2em] font-bold text-ink/60">
               02 — Plataforma
             </span>
@@ -36,11 +36,11 @@ export function Bento() {
           <div className="col-span-12 lg:col-span-7 row-span-3 group relative rounded-2xl border-2 border-ink bg-card overflow-hidden shadow-brutal hover:shadow-brutal-lg hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all">
             <div className="absolute top-8 left-8 z-20">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-ink text-background text-[10px] font-bold uppercase tracking-widest shadow-glow-sm">
-                <Zap className="w-3 h-3 text-brand-orange animate-pulse" />
+                <Zap className="w-3 h-3 text-[#FF6B35] animate-pulse" fill="currentColor" />
                 Live: Central de Pedidos
               </div>
               <h3 className="font-display text-4xl md:text-5xl text-ink mt-4 max-w-sm leading-[0.85] tracking-tighter uppercase">
-                KANBAN QUE PULSA COM A <span className="text-brand-orange">SUA OPERAÇÃO.</span>
+                KANBAN QUE PULSA COM A <span className="text-[#FF6B35]">SUA OPERAÇÃO.</span>
               </h3>
               <p className="text-sm text-ink/60 mt-3 max-w-[28ch] font-bold uppercase tracking-wide">
                 Gestão visual, intuitiva e sem atritos.
@@ -48,7 +48,7 @@ export function Bento() {
             </div>
             
             {/* Decoração de fundo para profundidade */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-brand-orange/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none z-10" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF6B35]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none z-10" />
 
             {/* Mockup Container com ajuste de posicionamento para evitar sobreposição */}
             <div className="absolute bottom-0 right-0 w-[98%] translate-x-8 translate-y-44 group-hover:translate-y-36 transition-all duration-700 ease-out z-0">
@@ -87,7 +87,7 @@ export function Bento() {
               </p>
               <div className="relative flex-1 mt-4">
                 <div className="absolute -bottom-10 -right-8 w-[60%] rounded-[2.5rem] border-[8px] border-ink shadow-brutal-lg rotate-[6deg] group-hover:rotate-[3deg] transition-transform bg-background overflow-hidden aspect-[9/19]">
-                  <MockupPhoneCardapio />
+                  <MockupPhoneCardapio className="[&_.logo-mark-animated_.logo-dot]:!fill-white" />
                 </div>
               </div>
             </div>
@@ -107,7 +107,7 @@ export function Bento() {
           {/* Entregadores */}
           <div className="col-span-6 lg:col-span-4 row-span-2 group relative rounded-2xl border-2 border-ink bg-card p-5 shadow-brutal hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all">
             <div className="flex items-start gap-3">
-              <div className="w-10 h-10 grid place-items-center rounded-lg bg-brand-magenta text-background shrink-0">
+              <div className="w-10 h-10 grid place-items-center rounded-lg bg-[#E84393] text-background shrink-0">
                 <Bike className="w-5 h-5" strokeWidth={2.5} />
               </div>
               <div>
@@ -122,7 +122,7 @@ export function Bento() {
           </div>
 
           {/* Cupons */}
-          <div className="col-span-6 lg:col-span-3 row-span-2 group relative rounded-2xl border-2 border-ink bg-brand-violet text-background p-5 shadow-brutal hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all overflow-hidden">
+          <div className="col-span-6 lg:col-span-3 row-span-2 group relative rounded-2xl border-2 border-ink bg-[#7C5CFF] text-background p-5 shadow-brutal hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all overflow-hidden">
             <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-background/10" />
             <Tag className="w-7 h-7 relative" strokeWidth={2.5} />
             <h3 className="font-display text-2xl mt-3 leading-[0.9] tracking-tight uppercase relative">
@@ -138,7 +138,7 @@ export function Bento() {
             <div className="absolute inset-0 bg-noise opacity-40" />
             <div className="relative">
               <div className="flex items-center gap-2 mb-3">
-                <BarChart3 className="w-5 h-5 text-brand-orange" strokeWidth={2.5} />
+                <BarChart3 className="w-5 h-5 text-[#FF6B35]" strokeWidth={2.5} />
                 <span className="text-[10px] uppercase tracking-widest font-bold text-background/60">
                   Relatórios
                 </span>
@@ -147,7 +147,7 @@ export function Bento() {
                 {[40, 65, 50, 80, 70, 95, 100].map((h, i) => (
                   <div
                     key={i}
-                    className="flex-1 rounded-t-sm bg-gradient-to-t from-brand-orange to-brand-amber"
+                    className="flex-1 rounded-t-sm bg-gradient-to-t from-[#FF6B35] to-[#FFB020]"
                     style={{ height: `${h}%` }}
                   />
                 ))}
@@ -178,7 +178,7 @@ export function Bento() {
 
           {/* CRM */}
           <div className="col-span-6 lg:col-span-4 row-span-2 group relative rounded-2xl border-2 border-ink bg-card p-5 shadow-brutal hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all">
-            <Users className="w-7 h-7 text-brand-orange" strokeWidth={2.5} />
+            <Users className="w-7 h-7 text-[#FF6B35]" strokeWidth={2.5} />
             <h3 className="font-display text-xl text-ink mt-3 leading-[0.9] tracking-tight uppercase">
               BASE DE CLIENTES SUA.
             </h3>
@@ -188,7 +188,7 @@ export function Bento() {
           </div>
 
           {/* WhatsApp */}
-          <div className="col-span-6 lg:col-span-3 row-span-2 group relative rounded-2xl border-2 border-ink bg-success text-success-foreground p-5 shadow-brutal hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all">
+          <div className="col-span-6 lg:col-span-3 row-span-2 group relative rounded-2xl border-2 border-ink bg-[#22C55E] text-white p-5 shadow-brutal hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all">
             <MessageSquare className="w-7 h-7" strokeWidth={2.5} fill="currentColor" />
             <h3 className="font-display text-xl mt-3 leading-[0.9] tracking-tight uppercase">
               WHATSAPP<br />INTEGRADO

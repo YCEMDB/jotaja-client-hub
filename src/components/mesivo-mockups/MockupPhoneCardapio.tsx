@@ -43,7 +43,7 @@ export function MockupPhoneCardapio({ className }: { className?: string }) {
             placeItems: "center",
             boxShadow: `3px 3px 0 0 ${accentColor}`
           }}>
-            <MesivoMark size={24} decorative />
+            <MesivoMark size={24} decorative className="[&_stop]:stop-color-white logo-mark-animated" />
           </div>
           <div>
             <div style={{ fontWeight: 900, fontSize: 14, letterSpacing: '-0.02em', fontFamily: 'var(--font-display)' }}>

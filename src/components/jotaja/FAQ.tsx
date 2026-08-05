@@ -39,11 +39,11 @@ export function FAQ() {
       <div className="absolute inset-0 bg-grid opacity-[0.03] pointer-events-none" />
       <div className="container mx-auto px-6 relative">
         <Reveal className="max-w-2xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-orange/10 border-2 border-brand-orange/20 text-brand-orange font-bold text-[10px] uppercase tracking-widest mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-sunset/10 border-2 border-[#FF6B35]/20 text-[#FF6B35] font-bold text-[10px] uppercase tracking-widest mb-4">
             Dúvidas Comuns
           </div>
           <h2 className="font-display text-4xl md:text-6xl text-ink leading-[0.9] tracking-tighter uppercase mb-6">
-            FAQ<span className="text-brand-orange">.</span>
+            FAQ<span className="text-gradient-sunset">.</span>
           </h2>
           <p className="text-ink/60 max-w-lg mx-auto">
             Tudo que você precisa saber para começar a gerenciar seu restaurante com eficiência hoje mesmo.
