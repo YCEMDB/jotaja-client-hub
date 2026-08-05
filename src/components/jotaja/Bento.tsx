@@ -39,8 +39,8 @@ export function Bento() {
                 <ShoppingBag className="w-3 h-3" />
                 Pedidos em tempo real
               </div>
-              <h3 className="font-display text-3xl md:text-4xl text-ink mt-3 max-w-xs leading-tight">
-                Kanban que pulsa com sua cozinha.
+              <h3 className="font-display text-3xl md:text-4xl text-ink mt-3 max-w-sm leading-[0.9] tracking-tighter uppercase">
+                KANBAN QUE PULSA COM A SUA OPERAÇÃO.
               </h3>
             </div>
             <div className="absolute bottom-0 right-0 w-[95%] translate-x-4 translate-y-6 group-hover:translate-y-4 transition-transform border-2 border-ink rounded-xl shadow-card-xl bg-background overflow-hidden">
@@ -56,8 +56,8 @@ export function Bento() {
                 <Smartphone className="w-3 h-3" />
                 Cardápio digital
               </div>
-              <h3 className="font-display text-3xl md:text-4xl text-background mt-3 max-w-[14ch] leading-tight">
-                Sua loja na palma do cliente.
+              <h3 className="font-display text-3xl md:text-4xl text-background mt-3 max-w-[14ch] leading-[0.9] tracking-tighter uppercase">
+                SUA LOJA NA PALMA DO CLIENTE.
               </h3>
               <p className="text-background/85 mt-2 text-sm max-w-[28ch]">
                 Cores, logo, fotos. URL própria. QR Code pra mesa.
