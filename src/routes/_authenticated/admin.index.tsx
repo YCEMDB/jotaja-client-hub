@@ -227,8 +227,8 @@ function Dashboard() {
 
   return (
     <AdminPageLayout
-      kicker="Visão geral"
-      title="Painel"
+      kicker="Visão operacional"
+      title="CENTRO DE COMANDO"
       subtitle={`${range.label} • fuso ${timezone}`}
       accent="magenta"
       icon={LayoutDashboard}

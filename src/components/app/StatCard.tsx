@@ -39,8 +39,8 @@ export function StatCard({
     <div
       className={cn(
         "relative bg-card border-2 border-ink rounded-2xl p-5 md:p-6",
-        "shadow-[5px_5px_0_0_oklch(0.15_0.02_30)]",
-        "hover:shadow-[7px_7px_0_0_oklch(0.69_0.22_38)] hover:-translate-x-0.5 hover:-translate-y-0.5",
+        "shadow-brutal hover:shadow-brutal-lg",
+        "hover:-translate-x-0.5 hover:-translate-y-0.5",
         "transition-all overflow-hidden",
         className,
       )}
