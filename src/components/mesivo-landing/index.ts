@@ -6,3 +6,4 @@ export { Beneficios } from "./Beneficios";
 export { PlanosMesivo } from "./PlanosMesivo";
 export { FAQMesivo } from "./FAQMesivo";
 export { CTAFinal } from "./CTAFinal";
+export { MesivoTemplates } from "./MesivoTemplates";

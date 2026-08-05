@@ -5,19 +5,19 @@ type MesivoMarkProps = {
   className?: string;
   /** Se true, o gráfico é decorativo e recebe aria-hidden. */
   decorative?: boolean;
-  /** Cor do símbolo. Por padrão usa var(--mesivo-primary) ou #2B2B2B */
+  /** Cor do símbolo. Por padrão usa currentColor */
   color?: string;
 };
 
 /**
- * MesivoMark — "Fluxo de Sincronia"
- * Três traços assimétricos que representam o fluxo operacional (Bastidores).
+ * MesivoMark — "4 Quadrados Assimétricos"
+ * Seguindo a nova identidade visual: Deep Forest e Copper.
  */
 export function MesivoMark({
   size = 40,
   className,
   decorative = false,
-  color = "currentColor",
+  color = "var(--deep-forest, #173A34)",
 }: MesivoMarkProps) {
   return (
     <svg
@@ -31,17 +31,17 @@ export function MesivoMark({
       aria-label={decorative ? undefined : "Mesivo"}
       xmlns="http://www.w3.org/2000/svg"
     >
-      {/* Top Left Square (Cream/Sage context) */}
-      <rect x="4" y="4" width="11" height="11" rx="1.5" fill={color} fillOpacity="0.9" />
+      {/* Top Left Square (Deep Forest) */}
+      <rect x="4" y="4" width="11" height="11" rx="2" fill={color} />
       
-      {/* Top Right Square (Copper) */}
-      <rect x="17" y="4" width="11" height="11" rx="1.5" fill="var(--copper, #D87A43)" />
+      {/* Top Right Square (Deep Forest) */}
+      <rect x="17" y="4" width="11" height="11" rx="2" fill={color} />
       
-      {/* Bottom Left Square (Primary) */}
-      <rect x="4" y="17" width="11" height="11" rx="1.5" fill={color} />
+      {/* Bottom Left Square (Deep Forest) */}
+      <rect x="4" y="17" width="11" height="11" rx="2" fill={color} />
 
-      {/* Bottom Right Square (Primary) */}
-      <rect x="17" y="17" width="11" height="11" rx="1.5" fill={color} />
+      {/* Bottom Right Square (Copper) */}
+      <rect x="17" y="17" width="11" height="11" rx="2" fill="var(--copper, #D87A43)" />
     </svg>
   );
 }

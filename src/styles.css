@@ -36,7 +36,7 @@
 
 :root {
   --background: #F8F5EF;
-  --foreground: #232323;
+  --foreground: #232333;
   --deep-forest: #173A34;
   --copper: #D87A43;
   --sage: #5F8D67;
@@ -57,7 +57,7 @@
   --shadow-xl: 0 20px 40px rgba(23, 35, 51, 0.08);
   --shadow-glow: 0 0 40px rgba(216, 122, 67, 0.1);
 
-  --transition-editorial: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-editorial: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 

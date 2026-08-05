@@ -13,6 +13,7 @@ import {
   PlanosMesivo,
   FAQMesivo,
   CTAFinal,
+  MesivoTemplates,
 } from "@/components/mesivo-landing";
 import { mesivoFaq } from "@/components/mesivo-landing/faq-data";
 
@@ -163,8 +164,7 @@ function Index() {
       <PublicShell variant="landing">
         <ScrollProgress />
         <LandingHero />
-        <ProblemaSolucao />
-        <FluxoPedidos />
+        <MesivoTemplates />
         <RecursosMesivo />
         <Beneficios />
         <PlanosMesivo />
