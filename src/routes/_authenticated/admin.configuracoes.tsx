@@ -111,6 +111,7 @@ function ConfigPage() {
         <TabsList className="mb-4 flex-wrap h-auto">
           <TabsTrigger value="geral">Geral</TabsTrigger>
           <TabsTrigger value="aparencia">Aparência</TabsTrigger>
+          <TabsTrigger value="plano">Plano</TabsTrigger>
           <TabsTrigger value="horarios">Horários</TabsTrigger>
           <TabsTrigger value="entrega">Áreas de entrega</TabsTrigger>
           <TabsTrigger value="retirada">Retirada</TabsTrigger>
@@ -120,6 +121,7 @@ function ConfigPage() {
 
         <TabsContent value="geral"><GeralTab r={r} onSaved={load} /></TabsContent>
         <TabsContent value="aparencia"><AparenciaTab r={r} restaurantId={restaurantId} onSaved={load} /></TabsContent>
+        <TabsContent value="plano"><PlanoTab r={r} onSaved={load} /></TabsContent>
         <TabsContent value="horarios"><HorariosTab r={r} onSaved={load} /></TabsContent>
         <TabsContent value="entrega"><AreasTab areas={areas} restaurantId={restaurantId} onSaved={load} canWrite={canWriteAreas} needsReason={needsReason} /></TabsContent>
         <TabsContent value="retirada"><RetiradaTab r={r} onSaved={load} /></TabsContent>
@@ -176,6 +178,51 @@ function GeralTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
       </div>
 
       <Button onClick={save} disabled={saving}>{saving ? "Salvando…" : "Salvar"}</Button>
+    </Card>
+  );
+}
+
+function PlanoTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
+  const [plan, setPlan] = useState(r.plan || "trial");
+  const [saving, setSaving] = useState(false);
+
+  const save = async () => {
+    setSaving(true);
+    // Explicitly cast to any to avoid TS enum constraint issues in the update call if necessary,
+    // though 'restaurant_plan' should match our options.
+    const { error } = await supabase.from("restaurants").update({
+      plan: plan as any
+    }).eq("id", r.id);
+    setSaving(false);
+    if (error) return toast.error(error.message);
+    toast.success("Plano atualizado");
+    onSaved();
+  };
+
+  const PLANS = [
+    { id: "trial", name: "Teste (Trial)", description: "Período de avaliação" },
+    { id: "essential", name: "Essencial", description: "Recursos básicos para começar" },
+    { id: "professional", name: "Profissional", description: "Recursos avançados para sua loja" },
+  ];
+
+  return (
+    <Card className="p-6 space-y-4">
+      <div className="grid gap-3 sm:grid-cols-3">
+        {PLANS.map((p) => (
+          <button
+            key={p.id}
+            type="button"
+            onClick={() => setPlan(p.id)}
+            className={`text-left border rounded-lg p-4 transition ${plan === p.id ? "border-primary ring-2 ring-primary/40 bg-primary/5" : "hover:border-primary/50"}`}
+          >
+            <p className="font-bold text-lg">{p.name}</p>
+            <p className="text-sm text-muted-foreground">{p.description}</p>
+          </button>
+        ))}
+      </div>
+      <Button onClick={save} disabled={saving || plan === r.plan}>
+        {saving ? "Salvando…" : "Salvar Plano"}
+      </Button>
     </Card>
   );
 }
