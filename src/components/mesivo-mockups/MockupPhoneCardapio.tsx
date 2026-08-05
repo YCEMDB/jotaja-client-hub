@@ -11,8 +11,6 @@ export function MockupPhoneCardapio({ className }: { className?: string }) {
       style={{
         width: "100%",
         height: "100%",
-        borderRadius: 0,
-        border: "none",
         backgroundColor: "var(--mesivo-warm-white)",
         padding: 16,
         fontFamily: "var(--font-ui)",
