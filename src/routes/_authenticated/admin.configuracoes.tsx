@@ -927,6 +927,12 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
 
       <div className="text-xs bg-amber-50 border border-amber-200 text-amber-900 p-3 rounded-lg space-y-2">
         <div className="mb-2 leading-relaxed opacity-90">
+          Para começar, busque no menu lateral as credenciais de teste e use-as na implementação do SDK no seu backend para acessar as funcionalidades do Mercado Pago. <a href="https://www.mercadopago.com.br/developers/pt/docs" target="_blank" rel="noreferrer" className="underline font-bold">Saiba mais</a>
+          <br /><br />
+          <strong>Instalar o SDK e iniciar a biblioteca com suas credenciais de teste</strong>
+          <br /><br />
+          O SDK de backend permitirá que você opere via servidor para gerenciar preferências de pagamento, processar transações e outras operações críticas.
+          <br /><br />
           Crie e implemente as preferências de pagamento do produto ou serviço a ser cobrado a partir do SDK. Em seguida, configure o tipo de integração web ou mobile e as notificações Webhook.
           <br /><br />
           <strong>1. Criar uma preferência de pagamento</strong>
