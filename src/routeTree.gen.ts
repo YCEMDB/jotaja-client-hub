@@ -48,6 +48,7 @@ import { Route as LojaSlugRouteImport } from './routes/loja.$slug'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
 import { Route as DevTypeLabRouteImport } from './routes/dev.type-lab'
 import { Route as DevMotionRouteImport } from './routes/dev.motion'
+import { Route as DevLogoLabRouteImport } from './routes/dev.logo-lab'
 import { Route as ComparativoComandahubVsSaiposRouteImport } from './routes/comparativo.comandahub-vs-saipos'
 import { Route as ComparativoComandahubVsPlanilhaRouteImport } from './routes/comparativo.comandahub-vs-planilha'
 import { Route as ComparativoComandahubVsGoomerRouteImport } from './routes/comparativo.comandahub-vs-goomer'
@@ -303,6 +304,11 @@ const DevTypeLabRoute = DevTypeLabRouteImport.update({
 const DevMotionRoute = DevMotionRouteImport.update({
   id: '/dev/motion',
   path: '/dev/motion',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DevLogoLabRoute = DevLogoLabRouteImport.update({
+  id: '/dev/logo-lab',
+  path: '/dev/logo-lab',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ComparativoComandahubVsSaiposRoute =
@@ -689,6 +695,7 @@ export interface FileRoutesByFullPath {
   '/comparativo/comandahub-vs-goomer': typeof ComparativoComandahubVsGoomerRoute
   '/comparativo/comandahub-vs-planilha': typeof ComparativoComandahubVsPlanilhaRoute
   '/comparativo/comandahub-vs-saipos': typeof ComparativoComandahubVsSaiposRoute
+  '/dev/logo-lab': typeof DevLogoLabRoute
   '/dev/motion': typeof DevMotionRoute
   '/dev/type-lab': typeof DevTypeLabRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
@@ -789,6 +796,7 @@ export interface FileRoutesByTo {
   '/comparativo/comandahub-vs-goomer': typeof ComparativoComandahubVsGoomerRoute
   '/comparativo/comandahub-vs-planilha': typeof ComparativoComandahubVsPlanilhaRoute
   '/comparativo/comandahub-vs-saipos': typeof ComparativoComandahubVsSaiposRoute
+  '/dev/logo-lab': typeof DevLogoLabRoute
   '/dev/motion': typeof DevMotionRoute
   '/dev/type-lab': typeof DevTypeLabRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
@@ -892,6 +900,7 @@ export interface FileRoutesById {
   '/comparativo/comandahub-vs-goomer': typeof ComparativoComandahubVsGoomerRoute
   '/comparativo/comandahub-vs-planilha': typeof ComparativoComandahubVsPlanilhaRoute
   '/comparativo/comandahub-vs-saipos': typeof ComparativoComandahubVsSaiposRoute
+  '/dev/logo-lab': typeof DevLogoLabRoute
   '/dev/motion': typeof DevMotionRoute
   '/dev/type-lab': typeof DevTypeLabRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
@@ -994,6 +1003,7 @@ export interface FileRouteTypes {
     | '/comparativo/comandahub-vs-goomer'
     | '/comparativo/comandahub-vs-planilha'
     | '/comparativo/comandahub-vs-saipos'
+    | '/dev/logo-lab'
     | '/dev/motion'
     | '/dev/type-lab'
     | '/email/unsubscribe'
@@ -1094,6 +1104,7 @@ export interface FileRouteTypes {
     | '/comparativo/comandahub-vs-goomer'
     | '/comparativo/comandahub-vs-planilha'
     | '/comparativo/comandahub-vs-saipos'
+    | '/dev/logo-lab'
     | '/dev/motion'
     | '/dev/type-lab'
     | '/email/unsubscribe'
@@ -1196,6 +1207,7 @@ export interface FileRouteTypes {
     | '/comparativo/comandahub-vs-goomer'
     | '/comparativo/comandahub-vs-planilha'
     | '/comparativo/comandahub-vs-saipos'
+    | '/dev/logo-lab'
     | '/dev/motion'
     | '/dev/type-lab'
     | '/email/unsubscribe'
@@ -1299,6 +1311,7 @@ export interface RootRouteChildren {
   ComparativoComandahubVsGoomerRoute: typeof ComparativoComandahubVsGoomerRoute
   ComparativoComandahubVsPlanilhaRoute: typeof ComparativoComandahubVsPlanilhaRoute
   ComparativoComandahubVsSaiposRoute: typeof ComparativoComandahubVsSaiposRoute
+  DevLogoLabRoute: typeof DevLogoLabRoute
   DevMotionRoute: typeof DevMotionRoute
   DevTypeLabRoute: typeof DevTypeLabRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
@@ -1601,6 +1614,13 @@ declare module '@tanstack/react-router' {
       path: '/dev/motion'
       fullPath: '/dev/motion'
       preLoaderRoute: typeof DevMotionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dev/logo-lab': {
+      id: '/dev/logo-lab'
+      path: '/dev/logo-lab'
+      fullPath: '/dev/logo-lab'
+      preLoaderRoute: typeof DevLogoLabRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/comparativo/comandahub-vs-saipos': {
@@ -2174,6 +2194,7 @@ const rootRouteChildren: RootRouteChildren = {
   ComparativoComandahubVsGoomerRoute: ComparativoComandahubVsGoomerRoute,
   ComparativoComandahubVsPlanilhaRoute: ComparativoComandahubVsPlanilhaRoute,
   ComparativoComandahubVsSaiposRoute: ComparativoComandahubVsSaiposRoute,
+  DevLogoLabRoute: DevLogoLabRoute,
   DevMotionRoute: DevMotionRoute,
   DevTypeLabRoute: DevTypeLabRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
