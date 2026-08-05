@@ -87,18 +87,17 @@ export function Hero() {
           <div className="col-span-12 lg:col-span-7">
             <MotionText
               as="h1"
-              className="font-display text-ink uppercase leading-[0.82] tracking-[-0.05em] text-[clamp(2.75rem,8.5vw,6.8rem)] drop-shadow-[0_2px_2px_rgba(0,0,0,0.05)]"
+              className="font-display text-ink uppercase leading-[0.9] tracking-[-0.05em] text-[clamp(2.75rem,8.5vw,6.8rem)] drop-shadow-[0_2px_2px_rgba(0,0,0,0.05)] py-4"
               ariaLabel="Gestão que liberta o seu restaurante."
               lines={[
-                <span className="block overflow-hidden pb-2" key="l1">
+                <span className="block overflow-visible pb-4" key="l1">
                   <span className="inline-block hover:scale-[1.02] transition-transform duration-500 cursor-default">
                     Gestão que
                   </span>
                 </span>,
-                <span key="l2" className="block overflow-hidden">
-                  liberta o <span className="text-gradient-sunset drop-shadow-sm px-1">seu negócio.</span>
+                <span key="l2" className="block overflow-visible pt-2">
+                  liberta o <span className="text-gradient-sunset drop-shadow-sm px-2">seu negócio.</span>
                 </span>
-
               ]}
             />
 
