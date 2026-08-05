@@ -1,7 +1,9 @@
 /**
  * Mercado Pago Connect + Pix API — cliente HTTP server-only.
+ * Usa o SDK oficial 'mercadopago' para operações complexas se necessário.
  */
 import { createHash, createHmac, timingSafeEqual } from "node:crypto";
+import { MercadoPagoConfig, Payment } from "mercadopago";
 
 export type MercadoPagoEnvironment = "sandbox" | "production";
 
