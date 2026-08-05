@@ -27,7 +27,7 @@ import { toast } from "sonner";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
-import { mercadopagoConnectInit, createTestMercadoPagoPix } from "@/lib/payments/mercadopago.functions";
+import { mercadopagoConnectInit, createTestMercadoPagoPix, mercadopagoUseSandboxCredentials } from "@/lib/payments/mercadopago.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/configuracoes")({
   component: ConfigPage,
@@ -721,6 +721,7 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
   const connectFn = useServerFn(mercadopagoConnectInit);
   const webhookUrl = typeof window !== "undefined" ? `${window.location.origin}/api/public/mercadopago-webhook` : "";
   const createTestPix = useServerFn(createTestMercadoPagoPix);
+  const useSandboxFn = useServerFn(mercadopagoUseSandboxCredentials);
 
   const reload = async () => {
     setLoading(true);
