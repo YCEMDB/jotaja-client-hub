@@ -104,32 +104,36 @@ export function PlanosMesivo() {
                   height: "100%",
                   display: "flex",
                   flexDirection: "column",
-                  padding: "28px 26px",
-                  borderRadius: 24,
+                  padding: "40px 32px",
+                  borderRadius: 32,
                   backgroundColor: "var(--card)",
                   border: p.highlighted
-                    ? "1.5px solid var(--accent)"
+                    ? "2px solid var(--accent)"
                     : "1px solid var(--border)",
                   boxShadow: p.highlighted
-                    ? "0 24px 60px -30px color-mix(in oklab, var(--accent) 40%, transparent)"
-                    : "none",
+                    ? "var(--shadow-xl)"
+                    : "var(--shadow-md)",
                   position: "relative",
+                  transition: "var(--transition-smooth)",
                 }}
+                className="hover:shadow-lg"
               >
                 {p.highlighted && (
                   <span
                     style={{
                       position: "absolute",
-                      top: -12,
-                      left: 20,
-                      padding: "4px 12px",
+                      top: 0,
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                      padding: "6px 16px",
                       borderRadius: 999,
                       backgroundColor: "var(--accent)",
                       color: "var(--accent-foreground)",
-                      fontSize: 11,
+                      fontSize: 12,
                       fontWeight: 700,
-                      letterSpacing: "0.08em",
+                      letterSpacing: "0.05em",
                       textTransform: "uppercase",
+                      boxShadow: "0 4px 12px rgba(216, 122, 67, 0.3)",
                     }}
                   >
                     Mais escolhido

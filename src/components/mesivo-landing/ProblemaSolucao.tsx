@@ -93,14 +93,16 @@ function Card({
   return (
     <div
       style={{
-        borderRadius: 24,
-        padding: "clamp(20px, 3vw, 32px)",
-        border: brand ? "1px solid var(--accent)" : "1px solid var(--border)",
+        borderRadius: 32,
+        padding: "clamp(32px, 4vw, 48px)",
+        border: brand ? "2px solid var(--accent)" : "1px solid var(--border)",
         backgroundColor: brand ? "var(--card)" : "var(--muted)",
         boxShadow: brand
-          ? "0 20px 40px -24px color-mix(in oklab, var(--mesivo-tomato) 30%, transparent)"
-          : "none",
+          ? "var(--shadow-xl)"
+          : "var(--shadow-sm)",
+        transition: "var(--transition-smooth)",
       }}
+      className="hover:shadow-lg"
     >
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
         <span
