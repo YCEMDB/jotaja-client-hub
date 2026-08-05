@@ -6,9 +6,10 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-display: "Sora", system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
   --font-sans: "Manrope", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", monospace;
+  --font-serif: "Instrument Serif", serif;
 
   --radius-sm: 8px;
   --radius-md: 12px;
