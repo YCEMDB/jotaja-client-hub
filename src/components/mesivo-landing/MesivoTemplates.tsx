@@ -46,7 +46,7 @@ const layouts = [
 
 export function MesivoTemplates() {
   return (
-    <section id="templates" className="py-40 bg-[#FAF9F6]">
+    <section id="templates" className="py-20 bg-[#FAF9F6]">
       <div className="max-w-[1440px] mx-auto px-8">
         <MotionReveal variant="fade" className="mb-24">
           <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-copper mb-8 block">Plano de Ação & Design System</span>
