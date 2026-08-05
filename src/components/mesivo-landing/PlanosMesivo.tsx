@@ -73,8 +73,8 @@ export function PlanosMesivo() {
                   <div
                     className={`relative h-full flex flex-col p-12 rounded-[32px] border transition-editorial group ${
                       p.highlighted
-                        ? "bg-deep-forest text-cream border-deep-forest shadow-2xl scale-[1.02] z-10"
-                        : "bg-white border-border hover:shadow-xl"
+                    ? "bg-deep-forest text-cream border-deep-forest shadow-2xl scale-[1.02] z-10"
+                    : "bg-white border-border hover:shadow-xl shadow-sm"
                     }`}
                   >
                     <div className="mb-8">

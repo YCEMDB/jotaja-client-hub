@@ -163,8 +163,7 @@ function Index() {
       <PublicShell variant="landing">
         <ScrollProgress />
         <LandingHero />
-        <ProblemaSolucao />
-        <FluxoPedidos />
+        <MesivoTemplates />
         <RecursosMesivo />
         <Beneficios />
         <PlanosMesivo />
