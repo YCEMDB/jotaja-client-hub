@@ -83,12 +83,10 @@ export function LandingHero() {
               <MotionText
                 as="h1"
                 lines={[
-                  "Vamos remodelar o design,",
-                  <>
-                    vamos começar pela <span className="mesivo-accent">marcar</span>.
-                  </>,
+                  "essa era",
+                  <span key="idea" className="mesivo-accent">minha ideia</span>,
                 ]}
-                ariaLabel="Vamos remodelar o design, vamos começar pela marcar."
+                ariaLabel="essa era minha ideia"
               />
             </div>
 
