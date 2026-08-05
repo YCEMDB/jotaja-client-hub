@@ -73,7 +73,7 @@ export function Planos() {
       <div className="absolute inset-0 bg-grid opacity-[0.05] pointer-events-none" />
       <div className="container mx-auto px-6 relative">
         <MotionReveal className="max-w-2xl mx-auto text-center">
-          <span className="text-xs font-semibold uppercase tracking-widest text-brand-orange">
+          <span className="text-xs font-semibold uppercase tracking-widest text-gradient-sunset">
             Planos
           </span>
           <h2 className="mt-3 font-display text-3xl md:text-5xl text-ink tracking-tight uppercase leading-[0.95]">
@@ -98,7 +98,7 @@ export function Planos() {
               }`}
             >
               {plan.highlighted && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-brand-orange text-ink text-xs font-bold border-2 border-ink shadow-brutal">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-gradient-sunset text-ink text-xs font-bold border-2 border-ink shadow-brutal">
                   Recomendado
                 </div>
               )}
@@ -113,7 +113,7 @@ export function Planos() {
               <Button
                 className={`mt-6 w-full rounded-lg font-semibold border-2 border-ink shadow-brutal ${
                   plan.highlighted
-                    ? "bg-brand-orange text-ink hover:bg-brand-orange/90"
+                    ? "bg-gradient-sunset text-ink hover:opacity-90"
                     : "bg-ink text-background hover:bg-ink/90"
                 }`}
                 asChild
@@ -124,7 +124,7 @@ export function Planos() {
                 {plan.features.map((f) => (
                   <li key={f} className="flex items-start gap-2.5 text-sm">
                     <Check
-                      className="w-4 h-4 text-brand-orange mt-0.5 flex-shrink-0"
+                      className="w-4 h-4 text-brand-magenta mt-0.5 flex-shrink-0"
                       strokeWidth={2.5}
                       aria-hidden="true"
                     />
