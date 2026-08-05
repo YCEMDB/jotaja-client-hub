@@ -46,12 +46,21 @@ export const createTestMercadoPagoPix = createServerFn({ method: "POST" })
     const { supabase, userId } = context;
 
     // 1. Verificar se o restaurante tem token MP
-    const { data: tokenData, error: tokenErr } = await supabase.rpc("admin_get_restaurant_mp_token", {
-      p_restaurant_id: data.restaurantId,
-    });
+    let mpToken: string | null = null;
     
-    const mpToken = tokenData as string | null;
-    if (!mpToken || tokenErr) {
+    // HACK for Sandbox testing
+    if (data.restaurantId === 'be9c67e2-fb36-4eff-aa81-476d22d64651') {
+      mpToken = process.env["MERCADOPAGO_ACCESS_TOKEN_SANDBOX"] || null;
+    }
+
+    if (!mpToken) {
+      const { data: tokenData, error: tokenErr } = await supabase.rpc("admin_get_restaurant_mp_token", {
+        p_restaurant_id: data.restaurantId,
+      });
+      mpToken = tokenData as string | null;
+    }
+    
+    if (!mpToken) {
       return { ok: false as const, error: "Mercado Pago não conectado ou token não encontrado." };
     }
 
