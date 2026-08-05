@@ -9,13 +9,14 @@ export function MockupPhoneCardapio({ className }: { className?: string }) {
       role="img"
       aria-label="Mockup do cardápio digital Mesivo em um telefone (dados demonstrativos)"
       style={{
-        width: 260,
-        borderRadius: 32,
-        border: "6px solid var(--mesivo-coffee)",
+        width: "100%",
+        height: "100%",
+        borderRadius: 0,
+        border: "none",
         backgroundColor: "var(--mesivo-warm-white)",
         padding: 16,
         fontFamily: "var(--font-ui)",
-        boxShadow: "0 20px 40px -20px rgba(52,36,29,0.5)",
+        boxShadow: "none",
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>

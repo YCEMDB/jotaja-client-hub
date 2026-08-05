@@ -17,9 +17,9 @@ export const DEMO_ORDERS: DemoOrder[] = [
   {
     id: "d1",
     code: "#241",
-    customer: "Cliente Balcão",
-    items: "1x Combo Demo",
-    total: "R$ 42,90",
+    customer: "Mesa 08",
+    items: "2x Burger Artesanal",
+    total: "R$ 78,00",
     status: "novo",
   },
   {
