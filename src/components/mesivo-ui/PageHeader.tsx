@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
 type PageHeaderProps = {
   eyebrow?: string;
@@ -11,48 +12,30 @@ type PageHeaderProps = {
 /** PageHeader — cabeçalho institucional/de conteúdo. Usa H1. */
 export function PageHeader({ eyebrow, title, description, actions, className }: PageHeaderProps) {
   return (
-    <header className={className} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-      {eyebrow ? (
-        <span
-          style={{
-            fontFamily: "var(--font-ui)",
-            fontSize: 12,
-            fontWeight: 700,
-            letterSpacing: 1,
-            textTransform: "uppercase",
-            color: "var(--mesivo-tomato)",
-          }}
-        >
-          {eyebrow}
-        </span>
-      ) : null}
-      <h1
-        style={{
-          margin: 0,
-          fontFamily: "var(--font-display)",
-          color: "var(--fg-hi)",
-          fontSize: "clamp(2rem, 4.5vw, 3.25rem)",
-          lineHeight: 1.05,
-          letterSpacing: "-0.03em",
-        }}
-      >
-        {title}
-      </h1>
-      {description ? (
-        <p
-          style={{
-            margin: 0,
-            fontFamily: "var(--font-ui)",
-            color: "var(--fg-mid)",
-            fontSize: "1.05rem",
-            lineHeight: 1.55,
-            maxWidth: "60ch",
-          }}
-        >
-          {description}
-        </p>
-      ) : null}
-      {actions ? <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>{actions}</div> : null}
+    <header className={cn("mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8", className)}>
+      <div className="space-y-4 max-w-3xl">
+        {eyebrow && (
+          <span className="inline-block font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground">
+            {eyebrow}
+          </span>
+        )}
+        <div>
+          <h1 className="font-display text-5xl md:text-6xl tracking-tight leading-[0.9] text-foreground m-0">
+            {title}
+            <span className="inline-block w-2 h-2 ml-2 bg-copper rounded-full" />
+          </h1>
+          {description && (
+            <p className="mt-6 text-lg text-muted-foreground font-sans max-w-xl leading-relaxed m-0">
+              {description}
+            </p>
+          )}
+        </div>
+      </div>
+      {actions && (
+        <div className="flex flex-wrap items-center gap-4 shrink-0">
+          {actions}
+        </div>
+      )}
     </header>
   );
 }
@@ -67,40 +50,20 @@ type SectionHeaderProps = {
 /** SectionHeader — cabeçalho de seção (h2). */
 export function SectionHeader({ eyebrow, title, description, className }: SectionHeaderProps) {
   return (
-    <header
-      className={className}
-      style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 16 }}
-    >
-      {eyebrow ? (
-        <span
-          style={{
-            fontFamily: "var(--font-ui)",
-            fontSize: 11,
-            fontWeight: 700,
-            letterSpacing: 1,
-            textTransform: "uppercase",
-            color: "var(--mesivo-tomato)",
-          }}
-        >
+    <header className={cn("flex flex-col gap-2 mb-6", className)}>
+      {eyebrow && (
+        <span className="inline-block font-mono text-[10px] tracking-[0.2em] uppercase text-copper">
           {eyebrow}
         </span>
-      ) : null}
-      <h2
-        style={{
-          margin: 0,
-          fontFamily: "var(--font-display)",
-          color: "var(--fg-hi)",
-          fontSize: "clamp(1.4rem, 2.4vw, 1.9rem)",
-          letterSpacing: "-0.02em",
-        }}
-      >
+      )}
+      <h2 className="font-display text-3xl md:text-4xl tracking-tight leading-tight text-foreground m-0">
         {title}
       </h2>
-      {description ? (
-        <p style={{ margin: 0, color: "var(--fg-mid)", fontFamily: "var(--font-ui)" }}>
+      {description && (
+        <p className="mt-2 text-muted-foreground font-sans m-0 leading-relaxed max-w-2xl">
           {description}
         </p>
-      ) : null}
+      )}
     </header>
   );
 }

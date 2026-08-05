@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { MotionReveal } from "@/components/motion";
 
 export type PageMaxWidth = "3xl" | "4xl" | "5xl" | "6xl" | "7xl" | "full";
 
@@ -31,15 +32,17 @@ export function PageContainer({
   padded = true,
 }: PageContainerProps) {
   return (
-    <div
-      className={cn(
-        "mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-10",
-        padded && "pt-8 md:pt-10 pb-12",
-        MAX_W[maxWidth],
-        className,
-      )}
-    >
-      {children}
-    </div>
+    <MotionReveal variant="fade" delay={0.1}>
+      <div
+        className={cn(
+          "mx-auto w-full px-6 sm:px-8 lg:px-12 xl:px-16 transition-all duration-500",
+          padded && "pt-10 md:pt-14 pb-16",
+          MAX_W[maxWidth],
+          className,
+        )}
+      >
+        {children}
+      </div>
+    </MotionReveal>
   );
 }
