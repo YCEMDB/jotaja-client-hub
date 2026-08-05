@@ -187,7 +187,7 @@ export async function printReceipt(opts: {
     try {
       await ensureQZ();
       const printConfig = qz.configs.create(config.printerName);
-      const data = [{
+      const data: any[] = [{
         type: 'html',
         format: 'plain',
         data: html
