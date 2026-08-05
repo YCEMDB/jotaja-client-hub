@@ -34,7 +34,7 @@ export function Bento() {
         <div className="grid grid-cols-12 gap-4 md:gap-5 auto-rows-[140px] md:auto-rows-[160px]">
           {/* BIG — kanban screenshot */}
           <div className="col-span-12 lg:col-span-7 row-span-3 group relative rounded-2xl border-2 border-ink bg-card overflow-hidden shadow-brutal hover:shadow-brutal-lg hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all">
-            <div className="absolute top-6 left-6 z-10">
+            <div className="absolute top-6 left-6 z-20">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-ink text-background text-[10px] font-bold uppercase tracking-widest shadow-glow-sm">
                 <Zap className="w-3 h-3 text-brand-orange animate-pulse" />
                 Live: Central de Pedidos
@@ -48,9 +48,10 @@ export function Bento() {
             </div>
             
             {/* Decoração de fundo para profundidade */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-brand-orange/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-brand-orange/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none z-10" />
 
-            <div className="absolute bottom-0 right-0 w-[92%] translate-x-4 translate-y-8 group-hover:translate-y-4 transition-all duration-500 ease-out">
+            {/* Mockup Container com ajuste de posicionamento para evitar sobreposição */}
+            <div className="absolute bottom-0 right-0 w-[94%] translate-x-4 translate-y-12 group-hover:translate-y-6 transition-all duration-700 ease-out z-0">
               <div className="relative border-[3px] border-ink rounded-2xl shadow-brutal-lg bg-background overflow-hidden transform group-hover:scale-[1.01] transition-transform">
                 {/* Browser bar realística */}
                 <div className="h-8 bg-ink border-b-2 border-ink flex items-center px-4 gap-2">
@@ -60,10 +61,12 @@ export function Bento() {
                     <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
                   </div>
                   <div className="mx-auto bg-white/10 rounded px-3 py-0.5 text-[10px] text-white/40 font-mono truncate max-w-[200px]">
-                    app.mesivo.com.br/admin/pedidos
+                    mesivo.com.br
                   </div>
                 </div>
-                <MockupAdminKanban />
+                <div className="max-h-[320px] overflow-hidden">
+                  <MockupAdminKanban />
+                </div>
               </div>
             </div>
           </div>
