@@ -44,9 +44,6 @@ export function MockupPhoneCardapio({ className }: { className?: string }) {
           </article>
         ))}
       </div>
-      <p style={{ margin: "10px 0 0", fontSize: 10, color: "var(--fg-low)", fontStyle: "italic" }}>
-        Dados demonstrativos.
-      </p>
     </div>
   );
 }

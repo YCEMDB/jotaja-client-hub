@@ -53,17 +53,6 @@ export function MockupAdminKanban({ className }: { className?: string }) {
           ))}
         </div>
       ))}
-      <p
-        style={{
-          gridColumn: "1 / -1",
-          margin: 0,
-          fontSize: 11,
-          color: "var(--fg-low)",
-          fontStyle: "italic",
-        }}
-      >
-        Dados demonstrativos — nenhum pedido real.
-      </p>
     </div>
   );
 }
