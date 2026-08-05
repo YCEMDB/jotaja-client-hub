@@ -111,7 +111,7 @@ export function LeadForm({ variant = "light", onDone }: LeadFormProps) {
         type="submit"
         size="lg"
         disabled={busy}
-        className="w-full rounded-xl bg-brand-orange hover:bg-brand-orange text-ink font-bold h-14 text-base shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all uppercase tracking-wider border-2 border-ink"
+        className="w-full rounded-xl bg-ink hover:bg-ink/90 text-background font-bold h-14 text-base shadow-brutal transition-all uppercase tracking-wider border-2 border-ink"
       >
         {busy ? <Loader2 className="w-5 h-5 animate-spin" /> : (
           <>
