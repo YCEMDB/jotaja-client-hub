@@ -1087,10 +1087,37 @@ function RetiradaTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
   );
 }
 
+import qz from "qz-tray";
+
 function ImpressaoTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
   const [enabled, setEnabled] = useState(!!r.auto_print_enabled);
   const [copies, setCopies] = useState(String(r.auto_print_copies ?? 1));
   const [saving, setSaving] = useState(false);
+  
+  // Configurações locais (QZ Tray)
+  const [printers, setPrinters] = useState<string[]>([]);
+  const [loadingPrinters, setLoadingPrinters] = useState(false);
+  const [localConfig, setLocalConfig] = useState<any>(() => {
+    if (typeof window === "undefined") return { silent: false, paperWidth: "80mm" };
+    const saved = localStorage.getItem("printer_settings");
+    return saved ? JSON.parse(saved) : { silent: false, paperWidth: "80mm" };
+  });
+
+  const loadPrinters = async () => {
+    setLoadingPrinters(true);
+    try {
+      if (!qz.websocket.isActive()) {
+        await qz.websocket.connect();
+      }
+      const list = await qz.printers.find();
+      setPrinters(Array.isArray(list) ? list : [list]);
+    } catch (err) {
+      console.error(err);
+      toast.error("Não foi possível conectar ao QZ Tray. Certifique-se de que o app está aberto.");
+    } finally {
+      setLoadingPrinters(false);
+    }
+  };
 
   const save = async () => {
     setSaving(true);
@@ -1098,12 +1125,17 @@ function ImpressaoTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
       auto_print_enabled: enabled,
       auto_print_copies: Math.min(3, Math.max(1, Number(copies) || 1)),
     }).eq("id", r.id);
+    
+    // Salva config local
+    localStorage.setItem("printer_settings", JSON.stringify({
+      ...localConfig,
+      autoPrint: enabled,
+      copies: Number(copies)
+    }));
+    localStorage.setItem("autoPrintOrders", enabled ? "1" : "0");
+    
     setSaving(false);
     if (error) return toast.error(error.message);
-    // Espelha no localStorage para a tela de pedidos pegar imediatamente
-    if (typeof window !== "undefined") {
-      localStorage.setItem("autoPrintOrders", enabled ? "1" : "0");
-    }
     toast.success("Configuração de impressão salva");
     onSaved();
   };
@@ -1114,49 +1146,96 @@ function ImpressaoTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
         <div className="flex items-start gap-3">
           <Printer className="h-6 w-6 text-primary shrink-0 mt-1" />
           <div>
-            <h3 className="font-semibold text-lg">Impressão automática de pedidos</h3>
+            <h3 className="font-semibold text-lg">Impressão Automática (Um Clique)</h3>
             <p className="text-sm text-muted-foreground">
-              Toda vez que um pedido novo chegar, a tela de impressão abre sozinha com o cupom no formato 80mm.
+              Configure a impressão silenciosa sem janelas de confirmação.
             </p>
           </div>
         </div>
 
-        <Toggle label="Imprimir pedidos novos automaticamente" value={enabled} onChange={setEnabled} />
+        <div className="space-y-4 pt-2">
+          <Toggle label="Habilitar impressão automática" value={enabled} onChange={setEnabled} />
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label>Vias por pedido</Label>
+              <Input type="number" min={1} max={3} value={copies} onChange={(e) => setCopies(e.target.value)} />
+            </div>
+            <div>
+              <Label>Largura do papel</Label>
+              <select 
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                value={localConfig.paperWidth}
+                onChange={(e) => setLocalConfig({...localConfig, paperWidth: e.target.value})}
+              >
+                <option value="80mm">80mm (Padrão)</option>
+                <option value="58mm">58mm (Estreita)</option>
+              </select>
+            </div>
+          </div>
 
-        <div>
-          <Label>Vias por pedido (1 a 3)</Label>
-          <Input type="number" min={1} max={3} value={copies} onChange={(e) => setCopies(e.target.value)} className="w-24" />
+          <div className="border-t pt-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label>Modo Silencioso (QZ Tray)</Label>
+                <p className="text-xs text-muted-foreground">Imprime direto na impressora sem abrir diálogo.</p>
+              </div>
+              <Switch 
+                checked={localConfig.silent} 
+                onCheckedChange={(v) => {
+                  setLocalConfig({...localConfig, silent: v});
+                  if (v && printers.length === 0) loadPrinters();
+                }} 
+              />
+            </div>
+
+            {localConfig.silent && (
+              <div className="space-y-2 animate-in fade-in slide-in-from-top-1">
+                <div className="flex items-center justify-between gap-2">
+                  <Label className="text-xs font-bold uppercase">Impressora Selecionada</Label>
+                  <Button variant="ghost" size="xs" onClick={loadPrinters} disabled={loadingPrinters} className="h-6 text-[10px]">
+                    {loadingPrinters ? <Loader2 className="h-3 w-3 animate-spin" /> : "Atualizar Lista"}
+                  </Button>
+                </div>
+                <select 
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                  value={localConfig.printerName}
+                  onChange={(e) => setLocalConfig({...localConfig, printerName: e.target.value})}
+                >
+                  <option value="">Selecione uma impressora...</option>
+                  {printers.map(p => <option key={p} value={p}>{p}</option>)}
+                </select>
+                <p className="text-[10px] text-brand-orange bg-brand-orange/10 p-2 rounded">
+                  Necessário ter o <strong>QZ Tray</strong> instalado e rodando no computador.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
 
-        <Button onClick={save} disabled={saving}>{saving ? "Salvando…" : "Salvar"}</Button>
+        <Button onClick={save} disabled={saving} className="w-full">
+          {saving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+          Salvar Configurações
+        </Button>
       </Card>
 
-      <Card className="p-6 space-y-3 text-sm">
-        <h4 className="font-semibold">Como configurar o Chrome para imprimir sem confirmar (modo balcão)</h4>
-        <ol className="list-decimal list-inside space-y-2 text-muted-foreground">
-          <li>Conecte a impressora térmica (80mm) ao computador e defina como <strong>impressora padrão</strong> do Windows/Mac.</li>
-          <li>Crie um atalho do Chrome na área de trabalho.</li>
-          <li>Clique com o botão direito → <strong>Propriedades</strong> → no campo <strong>Destino</strong>, adicione no final:</li>
-        </ol>
-        <KioskCommandBox />
-        <ol className="list-decimal list-inside space-y-2 text-muted-foreground" start={4}>
-          <li>Abra o Mesivo por esse atalho. Pronto — os cupons saem direto sem janela de confirmação.</li>
-          <li>Quando chegar pedido novo, o navegador imprime automaticamente na impressora padrão.</li>
-        </ol>
-        <div className="bg-amber-50 border border-amber-200 text-amber-900 p-3 rounded-lg text-xs">
-          <strong>Importante:</strong> mantenha a aba <strong>Pedidos</strong> aberta durante o expediente. Se fechar, a impressão automática para.
+      <Card className="p-6 space-y-3 text-sm border-dashed">
+        <h4 className="font-semibold flex items-center gap-2"><Settings2 className="h-4 w-4" /> Guia de Instalação</h4>
+        <div className="space-y-4">
+          <div className="bg-muted p-3 rounded-lg">
+            <p className="font-bold text-xs uppercase tracking-wider mb-1">Opção A: QZ Tray (Recomendado)</p>
+            <p className="text-xs text-muted-foreground mb-2">Ideal para automação total e impressão em segundo plano.</p>
+            <Button variant="outline" size="sm" asChild className="h-8 text-xs">
+              <a href="https://qz.io/download/" target="_blank" rel="noreferrer">Baixar QZ Tray Oficial</a>
+            </Button>
+          </div>
+          
+          <div className="bg-muted p-3 rounded-lg">
+            <p className="font-bold text-xs uppercase tracking-wider mb-1">Opção B: Modo Kiosk (Chrome)</p>
+            <p className="text-xs text-muted-foreground mb-2">Alternativa nativa do navegador sem apps extras.</p>
+            <KioskCommandBox />
+          </div>
         </div>
-        <Button variant="outline" size="sm" onClick={() => {
-          const w = window.open("", "_blank", "width=300,height=400");
-          if (w) {
-            w.document.write("<html><head><title>Teste de Impressão Mesivo</title></head><body style='font-family:monospace;padding:20px;text-align:center'><h2>TESTE OK</h2><p>Se você está vendo esta janela, sua impressora está pronta.</p></body></html>");
-            w.document.close();
-            w.focus();
-            w.print();
-          }
-        }}>
-          <Printer className="h-4 w-4 mr-2" /> Testar impressão agora
-        </Button>
       </Card>
     </div>
   );
