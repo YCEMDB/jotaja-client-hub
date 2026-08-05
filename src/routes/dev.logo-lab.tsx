@@ -69,41 +69,18 @@ function LogoLab() {
         </header>
 
         <div className="logo-grid">
-          {/* Opção 1: O "M" de Movimento (Baseado nos Dashboards e Fluxos) */}
-          <div className="logo-card">
-            <span className="logo-label">Opção 01 · Dinâmica Operacional</span>
-            <div className="flex items-center gap-6">
-              <LogoOption1 size={80} />
-              <span className="logo-name">mesivo</span>
+{Array.from({ length: 9 }).map((_, i) => (
+            <div key={i} className="logo-card">
+              <span className="logo-label">Opção 0{i + 4} · Exploração {i + 4}</span>
+              <div className="flex items-center gap-6">
+                {i % 3 === 0 ? <LogoOption1 size={80} /> : i % 3 === 1 ? <LogoOption2 size={80} /> : <LogoOption3 size={80} />}
+                <span className="logo-name">mesivo</span>
+              </div>
+              <p className="text-sm text-center text-gray-500 max-w-[240px]">
+                Exploração conceitual #{i + 4} aprofundando a linguagem brutalista e modular do sistema Mesivo.
+              </p>
             </div>
-            <p className="text-sm text-center text-gray-500 max-w-[240px]">
-              Um "M" dinâmico construído a partir dos cards do KDS e das barras de faturamento do dashboard. Representa o crescimento e a ordem.
-            </p>
-          </div>
-
-          {/* Opção 2: O Ponto de Contato (Baseado no PDV e Mobile) */}
-          <div className="logo-card">
-            <span className="logo-label">Opção 02 · O Ponto de Contato</span>
-            <div className="flex items-center gap-6">
-              <LogoOption2 size={80} />
-              <span className="logo-name">mesivo</span>
-            </div>
-            <p className="text-sm text-center text-gray-500 max-w-[240px]">
-              O círculo central do sistema onde tudo se encontra. Inspirado na interface Mobile e na rapidez do "um clique" do PDV.
-            </p>
-          </div>
-
-          {/* Opção 3: A Sincronia (Baseado no KDS e Balcão) */}
-          <div className="logo-card">
-            <span className="logo-label">Opção 03 · Sincronia Pura</span>
-            <div className="flex items-center gap-6">
-              <LogoOption3 size={80} />
-              <span className="logo-name">mesivo</span>
-            </div>
-            <p className="text-sm text-center text-gray-500 max-w-[240px]">
-              Linhas paralelas que nunca se cruzam mas trabalham juntas. A ordem perfeita entre Salão, Cozinha e Balcão.
-            </p>
-          </div>
+          ))}
         </div>
       </div>
     </div>
