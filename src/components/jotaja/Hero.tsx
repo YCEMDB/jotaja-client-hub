@@ -85,11 +85,11 @@ export function Hero() {
             <MotionText
               as="h1"
               className="font-display text-ink uppercase leading-[0.85] tracking-[-0.055em] text-[clamp(2.5rem,8vw,6.5rem)]"
-              ariaLabel="Controle o salão. Acelere cada pedido."
+              ariaLabel="Faça uma analise da homepage e identifique erros"
               lines={[
-                "CONTROLE O SALÃO.",
+                "FAÇA UMA ANALISE",
                 <span key="l2">
-                  <span className="text-gradient-sunset">ACELERE</span> CADA PEDIDO.
+                  DA HOMEPAGE E <span className="text-gradient-sunset">IDENTIFIQUE ERROS</span>.
                 </span>,
               ]}
             />
