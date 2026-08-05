@@ -1,84 +1,87 @@
-import { MotionReveal, MotionStagger, MotionStaggerItem } from "@/components/motion";
+import { MotionReveal } from "@/components/motion";
+import { motion, useScroll, useTransform } from "motion/react";
+import { useRef } from "react";
+import { Terminal, Users, Cpu, Layout } from "lucide-react";
 
-const beneficios = [
-  { t: "Sem comissão por pedido", d: "Mensalidade fixa. O que você vende, você recebe — 100%." },
-  { t: "Setup guiado", d: "Cadastro passo a passo, cardápio importável, link pronto pra divulgar." },
-  { t: "Painel em tempo real", d: "Pedido, mesa, cozinha e caixa no mesmo lugar, no mesmo instante." },
-  { t: "Pix e cartão integrados", d: "Recebimento direto na sua conta Mercado Pago, sem intermediário." },
-  { t: "Impressão automática", d: "Cupom sai direto na térmica assim que o pedido entra." },
-  { t: "Suporte que atende", d: "WhatsApp humano, não bot. Responde no mesmo dia útil." },
+const sections = [
+  {
+    icon: Layout,
+    title: "Interface Editorial",
+    desc: "A gestão do seu restaurante com o refinamento de uma revista. Sem ruído, apenas clareza.",
+  },
+  {
+    icon: Cpu,
+    title: "Sincronia Invisível",
+    desc: "Pedidos, cozinha e financeiro em um fluxo contínuo. Tudo acontece no tempo certo.",
+  },
+  {
+    icon: Users,
+    title: "Foco na Experiência",
+    desc: "Tecnologia que desaparece para você focar no que importa: a hospitalidade.",
+  },
+  {
+    icon: Terminal,
+    title: "Precisão de Dados",
+    desc: "Métricas apresentadas com elegância monospaçada. Decisões baseadas em fatos, não intuição.",
+  },
 ];
 
 export function Beneficios() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
   return (
     <section
+      ref={containerRef}
       id="beneficios"
-      aria-label="Benefícios do Mesivo"
-      style={{ paddingBlock: "clamp(64px, 8vw, 120px)" }}
+      className="relative py-40 bg-cream overflow-hidden"
     >
-      <div style={{ maxWidth: 1200, marginInline: "auto", paddingInline: "clamp(16px, 4vw, 32px)" }}>
-        <MotionReveal variant="fade">
-          <div style={{ maxWidth: 640 }}>
-            <span
-              style={{
-                fontSize: 12,
-                fontWeight: 600,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                color: "var(--accent)",
-              }}
-            >
-              Por que Mesivo
-            </span>
-            <h2
-              className="mt-6 text-[clamp(2.5rem,5vw,4.5rem)] leading-[0.95] tracking-tight font-extrabold text-foreground"
-            >
-              O que a operação{" "}
-              <span className="text-accent">ganha</span> quando tudo conversa.
-            </h2>
+      <div className="max-w-[1440px] mx-auto px-8">
+        <div className="grid lg:grid-cols-2 gap-24 items-start">
+          <div className="sticky top-40">
+            <MotionReveal variant="fade">
+              <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-copper mb-8 block">
+                Filosofia Mesivo
+              </span>
+              <h2 className="font-display text-[clamp(2.5rem,5vw,5rem)] leading-[0.9] tracking-[-0.05em] text-foreground mb-12">
+                Onde a tecnologia <br /> encontra a <span className="italic text-sage font-serif">serenidade</span>.
+              </h2>
+              <p className="max-w-md text-lg text-muted-foreground leading-relaxed">
+                Nós não construímos apenas software. Nós projetamos o ritmo da sua operação. 
+                Cada pixel é pensado para reduzir o esforço cognitivo e elevar o padrão do seu negócio.
+              </p>
+            </MotionReveal>
           </div>
-        </MotionReveal>
 
-        <div
-          style={{
-            marginTop: 40,
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-            gap: 16,
-          }}
-        >
-          <MotionStagger>
-            <>
-              {beneficios.map((b) => (
-                <MotionStaggerItem key={b.t}>
-                  <div
-                    className="group relative h-full p-10 rounded-[32px] border border-black/[0.03] bg-white shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[32px]" />
-                    <div
-                      className="relative z-10"
-                    >
-                      <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-muted/50 text-accent transition-colors group-hover:bg-accent group-hover:text-white">
-                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                      </div>
-                      <h3
-                        className="text-xl font-bold text-foreground tracking-tight mb-3"
-                      >
-                        {b.t}
+          <div className="space-y-12">
+            {sections.map((item, idx) => (
+              <MotionReveal 
+                key={item.title} 
+                variant="fade" 
+                delay={idx * 0.1}
+              >
+                <div className="group relative p-12 rounded-3xl bg-white border border-border transition-editorial hover:shadow-xl hover:scale-[1.01]">
+                  <div className="flex items-start gap-8">
+                    <div className="flex-shrink-0 w-12 h-12 rounded-2xl bg-cream flex items-center justify-center text-deep-forest group-hover:bg-deep-forest group-hover:text-cream transition-editorial">
+                      <item.icon size={20} strokeWidth={1.5} />
+                    </div>
+                    <div>
+                      <h3 className="font-display text-2xl tracking-tight text-foreground mb-4">
+                        {item.title}
                       </h3>
-                      <p className="text-muted-foreground text-base leading-relaxed">
-                        {b.d}
+                      <p className="text-muted-foreground leading-relaxed">
+                        {item.desc}
                       </p>
                     </div>
                   </div>
-                </MotionStaggerItem>
-              ))}
-            </>
-          </MotionStagger>
+                </div>
+              </MotionReveal>
+            ))}
+          </div>
         </div>
-
       </div>
     </section>
   );
