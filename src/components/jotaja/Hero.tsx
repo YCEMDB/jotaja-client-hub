@@ -70,26 +70,29 @@ export function Hero() {
           variant="fade"
           delay={heroSequence.badge}
           amount={0.4}
-          className="flex justify-center mb-8"
+          className="flex justify-center mb-10"
         >
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border-2 border-ink/15 bg-background/70 backdrop-blur text-[11px] font-bold uppercase tracking-[0.18em] text-ink/70">
-            <span className="w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse" />A plataforma
-            completa para restaurantes
+          <span className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-ink/10 bg-background/40 backdrop-blur-md text-[10px] font-bold uppercase tracking-[0.22em] text-ink/60 shadow-sm ring-1 ring-inset ring-white/20">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-orange opacity-40" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-orange" />
+            </span>
+            A inteligência operacional definitiva
           </span>
         </MotionReveal>
 
         {/* HERO MAIN */}
-        <div className="grid grid-cols-12 gap-6 lg:gap-10 items-center">
+        <div className="grid grid-cols-12 gap-6 lg:gap-12 items-center">
           {/* LEFT — headline */}
           <div className="col-span-12 lg:col-span-7">
             <MotionText
               as="h1"
-              className="font-display text-ink uppercase leading-[0.85] tracking-[-0.055em] text-[clamp(2.5rem,8vw,6.5rem)]"
+              className="font-display text-ink uppercase leading-[0.82] tracking-[-0.05em] text-[clamp(2.75rem,8.5vw,6.8rem)] drop-shadow-[0_2px_2px_rgba(0,0,0,0.05)]"
               ariaLabel="Gestão que liberta o seu restaurante."
               lines={[
                 "Gestão que",
                 <span key="l2">
-                  liberta o <span className="text-gradient-sunset">seu restaurante.</span>
+                  liberta o <span className="text-gradient-sunset drop-shadow-sm">seu negócio.</span>
                 </span>
               ]}
             />
@@ -98,36 +101,38 @@ export function Hero() {
               variant="fade"
               delay={heroSequence.subtitle}
               amount={0.3}
-              className="mt-8 max-w-xl text-lg md:text-xl text-ink/75 leading-relaxed"
+              className="mt-8 max-w-xl text-lg md:text-xl text-ink/70 leading-relaxed font-medium"
             >
-              Uma única plataforma para digitalizar sua operação, eliminar erros de pedido
-              e aumentar sua margem. Do PDV ao Cardápio Digital.
+              Uma plataforma de alta performance para unificar sua operação, eliminar fricções e maximizar lucros. Do PDV ao Cardápio Inteligente.
             </MotionReveal>
 
             <MotionReveal
               variant="fade"
               delay={heroSequence.buttons}
               amount={0.3}
-              className="mt-9 flex flex-col sm:flex-row items-start sm:items-center gap-4"
+              className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-5"
             >
               <LeadFormDialog
                 trigger={
                   <MagneticButton
                     strength={4}
-                    className="inline-flex items-center justify-center rounded-2xl bg-ink text-background hover:bg-ink/90 font-bold px-8 h-14 text-base shadow-brutal transition-colors uppercase tracking-wider"
+                    className="group relative inline-flex items-center justify-center rounded-2xl bg-ink text-background hover:bg-ink/95 font-bold px-10 h-16 text-base shadow-brutal transition-all uppercase tracking-wider overflow-hidden"
                   >
-                    Começar gratuitamente
-                    <ArrowRight className="w-5 h-5 ml-2" strokeWidth={3} />
+                    <span className="relative z-10 flex items-center">
+                      Começar agora
+                      <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" strokeWidth={3} />
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                   </MagneticButton>
                 }
               />
               <Button
                 size="lg"
                 variant="outline"
-                className="rounded-2xl font-bold px-6 h-14 text-base border-2 border-ink/20 hover:bg-ink/5"
+                className="rounded-2xl font-bold px-8 h-16 text-base border-2 border-ink/15 hover:border-ink/30 hover:bg-ink/5 transition-all active:scale-[0.98]"
                 asChild
               >
-                <a href="#funcionalidades">Conhecer a plataforma</a>
+                <a href="#funcionalidades">Explorar Ecossistema</a>
               </Button>
             </MotionReveal>
 
@@ -135,11 +140,13 @@ export function Hero() {
               variant="fade"
               delay={heroSequence.buttons + 0.1}
               amount={0.3}
-              className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-ink/60 font-semibold"
+              className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-[11px] text-ink/50 font-bold uppercase tracking-widest"
             >
-              {["14 dias grátis", "sem cartão de crédito", "cancele quando quiser"].map((item) => (
-                <div key={item} className="flex items-center gap-1.5">
-                  <Check className="w-3.5 h-3.5 text-brand-orange" strokeWidth={3} />
+              {["Trial de 14 dias", "Setup em minutos", "Sem fidelidade"].map((item) => (
+                <div key={item} className="flex items-center gap-2">
+                  <div className="flex items-center justify-center w-4 h-4 rounded-full bg-brand-orange/10">
+                    <Check className="w-2.5 h-2.5 text-brand-orange" strokeWidth={4} />
+                  </div>
                   <span>{item}</span>
                 </div>
               ))}
@@ -147,7 +154,7 @@ export function Hero() {
           </div>
 
           {/* RIGHT — mockup do painel + notificações */}
-          <div className="col-span-12 lg:col-span-5 relative">
+          <div className="col-span-12 lg:col-span-5 relative lg:pl-4">
             <ProductMockup />
           </div>
         </div>
@@ -192,20 +199,33 @@ function HeroBackground() {
   const loop = !reduce && inView;
 
   return (
-    <div ref={ref} aria-hidden="true" className="absolute inset-0 pointer-events-none">
+    <div ref={ref} aria-hidden="true" className="absolute inset-0 pointer-events-none select-none">
+      {/* Base gradients */}
       <div className="absolute inset-0 bg-gradient-radial" />
-      <div className="absolute inset-0 bg-gradient-mesh opacity-70" />
-      <div className="absolute inset-0 bg-noise opacity-50 mix-blend-overlay" />
-      <div className="absolute inset-0 opacity-[0.06] bg-grid" />
+      <div className="absolute inset-0 bg-gradient-mesh opacity-80" />
+      
+      {/* Heavy Paper Texture Overlay */}
+      <div className="absolute inset-0 opacity-[0.4] mix-blend-multiply pointer-events-none" 
+           style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
+      
+      {/* Grain / Film Texture */}
+      <div className="absolute inset-0 bg-noise opacity-40 mix-blend-overlay" />
+      
+      {/* Technical Grid with mask */}
+      <div className="absolute inset-0 opacity-[0.08] bg-grid" />
 
-      {/* Blob 1 — laranja-coral (#FF6534 aprox.), parallax sutil */}
+      {/* Static "Scratches" / Distressed Texture */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+           style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 1000 1000' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.01' numOctaves='5'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='20'/%3E%3C/filter%3E%3Cpath d='M0 0l1000 1000M1000 0L0 1000' stroke='black' stroke-width='2' filter='url(%23f)' opacity='0.5'/%3E%3C/svg%3E")` }} />
+
+      {/* Blob 1 — laranja-coral (#FF6534 aprox.) */}
       <motion.div
         style={{ x: fine && !reduce ? sx : 0, y: fine && !reduce ? sy : 0 }}
         animate={
           loop ? { scale: [1, 1.06, 1], opacity: [0.55, 0.75, 0.55] } : { scale: 1, opacity: 0.55 }
         }
         transition={loop ? { duration: 9, ease: "easeInOut", repeat: Infinity } : { duration: 0 }}
-        className="absolute -top-24 -right-24 w-[38rem] h-[38rem] rounded-full blur-3xl"
+        className="absolute -top-24 -right-24 w-[38rem] h-[38rem] rounded-full blur-[100px]"
       >
         <div
           className="w-full h-full rounded-full"
@@ -216,7 +236,7 @@ function HeroBackground() {
         />
       </motion.div>
 
-      {/* Blob 2 — âmbar quente (#FFB020 aprox.), pulso mais lento */}
+      {/* Blob 2 — âmbar quente (#FFB020 aprox.) */}
       <motion.div
         style={{ x: fine && !reduce ? sx : 0, y: fine && !reduce ? sy : 0 }}
         animate={
@@ -225,7 +245,7 @@ function HeroBackground() {
         transition={
           loop ? { duration: 12, ease: "easeInOut", repeat: Infinity, delay: 0.6 } : { duration: 0 }
         }
-        className="absolute -bottom-32 -left-24 w-[32rem] h-[32rem] rounded-full blur-3xl"
+        className="absolute -bottom-32 -left-24 w-[32rem] h-[32rem] rounded-full blur-[100px]"
       >
         <div
           className="w-full h-full rounded-full"
@@ -248,14 +268,21 @@ function ProductMockup() {
       delay={heroSequence.mockup}
     >
       {/* Janela do navegador */}
-      <div className="relative rounded-2xl overflow-hidden shadow-card-xl ring-1 ring-ink/15 bg-card">
-        {/* Chrome */}
-        <div className="flex items-center gap-1.5 px-3 py-2.5 bg-ink border-b border-background/10">
-          <div className="w-2.5 h-2.5 rounded-full bg-destructive/80" />
-          <div className="w-2.5 h-2.5 rounded-full bg-brand-amber" />
-          <div className="w-2.5 h-2.5 rounded-full bg-success" />
-          <div className="ml-3 text-[10px] text-background/60 font-mono truncate">
-            app.mesivo · pedidos
+      <div className="relative rounded-3xl overflow-hidden shadow-[0_32px_80px_-16px_rgba(0,0,0,0.15),0_0_0_1px_rgba(0,0,0,0.08)] bg-card/80 backdrop-blur-xl group/mockup">
+        {/* Subtle Scanline Effect on Mockup */}
+        <div className="absolute inset-0 pointer-events-none z-50 opacity-[0.03] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%]" />
+
+        {/* Chrome / Window Titlebar */}
+        <div className="flex items-center gap-2 px-4 py-3 bg-ink border-b border-white/5 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent opacity-20" />
+          <div className="relative z-10 flex items-center gap-1.5">
+            <div className="w-2.5 h-2.5 rounded-full bg-destructive/90 shadow-[0_0_8px_rgba(239,68,68,0.3)]" />
+            <div className="w-2.5 h-2.5 rounded-full bg-brand-amber/90 shadow-[0_0_8px_rgba(251,191,36,0.2)]" />
+            <div className="w-2.5 h-2.5 rounded-full bg-success/90 shadow-[0_0_8px_rgba(34,197,94,0.2)]" />
+          </div>
+          <div className="relative z-10 mx-auto px-3 py-1 rounded-md bg-white/5 border border-white/10 text-[9px] text-background/40 font-mono tracking-tight flex items-center gap-2">
+            <span className="opacity-50">https://</span>
+            app.mesivo.cloud
           </div>
         </div>
 
@@ -263,43 +290,49 @@ function ProductMockup() {
         <MotionMockupLayer
           depth={0}
           delay={heroSequence.mockup + 0.1}
-          className="flex items-center gap-2 px-4 py-3 border-b border-ink/10 bg-background/60"
+          className="flex items-center gap-2 px-5 py-4 border-b border-ink/5 bg-background/40 backdrop-blur-sm"
         >
-          <MesivoMark size={24} />
-          <span className="font-display text-lg tracking-tight text-ink uppercase">mesivo</span>
-          <span className="ml-auto text-[10px] font-bold text-ink/50 uppercase tracking-wider">
-            Painel
-          </span>
+          <MesivoMark size={22} className="drop-shadow-sm" />
+          <span className="font-display text-base tracking-tight text-ink uppercase">mesivo</span>
+          <div className="ml-auto flex items-center gap-3">
+            <div className="h-6 w-px bg-ink/10" />
+            <span className="text-[10px] font-bold text-ink/40 uppercase tracking-widest">
+              Live Feed
+            </span>
+          </div>
         </MotionMockupLayer>
 
-        {/* Kanban */}
+        {/* Kanban Content */}
         <MotionMockupLayer
           depth={2}
           delay={heroSequence.mockup + 0.2}
-          className="grid grid-cols-3 gap-2 p-3 bg-background/40"
+          className="grid grid-cols-3 gap-3 p-4 bg-secondary/10"
         >
           {[
-            { label: "Novos", count: 3, color: "bg-brand-amber" },
-            { label: "Em preparo", color: "bg-brand-orange", count: 2 },
-            { label: "Prontos", color: "bg-success", count: 1 },
+            { label: "Check-in", count: 3, color: "bg-brand-amber", light: "amber" },
+            { label: "Produção", color: "bg-brand-orange", count: 2, light: "orange" },
+            { label: "Despacho", color: "bg-success", count: 1, light: "success" },
           ].map((col, ci) => (
-            <div key={col.label} className="rounded-lg border border-ink/10 bg-background p-2">
-              <div className="flex items-center gap-1.5 mb-2">
-                <span className={`w-2 h-2 rounded-full ${col.color}`} />
-                <span className="text-[10px] font-bold uppercase tracking-wider text-ink/70">
+            <div key={col.label} className="rounded-xl border border-ink/10 bg-background/80 shadow-sm p-2.5 transition-transform hover:scale-[1.02] duration-300">
+              <div className="flex items-center gap-2 mb-3">
+                <span className={`w-2 h-2 rounded-full ${col.color} shadow-sm`} />
+                <span className="text-[9px] font-extrabold uppercase tracking-[0.1em] text-ink/60">
                   {col.label}
                 </span>
-                <span className="ml-auto text-[10px] font-bold text-ink/50">{col.count}</span>
+                <span className="ml-auto text-[10px] font-bold text-ink/30">{col.count}</span>
               </div>
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 {Array.from({ length: col.count }).map((_, i) => (
-                  <div key={i} className="rounded-md border border-ink/10 p-2 bg-secondary/30">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-[10px] font-bold text-ink">#{100 + ci * 10 + i}</span>
-                      <span className="text-[9px] text-ink/50">{5 + i}min</span>
+                  <div key={i} className="rounded-lg border border-ink/5 p-2.5 bg-background shadow-[0_2px_4px_rgba(0,0,0,0.02)] relative overflow-hidden group/item">
+                    <div className="absolute top-0 left-0 w-1 h-full bg-ink/5" />
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[9px] font-black text-ink">#{100 + ci * 10 + i}</span>
+                      <span className="text-[8px] font-bold text-ink/40 bg-ink/5 px-1.5 py-0.5 rounded-full">{5 + i}m</span>
                     </div>
-                    <div className="h-1 rounded bg-ink/10 w-3/4" />
-                    <div className="h-1 rounded bg-ink/10 w-1/2 mt-1" />
+                    <div className="space-y-1">
+                      <div className="h-1.5 rounded-full bg-ink/10 w-5/6" />
+                      <div className="h-1.5 rounded-full bg-ink/5 w-1/2" />
+                    </div>
                   </div>
                 ))}
               </div>
