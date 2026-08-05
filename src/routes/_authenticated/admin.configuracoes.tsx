@@ -182,6 +182,48 @@ function GeralTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
   );
 }
 
+function PlanoTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
+  const [plan, setPlan] = useState(r.plan || "trial");
+  const [saving, setSaving] = useState(false);
+
+  const save = async () => {
+    setSaving(true);
+    const { error } = await supabase.from("restaurants").update({
+      plan: plan
+    }).eq("id", r.id);
+    setSaving(false);
+    if (error) return toast.error(error.message);
+    toast.success("Plano atualizado");
+    onSaved();
+  };
+
+  const PLANS = [
+    { id: "trial", name: "Teste (Trial)", description: "Período de avaliação" },
+    { id: "professional", name: "Profissional", description: "Recursos avançados para sua loja" },
+  ];
+
+  return (
+    <Card className="p-6 space-y-4">
+      <div className="grid gap-3 sm:grid-cols-2">
+        {PLANS.map((p) => (
+          <button
+            key={p.id}
+            type="button"
+            onClick={() => setPlan(p.id)}
+            className={`text-left border rounded-lg p-4 transition ${plan === p.id ? "border-primary ring-2 ring-primary/40 bg-primary/5" : "hover:border-primary/50"}`}
+          >
+            <p className="font-bold text-lg">{p.name}</p>
+            <p className="text-sm text-muted-foreground">{p.description}</p>
+          </button>
+        ))}
+      </div>
+      <Button onClick={save} disabled={saving || plan === r.plan}>
+        {saving ? "Salvando…" : "Salvar Plano"}
+      </Button>
+    </Card>
+  );
+}
+
 function Toggle({ label, value, onChange }: { label: string; value: boolean; onChange: (v: boolean) => void }) {
   return (
     <div className="flex items-center justify-between">
