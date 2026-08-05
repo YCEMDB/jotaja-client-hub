@@ -192,20 +192,33 @@ function HeroBackground() {
   const loop = !reduce && inView;
 
   return (
-    <div ref={ref} aria-hidden="true" className="absolute inset-0 pointer-events-none">
+    <div ref={ref} aria-hidden="true" className="absolute inset-0 pointer-events-none select-none">
+      {/* Base gradients */}
       <div className="absolute inset-0 bg-gradient-radial" />
-      <div className="absolute inset-0 bg-gradient-mesh opacity-70" />
-      <div className="absolute inset-0 bg-noise opacity-50 mix-blend-overlay" />
-      <div className="absolute inset-0 opacity-[0.06] bg-grid" />
+      <div className="absolute inset-0 bg-gradient-mesh opacity-80" />
+      
+      {/* Heavy Paper Texture Overlay */}
+      <div className="absolute inset-0 opacity-[0.4] mix-blend-multiply pointer-events-none" 
+           style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
+      
+      {/* Grain / Film Texture */}
+      <div className="absolute inset-0 bg-noise opacity-40 mix-blend-overlay" />
+      
+      {/* Technical Grid with mask */}
+      <div className="absolute inset-0 opacity-[0.08] bg-grid" />
 
-      {/* Blob 1 — laranja-coral (#FF6534 aprox.), parallax sutil */}
+      {/* Static "Scratches" / Distressed Texture */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+           style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 1000 1000' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.01' numOctaves='5'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='20'/%3E%3C/filter%3E%3Cpath d='M0 0l1000 1000M1000 0L0 1000' stroke='black' stroke-width='2' filter='url(%23f)' opacity='0.5'/%3E%3C/svg%3E")` }} />
+
+      {/* Blob 1 — laranja-coral (#FF6534 aprox.) */}
       <motion.div
         style={{ x: fine && !reduce ? sx : 0, y: fine && !reduce ? sy : 0 }}
         animate={
           loop ? { scale: [1, 1.06, 1], opacity: [0.55, 0.75, 0.55] } : { scale: 1, opacity: 0.55 }
         }
         transition={loop ? { duration: 9, ease: "easeInOut", repeat: Infinity } : { duration: 0 }}
-        className="absolute -top-24 -right-24 w-[38rem] h-[38rem] rounded-full blur-3xl"
+        className="absolute -top-24 -right-24 w-[38rem] h-[38rem] rounded-full blur-[100px]"
       >
         <div
           className="w-full h-full rounded-full"
@@ -216,7 +229,7 @@ function HeroBackground() {
         />
       </motion.div>
 
-      {/* Blob 2 — âmbar quente (#FFB020 aprox.), pulso mais lento */}
+      {/* Blob 2 — âmbar quente (#FFB020 aprox.) */}
       <motion.div
         style={{ x: fine && !reduce ? sx : 0, y: fine && !reduce ? sy : 0 }}
         animate={
@@ -225,7 +238,7 @@ function HeroBackground() {
         transition={
           loop ? { duration: 12, ease: "easeInOut", repeat: Infinity, delay: 0.6 } : { duration: 0 }
         }
-        className="absolute -bottom-32 -left-24 w-[32rem] h-[32rem] rounded-full blur-3xl"
+        className="absolute -bottom-32 -left-24 w-[32rem] h-[32rem] rounded-full blur-[100px]"
       >
         <div
           className="w-full h-full rounded-full"
