@@ -167,7 +167,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body className="Aonde foi implementado isso?">
+      <body>
         {children}
         <Scripts />
       </body>
