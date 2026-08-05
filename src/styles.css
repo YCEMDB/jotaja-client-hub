@@ -7,8 +7,9 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-display: "Archivo Black", system-ui, sans-serif;
-  --font-sans: "Hind", system-ui, sans-serif;
+  --font-display: "Manrope", system-ui, sans-serif;
+  --font-sans: "Manrope", system-ui, sans-serif;
+
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -162,9 +163,10 @@
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    font-weight: 900;
-    letter-spacing: -0.035em;
-    line-height: 0.95;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+
     text-transform: none;
     overflow-wrap: anywhere;
     word-break: break-word;

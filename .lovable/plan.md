@@ -21,11 +21,11 @@ Este plano detalha a implementação da nova identidade visual "The Conductor + 
 - **Sistema:** *Manrope* (Exclusivo).
 - **Números:** *Manrope* (Tabular em dados operacionais).
 
-## 4. Etapas de Implementação (Sem Alteração de Código Ainda)
-1. **Refatoração do SVG do Logo:** Atualizar `MesivoMark.tsx` para refletir o símbolo de "Fluxo de Sincronia".
-2. **Atualização de Design Tokens:** Migrar as variáveis do `src/styles.css` para a nova paleta e escalas de radius (10px, 12px, 16px).
-3. **Refinamento de Componentes de Shell:** Ajustar `PublicHeader.tsx` e `PublicFooter.tsx` com a nova tipografia e logo em caixa baixa (`mesivo`).
-4. **Protótipo de Dashboard Operacional:** Criar uma rota dev-only demonstrando o conceito "vivo" (sem cards genéricos).
+## 4. Etapas de Implementação (Status)
+1. **Refatoração do SVG do Logo:** [OK] Logo de Fluxo implementado em `MesivoMark.tsx`.
+2. **Atualização de Design Tokens:** [OK] Paleta profissional e tipografia Manrope/Instrument Serif aplicadas em `src/styles.css`.
+3. **Refinamento de Componentes de Shell:** [OK] Wordmark `mesivo` em caixa baixa e tipografia UI atualizadas no Header e Footer.
+4. **Protótipo de Dashboard Operacional:** [Pendente] Criar uma rota dev-only demonstrando o conceito "vivo" (sem cards genéricos).
 
 ## 5. Próxima Ação
-- [ ] Implementar a nova logo no componente `src/components/mesivo-graphics/MesivoMark.tsx`.
+- [ ] Criar protótipo funcional do Dashboard Operacional de 2028 (Conceito "Maestro").
