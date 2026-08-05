@@ -7,8 +7,9 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-display: "Manrope", system-ui, sans-serif;
+  --font-display: "Sora", system-ui, sans-serif;
   --font-sans: "Manrope", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
 
 
   --radius-sm: calc(var(--radius) - 4px);
@@ -55,21 +56,24 @@
 :root {
   --radius: 0.75rem; /* 12px base */
 
-  /* THE CONDUCTOR + THE LEDGER — professional, gastronomy-focused palette */
-  --background: #F8F6F3;
-  --foreground: #2B2B2B;
-  --ink:        #2B2B2B;
+  /* MESIVO — Deep Forest & Copper (Final Approval) */
+  --background: #F8F5EF; /* Cream */
+  --foreground: #232333; /* Texto */
+  --ink:        #232333;
+  --deep-forest: #173A34;
+  --copper:      #D87A43;
+  --sage:        #5F8D67;
 
   --card:       #FFFFFF;
   --card-foreground: #2B2B2B;
   --popover:    #FFFFFF;
   --popover-foreground: #2B2B2B;
 
-  --primary:    #2B2B2B;
-  --primary-foreground: #FFFFFF;
-  --primary-glow: rgba(43, 43, 43, 0.15);
+  --primary:    #173A34; /* Deep Forest */
+  --primary-foreground: #F8F5EF;
+  --primary-glow: rgba(23, 58, 52, 0.15);
 
-  --accent:     #E36D42;
+  --accent:     #D87A43; /* Copper */
   --accent-foreground: #FFFFFF;
   --accent-soft: rgba(227, 109, 66, 0.1);
 
@@ -80,7 +84,7 @@
   --muted-foreground: #70645E;
 
   --warning:    #D4A73F;
-  --destructive: #C84B4B;
+  --destructive: #C44747; /* Error */
   --success:     #3F7D58;
 
   --border:     #E5E2DE;

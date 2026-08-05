@@ -31,14 +31,17 @@ export function MesivoMark({
       aria-label={decorative ? undefined : "Mesivo"}
       xmlns="http://www.w3.org/2000/svg"
     >
-      {/* Traço Superior: A Ordem (Curto, esquerda) */}
-      <rect x="4" y="8" width="10" height="3" rx="1.5" fill={color} />
+      {/* Top Left Square (Cream/Sage context) */}
+      <rect x="4" y="4" width="11" height="11" rx="1.5" fill={color} fillOpacity="0.9" />
       
-      {/* Traço Central: O Movimento (Longo, deslocado direita) */}
-      <rect x="8" y="14.5" width="20" height="3" rx="1.5" fill={color} />
+      {/* Top Right Square (Copper) */}
+      <rect x="17" y="4" width="11" height="11" rx="1.5" fill="var(--copper, #D87A43)" />
       
-      {/* Traço Inferior: A Entrega (Médio, alinhado ao fim) */}
-      <rect x="14" y="21" width="14" height="3" rx="1.5" fill={color} />
+      {/* Bottom Left Square (Primary) */}
+      <rect x="4" y="17" width="11" height="11" rx="1.5" fill={color} />
+
+      {/* Bottom Right Square (Primary) */}
+      <rect x="17" y="17" width="11" height="11" rx="1.5" fill={color} />
     </svg>
   );
 }
