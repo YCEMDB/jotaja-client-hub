@@ -7,55 +7,45 @@ import {
 import { MotionReveal } from "@/components/motion";
 import { mesivoFaq } from "./faq-data";
 
-const faqs = mesivoFaq;
-
 export function FAQMesivo() {
   return (
     <section
       id="faq"
-      aria-label="Perguntas frequentes"
-      style={{ paddingBlock: "clamp(64px, 8vw, 120px)" }}
+      className="py-40 bg-white"
     >
-      <div style={{ maxWidth: 800, marginInline: "auto", paddingInline: "clamp(16px, 4vw, 32px)" }}>
-        <MotionReveal variant="fade">
-          <div className="text-center max-w-xl mx-auto mb-16">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-accent mb-6 block">
-              FAQ
+      <div className="max-w-[1440px] mx-auto px-8">
+        <div className="grid lg:grid-cols-[400px_1fr] gap-20 items-start">
+          <MotionReveal variant="fade" className="lg:sticky lg:top-40">
+            <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-copper mb-8 block">
+              Dúvidas
             </span>
-            <h2 className="text-[clamp(2.5rem,5vw,4.5rem)] font-extrabold leading-[0.95] tracking-tight mb-8">
-              Perguntas <span className="text-accent">frequentes</span>
+            <h2 className="font-display text-[clamp(2.5rem,5vw,5rem)] leading-[0.9] tracking-[-0.05em] text-foreground mb-8">
+              Sincronia <br /><span className="italic font-serif text-deep-forest">Total</span>.
             </h2>
-            <p className="text-lg font-medium text-muted-foreground">
-              Tudo que você precisa saber antes de transformar sua operação.
+            <p className="text-lg text-muted-foreground leading-relaxed font-sans">
+              Tudo que você precisa saber para elevar o padrão da sua operação.
             </p>
-          </div>
-        </MotionReveal>
+          </MotionReveal>
 
-        <MotionReveal delay={0.1} style={{ marginTop: 32 }}>
-          <Accordion type="single" collapsible className="w-full">
-            {faqs.map((f, i) => (
-              <AccordionItem
-                key={i}
-                value={`faq-${i}`}
-                className="border-b last:border-0"
-                style={{ borderColor: "var(--hairline)" }}
-              >
-                <AccordionTrigger
-                  className="text-left py-5 hover:no-underline"
-                  style={{ color: "var(--fg-hi)", fontSize: 16, fontWeight: 600 }}
+          <MotionReveal variant="fade" delay={0.1}>
+            <Accordion type="single" collapsible className="w-full space-y-4">
+              {mesivoFaq.map((f, i) => (
+                <AccordionItem
+                  key={i}
+                  value={`faq-${i}`}
+                  className="border border-border rounded-[32px] px-8 bg-cream/30 transition-editorial hover:bg-cream/50"
                 >
-                  {f.q}
-                </AccordionTrigger>
-                <AccordionContent
-                  className="pb-5"
-                  style={{ color: "var(--fg-mid)", fontSize: 15, lineHeight: 1.6 }}
-                >
-                  {f.a}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </MotionReveal>
+                  <AccordionTrigger className="font-display text-xl text-left py-8 hover:no-underline hover:text-copper transition-editorial">
+                    {f.q}
+                  </AccordionTrigger>
+                  <AccordionContent className="font-sans text-base leading-relaxed text-muted-foreground pb-8">
+                    {f.a}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </MotionReveal>
+        </div>
       </div>
     </section>
   );
