@@ -792,7 +792,7 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
             )}
           </h3>
           <p className="text-sm text-muted-foreground mt-1">
-            Conecte sua conta do Mercado Pago para gerar QR Codes PIX automáticos. O dinheiro cai direto na sua conta. <span className="font-medium text-emerald-600">melhore a integração de pagamento mercado pago, ainda é dificutoso pra quem é leigo</span>
+            Conecte sua conta do Mercado Pago para gerar QR Codes PIX automáticos. O dinheiro cai direto na sua conta.
           </p>
           {isConnected && (account.nickname || account.email) && (
             <p className="text-xs text-muted-foreground mt-1">
