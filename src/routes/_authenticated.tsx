@@ -342,8 +342,9 @@ function AuthLayout() {
           userEmail={user?.email}
           onSignOut={handleSignOut}
         />
-        <div className="absolute top-14 md:top-16 left-0 right-0 h-[40vh] bg-gradient-radial from-brand-orange/10 via-brand-magenta/5 to-transparent opacity-60 pointer-events-none" />
-        <div className="absolute inset-0 bg-grid opacity-[0.03] pointer-events-none" />
+        <div className="absolute top-14 md:top-16 left-0 right-0 h-[60vh] bg-gradient-radial from-brand-orange/15 via-brand-magenta/5 to-transparent opacity-70 pointer-events-none" />
+        <div className="absolute inset-0 bg-grid opacity-[0.04] pointer-events-none mix-blend-multiply" />
+        <div className="absolute inset-0 bg-noise opacity-10 pointer-events-none mix-blend-soft-light" />
         <div className="relative flex-1 min-w-0">
           <SupportSessionBanner />
           <GlobalAnnouncementsBanner />
