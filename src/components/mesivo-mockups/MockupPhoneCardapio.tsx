@@ -20,8 +20,8 @@ export function MockupPhoneCardapio({ className }: { className?: string }) {
     >
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
         <MesivoMark size={22} decorative />
-        <div style={{ fontWeight: 800, color: "var(--fg-hi)", fontFamily: "var(--font-display)" }}>
-          Restaurante Demo
+        <div style={{ fontWeight: 800, color: "var(--fg-hi)", fontFamily: "var(--font-display)", textTransform: 'uppercase' }}>
+          MESIVO
         </div>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
