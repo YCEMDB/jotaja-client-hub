@@ -32,7 +32,7 @@ export function Stats() {
       <div className="absolute inset-0 bg-noise opacity-40 pointer-events-none" />
 
       <Marquee
-        className="pb-10 md:pb-14"
+        className="py-10 md:py-14"
         speed={40}
         ariaLabel="Canais operacionais atendidos pela Mesivo"
       >
