@@ -855,12 +855,13 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
           </Button>
         </div>
         <div className="border-t border-muted-foreground/10 pt-2">
-          <p className="font-semibold flex items-center gap-1 opacity-70">Alternativa (Access Token manual):</p>
-          <ol className="list-decimal list-inside space-y-0.5 text-muted-foreground opacity-70 mt-1">
-            <li>Acesse o <a href="https://www.mercadopago.com.br/developers/panel/app" target="_blank" rel="noreferrer" className="underline">painel de desenvolvedores</a></li>
-            <li>Crie uma aplicação do tipo <strong>Pagamentos online</strong></li>
-            <li>Em <em>Credenciais de produção</em>, copie o <strong>Access Token</strong></li>
-          </ol>
+          <p className="font-semibold flex-col items-start gap-1 opacity-85 text-[11px] leading-relaxed">
+            Para começar, busque no menu lateral as credenciais de teste e use-as na implementação do SDK no seu backend para acessar as funcionalidades do Mercado Pago. <a href="https://www.mercadopago.com.br/developers/panel/app" target="_blank" rel="noreferrer" className="underline font-bold text-blue-600">Saiba mais</a>
+            <br /><br />
+            <strong>Instalar o SDK e iniciar a biblioteca com suas credenciais de teste</strong>
+            <br /><br />
+            O SDK de backend permitirá que você opere via servidor para gerenciar preferências de pagamento, processar transações e outras operações críticas.
+          </p>
         </div>
       </div>
 
