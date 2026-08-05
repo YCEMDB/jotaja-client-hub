@@ -30,8 +30,6 @@ export function Stats() {
       className="relative bg-ink text-background border-y-[3px] border-ink overflow-hidden"
     >
       <div className="absolute inset-0 bg-noise opacity-40 pointer-events-none" />
-      <div className="container mx-auto px-6 pt-10 pb-6 relative">
-      </div>
 
       <Marquee
         className="pb-8 md:pb-10"
