@@ -1,7 +1,7 @@
 /**
- * Mercado Pago OAuth API — cliente HTTP server-only.
+ * Mercado Pago Connect + Pix API — cliente HTTP server-only.
  */
-import { z } from "zod";
+import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 
 export type MercadoPagoEnvironment = "sandbox" | "production";
 
@@ -30,7 +30,7 @@ export function buildAuthorizationUrl(input: {
   const url = new URL("https://auth.mercadopago.com.br/authorization");
   url.searchParams.set("client_id", creds.clientId);
   url.searchParams.set("response_type", "code");
-  url.searchParams.set("platform_id", "mp"); // Mercado Pago platform
+  url.searchParams.set("platform_id", "mp");
   url.searchParams.set("redirect_uri", mercadopagoRedirectUri());
   url.searchParams.set("state", input.state);
   return { ok: true, url: url.toString() };
@@ -71,6 +71,74 @@ export async function exchangeAuthorizationCode(input: {
     };
   } catch (e) {
     console.error("[mercadopago] exchange error", e);
+    return { ok: false, error: "network_error" };
+  }
+}
+
+/**
+ * Cria uma cobrança Pix via Mercado Pago (Checkout Pro / API v1).
+ */
+export type CreatePixResult =
+  | {
+      ok: true;
+      provider_payment_id: string;
+      qr_code_text: string;
+      qr_code_image_url: string | null;
+      expires_at: string;
+    }
+  | { ok: false; error: string; message?: string };
+
+export async function createPixCharge(input: {
+  accessToken: string;
+  idempotencyKey: string;
+  referenceId: string;
+  amount: number;
+  description: string;
+  notificationUrl: string;
+}): Promise<CreatePixResult> {
+  try {
+    const body = {
+      transaction_amount: input.amount,
+      description: input.description,
+      payment_method_id: "pix",
+      payer: {
+        email: "test_user_123@testuser.com", // Obrigatório para MP
+      },
+      external_reference: input.referenceId,
+      notification_url: input.notificationUrl,
+    };
+
+    const res = await fetch(`${BASE_API}/v1/payments`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${input.accessToken}`,
+        "Content-Type": "application/json",
+        "X-Idempotency-Key": input.idempotencyKey,
+      },
+      body: JSON.stringify(body),
+    });
+
+    const payload: any = await res.json();
+    if (!res.ok) {
+      console.error("[mercadopago] create pix error", res.status, payload);
+      return {
+        ok: false,
+        error: payload?.cause?.[0]?.code ?? payload?.error ?? `http_${res.status}`,
+        message: payload?.message,
+      };
+    }
+
+    const pointOfInteraction = payload?.point_of_interaction?.transaction_data;
+    
+    return {
+      ok: true,
+      provider_payment_id: String(payload.id),
+      qr_code_text: pointOfInteraction?.qr_code ?? "",
+      qr_code_image_url: pointOfInteraction?.ticket_url ?? null,
+      expires_at: payload.date_of_expiration || new Date(Date.now() + 30 * 60_000).toISOString(),
+    };
+  } catch (e) {
+    console.error("[mercadopago] create pix catch", e);
     return { ok: false, error: "network_error" };
   }
 }
