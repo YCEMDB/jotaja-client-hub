@@ -44,7 +44,7 @@ function AuthPage() {
         <div className="absolute -top-24 -left-24 w-96 h-96 bg-brand-orange/20 blur-[120px] rounded-full" />
         <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-brand-magenta/20 blur-[120px] rounded-full" />
         
-        <Link to="/" className="relative z-10 flex items-center group bg-white border-3 border-ink shadow-brutal px-5 py-4 w-fit hover:-translate-y-1 hover:-translate-x-1 transition-transform">
+        <Link to="/" className="relative z-10 flex items-center group bg-ink border-3 border-brand-orange shadow-[6px_6px_0_0_#e84393] px-6 py-5 w-fit hover:-translate-y-1 hover:-translate-x-1 transition-all active:translate-y-0 active:translate-x-0 active:shadow-none">
           <Logo size="md" />
         </Link>
 
