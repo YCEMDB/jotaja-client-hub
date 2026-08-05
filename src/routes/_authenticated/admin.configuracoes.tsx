@@ -902,6 +902,10 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
           <strong>1. Criar uma preferência de pagamento</strong>
           <br /><br />
           São dados que representam o que você deseja cobrar, valor, quantidade e meios de pagamento, entre outros.
+          <br /><br />
+          <strong>2. Configurar o frontend: web ou mobile</strong>
+          <br /><br />
+          Ao obter seu ID da preferência de pagamento, você deve avançar para as configurações do frontend para sites ou para aplicações móveis.
         </div>
         <div className="pt-2 border-t border-amber-200/50">
           <strong>Webhook (obrigatório):</strong> cole a URL abaixo no painel do Mercado Pago em
