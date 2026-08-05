@@ -57,17 +57,9 @@ export function Beneficios() {
               {beneficios.map((b) => (
                 <MotionStaggerItem key={b.t}>
                   <div
-                    style={{
-                      height: "100%",
-                      padding: "32px",
-                      borderRadius: 24,
-                      border: "1px solid var(--border)",
-                      backgroundColor: "var(--card)",
-                      boxShadow: "var(--shadow-sm)",
-                      transition: "var(--transition-smooth)",
-                    }}
-                    className="hover:shadow-md hover:border-accent/20"
+                    className="group relative h-full p-10 rounded-[32px] border border-black/[0.03] bg-white shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
                   >
+                    <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[32px]" />
                     <div
                       style={{
                         fontSize: 17,

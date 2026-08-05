@@ -68,15 +68,20 @@ export function PublicHeader({ variant = "default" }: { variant?: PublicShellVar
 
   return (
     <header
-      className="sticky top-0 z-40 w-full transition-colors"
-      style={{
-        backgroundColor: scrolled
-          ? "color-mix(in oklab, var(--background) 92%, transparent)"
-          : "transparent",
-        backdropFilter: scrolled ? "saturate(1.1) blur(6px)" : undefined,
-        borderBottom: scrolled ? "1px solid var(--border)" : "1px solid transparent",
-      }}
+      className="fixed top-6 left-1/2 z-50 w-[95%] max-w-5xl -translate-x-1/2 transition-all duration-500 px-4"
     >
+      <div 
+        className="mx-auto flex h-14 items-center justify-between px-6 transition-all duration-500"
+        style={{
+          backgroundColor: scrolled
+            ? "rgba(255, 255, 255, 0.75)"
+            : "rgba(255, 255, 255, 0.45)",
+          backdropFilter: "blur(16px) saturate(180%)",
+          border: "1px solid rgba(0, 0, 0, 0.08)",
+          borderRadius: "999px",
+          boxShadow: scrolled ? "var(--shadow-lg)" : "var(--shadow-md)",
+        }}
+      >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link
           to="/"

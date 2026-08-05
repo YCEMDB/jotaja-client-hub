@@ -100,23 +100,11 @@ export function PlanosMesivo() {
           {planos.map((p) => (
             <MotionStaggerItem key={p.name}>
               <div
-                style={{
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  padding: "40px 32px",
-                  borderRadius: 32,
-                  backgroundColor: "var(--card)",
-                  border: p.highlighted
-                    ? "2px solid var(--accent)"
-                    : "1px solid var(--border)",
-                  boxShadow: p.highlighted
-                    ? "var(--shadow-xl)"
-                    : "var(--shadow-md)",
-                  position: "relative",
-                  transition: "var(--transition-smooth)",
-                }}
-                className="hover:shadow-lg"
+                className={`relative h-full flex flex-col p-10 rounded-[40px] border transition-all duration-500 group ${
+                  p.highlighted
+                    ? "bg-white shadow-2xl border-accent/20 scale-105 z-10"
+                    : "bg-white/50 border-black/5 hover:bg-white hover:shadow-xl"
+                }`}
               >
                 {p.highlighted && (
                   <span
