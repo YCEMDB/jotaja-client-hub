@@ -34,7 +34,7 @@ export function Header() {
   }, []);
 
   const shellClass = scrolled
-    ? "bg-background/80 backdrop-blur-xl border-b border-border/40 shadow-sm"
+    ? "bg-background/80 backdrop-blur-2xl border-b border-ink/5 shadow-[0_8px_32px_rgba(0,0,0,0.04)]"
     : "bg-background/0 border-b border-transparent";
 
   const rowHeight = scrolled ? "h-16 md:h-20" : "h-20 md:h-24";
@@ -47,49 +47,53 @@ export function Header() {
         <div
           className={`flex items-center justify-between gap-4 transition-[height] duration-300 ease-out motion-reduce:transition-none ${rowHeight}`}
         >
-          <Link
-            to="/"
-            className="flex items-center group animate-logo-in motion-reduce:animate-none shrink-0 min-w-0"
-          >
-            <Logo size="sm" className="md:[&_.logo-mark-3d]:h-10 lg:[&_.logo-mark-3d]:h-11" />
-          </Link>
+          <div className="flex items-center gap-12 lg:gap-16 shrink-0 min-w-0">
+            <Link
+              to="/"
+              className="flex items-center group animate-logo-in motion-reduce:animate-none shrink-0"
+            >
+              <Logo size="sm" />
+            </Link>
 
-          <nav className="hidden lg:flex items-center gap-1 min-w-0">
-            {navItems.map((item) =>
-              item.route ? (
-                <Link
-                  key={item.href}
-                  to={item.href}
-                  className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-smooth whitespace-nowrap"
-                >
-                  {item.label}
-                </Link>
-              ) : (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-smooth whitespace-nowrap"
-                >
-                  {item.label}
-                </a>
-              ),
-            )}
-          </nav>
+            <nav className="hidden lg:flex items-center gap-1 min-w-0">
+              {navItems.map((item) =>
+                item.route ? (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    className="px-4 py-2 text-[13px] font-bold text-ink/60 hover:text-ink uppercase tracking-wider transition-all hover:bg-ink/5 rounded-lg"
+                  >
+                    {item.label}
+                  </Link>
+                ) : (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    className="px-4 py-2 text-[13px] font-bold text-ink/60 hover:text-ink uppercase tracking-wider transition-all hover:bg-ink/5 rounded-lg"
+                  >
+                    {item.label}
+                  </a>
+                ),
+              )}
+            </nav>
+          </div>
 
-          <div className="hidden lg:flex items-center gap-2 shrink-0">
+          <div className="hidden lg:flex items-center gap-6 shrink-0">
             <a
               href="/auth"
-              className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-smooth"
+              className="text-[13px] font-bold text-ink/60 hover:text-ink uppercase tracking-wider transition-colors"
             >
               Entrar
             </a>
-            <Button
-              size="sm"
-              className="rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 font-semibold shadow-blue"
-              asChild
-            >
-              <a href="#cadastro">Começar grátis</a>
-            </Button>
+            <LeadFormDialog
+              trigger={
+                <Button
+                  className="rounded-xl bg-ink text-background hover:bg-ink/90 font-bold px-6 h-11 text-sm shadow-brutal transition-all uppercase tracking-widest border-2 border-ink"
+                >
+                  Começar agora
+                </Button>
+              }
+            />
           </div>
 
           <button
