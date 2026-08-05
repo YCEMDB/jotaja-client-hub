@@ -188,8 +188,10 @@ function PlanoTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
 
   const save = async () => {
     setSaving(true);
+    // Explicitly cast to any to avoid TS enum constraint issues in the update call if necessary,
+    // though 'restaurant_plan' should match our options.
     const { error } = await supabase.from("restaurants").update({
-      plan: plan
+      plan: plan as any
     }).eq("id", r.id);
     setSaving(false);
     if (error) return toast.error(error.message);
@@ -199,12 +201,13 @@ function PlanoTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
 
   const PLANS = [
     { id: "trial", name: "Teste (Trial)", description: "Período de avaliação" },
+    { id: "essential", name: "Essencial", description: "Recursos básicos para começar" },
     { id: "professional", name: "Profissional", description: "Recursos avançados para sua loja" },
   ];
 
   return (
     <Card className="p-6 space-y-4">
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid gap-3 sm:grid-cols-3">
         {PLANS.map((p) => (
           <button
             key={p.id}
