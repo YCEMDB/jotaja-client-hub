@@ -89,8 +89,8 @@ export function Bento() {
                 <Bike className="w-5 h-5" strokeWidth={2.5} />
               </div>
               <div>
-                <h3 className="font-display text-xl text-ink leading-tight">
-                  Áreas + taxas por bairro
+                <h3 className="font-display text-xl text-ink leading-[0.9] tracking-tight uppercase">
+                  ÁREAS + TAXAS POR BAIRRO
                 </h3>
                 <p className="text-xs text-ink/60 mt-1.5 leading-snug">
                   Atribua entregadores, calcule frete por CEP e acompanhe o status.
@@ -103,8 +103,8 @@ export function Bento() {
           <div className="col-span-6 lg:col-span-3 row-span-2 group relative rounded-2xl border-2 border-ink bg-brand-violet text-background p-5 shadow-brutal hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all overflow-hidden">
             <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-background/10" />
             <Tag className="w-7 h-7 relative" strokeWidth={2.5} />
-            <h3 className="font-display text-2xl mt-3 leading-tight relative">
-              Cupons em<br />segundos
+            <h3 className="font-display text-2xl mt-3 leading-[0.9] tracking-tight uppercase relative">
+              CUPONS EM<br />SEGUNDOS
             </h3>
             <p className="text-[11px] uppercase tracking-widest font-bold opacity-70 mt-2 relative">
               % ou R$ fixo
@@ -130,7 +130,7 @@ export function Bento() {
                   />
                 ))}
               </div>
-              <p className="font-display text-lg text-background mt-3 leading-tight">
+              <p className="font-display text-lg text-background mt-3 leading-[0.9] tracking-tight uppercase">
                 Vendas, ticket, picos
               </p>
             </div>
@@ -157,8 +157,8 @@ export function Bento() {
           {/* CRM */}
           <div className="col-span-6 lg:col-span-4 row-span-2 group relative rounded-2xl border-2 border-ink bg-card p-5 shadow-brutal hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all">
             <Users className="w-7 h-7 text-brand-orange" strokeWidth={2.5} />
-            <h3 className="font-display text-xl text-ink mt-3 leading-tight">
-              Base de clientes sua.
+            <h3 className="font-display text-xl text-ink mt-3 leading-[0.9] tracking-tight uppercase">
+              BASE DE CLIENTES SUA.
             </h3>
             <p className="text-xs text-ink/60 mt-1.5">
               Histórico, ticket médio e contato — sem ninguém no meio.
@@ -168,8 +168,8 @@ export function Bento() {
           {/* WhatsApp */}
           <div className="col-span-6 lg:col-span-3 row-span-2 group relative rounded-2xl border-2 border-ink bg-success text-success-foreground p-5 shadow-brutal hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all">
             <MessageSquare className="w-7 h-7" strokeWidth={2.5} fill="currentColor" />
-            <h3 className="font-display text-xl mt-3 leading-tight">
-              WhatsApp<br />integrado
+            <h3 className="font-display text-xl mt-3 leading-[0.9] tracking-tight uppercase">
+              WHATSAPP<br />INTEGRADO
             </h3>
             <p className="text-[11px] uppercase tracking-widest font-bold opacity-80 mt-2">
               Notif + suporte
