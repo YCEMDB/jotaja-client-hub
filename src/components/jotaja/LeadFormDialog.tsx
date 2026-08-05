@@ -148,7 +148,7 @@ export function LeadFormDialog({ trigger }: DialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="max-w-2xl border-2 border-ink shadow-brutal-lg bg-background p-0 overflow-hidden">
+      <DialogContent className="max-w-2xl border-2 border-ink shadow-brutal-lg bg-background p-0 overflow-hidden rounded-3xl">
         <div className="bg-ink text-background px-6 py-5 border-b-2 border-ink relative overflow-hidden">
           <div className="absolute inset-0 bg-noise opacity-40 pointer-events-none" />
           <DialogHeader className="relative">
