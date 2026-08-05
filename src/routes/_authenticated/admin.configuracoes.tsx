@@ -27,7 +27,7 @@ import { toast } from "sonner";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
-import { mercadopagoConnectInit } from "@/lib/payments/mercadopago.functions";
+import { mercadopagoConnectInit, createTestMercadoPagoPix } from "@/lib/payments/mercadopago.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/configuracoes")({
   component: ConfigPage,
@@ -672,6 +672,7 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
   const verify = useServerFn(verifyMercadoPago);
   const connectFn = useServerFn(mercadopagoConnectInit);
   const webhookUrl = typeof window !== "undefined" ? `${window.location.origin}/api/public/mercadopago-webhook` : "";
+  const createTestPix = useServerFn(createTestMercadoPagoPix);
 
   const reload = async () => {
     setLoading(true);
@@ -805,10 +806,39 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
             Conecte sua conta do Mercado Pago para gerar QR Codes PIX automáticos. O dinheiro cai direto na sua conta.
           </p>
           {isConnected && (account.nickname || account.email) && (
-            <p className="text-xs text-muted-foreground mt-1">
-              Conta: <strong>{account.nickname ?? account.email}</strong>
-              {account.email && account.nickname ? ` · ${account.email}` : ""}
-            </p>
+            <div className="flex items-center justify-between mt-1">
+              <p className="text-xs text-muted-foreground">
+                Conta: <strong>{account.nickname ?? account.email}</strong>
+                {account.email && account.nickname ? ` · ${account.email}` : ""}
+              </p>
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="h-6 text-[10px] bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100"
+                onClick={async () => {
+                  if (testing) return;
+                  setTesting(true);
+                  try {
+                    const res = await createTestPix({ data: { restaurantId: r.id } });
+                    if (res.ok) {
+                      toast.success(`Pix de teste gerado: R$ ${res.amount.toFixed(2)}`);
+                      // Opcional: abrir link do ticket
+                      if (res.ticketUrl) window.open(res.ticketUrl, '_blank');
+                    } else {
+                      toast.error(res.error || "Erro ao gerar Pix de teste");
+                    }
+                  } catch (e) {
+                    toast.error("Falha na simulação");
+                  } finally {
+                    setTesting(false);
+                  }
+                }}
+                disabled={testing}
+              >
+                {testing ? <Loader2 className="h-3 w-3 animate-spin mr-1" /> : null}
+                Compra Teste (R$ 15,00)
+              </Button>
+            </div>
           )}
         </div>
         <div className="flex gap-2">
