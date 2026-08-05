@@ -51,7 +51,7 @@ export function Bento() {
             <div className="absolute top-0 right-0 w-64 h-64 bg-brand-orange/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none z-10" />
 
             {/* Mockup Container com ajuste de posicionamento para evitar sobreposição */}
-            <div className="absolute bottom-0 right-0 w-[94%] translate-x-4 translate-y-16 group-hover:translate-y-10 transition-all duration-700 ease-out z-0">
+            <div className="absolute bottom-0 right-0 w-[96%] translate-x-6 translate-y-24 group-hover:translate-y-16 transition-all duration-700 ease-out z-0">
               <div className="relative border-[3px] border-ink rounded-2xl shadow-brutal-lg bg-background overflow-hidden transform group-hover:scale-[1.01] transition-transform">
                 {/* Browser bar realística */}
                 <div className="h-8 bg-ink border-b-2 border-ink flex items-center px-4 gap-2">
