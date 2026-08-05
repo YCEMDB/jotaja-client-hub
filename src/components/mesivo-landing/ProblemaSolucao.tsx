@@ -18,136 +18,64 @@ export function ProblemaSolucao() {
   return (
     <section
       id="problema-solucao"
-      aria-label="Antes e depois do Mesivo"
-      style={{
-        paddingBlock: "clamp(64px, 8vw, 120px)",
-        backgroundColor: "var(--background)",
-      }}
+      className="py-40 bg-white"
     >
-      <div style={{ maxWidth: 1200, marginInline: "auto", paddingInline: "clamp(16px, 4vw, 32px)" }}>
-        <MotionReveal variant="fade">
-          <div style={{ maxWidth: 640, marginInline: "auto", textAlign: "center" }}>
-            <span
-              style={{
-                fontSize: 12,
-                fontWeight: 600,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                color: "var(--accent)",
-              }}
-            >
-              O contraste
-            </span>
-            <h2
-              style={{
-                marginTop: 12,
-                fontSize: "clamp(2rem, 3.6vw, 3rem)",
-                lineHeight: 1.02,
-                color: "var(--fg-hi)",
-              }}
-            >
-              A rotina real de um restaurante,{" "}
-              <span className="mesivo-accent">antes e depois</span> do Mesivo.
-            </h2>
-          </div>
+      <div className="max-w-[1440px] mx-auto px-8">
+        <MotionReveal variant="fade" className="text-center mb-24">
+          <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-copper mb-8 block">
+            O Contraste
+          </span>
+          <h2 className="font-display text-[clamp(2.5rem,5vw,5rem)] leading-[0.9] tracking-[-0.05em] text-foreground mb-12">
+            A rotina real, <br /><span className="italic font-serif text-deep-forest">antes e depois</span> do Mesivo.
+          </h2>
         </MotionReveal>
 
-        <div
-          className="mt-14 grid gap-6 md:grid-cols-2"
-          style={{ marginTop: 48 }}
-        >
-          <MotionReveal variant="up">
-            <Card
-              tone="muted"
-              label="Sem Mesivo"
-              icon="—"
-              items={problemas}
-            />
+        <div className="grid lg:grid-cols-2 gap-8">
+          <MotionReveal variant="fade">
+            <div className="p-16 rounded-[40px] bg-[#F1F1F1] border border-border h-full">
+              <div className="flex items-center gap-4 mb-12">
+                <span className="w-10 h-10 rounded-full bg-border flex items-center justify-center font-mono text-sm text-muted-foreground">
+                  —
+                </span>
+                <span className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground">
+                  Sem Mesivo
+                </span>
+              </div>
+              <ul className="space-y-8">
+                {problemas.map((p) => (
+                  <li key={p} className="text-xl text-muted-foreground leading-relaxed font-sans opacity-60">
+                    {p}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </MotionReveal>
-          <MotionReveal variant="up" delay={0.1}>
-            <Card
-              tone="brand"
-              label="Com Mesivo"
-              icon="✓"
-              items={solucoes}
-            />
+
+          <MotionReveal variant="fade" delay={0.1}>
+            <div className="p-16 rounded-[40px] bg-deep-forest border border-deep-forest h-full shadow-2xl relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-copper/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+              
+              <div className="relative z-10">
+                <div className="flex items-center gap-4 mb-12">
+                  <span className="w-10 h-10 rounded-full bg-copper flex items-center justify-center font-mono text-sm text-white">
+                    ✓
+                  </span>
+                  <span className="font-mono text-[10px] tracking-widest uppercase text-copper">
+                    Com Mesivo
+                  </span>
+                </div>
+                <ul className="space-y-8">
+                  {solucoes.map((s) => (
+                    <li key={s} className="text-xl text-cream leading-relaxed font-sans">
+                      {s}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </MotionReveal>
         </div>
       </div>
     </section>
-  );
-}
-
-function Card({
-  tone,
-  label,
-  icon,
-  items,
-}: {
-  tone: "muted" | "brand";
-  label: string;
-  icon: string;
-  items: string[];
-}) {
-  const brand = tone === "brand";
-  return (
-    <div
-      style={{
-        borderRadius: 32,
-        padding: "clamp(32px, 4vw, 48px)",
-        border: brand ? "2px solid var(--accent)" : "1px solid var(--border)",
-        backgroundColor: brand ? "var(--card)" : "var(--muted)",
-        boxShadow: brand
-          ? "var(--shadow-xl)"
-          : "var(--shadow-sm)",
-        transition: "var(--transition-smooth)",
-      }}
-      className="hover:shadow-lg"
-    >
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        <span
-          aria-hidden
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: 28,
-            height: 28,
-            borderRadius: 999,
-            backgroundColor: brand ? "var(--accent)" : "var(--border)",
-            color: brand ? "var(--accent-foreground)" : "var(--muted-foreground)",
-            fontWeight: 700,
-            fontSize: 14,
-          }}
-        >
-          {icon}
-        </span>
-        <strong
-          style={{
-            fontSize: 13,
-            fontWeight: 700,
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-            color: brand ? "var(--accent)" : "var(--muted-foreground)",
-          }}
-        >
-          {label}
-        </strong>
-      </div>
-      <ul style={{ marginTop: 20, display: "grid", gap: 14, listStyle: "none", padding: 0 }}>
-        {items.map((t) => (
-          <li
-            key={t}
-            style={{
-              fontSize: "clamp(0.95rem, 1.1vw, 1.05rem)",
-              lineHeight: 1.5,
-              color: brand ? "var(--fg-hi)" : "var(--fg-mid)",
-            }}
-          >
-            {t}
-          </li>
-        ))}
-      </ul>
-    </div>
   );
 }
