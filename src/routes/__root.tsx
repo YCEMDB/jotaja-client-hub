@@ -167,7 +167,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body className="Otimo e instalou as dependencias que o mercado pago exige?">
         {children}
         <Scripts />
       </body>
