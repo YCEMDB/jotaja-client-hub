@@ -79,7 +79,7 @@ export function AdminPageLayout({
                 </span>
               </div>
             )}
-            <h1 className="font-display text-3xl md:text-4xl lg:text-5xl text-ink leading-[0.95] tracking-tight">
+            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl text-ink leading-[0.85] tracking-tight uppercase italic drop-shadow-sm">
               {title}
               <span className={cn("inline-block w-2.5 h-2.5 ml-1 -mb-0.5 align-baseline", accentBg[accent])} />
             </h1>

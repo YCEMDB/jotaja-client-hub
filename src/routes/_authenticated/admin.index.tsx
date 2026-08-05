@@ -227,8 +227,8 @@ function Dashboard() {
 
   return (
     <AdminPageLayout
-      kicker="Visão geral"
-      title="Painel"
+      kicker="Visão operacional"
+      title="CENTRO DE COMANDO"
       subtitle={`${range.label} • fuso ${timezone}`}
       accent="magenta"
       icon={LayoutDashboard}
@@ -328,7 +328,7 @@ function Dashboard() {
       <OnboardingChecklist restaurantId={restaurantId} canWrite={canWriteOnboarding} />
       <PlanUsageBanner restaurantId={restaurantId} />
 
-      <div className="flex flex-wrap items-center gap-2 text-xs">
+      <div className="flex flex-wrap items-center gap-3 text-xs mb-2">
         <Badge variant="secondary" className="gap-1">
           Atualizado {relative}
         </Badge>

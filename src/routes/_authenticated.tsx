@@ -191,7 +191,7 @@ function TopBar({
   const initial = (userEmail?.[0] ?? "U").toUpperCase();
 
   return (
-    <header className="sticky top-0 z-30 flex items-center gap-3 px-4 sm:px-6 lg:px-8 xl:px-10 h-14 md:h-16 bg-background/95 backdrop-blur-md border-b-2 border-ink/10">
+    <header className="sticky top-0 z-30 flex items-center gap-3 px-4 sm:px-6 lg:px-8 xl:px-10 h-14 md:h-16 bg-background/80 backdrop-blur-xl border-b-2 border-ink/5">
       <button
         onClick={onOpenMobile}
         aria-label="Abrir menu"
@@ -341,7 +341,8 @@ function AuthLayout() {
           userEmail={user?.email}
           onSignOut={handleSignOut}
         />
-        <div className="absolute top-14 md:top-16 left-0 right-0 h-32 bg-gradient-radial opacity-60 pointer-events-none" />
+        <div className="absolute top-14 md:top-16 left-0 right-0 h-[40vh] bg-gradient-radial from-brand-orange/10 via-brand-magenta/5 to-transparent opacity-60 pointer-events-none" />
+        <div className="absolute inset-0 bg-grid opacity-[0.03] pointer-events-none" />
         <div className="relative flex-1 min-w-0">
           <SupportSessionBanner />
           <GlobalAnnouncementsBanner />
