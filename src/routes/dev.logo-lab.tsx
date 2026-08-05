@@ -63,64 +63,46 @@ function LogoLab() {
             Logo <span className="text-[#ff6b35]">Lab</span>
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl font-sans">
-            Explorações para a marca Mesivo. O objetivo é transmitir <strong>conexão</strong>, 
-            <strong>fluxo operacional</strong> e a energia calorosa da hospitalidade brasileira.
+            Analisei o sistema Mesivo e seus fluxos operacionais para criar estas 3 novas opções baseadas em <strong>Movimento Operacional</strong>, 
+            <strong>Ponto de Contato</strong> e <strong>Sincronia Operacional</strong>.
           </p>
         </header>
 
         <div className="logo-grid">
-          {/* Opção 1: O Fluxo Conectado (Evolução do Mark atual) */}
+          {/* Opção 1: O "M" de Movimento (Baseado nos Dashboards e Fluxos) */}
           <div className="logo-card">
-            <span className="logo-label">Opção A · Conexão & Fluxo</span>
+            <span className="logo-label">Opção 01 · Dinâmica Operacional</span>
             <div className="flex items-center gap-6">
-              <LogoOptionA size={80} />
+              <LogoOption1 size={80} />
               <span className="logo-name">mesivo</span>
             </div>
             <p className="text-sm text-center text-gray-500 max-w-[240px]">
-              Três pilares que simbolizam o pedido, a produção e a entrega, conectados por uma base sólida.
+              Um "M" dinâmico construído a partir dos cards do KDS e das barras de faturamento do dashboard. Representa o crescimento e a ordem.
             </p>
           </div>
 
-          {/* Opção 2: O Abraço da Gestão (Círculo Dinâmico) */}
+          {/* Opção 2: O Ponto de Contato (Baseado no PDV e Mobile) */}
           <div className="logo-card">
-            <span className="logo-label">Opção B · Unificação</span>
+            <span className="logo-label">Opção 02 · O Ponto de Contato</span>
             <div className="flex items-center gap-6">
-              <LogoOptionB size={80} />
+              <LogoOption2 size={80} />
               <span className="logo-name">mesivo</span>
             </div>
             <p className="text-sm text-center text-gray-500 max-w-[240px]">
-              Formas orgânicas que se abraçam, simbolizando a unificação de todos os canais em um só lugar.
+              O círculo central do sistema onde tudo se encontra. Inspirado na interface Mobile e na rapidez do "um clique" do PDV.
             </p>
           </div>
 
-          {/* Opção 3: A Velocidade Operacional (Geometria M) */}
+          {/* Opção 3: A Sincronia (Baseado no KDS e Balcão) */}
           <div className="logo-card">
-            <span className="logo-label">Opção C · Ritmo & Velocidade</span>
+            <span className="logo-label">Opção 03 · Sincronia Pura</span>
             <div className="flex items-center gap-6">
-              <LogoOptionC size={80} />
+              <LogoOption3 size={80} />
               <span className="logo-name">mesivo</span>
             </div>
             <p className="text-sm text-center text-gray-500 max-w-[240px]">
-              Um "M" estilizado que sugere movimento ascendente e precisão matemática.
+              Linhas paralelas que nunca se cruzam mas trabalham juntas. A ordem perfeita entre Salão, Cozinha e Balcão.
             </p>
-          </div>
-        </div>
-
-        <div className="mt-24 p-8 border border-white/10 rounded-3xl bg-white/5">
-          <h2 className="text-2xl font-bold mb-6" style={{ fontFamily: 'Bricolage Grotesque, sans-serif' }}>Diretrizes Visuais</h2>
-          <div className="grid md:grid-cols-3 gap-8 text-sm text-gray-400">
-            <div>
-              <h3 className="text-white font-bold mb-2">Paleta "Sunset Blaze"</h3>
-              <p>Gradientes de #FFB82E (Âmbar) a #F0522D (Laranja Queimado). Energia, calor e apetite.</p>
-            </div>
-            <div>
-              <h3 className="text-white font-bold mb-2">Tipografia Manrope</h3>
-              <p>Wordmark em Manrope ExtraBold. Moderna, legível e técnica o suficiente para SaaS.</p>
-            </div>
-            <div>
-              <h3 className="text-white font-bold mb-2">Geometria</h3>
-              <p>Cantos arredondados (radius: 12px) para manter a marca amigável e acessível.</p>
-            </div>
           </div>
         </div>
       </div>
@@ -128,7 +110,7 @@ function LogoLab() {
   );
 }
 
-function LogoOptionA({ size = 48 }) {
+function LogoOption1({ size = 48 }) {
   const id = useId();
   return (
     <svg width={size} height={size} viewBox="0 0 48 48" fill="none">
@@ -138,43 +120,50 @@ function LogoOptionA({ size = 48 }) {
           <stop offset="1" stopColor="#F0522D" />
         </linearGradient>
       </defs>
-      <rect x="4" y="12" width="10" height="24" rx="5" fill={`url(#${id})`} />
-      <rect x="19" y="4" width="10" height="40" rx="5" fill={`url(#${id})`} />
-      <rect x="34" y="12" width="10" height="24" rx="5" fill={`url(#${id})`} />
+      {/* Geometria inspirada no gráfico de barras do dashboard */}
+      <rect x="6" y="24" width="8" height="18" rx="2" fill={`url(#${id})`} />
+      <rect x="20" y="10" width="8" height="32" rx="2" fill={`url(#${id})`} />
+      <rect x="34" y="18" width="8" height="24" rx="2" fill={`url(#${id})`} />
+      {/* Linha de tendência/conexão */}
+      <path d="M6 24L20 10L34 18L46 6" stroke="#FFF8EE" strokeWidth="3" strokeLinecap="round" opacity="0.3" />
+    </svg>
+  );
+}
+
+function LogoOption2({ size = 48 }) {
+  const id = useId();
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none">
+      <defs>
+        <linearGradient id={id} x1="0" y1="0" x2="48" y2="48">
+          <stop offset="0" stopColor="#FFB82E" />
+          <stop offset="1" stopColor="#F0522D" />
+        </linearGradient>
+      </defs>
+      {/* Anéis concêntricos inspirados no Donut Chart e status mobile */}
+      <circle cx="24" cy="24" r="20" stroke={`url(#${id})`} strokeWidth="4" strokeDasharray="80 40" />
+      <circle cx="24" cy="24" r="12" stroke="#FFF8EE" strokeWidth="2" opacity="0.2" />
+      <rect x="20" y="20" width="8" height="8" rx="2" fill={`url(#${id})`} />
+    </svg>
+  );
+}
+
+function LogoOption3({ size = 48 }) {
+  const id = useId();
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none">
+      <defs>
+        <linearGradient id={id} x1="0" y1="0" x2="48" y2="48">
+          <stop offset="0" stopColor="#FFB82E" />
+          <stop offset="1" stopColor="#F0522D" />
+        </linearGradient>
+      </defs>
+      {/* Linhas de fluxo inspiradas no KDS e nas faixas de status */}
+      <rect x="4" y="8" width="40" height="6" rx="3" fill={`url(#${id})`} />
+      <rect x="4" y="21" width="40" height="6" rx="3" fill={`url(#${id})`} opacity="0.6" />
       <rect x="4" y="34" width="40" height="6" rx="3" fill="#FFF8EE" opacity="0.15" />
-    </svg>
-  );
-}
-
-function LogoOptionB({ size = 48 }) {
-  const id = useId();
-  return (
-    <svg width={size} height={size} viewBox="0 0 48 48" fill="none">
-      <defs>
-        <linearGradient id={id} x1="0" y1="0" x2="48" y2="48">
-          <stop offset="0" stopColor="#FFB82E" />
-          <stop offset="1" stopColor="#F0522D" />
-        </linearGradient>
-      </defs>
-      <circle cx="24" cy="24" r="20" stroke={`url(#${id})`} strokeWidth="8" />
-      <path d="M24 4C35.0457 4 44 12.9543 44 24C44 35.0457 35.0457 44 24 44" stroke="#FFF8EE" strokeWidth="8" strokeLinecap="round" opacity="0.2" />
-      <circle cx="24" cy="24" r="6" fill={`url(#${id})`} />
-    </svg>
-  );
-}
-
-function LogoOptionC({ size = 48 }) {
-  const id = useId();
-  return (
-    <svg width={size} height={size} viewBox="0 0 48 48" fill="none">
-      <defs>
-        <linearGradient id={id} x1="0" y1="0" x2="48" y2="48">
-          <stop offset="0" stopColor="#FFB82E" />
-          <stop offset="1" stopColor="#F0522D" />
-        </linearGradient>
-      </defs>
-      <path d="M4 36L14 12L24 36L34 12L44 36" stroke={`url(#${id})`} strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx="24" cy="18" r="4" fill="#FFF8EE" opacity="0.3" />
+      {/* Marcador de posição atual (o ponto de foco da operação) */}
+      <circle cx="12" cy="24" r="5" fill="#FFF8EE" />
     </svg>
   );
 }
