@@ -7,8 +7,9 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-display: "Archivo Black", system-ui, sans-serif;
-  --font-sans: "Hind", system-ui, sans-serif;
+  --font-display: "Manrope", system-ui, sans-serif;
+  --font-sans: "Manrope", system-ui, sans-serif;
+
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -52,75 +53,51 @@
 }
 
 :root {
-  --radius: 1.25rem;
+  --radius: 0.75rem; /* 12px base */
 
-  /* SUNSET BLAZE — bold, expressive, gastronomic energy */
-  --background: oklch(0.985 0.008 70);      /* warm off-white */
-  --foreground: oklch(0.15 0.02 30);        /* near-black ink */
-  --ink: oklch(0.12 0.025 25);
+  /* THE CONDUCTOR + THE LEDGER — professional, gastronomy-focused palette */
+  --background: #F8F6F3;
+  --foreground: #2B2B2B;
+  --ink:        #2B2B2B;
 
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.15 0.02 30);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.15 0.02 30);
+  --card:       #FFFFFF;
+  --card-foreground: #2B2B2B;
+  --popover:    #FFFFFF;
+  --popover-foreground: #2B2B2B;
 
-  /* Primary: vibrant sunset orange #ff6b35 */
-  --primary: oklch(0.69 0.22 38);
-  --primary-foreground: oklch(0.99 0.005 70);
-  --primary-glow: oklch(0.76 0.18 50);
+  --primary:    #2B2B2B;
+  --primary-foreground: #FFFFFF;
+  --primary-glow: rgba(43, 43, 43, 0.15);
 
-  /* Accent: hot magenta #e84393 */
-  --accent: oklch(0.62 0.24 0);
-  --accent-foreground: oklch(0.99 0.005 70);
-  --accent-soft: oklch(0.96 0.04 20);
+  --accent:     #E36D42;
+  --accent-foreground: #FFFFFF;
+  --accent-soft: rgba(227, 109, 66, 0.1);
 
-  --secondary: oklch(0.97 0.02 70);
-  --secondary-foreground: oklch(0.15 0.02 30);
+  --secondary:  #FFFFFF;
+  --secondary-foreground: #2B2B2B;
 
-  --muted: oklch(0.96 0.015 60);
-  --muted-foreground: oklch(0.45 0.02 30);
+  --muted:      #F0EEEB;
+  --muted-foreground: #70645E;
 
-  --warning: oklch(0.82 0.17 80);
+  --warning:    #D4A73F;
+  --destructive: #C84B4B;
+  --success:     #3F7D58;
 
-  --destructive: oklch(0.6 0.24 25);
-  --destructive-foreground: oklch(0.99 0.005 70);
+  --border:     #E5E2DE;
+  --input:      #E5E2DE;
+  --ring:       #E36D42;
 
-  --success: oklch(0.7 0.16 150);
-  --success-foreground: oklch(0.15 0.02 30);
+  --shadow-xs: 0 1px 2px rgba(43, 43, 43, 0.05);
+  --shadow-sm: 0 2px 4px rgba(43, 43, 43, 0.04);
+  --shadow-md: 0 4px 8px rgba(43, 43, 43, 0.06);
+  --shadow-lg: 0 8px 16px rgba(43, 43, 43, 0.08);
+  --shadow-xl: 0 16px 32px rgba(43, 43, 43, 0.1);
+  --shadow-brutal: 0 0 0 0 transparent; /* Desativado para esta fase */
+  --shadow-glow: 0 12px 32px -8px rgba(227, 109, 66, 0.25);
 
-  --border: oklch(0.9 0.015 40);
-  --input: oklch(0.94 0.015 40);
-  --ring: oklch(0.69 0.22 38);
-
-  /* Brand palette tokens */
-  --brand-orange: oklch(0.69 0.22 38);
-  --brand-amber: oklch(0.78 0.17 65);
-  --brand-magenta: oklch(0.62 0.24 0);
-  --brand-violet: oklch(0.5 0.22 290);
-
-  --gradient-primary: linear-gradient(135deg, oklch(0.69 0.22 38), oklch(0.62 0.19 30));
-  /* Paleta estrutural Mesivo: âmbar → laranja-coral → laranja queimado (sem magenta/violeta). */
-  --gradient-sunset: linear-gradient(135deg, oklch(0.82 0.17 75) 0%, oklch(0.72 0.20 55) 35%, oklch(0.69 0.22 38) 70%, oklch(0.62 0.19 30) 100%);
-  --gradient-soft: linear-gradient(180deg, oklch(0.99 0.01 70), oklch(0.96 0.03 40));
-  --gradient-radial: radial-gradient(120% 80% at 50% 0%, oklch(0.95 0.06 45) 0%, oklch(0.985 0.008 70) 60%);
-  --gradient-mesh:
-    radial-gradient(at 20% 20%, oklch(0.82 0.17 75 / 0.32) 0px, transparent 50%),
-    radial-gradient(at 80% 30%, oklch(0.72 0.20 55 / 0.28) 0px, transparent 50%),
-    radial-gradient(at 60% 80%, oklch(0.69 0.22 38 / 0.22) 0px, transparent 50%);
-
-  --shadow-xs: 0 1px 2px oklch(0.15 0.02 30 / 0.06);
-  --shadow-sm: 0 2px 6px oklch(0.15 0.02 30 / 0.08), 0 1px 2px oklch(0.15 0.02 30 / 0.06);
-  --shadow-md: 0 6px 20px -4px oklch(0.15 0.02 30 / 0.12), 0 2px 6px oklch(0.15 0.02 30 / 0.06);
-  --shadow-lg: 0 16px 40px -8px oklch(0.15 0.02 30 / 0.16), 0 4px 12px oklch(0.15 0.02 30 / 0.08);
-  --shadow-xl: 0 32px 80px -16px oklch(0.15 0.02 30 / 0.24), 0 8px 24px oklch(0.15 0.02 30 / 0.1);
-  --shadow-brutal: 6px 6px 0 0 oklch(0.15 0.02 30);
-  --shadow-brutal-lg: 10px 10px 0 0 oklch(0.15 0.02 30);
-  --shadow-glow: 0 20px 60px -10px oklch(0.69 0.22 38 / 0.45);
-  --shadow-glow-magenta: 0 20px 60px -10px oklch(0.62 0.24 0 / 0.4);
-  --shadow-blue: var(--shadow-glow); /* backwards-compat alias */
-
-  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
+
 
 .dark {
   --background: oklch(0.14 0.02 30);
@@ -186,9 +163,10 @@
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    font-weight: 900;
-    letter-spacing: -0.035em;
-    line-height: 0.95;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+
     text-transform: none;
     overflow-wrap: anywhere;
     word-break: break-word;
@@ -599,65 +577,67 @@
  * ===================================================================== */
 
 :root {
-  /* --- Paleta Mesivo (marketing) --- */
-  --mesivo-cream:      #FFF8EE;
-  --mesivo-warm-white: #FFFDFA;
-  --mesivo-peach:      #FFE7D5;
-  --mesivo-tomato:     #F0522D;
-  --mesivo-orange:     #FF6B35;
-  --mesivo-mango:      #FFB82E;
-  --mesivo-leaf:       #2F7D5B;
-  --mesivo-leaf-soft:  #E5F3EA;
-  --mesivo-coffee:     #34241D;
-  --mesivo-text:       #2A211D;
+  /* --- Paleta Mesivo (Diretor Criativo / The Ledger) --- */
+  --mesivo-cream:      #F8F6F3;
+  --mesivo-warm-white: #FFFFFF;
+  --mesivo-peach:      rgba(227, 109, 66, 0.08);
+  --mesivo-tomato:     #E36D42;
+  --mesivo-orange:     #E36D42;
+  --mesivo-mango:      #D4A73F;
+  --mesivo-leaf:       #3F7D58;
+  --mesivo-leaf-soft:  rgba(63, 125, 88, 0.08);
+  --mesivo-coffee:     #2B2B2B;
+  --mesivo-text:       #2B2B2B;
   --mesivo-muted:      #70645E;
-  --mesivo-border:     #ECDDD3;
+  --mesivo-border:     #E5E2DE;
   --mesivo-white:      #FFFFFF;
 
   /* --- Tipografia funcional --- */
-  --font-ui: "Manrope", system-ui, -apple-system, BlinkMacSystemFont,
-             "Segoe UI", sans-serif;
+  --font-ui: "Manrope", system-ui, sans-serif;
 
   /* --- Motion --- */
-  --dur-fast: 140ms;
-  --dur-base: 200ms;
-  --dur-slow: 320ms;
+  --dur-fast: 180ms;
+  --dur-base: 280ms;
+  --dur-slow: 450ms;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in:  cubic-bezier(0.4, 0, 1, 1);
 
-  /* --- Semantic tokens (fallback = valores atuais / seguros) --- */
-  /* Superfícies */
-  --surface:          var(--background);
-  --surface-1:        var(--card);
-  --surface-2:        var(--muted);
-  --surface-3:        var(--secondary);
-  --surface-elevated: var(--popover);
-  --overlay:          oklch(0.12 0.025 25 / 0.5);
-  --hairline:         var(--border);
-  --hairline-strong:  var(--ink);
+  /* --- Semantic tokens (Diretor Criativo) --- */
+  --surface:          var(--mesivo-cream);
+  --surface-1:        var(--mesivo-warm-white);
+  --surface-2:        var(--mesivo-peach);
+  --surface-3:        var(--mesivo-leaf-soft);
+  --surface-elevated: var(--mesivo-white);
+  --overlay:          rgba(43, 43, 43, 0.4);
+  --hairline:         var(--mesivo-border);
+  --hairline-strong:  var(--mesivo-coffee);
 
   /* Texto */
-  --fg-hi:     var(--ink);
-  --fg:        var(--foreground);
-  --fg-mid:    var(--muted-foreground);
-  --fg-low:    oklch(0.55 0.02 40);
-  --fg-invert: var(--primary-foreground);
+  --fg-hi:     var(--mesivo-coffee);
+  --fg:        var(--mesivo-text);
+  --fg-mid:    var(--mesivo-muted);
+  --fg-low:    #9A8A82;
+  --fg-invert: var(--mesivo-white);
 
   /* Marca semântica */
-  --accent-hover:  oklch(0.63 0.24 38);
-  --accent-active: oklch(0.55 0.26 38);
-  --accent-soft:   oklch(0.96 0.04 40);
-  --accent-glow:   oklch(0.69 0.22 38 / 0.35);
-  --accent-ink:    var(--primary-foreground);
+  --accent:        var(--mesivo-tomato);
+  --accent-hover:  #C84B4B; /* Troca para danger/accent secundário no hover em alguns casos */
+  --accent-active: #B33518;
+  --accent-soft:   var(--mesivo-peach);
+  --accent-glow:   rgba(227, 109, 66, 0.2);
+  --accent-ink:    var(--mesivo-white);
 
   /* Estados */
-  --success-soft: oklch(0.94 0.06 150);
-  --warning-soft: oklch(0.96 0.09 80);
-  --danger:       var(--destructive);
-  --danger-soft:  oklch(0.94 0.06 25);
-  --info:         oklch(0.6 0.15 240);
-  --info-soft:    oklch(0.94 0.04 240);
+  --success:      var(--mesivo-leaf);
+  --success-soft: var(--mesivo-leaf-soft);
+  --warning:      var(--mesivo-mango);
+  --warning-soft: rgba(212, 167, 63, 0.1);
+  --danger:       #C84B4B;
+  --danger-soft:  rgba(200, 75, 75, 0.1);
+  --info:         #4B7BEC;
+  --info-soft:    rgba(75, 123, 236, 0.1);
 }
+
 
 /* ---------------------------------------------------------------------
  * Contexto: MARKETING — creme + coral, aplicado no PublicShell novo
@@ -704,7 +684,7 @@
  * Escopo restrito ao PublicShell variant="landing" para não afetar
  * /empresa, /sobre e /contato (que permanecem no display global). */
 [data-theme="marketing"][data-variant="landing"] {
-  --font-display: "Bricolage Grotesque", "Manrope", system-ui, sans-serif;
+  --font-display: "Manrope", system-ui, sans-serif;
   --font-accent: "Instrument Serif", Georgia, serif;
 }
 [data-theme="marketing"][data-variant="landing"] h1,
@@ -712,13 +692,15 @@
 [data-theme="marketing"][data-variant="landing"] h3,
 [data-theme="marketing"][data-variant="landing"] h4 {
   font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: -0.035em;
-  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  text-transform: lowercase; /* Diretor Criativo prefere lowercase */
 }
 [data-theme="marketing"][data-variant="landing"] :is(h1,h2,h3,h4,h5,h6,p,li,a,button,input,textarea,label,span,strong,em,small,td,th) {
   font-variant-numeric: tabular-nums lining-nums;
 }
+
 [data-theme="marketing"][data-variant="landing"] .mesivo-accent {
   font-family: var(--font-accent);
   font-weight: 400;

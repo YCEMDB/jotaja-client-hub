@@ -70,7 +70,7 @@ export function PublicFooter() {
             }}
           >
             <MesivoMark size={32} />
-            <span style={{ fontFamily: "var(--font-display)", fontSize: "1.35rem" }}>Mesivo</span>
+            <span style={{ fontFamily: "var(--font-ui)", fontSize: "1.5rem", fontWeight: 800, letterSpacing: "-0.05em" }}>mesivo</span>
           </Link>
           <p
             style={{
@@ -91,7 +91,7 @@ export function PublicFooter() {
             <h3
               style={{
                 margin: 0,
-                fontFamily: "var(--font-display)",
+                fontFamily: "var(--font-ui)",
                 fontSize: "0.95rem",
                 letterSpacing: 0.5,
                 textTransform: "uppercase",

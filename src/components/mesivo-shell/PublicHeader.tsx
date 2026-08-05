@@ -85,10 +85,11 @@ export function PublicHeader({ variant = "default" }: { variant?: PublicShellVar
         >
           <MesivoMark size={32} />
           <span
-            className="text-lg font-bold tracking-tight"
+            className="text-xl font-extrabold tracking-tighter"
             style={{ color: "var(--mesivo-coffee)", fontFamily: "var(--font-ui)" }}
           >
-            Mesivo
+            mesivo
+
           </span>
         </Link>
 
