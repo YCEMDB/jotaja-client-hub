@@ -70,26 +70,29 @@ export function Hero() {
           variant="fade"
           delay={heroSequence.badge}
           amount={0.4}
-          className="flex justify-center mb-8"
+          className="flex justify-center mb-10"
         >
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border-2 border-ink/15 bg-background/70 backdrop-blur text-[11px] font-bold uppercase tracking-[0.18em] text-ink/70">
-            <span className="w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse" />A plataforma
-            completa para restaurantes
+          <span className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-ink/10 bg-background/40 backdrop-blur-md text-[10px] font-bold uppercase tracking-[0.22em] text-ink/60 shadow-sm ring-1 ring-inset ring-white/20">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-orange opacity-40" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-orange" />
+            </span>
+            A inteligência operacional definitiva
           </span>
         </MotionReveal>
 
         {/* HERO MAIN */}
-        <div className="grid grid-cols-12 gap-6 lg:gap-10 items-center">
+        <div className="grid grid-cols-12 gap-6 lg:gap-12 items-center">
           {/* LEFT — headline */}
           <div className="col-span-12 lg:col-span-7">
             <MotionText
               as="h1"
-              className="font-display text-ink uppercase leading-[0.85] tracking-[-0.055em] text-[clamp(2.5rem,8vw,6.5rem)]"
+              className="font-display text-ink uppercase leading-[0.82] tracking-[-0.05em] text-[clamp(2.75rem,8.5vw,6.8rem)] drop-shadow-[0_2px_2px_rgba(0,0,0,0.05)]"
               ariaLabel="Gestão que liberta o seu restaurante."
               lines={[
                 "Gestão que",
                 <span key="l2">
-                  liberta o <span className="text-gradient-sunset">seu restaurante.</span>
+                  liberta o <span className="text-gradient-sunset drop-shadow-sm">seu negócio.</span>
                 </span>
               ]}
             />
@@ -98,36 +101,38 @@ export function Hero() {
               variant="fade"
               delay={heroSequence.subtitle}
               amount={0.3}
-              className="mt-8 max-w-xl text-lg md:text-xl text-ink/75 leading-relaxed"
+              className="mt-8 max-w-xl text-lg md:text-xl text-ink/70 leading-relaxed font-medium"
             >
-              Uma única plataforma para digitalizar sua operação, eliminar erros de pedido
-              e aumentar sua margem. Do PDV ao Cardápio Digital.
+              Uma plataforma de alta performance para unificar sua operação, eliminar fricções e maximizar lucros. Do PDV ao Cardápio Inteligente.
             </MotionReveal>
 
             <MotionReveal
               variant="fade"
               delay={heroSequence.buttons}
               amount={0.3}
-              className="mt-9 flex flex-col sm:flex-row items-start sm:items-center gap-4"
+              className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-5"
             >
               <LeadFormDialog
                 trigger={
                   <MagneticButton
                     strength={4}
-                    className="inline-flex items-center justify-center rounded-2xl bg-ink text-background hover:bg-ink/90 font-bold px-8 h-14 text-base shadow-brutal transition-colors uppercase tracking-wider"
+                    className="group relative inline-flex items-center justify-center rounded-2xl bg-ink text-background hover:bg-ink/95 font-bold px-10 h-16 text-base shadow-brutal transition-all uppercase tracking-wider overflow-hidden"
                   >
-                    Começar gratuitamente
-                    <ArrowRight className="w-5 h-5 ml-2" strokeWidth={3} />
+                    <span className="relative z-10 flex items-center">
+                      Começar agora
+                      <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" strokeWidth={3} />
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                   </MagneticButton>
                 }
               />
               <Button
                 size="lg"
                 variant="outline"
-                className="rounded-2xl font-bold px-6 h-14 text-base border-2 border-ink/20 hover:bg-ink/5"
+                className="rounded-2xl font-bold px-8 h-16 text-base border-2 border-ink/15 hover:border-ink/30 hover:bg-ink/5 transition-all active:scale-[0.98]"
                 asChild
               >
-                <a href="#funcionalidades">Conhecer a plataforma</a>
+                <a href="#funcionalidades">Explorar Ecossistema</a>
               </Button>
             </MotionReveal>
 
@@ -135,11 +140,13 @@ export function Hero() {
               variant="fade"
               delay={heroSequence.buttons + 0.1}
               amount={0.3}
-              className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-ink/60 font-semibold"
+              className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-[11px] text-ink/50 font-bold uppercase tracking-widest"
             >
-              {["14 dias grátis", "sem cartão de crédito", "cancele quando quiser"].map((item) => (
-                <div key={item} className="flex items-center gap-1.5">
-                  <Check className="w-3.5 h-3.5 text-brand-orange" strokeWidth={3} />
+              {["Trial de 14 dias", "Setup em minutos", "Sem fidelidade"].map((item) => (
+                <div key={item} className="flex items-center gap-2">
+                  <div className="flex items-center justify-center w-4 h-4 rounded-full bg-brand-orange/10">
+                    <Check className="w-2.5 h-2.5 text-brand-orange" strokeWidth={4} />
+                  </div>
                   <span>{item}</span>
                 </div>
               ))}
@@ -147,7 +154,7 @@ export function Hero() {
           </div>
 
           {/* RIGHT — mockup do painel + notificações */}
-          <div className="col-span-12 lg:col-span-5 relative">
+          <div className="col-span-12 lg:col-span-5 relative lg:pl-4">
             <ProductMockup />
           </div>
         </div>
