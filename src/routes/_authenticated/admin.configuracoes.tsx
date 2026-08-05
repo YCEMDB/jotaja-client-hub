@@ -191,7 +191,8 @@ function PlanoTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
     // Explicitly cast to any to avoid TS enum constraint issues in the update call if necessary,
     // though 'restaurant_plan' should match our options.
     const { error } = await supabase.from("restaurants").update({
-      plan: plan as any
+      plan: plan as any,
+      plan_id: plan === "professional" ? "pro" : plan === "essential" ? "essential" : "starter"
     }).eq("id", r.id);
     setSaving(false);
     if (error) return toast.error(error.message);
