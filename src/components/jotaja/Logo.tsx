@@ -35,7 +35,7 @@ export function Logo({ className = "", markOnly = false, size = "md" }: LogoProp
 
       {!markOnly && (
         <span
-          className={`logo-wordmark font-display ${wordSize} leading-none tracking-tight text-ink lowercase`}
+          className={`logo-wordmark font-display ${wordSize} leading-none tracking-tight text-ink uppercase`}
           style={{ letterSpacing: "-0.02em" }}
         >
           mesivo
