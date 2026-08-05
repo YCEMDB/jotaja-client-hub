@@ -54,7 +54,7 @@ export function PlanosMesivo() {
     <section
       id="planos"
       aria-label="Planos e preços"
-      style={{ paddingBlock: "clamp(64px, 8vw, 120px)", backgroundColor: "var(--mesivo-cream)" }}
+      style={{ paddingBlock: "clamp(64px, 8vw, 120px)", backgroundColor: "var(--background)" }}
     >
       <div style={{ maxWidth: 1120, marginInline: "auto", paddingInline: "clamp(16px, 4vw, 32px)" }}>
         <MotionReveal variant="fade">
@@ -65,7 +65,7 @@ export function PlanosMesivo() {
                 fontWeight: 600,
                 letterSpacing: "0.14em",
                 textTransform: "uppercase",
-                color: "var(--mesivo-tomato)",
+                color: "var(--accent)",
               }}
             >
               Planos
@@ -106,12 +106,12 @@ export function PlanosMesivo() {
                   flexDirection: "column",
                   padding: "28px 26px",
                   borderRadius: 24,
-                  backgroundColor: "var(--mesivo-warm-white)",
+                  backgroundColor: "var(--card)",
                   border: p.highlighted
-                    ? "1.5px solid var(--mesivo-tomato)"
-                    : "1px solid var(--hairline)",
+                    ? "1.5px solid var(--accent)"
+                    : "1px solid var(--border)",
                   boxShadow: p.highlighted
-                    ? "0 24px 60px -30px color-mix(in oklab, var(--mesivo-tomato) 40%, transparent)"
+                    ? "0 24px 60px -30px color-mix(in oklab, var(--accent) 40%, transparent)"
                     : "none",
                   position: "relative",
                 }}
@@ -124,8 +124,8 @@ export function PlanosMesivo() {
                       left: 20,
                       padding: "4px 12px",
                       borderRadius: 999,
-                      backgroundColor: "var(--mesivo-tomato)",
-                      color: "var(--mesivo-white)",
+                      backgroundColor: "var(--accent)",
+                      color: "var(--accent-foreground)",
                       fontSize: 11,
                       fontWeight: 700,
                       letterSpacing: "0.08em",
@@ -135,7 +135,7 @@ export function PlanosMesivo() {
                     Mais escolhido
                   </span>
                 )}
-                <div style={{ fontSize: 14, fontWeight: 700, color: "var(--mesivo-tomato)" }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: "var(--accent)" }}>
                   {p.name}
                 </div>
                 <div
@@ -173,8 +173,8 @@ export function PlanosMesivo() {
                     borderRadius: 999,
                     fontWeight: 600,
                     fontSize: 14,
-                    backgroundColor: p.highlighted ? "var(--mesivo-tomato)" : "var(--fg-hi)",
-                    color: "var(--mesivo-white)",
+                    backgroundColor: p.highlighted ? "var(--accent)" : "var(--primary)",
+                    color: p.highlighted ? "var(--accent-foreground)" : "var(--primary-foreground)",
                   }}
                 >
                   {p.cta}
@@ -208,11 +208,11 @@ export function PlanosMesivo() {
                           width: 14,
                           height: 14,
                           borderRadius: 999,
-                          backgroundColor: "var(--mesivo-peach)",
+                          backgroundColor: "var(--accent-soft)",
                           display: "inline-flex",
                           alignItems: "center",
                           justifyContent: "center",
-                          color: "var(--mesivo-tomato)",
+                          color: "var(--accent)",
                           fontSize: 10,
                           fontWeight: 700,
                           flexShrink: 0,

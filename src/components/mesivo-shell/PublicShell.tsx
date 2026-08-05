@@ -38,8 +38,8 @@ export function PublicShell({
         minHeight: "100dvh",
         display: "flex",
         flexDirection: "column",
-        backgroundColor: "var(--surface)",
-        color: "var(--fg)",
+        backgroundColor: "var(--background)",
+        color: "var(--foreground)",
         fontFamily: "var(--font-ui)",
       }}
     >

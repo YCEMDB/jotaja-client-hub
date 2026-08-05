@@ -42,9 +42,9 @@ export function PublicHeader({ variant = "default" }: { variant?: PublicShellVar
   const NavAnchor = ({ item, mobile = false }: { item: NavItem; mobile?: boolean }) => {
     const className = mobile
       ? "block rounded-lg px-3 py-3 text-base font-medium"
-      : "rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-[var(--mesivo-peach)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--mesivo-tomato)]";
+      : "rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-[var(--accent-soft)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]";
     const style = {
-      color: "var(--mesivo-coffee)",
+      color: "var(--foreground)",
       fontFamily: "var(--font-ui)",
     } as const;
     if (item.anchor) {
@@ -59,7 +59,7 @@ export function PublicHeader({ variant = "default" }: { variant?: PublicShellVar
         to={item.href}
         className={className}
         style={style}
-        activeProps={{ style: { ...style, color: "var(--mesivo-tomato)" } }}
+        activeProps={{ style: { ...style, color: "var(--accent)" } }}
       >
         {item.label}
       </Link>
@@ -71,22 +71,22 @@ export function PublicHeader({ variant = "default" }: { variant?: PublicShellVar
       className="sticky top-0 z-40 w-full transition-colors"
       style={{
         backgroundColor: scrolled
-          ? "color-mix(in oklab, var(--mesivo-cream) 92%, transparent)"
+          ? "color-mix(in oklab, var(--background) 92%, transparent)"
           : "transparent",
         backdropFilter: scrolled ? "saturate(1.1) blur(6px)" : undefined,
-        borderBottom: scrolled ? "1px solid var(--hairline)" : "1px solid transparent",
+        borderBottom: scrolled ? "1px solid var(--border)" : "1px solid transparent",
       }}
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link
           to="/"
           aria-label="Mesivo — início"
-          className="inline-flex items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--mesivo-tomato)] focus-visible:ring-offset-2"
+          className="inline-flex items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2"
         >
           <MesivoMark size={32} />
           <span
             className="text-xl font-extrabold tracking-tighter"
-            style={{ color: "var(--mesivo-coffee)", fontFamily: "var(--font-ui)" }}
+            style={{ color: "var(--foreground)", fontFamily: "var(--font-display)" }}
           >
             mesivo
 
@@ -107,10 +107,10 @@ export function PublicHeader({ variant = "default" }: { variant?: PublicShellVar
           {variant === "landing" ? (
             <a
               href="#cadastro"
-              className="inline-flex h-10 items-center justify-center rounded-full px-5 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--mesivo-mango)] focus-visible:ring-offset-2"
+              className="inline-flex h-10 items-center justify-center rounded-full px-5 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2"
               style={{
-                backgroundColor: "var(--mesivo-tomato)",
-                color: "var(--mesivo-white)",
+                backgroundColor: "var(--accent)",
+                color: "var(--accent-foreground)",
                 fontFamily: "var(--font-ui)",
               }}
             >
@@ -119,10 +119,10 @@ export function PublicHeader({ variant = "default" }: { variant?: PublicShellVar
           ) : (
             <Link
               to="/contato"
-              className="inline-flex h-10 items-center justify-center rounded-full px-5 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--mesivo-mango)] focus-visible:ring-offset-2"
+              className="inline-flex h-10 items-center justify-center rounded-full px-5 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2"
               style={{
-                backgroundColor: "var(--mesivo-tomato)",
-                color: "var(--mesivo-white)",
+                backgroundColor: "var(--accent)",
+                color: "var(--accent-foreground)",
                 fontFamily: "var(--font-ui)",
               }}
             >
@@ -137,8 +137,8 @@ export function PublicHeader({ variant = "default" }: { variant?: PublicShellVar
               <button
                 type="button"
                 aria-label="Abrir menu"
-                className="inline-flex h-11 w-11 items-center justify-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--mesivo-tomato)]"
-                style={{ color: "var(--mesivo-coffee)" }}
+                className="inline-flex h-11 w-11 items-center justify-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                style={{ color: "var(--foreground)" }}
               >
                 <Menu className="h-6 w-6" aria-hidden="true" />
               </button>
@@ -146,7 +146,7 @@ export function PublicHeader({ variant = "default" }: { variant?: PublicShellVar
             <SheetContent
               side="right"
               className="w-[85vw] max-w-sm"
-              style={{ backgroundColor: "var(--mesivo-cream)" }}
+              style={{ backgroundColor: "var(--background)" }}
             >
               <SheetTitle className="sr-only">Menu</SheetTitle>
               <nav aria-label="Navegação principal (mobile)" className="mt-6">
@@ -166,8 +166,8 @@ export function PublicHeader({ variant = "default" }: { variant?: PublicShellVar
                         href="#cadastro"
                         className="inline-flex h-11 w-full items-center justify-center rounded-full px-5 text-sm font-semibold"
                         style={{
-                          backgroundColor: "var(--mesivo-tomato)",
-                          color: "var(--mesivo-white)",
+                          backgroundColor: "var(--accent)",
+                          color: "var(--accent-foreground)",
                           fontFamily: "var(--font-ui)",
                         }}
                       >
@@ -178,8 +178,8 @@ export function PublicHeader({ variant = "default" }: { variant?: PublicShellVar
                         to="/contato"
                         className="inline-flex h-11 w-full items-center justify-center rounded-full px-5 text-sm font-semibold"
                         style={{
-                          backgroundColor: "var(--mesivo-tomato)",
-                          color: "var(--mesivo-white)",
+                          backgroundColor: "var(--accent)",
+                          color: "var(--accent-foreground)",
                           fontFamily: "var(--font-ui)",
                         }}
                       >

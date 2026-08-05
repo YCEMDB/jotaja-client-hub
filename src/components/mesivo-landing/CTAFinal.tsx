@@ -7,8 +7,8 @@ export function CTAFinal() {
       aria-label="Começar com o Mesivo"
       style={{
         paddingBlock: "clamp(72px, 9vw, 128px)",
-        backgroundColor: "var(--fg-hi)",
-        color: "var(--mesivo-cream)",
+        backgroundColor: "var(--primary)",
+        color: "var(--background)",
         position: "relative",
         overflow: "hidden",
       }}
@@ -20,7 +20,7 @@ export function CTAFinal() {
           inset: "auto -10% -40% -10%",
           height: "70%",
           background:
-            "radial-gradient(closest-side, color-mix(in oklab, var(--mesivo-tomato) 55%, transparent), transparent 70%)",
+            "radial-gradient(closest-side, color-mix(in oklab, var(--accent) 35%, transparent), transparent 70%)",
           pointerEvents: "none",
         }}
       />
@@ -40,7 +40,7 @@ export function CTAFinal() {
               fontWeight: 700,
               letterSpacing: "0.16em",
               textTransform: "uppercase",
-              color: "var(--mesivo-peach)",
+              color: "var(--accent)",
             }}
           >
             14 dias grátis · Sem cartão
@@ -50,11 +50,11 @@ export function CTAFinal() {
               marginTop: 16,
               fontSize: "clamp(2.25rem, 4.6vw, 3.75rem)",
               lineHeight: 1,
-              color: "var(--mesivo-white)",
+              color: "var(--primary-foreground)",
             }}
           >
             Pronto para operar em{" "}
-            <span className="mesivo-accent" style={{ color: "var(--mesivo-mango)" }}>
+            <span className="mesivo-accent" style={{ color: "var(--accent)" }}>
               um só ritmo
             </span>
             ?
@@ -63,7 +63,7 @@ export function CTAFinal() {
             style={{
               marginTop: 16,
               fontSize: "clamp(1rem, 1.4vw, 1.15rem)",
-              color: "color-mix(in oklab, var(--mesivo-cream) 80%, transparent)",
+              color: "color-mix(in oklab, var(--primary-foreground) 80%, transparent)",
               maxWidth: 520,
               marginInline: "auto",
               lineHeight: 1.55,
@@ -90,8 +90,8 @@ export function CTAFinal() {
                 display: "inline-flex",
                 padding: "14px 26px",
                 borderRadius: 999,
-                backgroundColor: "var(--mesivo-tomato)",
-                color: "var(--mesivo-white)",
+                backgroundColor: "var(--accent)",
+                color: "var(--accent-foreground)",
                 fontWeight: 700,
                 fontSize: 15,
               }}
@@ -104,8 +104,8 @@ export function CTAFinal() {
                 display: "inline-flex",
                 padding: "14px 26px",
                 borderRadius: 999,
-                border: "1.5px solid color-mix(in oklab, var(--mesivo-cream) 40%, transparent)",
-                color: "var(--mesivo-cream)",
+                border: "1.5px solid color-mix(in oklab, var(--primary-foreground) 40%, transparent)",
+                color: "var(--primary-foreground)",
                 fontWeight: 600,
                 fontSize: 15,
               }}

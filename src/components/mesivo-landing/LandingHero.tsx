@@ -50,8 +50,8 @@ export function LandingHero() {
                   padding: "6px 14px",
                   borderRadius: 999,
                   border: "1px solid var(--hairline)",
-                  backgroundColor: "color-mix(in oklab, var(--mesivo-cream) 90%, transparent)",
-                  color: "var(--mesivo-coffee)",
+                  backgroundColor: "var(--accent-soft)",
+                  color: "var(--accent)",
                   fontSize: 12,
                   fontWeight: 600,
                   letterSpacing: "0.02em",
@@ -63,7 +63,7 @@ export function LandingHero() {
                     width: 6,
                     height: 6,
                     borderRadius: 999,
-                    backgroundColor: "var(--mesivo-tomato)",
+                    backgroundColor: "var(--accent)",
                   }}
                 />
                 Plataforma completa para restaurantes
@@ -77,7 +77,7 @@ export function LandingHero() {
                 lineHeight: 0.96,
                 letterSpacing: "-0.045em",
                 fontWeight: 750 as unknown as number,
-                color: "var(--fg-hi)",
+                color: "var(--foreground)",
               }}
             >
               <MotionText
@@ -98,7 +98,7 @@ export function LandingHero() {
                   maxWidth: 640,
                   fontSize: "clamp(1rem, 1.2vw, 1.15rem)",
                   lineHeight: 1.55,
-                  color: "var(--fg-mid)",
+                  color: "var(--muted-foreground)",
                 }}
               >
                 Haja como Design e Gestor de Marketing senior, preciso padronizar paletas, logo etc.
@@ -124,8 +124,8 @@ export function LandingHero() {
                   justifyContent: "center",
                   padding: "14px 24px",
                   borderRadius: 999,
-                  backgroundColor: "var(--mesivo-tomato)",
-                  color: "var(--mesivo-white)",
+                  backgroundColor: "var(--accent)",
+                  color: "var(--accent-foreground)",
                   fontWeight: 600,
                   fontSize: 15,
                 }}
@@ -141,7 +141,7 @@ export function LandingHero() {
                   padding: "14px 24px",
                   borderRadius: 999,
                   border: "1.5px solid var(--hairline-strong, var(--hairline))",
-                  color: "var(--fg-hi)",
+                  color: "var(--foreground)",
                   fontWeight: 600,
                   fontSize: 15,
                   backgroundColor: "transparent",
@@ -156,7 +156,7 @@ export function LandingHero() {
               style={{
                 marginTop: 20,
                 fontSize: 13,
-                color: "var(--fg-low)",
+                color: "var(--muted-foreground)",
                 display: "flex",
                 gap: 16,
                 flexWrap: "wrap",
@@ -179,10 +179,10 @@ export function LandingHero() {
                 marginInline: "auto",
                 borderRadius: 32,
                 background:
-                  "linear-gradient(160deg, var(--mesivo-peach) 0%, var(--mesivo-cream) 100%)",
+                  "linear-gradient(160deg, var(--accent-soft) 0%, var(--background) 100%)",
                 border: "1px solid var(--hairline)",
                 padding: 20,
-                boxShadow: "0 30px 60px -30px color-mix(in oklab, var(--mesivo-tomato) 30%, transparent)",
+                boxShadow: "0 30px 60px -30px color-mix(in oklab, var(--accent) 30%, transparent)",
               }}
             >
               <MockupPhoneCardapio className="h-full w-full" />
