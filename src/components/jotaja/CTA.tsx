@@ -18,7 +18,7 @@ export function CTA() {
         <div className="grid lg:grid-cols-[1.1fr_1fr] gap-12 lg:gap-20 items-start">
           <div>
             <div className="inline-flex items-center gap-2 mb-6">
-              <span className="h-2 w-2 rounded-full bg-brand-orange animate-pulse" />
+              <span className="h-2 w-2 rounded-full bg-gradient-sunset animate-pulse" />
               <span className="text-[11px] uppercase tracking-[0.2em] font-bold text-background/70">
                 09 — Comece agora
               </span>
@@ -41,7 +41,7 @@ export function CTA() {
                 "Cancele quando quiser, sem multa",
               ].map((item) => (
                 <li key={item} className="flex items-start gap-3">
-                  <span className="mt-0.5 w-6 h-6 grid place-items-center rounded-full bg-brand-orange text-ink border-2 border-background shrink-0">
+                  <span className="mt-0.5 w-6 h-6 grid place-items-center rounded-full bg-gradient-sunset text-ink border-2 border-background shrink-0">
                     <Check className="w-3.5 h-3.5" strokeWidth={4} />
                   </span>
                   <span className="text-background/90 font-medium">{item}</span>
@@ -59,7 +59,7 @@ export function CTA() {
           </div>
 
           <div className="relative">
-            <div className="absolute -top-3 -left-3 bg-brand-orange text-ink px-4 py-2 rounded-lg text-[11px] font-bold uppercase tracking-widest border-2 border-background shadow-brutal z-10 rotate-[-2deg]">
+            <div className="absolute -top-3 -left-3 bg-gradient-sunset text-ink px-4 py-2 rounded-lg text-[11px] font-bold uppercase tracking-widest border-2 border-background shadow-brutal z-10 rotate-[-2deg]">
               Resposta em &lt; 5min
             </div>
             <div className="rounded-2xl bg-background text-ink p-6 md:p-8 border-2 border-background shadow-brutal-lg">
