@@ -153,22 +153,6 @@ export function Hero() {
         </div>
       </div>
 
-      {/* Faixa de operações */}
-      <div className="relative border-y-[2px] border-ink/10 bg-ink text-background py-5 overflow-hidden">
-        <div className="container mx-auto px-6">
-          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm md:text-base font-display uppercase tracking-wider">
-            {OPERACOES.map((canal, i, arr) => (
-              <span key={canal} className="flex items-center gap-6">
-                <span>{canal}</span>
-                {i < arr.length - 1 && <span className="text-brand-orange">·</span>}
-              </span>
-            ))}
-          </div>
-          <p className="mt-3 text-center text-xs md:text-sm text-background/60 font-medium">
-            Uma única plataforma para todos os canais do seu restaurante.
-          </p>
-        </div>
-      </div>
     </section>
   );
 }
