@@ -1,4 +1,4 @@
-import markUrl from "@/assets/mesivo-mark.svg";
+import { MesivoMark } from "@/components/mesivo-graphics/MesivoMark";
 
 type LogoProps = {
   className?: string;
@@ -9,12 +9,12 @@ type LogoProps = {
 };
 
 /**
- * Mesivo logo lockup — símbolo (M formado por três blocos conectados
- * representando pedido → produção → entrega) + wordmark.
+ * Mesivo logo lockup — Utiliza o MesivoMark (Nexus Brutalista) + wordmark.
  */
 export function Logo({ className = "", markOnly = false, size = "md" }: LogoProps) {
-  const markSize =
-    size === "sm" ? "h-8" : size === "lg" ? "h-14 md:h-16" : "h-10 md:h-11";
+  const markPixelSize =
+    size === "sm" ? 32 : size === "lg" ? 64 : 44;
+  
   const wordSize =
     size === "sm"
       ? "text-[1.15rem]"
@@ -24,15 +24,13 @@ export function Logo({ className = "", markOnly = false, size = "md" }: LogoProp
 
   return (
     <span
-      className={`logo-lockup inline-flex items-center gap-2.5 select-none ${className}`}
+      className={`logo-lockup inline-flex items-center gap-3 select-none ${className}`}
       aria-label="Mesivo"
     >
-      <img
-        src={markUrl}
-        alt=""
-        aria-hidden="true"
-        className={`logo-mark-3d ${markSize} w-auto shrink-0 object-contain drop-shadow-[0_6px_18px_rgba(255,101,52,0.3)] transition-transform duration-500 ease-out group-hover:-rotate-6 group-hover:scale-105`}
-        draggable={false}
+      <MesivoMark 
+        size={markPixelSize} 
+        className="shrink-0 drop-shadow-[0_6px_18px_rgba(255,101,52,0.2)] transition-transform duration-500 ease-out group-hover:-rotate-6 group-hover:scale-105"
+        decorative
       />
 
       {!markOnly && (
