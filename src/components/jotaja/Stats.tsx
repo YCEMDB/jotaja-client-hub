@@ -32,28 +32,28 @@ export function Stats() {
       <div className="absolute inset-0 bg-noise opacity-40 pointer-events-none" />
 
       <Marquee
-        className="pb-8 md:pb-10"
-        speed={55}
+        className="pb-10 md:pb-14"
+        speed={40}
         ariaLabel="Canais operacionais atendidos pela Mesivo"
       >
         {canais.map(({ label, icon: Icon }) => (
-          <span key={label} className="inline-flex items-center gap-3 px-3 py-2 whitespace-nowrap">
-            <span
+          <div key={label} className="inline-flex items-center gap-4 px-6 py-2 whitespace-nowrap group">
+            <div
               aria-hidden="true"
-              className="w-9 h-9 grid place-items-center rounded-lg bg-background/10 border border-background/20 text-brand-orange"
+              className="w-12 h-12 grid place-items-center rounded-xl bg-background/5 border border-background/10 text-brand-orange group-hover:bg-brand-orange group-hover:text-ink transition-all duration-300"
             >
-              <Icon className="w-5 h-5" strokeWidth={2.5} />
-            </span>
-            <span className="font-display text-2xl md:text-3xl leading-none tracking-tight">
+              <Icon className="w-6 h-6" strokeWidth={2} />
+            </div>
+            <span className="font-display text-3xl md:text-4xl leading-none tracking-tight text-background/90 group-hover:text-background transition-colors">
               {label}
             </span>
             <span
               aria-hidden="true"
-              className="ml-4 text-background/25 font-display text-2xl md:text-3xl"
+              className="ml-8 text-brand-orange/20 font-display text-3xl md:text-4xl"
             >
               ·
             </span>
-          </span>
+          </div>
         ))}
       </Marquee>
     </section>
