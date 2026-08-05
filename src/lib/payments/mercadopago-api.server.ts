@@ -99,48 +99,43 @@ export async function createPixCharge(input: {
   notificationUrl: string;
 }): Promise<CreatePixResult> {
   try {
-    const body = {
-      transaction_amount: input.amount,
-      description: input.description,
-      payment_method_id: "pix",
-      payer: {
-        email: "test_user_123@testuser.com", // Obrigatório para MP
+    const client = new MercadoPagoConfig({ 
+      accessToken: input.accessToken,
+      options: { timeout: 5000 }
+    });
+    
+    const payment = new Payment(client);
+    
+    const response = await payment.create({
+      body: {
+        transaction_amount: input.amount,
+        description: input.description,
+        payment_method_id: "pix",
+        payer: {
+          email: "test_user_123@testuser.com",
+        },
+        external_reference: input.referenceId,
+        notification_url: input.notificationUrl,
       },
-      external_reference: input.referenceId,
-      notification_url: input.notificationUrl,
-    };
-
-    const res = await fetch(`${BASE_API}/v1/payments`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${input.accessToken}`,
-        "Content-Type": "application/json",
-        "X-Idempotency-Key": input.idempotencyKey,
-      },
-      body: JSON.stringify(body),
+      requestOptions: {
+        idempotencyKey: input.idempotencyKey,
+      }
     });
 
-    const payload: any = await res.json();
-    if (!res.ok) {
-      console.error("[mercadopago] create pix error", res.status, payload);
-      return {
-        ok: false,
-        error: payload?.cause?.[0]?.code ?? payload?.error ?? `http_${res.status}`,
-        message: payload?.message,
-      };
-    }
-
-    const pointOfInteraction = payload?.point_of_interaction?.transaction_data;
+    const pointOfInteraction = response.point_of_interaction?.transaction_data;
     
     return {
       ok: true,
-      provider_payment_id: String(payload.id),
+      provider_payment_id: String(response.id),
       qr_code_text: pointOfInteraction?.qr_code ?? "",
       qr_code_image_url: pointOfInteraction?.ticket_url ?? null,
-      expires_at: payload.date_of_expiration || new Date(Date.now() + 30 * 60_000).toISOString(),
+      expires_at: response.date_of_expiration || new Date(Date.now() + 30 * 60_000).toISOString(),
     };
-  } catch (e) {
-    console.error("[mercadopago] create pix catch", e);
-    return { ok: false, error: "network_error" };
+  } catch (e: any) {
+    console.error("[mercadopago] sdk error", e);
+    return { 
+      ok: false, 
+      error: e.cause?.[0]?.code ?? e.message ?? "sdk_error" 
+    };
   }
 }
