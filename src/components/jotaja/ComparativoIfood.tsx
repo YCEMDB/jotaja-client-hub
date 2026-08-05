@@ -14,7 +14,7 @@ export function ComparativoIfood() {
       <div className="absolute inset-0 bg-grid opacity-[0.03] pointer-events-none" />
       
       <div className="container mx-auto px-6 max-w-6xl">
-        <div className="grid lg:grid-cols-[1fr_1.2fr] gap-16 md:gap-24 items-start">
+        <div className="grid lg:grid-cols-[1fr_1.2fr] gap-16 md:gap-24 items-center">
           
           {/* Lado Esquerdo: Texto de Venda */}
           <div className="relative z-10 lg:sticky lg:top-32">
