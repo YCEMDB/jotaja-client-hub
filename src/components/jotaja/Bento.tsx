@@ -14,7 +14,7 @@ export function Bento() {
         {/* Kicker + title */}
         <div className="max-w-3xl mb-14">
           <div className="inline-flex items-center gap-2 mb-4">
-            <span className="h-2 w-2 rounded-full bg-brand-orange" />
+            <span className="h-2 w-2 rounded-full bg-gradient-sunset" />
             <span className="text-[11px] uppercase tracking-[0.2em] font-bold text-ink/60">
               02 — Plataforma
             </span>

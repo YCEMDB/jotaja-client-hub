@@ -43,7 +43,7 @@ export function FAQ() {
             Dúvidas Comuns
           </div>
           <h2 className="font-display text-4xl md:text-6xl text-ink leading-[0.9] tracking-tighter uppercase mb-6">
-            FAQ<span className="text-brand-orange">.</span>
+            FAQ<span className="text-gradient-sunset">.</span>
           </h2>
           <p className="text-ink/60 max-w-lg mx-auto">
             Tudo que você precisa saber para começar a gerenciar seu restaurante com eficiência hoje mesmo.
