@@ -64,7 +64,7 @@ export const createTestMercadoPagoPix = createServerFn({ method: "POST" })
         total: 15.00,
         status: "pending",
         payment_method: "pix",
-        payment_status: "waiting",
+        payment_status: "pending",
         items: [{ name: "Teste Sandbox", price: 15.00, quantity: 1 }],
       })
       .select("id")
