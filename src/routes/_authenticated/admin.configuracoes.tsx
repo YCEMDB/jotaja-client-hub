@@ -927,28 +927,9 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
 
       <div className="text-xs bg-amber-50 border border-amber-200 text-amber-900 p-3 rounded-lg space-y-2">
         <div className="mb-2 leading-relaxed opacity-90">
-          Para começar, busque no menu lateral as credenciais de teste e use-as na implementação do SDK no seu backend para acessar as funcionalidades do Mercado Pago. <a href="https://www.mercadopago.com.br/developers/pt/docs" target="_blank" rel="noreferrer" className="underline font-bold">Saiba mais</a>
+          Configure a URL abaixo no painel do Mercado Pago em <em>Suas integrações → Webhooks</em> para receber notificações de pagamento. Evento: <strong>payment</strong>.
           <br /><br />
-          <strong>Instalar o SDK e iniciar a biblioteca com suas credenciais de teste</strong>
-          <br /><br />
-          O SDK de backend permitirá que você opere via servidor para gerenciar preferências de pagamento, processar transações e outras operações críticas.
-          <br /><br />
-          Crie e implemente as preferências de pagamento do produto ou serviço a ser cobrado a partir do SDK. Em seguida, configure o tipo de integração web ou mobile e as notificações Webhook.
-          <br /><br />
-          <strong>1. Criar uma preferência de pagamento</strong>
-          <br /><br />
-          São dados que representam o que você deseja cobrar, valor, quantidade e meios de pagamento, entre outros.
-          <br /><br />
-          <strong>2. Configurar o frontend: web ou mobile</strong>
-          <br /><br />
-          Ao obter seu ID da preferência de pagamento, você deve avançar para as configurações do frontend para sites ou para aplicações móveis.
-        </div>
-        <div className="pt-2 border-t border-amber-200/50">
-          <strong>3. Configurar as notificações de pagamento</strong>
-          <br /><br />
-          Configure as notificações Webhooks para receber informações sobre eventos de criação e atualização de pagamentos na integração. <a href="https://www.mercadopago.com.br/developers/pt/docs/checkout-pro/additional-content/your-integrations/notifications/webhooks" target="_blank" rel="noreferrer" className="underline font-bold">Saiba mais</a>
-          <br /><br />
-          Cole a URL abaixo no painel do Mercado Pago em <em>Suas integrações → Webhooks</em>. Evento: <strong>payment</strong>.
+          <a href="https://www.mercadopago.com.br/developers/pt/docs/checkout-pro/additional-content/your-integrations/notifications/webhooks" target="_blank" rel="noreferrer" className="underline font-bold">Documentação oficial</a>
         </div>
         <div className="flex gap-2 items-center">
           <code className="flex-1 bg-white px-2 py-1.5 rounded font-mono text-[11px] break-all">{webhookUrl}</code>
