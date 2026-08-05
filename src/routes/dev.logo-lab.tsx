@@ -116,16 +116,21 @@ function LogoOption1({ size = 48 }) {
     <svg width={size} height={size} viewBox="0 0 48 48" fill="none">
       <defs>
         <linearGradient id={id} x1="0" y1="0" x2="48" y2="48">
-          <stop offset="0" stopColor="#FFB82E" />
-          <stop offset="1" stopColor="#F0522D" />
+          <stop offset="0" stopColor="#FF6B35" />
+          <stop offset="1" stopColor="#E84393" />
         </linearGradient>
       </defs>
-      {/* Geometria inspirada no gráfico de barras do dashboard */}
-      <rect x="6" y="24" width="8" height="18" rx="2" fill={`url(#${id})`} />
-      <rect x="20" y="10" width="8" height="32" rx="2" fill={`url(#${id})`} />
-      <rect x="34" y="18" width="8" height="24" rx="2" fill={`url(#${id})`} />
-      {/* Linha de tendência/conexão */}
-      <path d="M6 24L20 10L34 18L46 6" stroke="#FFF8EE" strokeWidth="3" strokeLinecap="round" opacity="0.3" />
+      {/* 
+         O "M" MESIVO OPERACIONAL:
+         Geometria inspirada no hardware de autoatendimento e na precisão milimétrica.
+         Brutalismo elegante com proporções áureas.
+      */}
+      <path d="M6 10C6 7.79086 7.79086 6 10 6H12V42H10C7.79086 42 6 40.2091 6 38V10Z" fill={`url(#${id})`} />
+      <rect x="18" y="4" width="12" height="40" rx="2" fill={`url(#${id})`} />
+      <path d="M36 6H38C40.2091 6 42 7.79086 42 10V38C42 40.2091 40.2091 42 38 42H36V6Z" fill={`url(#${id})`} />
+      
+      {/* Detalhe de Pulso (Conexão em tempo real) */}
+      <rect x="18" y="22" width="12" height="4" fill="#0F0A08" opacity="0.6" />
     </svg>
   );
 }
@@ -136,14 +141,23 @@ function LogoOption2({ size = 48 }) {
     <svg width={size} height={size} viewBox="0 0 48 48" fill="none">
       <defs>
         <linearGradient id={id} x1="0" y1="0" x2="48" y2="48">
-          <stop offset="0" stopColor="#FFB82E" />
-          <stop offset="1" stopColor="#F0522D" />
+          <stop offset="0" stopColor="#7C5CFF" />
+          <stop offset="1" stopColor="#3B82F6" />
         </linearGradient>
       </defs>
-      {/* Anéis concêntricos inspirados no Donut Chart e status mobile */}
-      <circle cx="24" cy="24" r="20" stroke={`url(#${id})`} strokeWidth="4" strokeDasharray="80 40" />
-      <circle cx="24" cy="24" r="12" stroke="#FFF8EE" strokeWidth="2" opacity="0.2" />
-      <rect x="20" y="20" width="8" height="8" rx="2" fill={`url(#${id})`} />
+      {/* 
+         NÚCLEO DE DADOS:
+         Inspirado na arquitetura de microsserviços e no fluxo de pedidos.
+         Simboliza a inteligência central que distribui ordens.
+      */}
+      <rect x="4" y="4" width="40" height="40" rx="6" stroke={`url(#${id})`} strokeWidth="3" strokeDasharray="12 6" />
+      <path d="M12 24H36M24 12V36" stroke="#FFF8EE" strokeWidth="2" strokeLinecap="round" opacity="0.2" />
+      
+      {/* O "M" oculto na geometria de fluxo */}
+      <path d="M16 30V18L24 26L32 18V30" stroke={`url(#${id})`} strokeWidth="5" strokeLinecap="square" />
+      
+      {/* Ponto de origem (O Cliente) */}
+      <circle cx="24" cy="24" r="3" fill="#FFF8EE" />
     </svg>
   );
 }
@@ -155,15 +169,24 @@ function LogoOption3({ size = 48 }) {
       <defs>
         <linearGradient id={id} x1="0" y1="0" x2="48" y2="48">
           <stop offset="0" stopColor="#FFB82E" />
-          <stop offset="1" stopColor="#F0522D" />
+          <stop offset="1" stopColor="#FF6B35" />
         </linearGradient>
       </defs>
-      {/* Linhas de fluxo inspiradas no KDS e nas faixas de status */}
-      <rect x="4" y="8" width="40" height="6" rx="3" fill={`url(#${id})`} />
-      <rect x="4" y="21" width="40" height="6" rx="3" fill={`url(#${id})`} opacity="0.6" />
-      <rect x="4" y="34" width="40" height="6" rx="3" fill="#FFF8EE" opacity="0.15" />
-      {/* Marcador de posição atual (o ponto de foco da operação) */}
-      <circle cx="12" cy="24" r="5" fill="#FFF8EE" />
+      {/* 
+         ASCENSÃO OPERACIONAL:
+         Inspirado no KDS Mesivo (cozinha) e no crescimento de receita.
+         Formas ascendentes que formam um 'M' implícito.
+      */}
+      <rect x="4" y="24" width="10" height="18" rx="3" fill={`url(#${id})`} />
+      <rect x="19" y="12" width="10" height="30" rx="3" fill={`url(#${id})`} />
+      <rect x="34" y="6" width="10" height="36" rx="3" fill={`url(#${id})`} />
+      
+      {/* Linha de Corte de Eficiência */}
+      <path d="M4 36L44 8" stroke="#FFF8EE" strokeWidth="2" strokeLinecap="round" strokeDasharray="4 8" opacity="0.4" />
+      
+      {/* Check de conclusão */}
+      <circle cx="39" cy="11" r="5" fill="#FFF8EE" />
+      <path d="M37 11L38.5 12.5L41 10" stroke="#FF6B35" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
