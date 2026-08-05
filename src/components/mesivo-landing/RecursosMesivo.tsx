@@ -30,7 +30,7 @@ export function RecursosMesivo() {
                   {r.tag}
                 </span>
                 <h3 className="font-display text-4xl tracking-tighter mb-6 group-hover:text-copper transition-editorial">
-                  {r.title}
+                  {r.title}<span className="inline-block w-1.5 h-1.5 ml-1 bg-copper rounded-full opacity-0 group-hover:opacity-100 transition-editorial" />
                 </h3>
                 <p className="text-muted-foreground leading-relaxed mb-8">
                   {r.desc}

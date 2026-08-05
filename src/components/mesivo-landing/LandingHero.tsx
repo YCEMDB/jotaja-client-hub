@@ -27,13 +27,13 @@ export function LandingHero() {
           </MotionReveal>
 
           <div className="max-w-5xl mx-auto">
-            <h1 className="font-display text-[clamp(3.5rem,9vw,9rem)] leading-[0.82] tracking-[-0.07em] text-foreground mb-12">
+            <div className="font-display text-[clamp(3.5rem,9vw,9rem)] leading-[0.82] tracking-[-0.07em] text-foreground mb-12">
               <MotionText
                 lines={["Seu restaurante.", "Em um só ritmo."]}
                 delay={0.2}
-                as="div"
+                as="h1"
               />
-            </h1>
+            </div>
           </div>
 
           <MotionReveal delay={0.4}>
