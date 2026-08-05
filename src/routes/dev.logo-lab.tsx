@@ -14,7 +14,7 @@ export const Route = createFileRoute("/dev/logo-lab")({
 
 function LogoLab() {
   return (
-    <div className="mkt-root bg-ink min-h-screen p-8 md:p-16 text-white overflow-y-auto">
+    <div className="mkt-root bg-ink min-h-screen p-8 md:p-16 text-[#FFF8EE] overflow-y-auto">
       <style dangerouslySetInnerHTML={{ __html: PROTO_CSS }} />
       <style>{`
         .logo-grid {
@@ -24,8 +24,8 @@ function LogoLab() {
           margin-top: 3rem;
         }
         .logo-card {
-          background: #1e1e1e;
-          border: 1px solid #333;
+          background: #0F0A08;
+          border: 1px solid #2A1F1B;
           border-radius: 1.5rem;
           padding: 3rem;
           display: flex;
@@ -38,7 +38,8 @@ function LogoLab() {
         .logo-card:hover {
           border-color: #ff6b35;
           transform: translateY(-4px);
-          box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+          box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+          background: #1A120F;
         }
         .logo-label {
           font-family: "Manrope", sans-serif;
@@ -58,7 +59,7 @@ function LogoLab() {
 
       <div className="max-w-6xl mx-auto">
         <header className="mb-12">
-          <h1 className="text-5xl md:text-7xl font-bold mb-4" style={{ fontFamily: 'Bricolage Grotesque, sans-serif' }}>
+          <h1 className="text-5xl md:text-7xl font-bold mb-4" style={{ fontFamily: 'Bricolage Grotesque, sans-serif', color: '#FFF8EE' }}>
             Logo <span className="text-[#ff6b35]">Lab</span>
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl font-sans">
@@ -140,7 +141,7 @@ function LogoOptionA({ size = 48 }) {
       <rect x="4" y="12" width="10" height="24" rx="5" fill={`url(#${id})`} />
       <rect x="19" y="4" width="10" height="40" rx="5" fill={`url(#${id})`} />
       <rect x="34" y="12" width="10" height="24" rx="5" fill={`url(#${id})`} />
-      <rect x="4" y="34" width="40" height="6" rx="3" fill="#34241D" />
+      <rect x="4" y="34" width="40" height="6" rx="3" fill="#FFF8EE" opacity="0.15" />
     </svg>
   );
 }
@@ -156,7 +157,7 @@ function LogoOptionB({ size = 48 }) {
         </linearGradient>
       </defs>
       <circle cx="24" cy="24" r="20" stroke={`url(#${id})`} strokeWidth="8" />
-      <path d="M24 4C35.0457 4 44 12.9543 44 24C44 35.0457 35.0457 44 24 44" stroke="#34241D" strokeWidth="8" strokeLinecap="round" />
+      <path d="M24 4C35.0457 4 44 12.9543 44 24C44 35.0457 35.0457 44 24 44" stroke="#FFF8EE" strokeWidth="8" strokeLinecap="round" opacity="0.2" />
       <circle cx="24" cy="24" r="6" fill={`url(#${id})`} />
     </svg>
   );
@@ -173,7 +174,7 @@ function LogoOptionC({ size = 48 }) {
         </linearGradient>
       </defs>
       <path d="M4 36L14 12L24 36L34 12L44 36" stroke={`url(#${id})`} strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx="24" cy="18" r="4" fill="#34241D" />
+      <circle cx="24" cy="18" r="4" fill="#FFF8EE" opacity="0.3" />
     </svg>
   );
 }
