@@ -896,7 +896,14 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
       </div>
 
       <div className="text-xs bg-amber-50 border border-amber-200 text-amber-900 p-3 rounded-lg space-y-2">
-        <div>
+        <div className="mb-2 leading-relaxed opacity-90">
+          Crie e implemente as preferências de pagamento do produto ou serviço a ser cobrado a partir do SDK. Em seguida, configure o tipo de integração web ou mobile e as notificações Webhook.
+          <br /><br />
+          <strong>1. Criar uma preferência de pagamento</strong>
+          <br /><br />
+          São dados que representam o que você deseja cobrar, valor, quantidade e meios de pagamento, entre outros.
+        </div>
+        <div className="pt-2 border-t border-amber-200/50">
           <strong>Webhook (obrigatório):</strong> cole a URL abaixo no painel do Mercado Pago em
           {" "}<em>Suas integrações → Webhooks</em>. Evento: <strong>payment</strong>.
         </div>
