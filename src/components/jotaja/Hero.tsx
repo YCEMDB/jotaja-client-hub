@@ -266,7 +266,7 @@ function ProductMockup() {
           className="flex items-center gap-2 px-4 py-3 border-b border-ink/10 bg-background/60"
         >
           <MesivoMark size={24} />
-          <span className="font-display text-lg tracking-tight text-ink lowercase">mesivo</span>
+          <span className="font-display text-lg tracking-tight text-ink uppercase">mesivo</span>
           <span className="ml-auto text-[10px] font-bold text-ink/50 uppercase tracking-wider">
             Painel
           </span>
