@@ -29,7 +29,7 @@ export function Logo({ className = "", markOnly = false, size = "md" }: LogoProp
     >
       <MesivoMark 
         size={markPixelSize} 
-        className="shrink-0 drop-shadow-[0_6px_18px_rgba(255,101,52,0.2)] transition-transform duration-500 ease-out group-hover:-rotate-6 group-hover:scale-105"
+        className="shrink-0 transition-transform duration-500 ease-out group-hover:-rotate-6 group-hover:scale-105"
         decorative
       />
 
