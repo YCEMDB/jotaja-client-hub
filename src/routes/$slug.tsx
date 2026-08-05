@@ -497,6 +497,13 @@ function CheckoutDialog({
   const defaultPayment: "cash" | "pix" | "credit_card" | "debit_card" =
     allowPix ? "pix" : allowCash ? "cash" : allowCard ? "credit_card" : "pix";
   const [payment, setPayment] = useState<"cash" | "pix" | "credit_card" | "debit_card">(defaultPayment);
+
+  // Forçar atualização do payment se allowPix mudar para o restaurante de teste
+  useEffect(() => {
+    if (isTestRestaurant && allowPix && payment !== "pix") {
+      setPayment("pix");
+    }
+  }, [allowPix, isTestRestaurant]);
   const [changeFor, setChangeFor] = useState("");
   const [notes, setNotes] = useState("");
   const [couponCode, setCouponCode] = useState("");
