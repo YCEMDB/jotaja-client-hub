@@ -88,7 +88,7 @@ export function Hero() {
             <MotionText
               as="h1"
               className="font-display text-ink uppercase leading-[0.95] tracking-[-0.05em] text-[clamp(2.75rem,8.5vw,6.8rem)] drop-shadow-[0_2px_2px_rgba(0,0,0,0.05)] py-6"
-              ariaLabel="Gestão que liberta o seu restaurante."
+              ariaLabel="Gestão que liberta o seu negócio."
               lines={[
                 <span className="block overflow-visible pb-8" key="l1">
                   <span className="inline-block hover:scale-[1.02] transition-transform duration-500 cursor-default">
