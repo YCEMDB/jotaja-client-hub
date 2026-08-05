@@ -406,7 +406,7 @@
 
   /* Hover micro-interaction — restrained */
   .group:hover .logo-lockup .logo-plate { transform: rotate(-4deg); }
-  .group:hover .logo-lockup .logo-dot   { fill: #e84393; }
+  .group:hover .logo-lockup .logo-dot   { fill: var(--brand-magenta); }
 
   @media (prefers-reduced-motion: reduce) {
     .logo-lockup *, .animate-logo-in { animation: none !important; transition: none !important; opacity: 1 !important; transform: none !important; }
