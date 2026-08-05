@@ -82,11 +82,11 @@ export function Bento() {
               <h3 className="font-display text-3xl md:text-4xl text-background mt-3 max-w-[12ch] leading-[0.9] tracking-tighter uppercase">
                 SUA LOJA NA PALMA DO CLIENTE.
               </h3>
-              <p className="text-background/85 mt-2 text-sm max-w-[24ch]">
-                Cores, logo, fotos. URL própria. QR Code pra mesa.
+              <p className="text-background/85 mt-2 text-sm max-w-[20ch]">
+                Cores, logo e fotos. URL própria com autoatendimento.
               </p>
-              <div className="relative flex-1 mt-6">
-                <div className="absolute -bottom-16 -right-4 w-[85%] rounded-[2.5rem] border-[8px] border-ink shadow-brutal-lg rotate-[6deg] group-hover:rotate-[3deg] transition-transform bg-background overflow-hidden aspect-[9/19]">
+              <div className="relative flex-1 mt-4">
+                <div className="absolute -bottom-10 -right-2 w-[65%] rounded-[2.5rem] border-[8px] border-ink shadow-brutal-lg rotate-[6deg] group-hover:rotate-[3deg] transition-transform bg-background overflow-hidden aspect-[9/19]">
                   <MockupPhoneCardapio />
                 </div>
               </div>
