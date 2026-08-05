@@ -111,6 +111,7 @@ function ConfigPage() {
         <TabsList className="mb-4 flex-wrap h-auto">
           <TabsTrigger value="geral">Geral</TabsTrigger>
           <TabsTrigger value="aparencia">Aparência</TabsTrigger>
+          <TabsTrigger value="plano">Plano</TabsTrigger>
           <TabsTrigger value="horarios">Horários</TabsTrigger>
           <TabsTrigger value="entrega">Áreas de entrega</TabsTrigger>
           <TabsTrigger value="retirada">Retirada</TabsTrigger>
