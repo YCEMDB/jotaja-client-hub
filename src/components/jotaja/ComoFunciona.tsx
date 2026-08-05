@@ -93,7 +93,7 @@ const steps: Step[] = [
 
 const toneClasses: Record<Step["tone"], { chip: string; ring: string; text: string }> = {
   amber: { chip: "bg-brand-amber", ring: "border-ink", text: "text-ink" },
-  orange: { chip: "bg-brand-orange", ring: "border-ink", text: "text-ink" },
+  orange: { chip: "bg-gradient-sunset", ring: "border-ink", text: "text-ink" },
   ink: { chip: "bg-ink", ring: "border-ink", text: "text-background" },
   green: { chip: "bg-emerald-500", ring: "border-ink", text: "text-ink" },
 };
@@ -210,7 +210,7 @@ function FlowDesktop() {
           <motion.circle
             r="6"
             cy="30"
-            fill="#FF6B35"
+            fill="#E84393"
             stroke="var(--ink)"
             strokeWidth="2"
             initial={{ cx: 30 }}
