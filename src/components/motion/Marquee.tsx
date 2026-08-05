@@ -86,7 +86,7 @@ export function Marquee({
   return (
     <div
       ref={wrapperRef}
-      className={className}
+      className={`w-full ${className}`}
       aria-label={ariaLabel}
       data-marquee
       style={{ overflow: "hidden", position: "relative" }}

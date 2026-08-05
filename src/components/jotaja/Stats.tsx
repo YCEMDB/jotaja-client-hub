@@ -27,12 +27,12 @@ export function Stats() {
   return (
     <section
       aria-label="Canais atendidos pela Mesivo"
-      className="relative bg-ink text-background border-y-[3px] border-ink overflow-hidden"
+      className="relative bg-ink text-background border-y-[3px] border-ink overflow-hidden w-full flex flex-col items-center justify-center"
     >
       <div className="absolute inset-0 bg-noise opacity-40 pointer-events-none" />
 
       <Marquee
-        className="pb-10 md:pb-14"
+        className="py-10 md:py-14"
         speed={40}
         ariaLabel="Canais operacionais atendidos pela Mesivo"
       >
