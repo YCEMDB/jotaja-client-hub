@@ -79,14 +79,14 @@ export function Bento() {
                 <Smartphone className="w-3 h-3" />
                 Cardápio digital
               </div>
-              <h3 className="font-display text-3xl md:text-4xl text-background mt-3 max-w-[12ch] leading-[0.9] tracking-tighter uppercase">
+              <h3 className="font-display text-3xl md:text-4xl text-background mt-3 max-w-[12ch] leading-[0.9] tracking-tighter uppercase relative z-10">
                 SUA LOJA NA PALMA DO CLIENTE.
               </h3>
-              <p className="text-background/85 mt-2 text-sm max-w-[20ch]">
+              <p className="text-background/85 mt-2 text-sm max-w-[20ch] relative z-10">
                 Cores, logo e fotos. URL própria com autoatendimento.
               </p>
               <div className="relative flex-1 mt-4">
-                <div className="absolute -bottom-10 -right-2 w-[65%] rounded-[2.5rem] border-[8px] border-ink shadow-brutal-lg rotate-[6deg] group-hover:rotate-[3deg] transition-transform bg-background overflow-hidden aspect-[9/19]">
+                <div className="absolute -bottom-10 -right-8 w-[60%] rounded-[2.5rem] border-[8px] border-ink shadow-brutal-lg rotate-[6deg] group-hover:rotate-[3deg] transition-transform bg-background overflow-hidden aspect-[9/19]">
                   <MockupPhoneCardapio />
                 </div>
               </div>
