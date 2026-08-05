@@ -31,6 +31,7 @@ export function LandingHero() {
               <MotionText
                 lines={["Seu restaurante.", "Em um só ritmo."]}
                 delay={0.2}
+                as="div"
               />
             </h1>
           </div>
