@@ -111,5 +111,3 @@ export function PublicFooter() {
     </footer>
   );
 }
-  );
-}
