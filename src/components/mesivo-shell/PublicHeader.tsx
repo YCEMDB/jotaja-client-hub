@@ -25,13 +25,14 @@ const landingNav: NavItem[] = [
 /**
  * PublicHeader — cabeçalho do PublicShell.
  * variant="landing" troca a nav por âncoras internas da home.
+ * Agora com visual premium: floating glass navbar.
  */
 export function PublicHeader({ variant = "default" }: { variant?: PublicShellVariant }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => setScrolled(window.scrollY > 40);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -42,7 +43,7 @@ export function PublicHeader({ variant = "default" }: { variant?: PublicShellVar
   const NavAnchor = ({ item, mobile = false }: { item: NavItem; mobile?: boolean }) => {
     const className = mobile
       ? "block rounded-lg px-3 py-3 text-base font-medium"
-      : "rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-[var(--accent-soft)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]";
+      : "rounded-full px-4 py-1.5 text-sm font-semibold transition-all hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]";
     const style = {
       color: "var(--foreground)",
       fontFamily: "var(--font-ui)",
@@ -59,7 +60,7 @@ export function PublicHeader({ variant = "default" }: { variant?: PublicShellVar
         to={item.href}
         className={className}
         style={style}
-        activeProps={{ style: { ...style, color: "var(--accent)" } }}
+        activeProps={{ className: `${className} bg-black/5` }}
       >
         {item.label}
       </Link>
@@ -68,33 +69,31 @@ export function PublicHeader({ variant = "default" }: { variant?: PublicShellVar
 
   return (
     <header
-      className="fixed top-6 left-1/2 z-50 w-[95%] max-w-5xl -translate-x-1/2 transition-all duration-500 px-4"
+      className="fixed top-6 left-1/2 z-50 w-[95%] max-w-5xl -translate-x-1/2 transition-all duration-500 px-4 pointer-events-none"
     >
       <div 
-        className="mx-auto flex h-14 items-center justify-between px-6 transition-all duration-500"
+        className="mx-auto flex h-14 items-center justify-between px-6 transition-all duration-500 pointer-events-auto"
         style={{
           backgroundColor: scrolled
-            ? "rgba(255, 255, 255, 0.75)"
-            : "rgba(255, 255, 255, 0.45)",
-          backdropFilter: "blur(16px) saturate(180%)",
+            ? "rgba(255, 255, 255, 0.85)"
+            : "rgba(255, 255, 255, 0.5)",
+          backdropFilter: "blur(20px) saturate(180%)",
           border: "1px solid rgba(0, 0, 0, 0.08)",
           borderRadius: "999px",
-          boxShadow: scrolled ? "var(--shadow-lg)" : "var(--shadow-md)",
+          boxShadow: scrolled ? "var(--shadow-xl)" : "var(--shadow-lg)",
         }}
       >
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link
           to="/"
           aria-label="Mesivo — início"
-          className="inline-flex items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2"
+          className="inline-flex items-center gap-2 rounded-md focus-visible:outline-none"
         >
-          <MesivoMark size={32} />
+          <MesivoMark size={28} />
           <span
-            className="text-xl font-extrabold tracking-tighter"
+            className="text-lg font-extrabold tracking-tighter"
             style={{ color: "var(--foreground)", fontFamily: "var(--font-display)" }}
           >
             mesivo
-
           </span>
         </Link>
 
@@ -108,94 +107,76 @@ export function PublicHeader({ variant = "default" }: { variant?: PublicShellVar
           </ul>
         </nav>
 
-        <div className="hidden md:block">
-          {variant === "landing" ? (
-            <a
-              href="#cadastro"
-              className="inline-flex h-10 items-center justify-center rounded-full px-5 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2"
-              style={{
-                backgroundColor: "var(--accent)",
-                color: "var(--accent-foreground)",
-                fontFamily: "var(--font-ui)",
-              }}
-            >
-              Começar grátis
-            </a>
-          ) : (
-            <Link
-              to="/contato"
-              className="inline-flex h-10 items-center justify-center rounded-full px-5 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2"
-              style={{
-                backgroundColor: "var(--accent)",
-                color: "var(--accent-foreground)",
-                fontFamily: "var(--font-ui)",
-              }}
-            >
-              Falar com a gente
-            </Link>
-          )}
-        </div>
-
-        <div className="md:hidden">
-          <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger asChild>
-              <button
-                type="button"
-                aria-label="Abrir menu"
-                className="inline-flex h-11 w-11 items-center justify-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
-                style={{ color: "var(--foreground)" }}
+        <div className="flex items-center gap-2">
+          <div className="hidden md:block">
+            {variant === "landing" ? (
+              <a
+                href="#cadastro"
+                className="inline-flex h-9 items-center justify-center rounded-full px-5 text-sm font-bold transition-all bg-primary text-primary-foreground hover:scale-105 active:scale-95"
               >
-                <Menu className="h-6 w-6" aria-hidden="true" />
-              </button>
-            </SheetTrigger>
-            <SheetContent
-              side="right"
-              className="w-[85vw] max-w-sm"
-              style={{ backgroundColor: "var(--background)" }}
-            >
-              <SheetTitle className="sr-only">Menu</SheetTitle>
-              <nav aria-label="Navegação principal (mobile)" className="mt-6">
-                <ul className="flex flex-col gap-1">
-                  {items.map((item) => (
-                    <li key={item.href}>
-                      <SheetClose asChild>
-                        <NavAnchor item={item} mobile />
-                      </SheetClose>
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-6">
-                  <SheetClose asChild>
-                    {variant === "landing" ? (
-                      <a
-                        href="#cadastro"
-                        className="inline-flex h-11 w-full items-center justify-center rounded-full px-5 text-sm font-semibold"
-                        style={{
-                          backgroundColor: "var(--accent)",
-                          color: "var(--accent-foreground)",
-                          fontFamily: "var(--font-ui)",
-                        }}
-                      >
-                        Começar grátis
-                      </a>
-                    ) : (
-                      <Link
-                        to="/contato"
-                        className="inline-flex h-11 w-full items-center justify-center rounded-full px-5 text-sm font-semibold"
-                        style={{
-                          backgroundColor: "var(--accent)",
-                          color: "var(--accent-foreground)",
-                          fontFamily: "var(--font-ui)",
-                        }}
-                      >
-                        Falar com a gente
-                      </Link>
-                    )}
-                  </SheetClose>
-                </div>
-              </nav>
-            </SheetContent>
-          </Sheet>
+                Acessar
+              </a>
+            ) : (
+              <Link
+                to="/contato"
+                className="inline-flex h-9 items-center justify-center rounded-full px-5 text-sm font-bold transition-all bg-primary text-primary-foreground hover:scale-105 active:scale-95"
+              >
+                Contato
+              </Link>
+            )}
+          </div>
+
+          <div className="md:hidden">
+            <Sheet open={open} onOpenChange={setOpen}>
+              <SheetTrigger asChild>
+                <button
+                  type="button"
+                  aria-label="Abrir menu"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full hover:bg-black/5"
+                  style={{ color: "var(--foreground)" }}
+                >
+                  <Menu className="h-5 w-5" aria-hidden="true" />
+                </button>
+              </SheetTrigger>
+              <SheetContent
+                side="right"
+                className="w-[85vw] max-w-sm border-l border-black/5"
+                style={{ backgroundColor: "var(--background)" }}
+              >
+                <SheetTitle className="sr-only">Menu</SheetTitle>
+                <nav aria-label="Navegação principal (mobile)" className="mt-6">
+                  <ul className="flex flex-col gap-1">
+                    {items.map((item) => (
+                      <li key={item.href}>
+                        <SheetClose asChild>
+                          <NavAnchor item={item} mobile />
+                        </SheetClose>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-6">
+                    <SheetClose asChild>
+                      {variant === "landing" ? (
+                        <a
+                          href="#cadastro"
+                          className="inline-flex h-11 w-full items-center justify-center rounded-full px-5 text-sm font-bold bg-primary text-primary-foreground"
+                        >
+                          Começar grátis
+                        </a>
+                      ) : (
+                        <Link
+                          to="/contato"
+                          className="inline-flex h-11 w-full items-center justify-center rounded-full px-5 text-sm font-bold bg-primary text-primary-foreground"
+                        >
+                          Falar com a gente
+                        </Link>
+                      )}
+                    </SheetClose>
+                  </div>
+                </nav>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </div>
     </header>
