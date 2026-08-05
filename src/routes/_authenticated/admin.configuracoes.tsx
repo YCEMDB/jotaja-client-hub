@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
+import { mercadopagoConnectInit } from "@/lib/payments/mercadopago.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/configuracoes")({
   component: ConfigPage,
@@ -669,6 +670,7 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
   const [copiedHook, setCopiedHook] = useState(false);
 
   const verify = useServerFn(verifyMercadoPago);
+  const connectFn = useServerFn(mercadopagoConnectInit);
   const webhookUrl = typeof window !== "undefined" ? `${window.location.origin}/api/public/mercadopago-webhook` : "";
 
   const reload = async () => {
@@ -684,6 +686,14 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
 
   // Auto-validar quando já existe token salvo
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("mercadopago") === "connected") {
+      toast.success("Mercado Pago conectado com sucesso via OAuth!");
+      reload();
+    }
+    const err = params.get("mercadopago_error");
+    if (err) toast.error(`Não foi possível conectar via OAuth: ${err}`);
+
     if (hasSavedToken) void runTest(true);
     else setAccount(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -816,14 +826,42 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
         </div>
       </div>
 
-      <div className="text-xs bg-muted/50 p-3 rounded-lg space-y-1">
-        <p className="font-semibold flex items-center gap-1"><LinkIcon className="h-3 w-3" /> Como obter o Access Token:</p>
-        <ol className="list-decimal list-inside space-y-0.5 text-muted-foreground">
-          <li>Acesse o <a href="https://www.mercadopago.com.br/developers/panel/app" target="_blank" rel="noreferrer" className="underline">painel de desenvolvedores</a></li>
-          <li>Crie uma aplicação do tipo <strong>Pagamentos online</strong></li>
-          <li>Em <em>Credenciais de produção</em>, copie o <strong>Access Token</strong> (começa com <code>APP_USR-</code>)</li>
-          <li>Para testar antes de ir ao ar, use o <strong>Access Token de teste</strong> (começa com <code>TEST-</code>)</li>
-        </ol>
+      <div className="text-xs bg-muted/50 p-3 rounded-lg space-y-2">
+        <div className="flex items-center justify-between gap-3">
+          <p className="font-semibold flex items-center gap-1"><LinkIcon className="h-3 w-3" /> Conexão Simplificada:</p>
+          <Button 
+            size="sm" 
+            variant="default" 
+            className="h-8 bg-blue-600 hover:bg-blue-700 text-white"
+            onClick={async () => {
+              setSaving(true);
+              try {
+                const res = await connectFn({ data: { restaurantId: r.id } });
+                if (res.ok) {
+                  window.location.href = res.url;
+                } else {
+                  toast.error(res.error || "Erro ao iniciar conexão");
+                }
+              } catch (e) {
+                toast.error("Erro de conexão");
+              } finally {
+                setSaving(false);
+              }
+            }}
+            disabled={saving}
+          >
+            {saving ? <Loader2 className="h-3 w-3 animate-spin mr-2" /> : <LinkIcon className="h-3 w-3 mr-2" />}
+            Conectar com Mercado Pago
+          </Button>
+        </div>
+        <div className="border-t border-muted-foreground/10 pt-2">
+          <p className="font-semibold flex items-center gap-1 opacity-70">Alternativa (Access Token manual):</p>
+          <ol className="list-decimal list-inside space-y-0.5 text-muted-foreground opacity-70 mt-1">
+            <li>Acesse o <a href="https://www.mercadopago.com.br/developers/panel/app" target="_blank" rel="noreferrer" className="underline">painel de desenvolvedores</a></li>
+            <li>Crie uma aplicação do tipo <strong>Pagamentos online</strong></li>
+            <li>Em <em>Credenciais de produção</em>, copie o <strong>Access Token</strong></li>
+          </ol>
+        </div>
       </div>
 
       <div>
