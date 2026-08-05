@@ -13,7 +13,7 @@ export function ComparativoIfood() {
     <section className="py-24 md:py-40 bg-background relative overflow-hidden border-y-4 border-ink">
       <div className="absolute inset-0 bg-grid opacity-[0.03] pointer-events-none" />
       
-      <div className="container mx-auto px-6 max-w-6xl">
+      <div className="container mx-auto px-6 max-w-7xl">
         <div className="grid lg:grid-cols-[1fr_1.2fr] gap-16 md:gap-24 items-center">
           
           {/* Lado Esquerdo: Texto de Venda */}
