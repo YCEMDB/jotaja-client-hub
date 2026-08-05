@@ -4,7 +4,7 @@ import { motion, useMotionValue, useSpring, useInView } from "motion/react";
 import { useReducedMotionSafe } from "@/components/motion/useReducedMotionSafe";
 import { Button } from "@/components/ui/button";
 import { LeadFormDialog } from "./LeadFormDialog";
-import markUrl from "@/assets/mesivo-mark.svg";
+import { MesivoMark } from "@/components/mesivo-graphics/MesivoMark";
 import {
   AnimatedNotification,
   MagneticButton,
@@ -265,7 +265,7 @@ function ProductMockup() {
           delay={heroSequence.mockup + 0.1}
           className="flex items-center gap-2 px-4 py-3 border-b border-ink/10 bg-background/60"
         >
-          <img src={markUrl} alt="" className="h-6 w-auto" />
+          <MesivoMark size={24} />
           <span className="font-display text-lg tracking-tight text-ink lowercase">mesivo</span>
           <span className="ml-auto text-[10px] font-bold text-ink/50 uppercase tracking-wider">
             Painel
