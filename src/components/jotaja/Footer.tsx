@@ -3,7 +3,9 @@ import { Logo } from "./Logo";
 
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-background">
+    <footer className="border-t-[3px] border-ink bg-card relative overflow-hidden">
+      <div className="absolute inset-0 bg-noise opacity-5 pointer-events-none" />
+      <div className="absolute inset-0 bg-grid opacity-[0.03] pointer-events-none" />
       <div className="container mx-auto px-6 py-14">
         <div className="grid grid-cols-2 md:grid-cols-6 gap-8">
           <div className="col-span-2">
@@ -65,15 +67,15 @@ export function Footer() {
             },
           ].map((col) => (
             <div key={col.title}>
-              <h4 className="text-xs font-semibold uppercase tracking-widest text-foreground">
+              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-ink border-b-2 border-ink pb-2 mb-4 w-fit">
                 {col.title}
               </h4>
-              <ul className="mt-4 space-y-3">
+              <ul className="space-y-3">
                 {col.links.map((l) => (
                   <li key={l.label}>
                     <a
                       href={l.href}
-                      className="text-sm text-muted-foreground hover:text-foreground transition-smooth"
+                      className="text-[13px] font-bold text-ink/60 hover:text-ink transition-all hover:translate-x-1 inline-block"
                     >
                       {l.label}
                     </a>
@@ -84,7 +86,7 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="mt-12 pt-8 border-t-2 border-ink/10 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-muted-foreground">
             © {new Date().getFullYear()} Mesivo. Todos os direitos reservados.
           </p>
