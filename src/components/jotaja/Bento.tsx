@@ -1,6 +1,6 @@
 import { Smartphone, ShoppingBag, CreditCard, Bike, Tag, BarChart3, Users, MessageSquare, Zap } from "lucide-react";
-import heroKanban from "@/assets/hero-admin-kanban.png";
 import heroMobile from "@/assets/hero-app-mobile.png";
+import { MockupAdminKanban, MockupPhoneCardapio } from "@/components/mesivo-mockups";
 
 /**
  * Bento grid that consolidates Vantagens + Funcionalidades.
@@ -43,11 +43,9 @@ export function Bento() {
                 Kanban que pulsa com sua cozinha.
               </h3>
             </div>
-            <img
-              src={heroKanban}
-              alt="Painel kanban de pedidos"
-              className="absolute bottom-0 right-0 w-[85%] md:w-[78%] translate-x-6 translate-y-8 group-hover:translate-y-6 transition-transform border-2 border-ink rounded-xl shadow-card-xl"
-            />
+            <div className="absolute bottom-0 right-0 w-[95%] translate-x-4 translate-y-6 group-hover:translate-y-4 transition-transform border-2 border-ink rounded-xl shadow-card-xl bg-background overflow-hidden">
+              <MockupAdminKanban />
+            </div>
           </div>
 
           {/* TALL — phone screenshot */}
@@ -66,11 +64,9 @@ export function Bento() {
                 PWA instalável no celular.
               </p>
               <div className="relative flex-1 mt-4">
-                <img
-                  src={heroMobile}
-                  alt="Cardápio digital no celular"
-                  className="absolute -bottom-12 right-0 w-[70%] rounded-[2rem] border-[6px] border-ink shadow-brutal-lg rotate-[6deg] group-hover:rotate-[3deg] transition-transform"
-                />
+                <div className="absolute -bottom-12 right-0 w-[75%] rounded-[2.5rem] border-[8px] border-ink shadow-brutal-lg rotate-[6deg] group-hover:rotate-[3deg] transition-transform bg-background overflow-hidden aspect-[9/19]">
+                  <MockupPhoneCardapio />
+                </div>
               </div>
             </div>
           </div>
