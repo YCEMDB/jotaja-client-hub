@@ -40,7 +40,7 @@ export function Stats() {
           <div key={label} className="inline-flex items-center gap-4 px-6 py-2 whitespace-nowrap group">
             <div
               aria-hidden="true"
-              className="w-12 h-12 grid place-items-center rounded-xl bg-background/5 border border-background/10 text-brand-orange group-hover:bg-brand-orange group-hover:text-ink transition-all duration-300"
+              className="w-12 h-12 grid place-items-center rounded-xl bg-background/5 border border-background/10 text-brand-orange group-hover:bg-gradient-sunset group-hover:text-ink transition-all duration-300"
             >
               <Icon className="w-6 h-6" strokeWidth={2} />
             </div>
@@ -49,7 +49,7 @@ export function Stats() {
             </span>
             <span
               aria-hidden="true"
-              className="ml-8 text-brand-orange/20 font-display text-3xl md:text-4xl"
+              className="ml-8 text-brand-orange/30 font-display text-3xl md:text-4xl"
             >
               ·
             </span>
