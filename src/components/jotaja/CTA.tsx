@@ -24,17 +24,13 @@ export function CTA() {
               </span>
             </div>
             <h2 className="font-display text-background uppercase leading-[0.85] tracking-[-0.04em] text-[clamp(2.5rem,7vw,6rem)]">
-              Seu delivery,
+              Digitalize seu
               <br />
-              <span className="text-gradient-sunset">do seu jeito</span>,
-              <br />
-              <span className="italic font-normal" style={{ fontFamily: "Hind", fontWeight: 300 }}>
-                sem intermediário.
-              </span>
+              <span className="text-gradient-sunset">restaurante hoje</span>.
             </h2>
             <p className="mt-8 text-lg text-background/70 max-w-lg leading-relaxed">
-              Preencha aqui. Em minutos um especialista te chama no WhatsApp,
-              monta seu cardápio junto e libera tudo.
+              Junte-se a centenas de restaurantes que recuperaram o controle de sua
+              operação e margem de lucro com o Mesivo.
             </p>
 
             <ul className="mt-8 space-y-3">

@@ -85,11 +85,11 @@ export function Hero() {
             <MotionText
               as="h1"
               className="font-display text-ink uppercase leading-[0.85] tracking-[-0.055em] text-[clamp(2.5rem,8vw,6.5rem)]"
-              ariaLabel="A PLATAFORMA COMPLETA PARA O SEU RESTAURANTE"
+              ariaLabel="Gestão que liberta o seu restaurante."
               lines={[
-                "A PLATAFORMA",
+                "Gestão que",
                 <span key="l2">
-                  COMPLETA PARA O <span className="text-gradient-sunset">SEU RESTAURANTE</span>
+                  liberta o <span className="text-gradient-sunset">seu restaurante.</span>
                 </span>
               ]}
             />
@@ -100,8 +100,8 @@ export function Hero() {
               amount={0.3}
               className="mt-8 max-w-xl text-lg md:text-xl text-ink/75 leading-relaxed"
             >
-              Centralize pedidos, mesas, comandas, cardápio digital, caixa, cozinha, entregas e
-              clientes em uma plataforma criada para a rotina real do seu restaurante.
+              Uma única plataforma para digitalizar sua operação, eliminar erros de pedido
+              e aumentar sua margem. Do PDV ao Cardápio Digital.
             </MotionReveal>
 
             <MotionReveal

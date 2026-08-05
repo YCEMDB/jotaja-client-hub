@@ -34,8 +34,8 @@ export function Header() {
   }, []);
 
   const shellClass = scrolled
-    ? "bg-background/85 backdrop-blur-xl border-b border-border/60 shadow-[0_1px_0_0_rgba(0,0,0,0.02)]"
-    : "bg-background/40 backdrop-blur-md border-b border-transparent";
+    ? "bg-background/80 backdrop-blur-xl border-b border-border/40 shadow-sm"
+    : "bg-background/0 border-b border-transparent";
 
   const rowHeight = scrolled ? "h-16 md:h-20" : "h-20 md:h-24";
 

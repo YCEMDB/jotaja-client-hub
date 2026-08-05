@@ -20,13 +20,13 @@ export function Bento() {
             </span>
           </div>
           <h2 className="font-display text-ink uppercase leading-[0.85] tracking-[-0.04em] text-[clamp(2.25rem,6vw,5rem)]">
-            Tudo integrado.
+            OPERAÇÃO <span className="text-gradient-sunset">SOFISTICADA</span>,
             <br />
-            <span className="text-gradient-sunset">Nada de gambiarra.</span>
+            SEM COMPLEXIDADE.
           </h2>
           <p className="mt-5 text-lg text-ink/70 max-w-xl leading-relaxed">
-            Cardápio, pedidos, pagamento, entrega e CRM — em um único painel
-            pensado pra operação real de restaurante.
+            Elimine as ferramentas isoladas. O Mesivo centraliza tudo o que importa
+            para o crescimento do seu negócio em um ecossistema fluido.
           </p>
         </div>
 
