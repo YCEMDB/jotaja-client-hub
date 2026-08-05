@@ -70,7 +70,7 @@ export function PublicFooter() {
             }}
           >
             <MesivoMark size={32} />
-            <span style={{ fontFamily: "var(--font-ui)", fontSize: "1.5rem", fontWeight: 800, tracking: "-0.05em" }}>mesivo</span>
+            <span style={{ fontFamily: "var(--font-ui)", fontSize: "1.5rem", fontWeight: 800, letterSpacing: "-0.05em" }}>mesivo</span>
           </Link>
           <p
             style={{
