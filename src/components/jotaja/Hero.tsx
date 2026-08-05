@@ -268,14 +268,18 @@ function ProductMockup() {
       delay={heroSequence.mockup}
     >
       {/* Janela do navegador */}
-      <div className="relative rounded-2xl overflow-hidden shadow-card-xl ring-1 ring-ink/15 bg-card">
-        {/* Chrome */}
-        <div className="flex items-center gap-1.5 px-3 py-2.5 bg-ink border-b border-background/10">
-          <div className="w-2.5 h-2.5 rounded-full bg-destructive/80" />
-          <div className="w-2.5 h-2.5 rounded-full bg-brand-amber" />
-          <div className="w-2.5 h-2.5 rounded-full bg-success" />
-          <div className="ml-3 text-[10px] text-background/60 font-mono truncate">
-            app.mesivo · pedidos
+      <div className="relative rounded-3xl overflow-hidden shadow-[0_32px_80px_-16px_rgba(0,0,0,0.15),0_0_0_1px_rgba(0,0,0,0.08)] bg-card/80 backdrop-blur-xl group/mockup">
+        {/* Chrome / Window Titlebar */}
+        <div className="flex items-center gap-2 px-4 py-3 bg-ink border-b border-white/5 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent opacity-20" />
+          <div className="relative z-10 flex items-center gap-1.5">
+            <div className="w-2.5 h-2.5 rounded-full bg-destructive/90 shadow-[0_0_8px_rgba(239,68,68,0.3)]" />
+            <div className="w-2.5 h-2.5 rounded-full bg-brand-amber/90 shadow-[0_0_8px_rgba(251,191,36,0.2)]" />
+            <div className="w-2.5 h-2.5 rounded-full bg-success/90 shadow-[0_0_8px_rgba(34,197,94,0.2)]" />
+          </div>
+          <div className="relative z-10 mx-auto px-3 py-1 rounded-md bg-white/5 border border-white/10 text-[9px] text-background/40 font-mono tracking-tight flex items-center gap-2">
+            <span className="opacity-50">https://</span>
+            app.mesivo.cloud
           </div>
         </div>
 
@@ -283,43 +287,49 @@ function ProductMockup() {
         <MotionMockupLayer
           depth={0}
           delay={heroSequence.mockup + 0.1}
-          className="flex items-center gap-2 px-4 py-3 border-b border-ink/10 bg-background/60"
+          className="flex items-center gap-2 px-5 py-4 border-b border-ink/5 bg-background/40 backdrop-blur-sm"
         >
-          <MesivoMark size={24} />
-          <span className="font-display text-lg tracking-tight text-ink uppercase">mesivo</span>
-          <span className="ml-auto text-[10px] font-bold text-ink/50 uppercase tracking-wider">
-            Painel
-          </span>
+          <MesivoMark size={22} className="drop-shadow-sm" />
+          <span className="font-display text-base tracking-tight text-ink uppercase">mesivo</span>
+          <div className="ml-auto flex items-center gap-3">
+            <div className="h-6 w-px bg-ink/10" />
+            <span className="text-[10px] font-bold text-ink/40 uppercase tracking-widest">
+              Live Feed
+            </span>
+          </div>
         </MotionMockupLayer>
 
-        {/* Kanban */}
+        {/* Kanban Content */}
         <MotionMockupLayer
           depth={2}
           delay={heroSequence.mockup + 0.2}
-          className="grid grid-cols-3 gap-2 p-3 bg-background/40"
+          className="grid grid-cols-3 gap-3 p-4 bg-secondary/10"
         >
           {[
-            { label: "Novos", count: 3, color: "bg-brand-amber" },
-            { label: "Em preparo", color: "bg-brand-orange", count: 2 },
-            { label: "Prontos", color: "bg-success", count: 1 },
+            { label: "Check-in", count: 3, color: "bg-brand-amber", light: "amber" },
+            { label: "Produção", color: "bg-brand-orange", count: 2, light: "orange" },
+            { label: "Despacho", color: "bg-success", count: 1, light: "success" },
           ].map((col, ci) => (
-            <div key={col.label} className="rounded-lg border border-ink/10 bg-background p-2">
-              <div className="flex items-center gap-1.5 mb-2">
-                <span className={`w-2 h-2 rounded-full ${col.color}`} />
-                <span className="text-[10px] font-bold uppercase tracking-wider text-ink/70">
+            <div key={col.label} className="rounded-xl border border-ink/10 bg-background/80 shadow-sm p-2.5 transition-transform hover:scale-[1.02] duration-300">
+              <div className="flex items-center gap-2 mb-3">
+                <span className={`w-2 h-2 rounded-full ${col.color} shadow-sm`} />
+                <span className="text-[9px] font-extrabold uppercase tracking-[0.1em] text-ink/60">
                   {col.label}
                 </span>
-                <span className="ml-auto text-[10px] font-bold text-ink/50">{col.count}</span>
+                <span className="ml-auto text-[10px] font-bold text-ink/30">{col.count}</span>
               </div>
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 {Array.from({ length: col.count }).map((_, i) => (
-                  <div key={i} className="rounded-md border border-ink/10 p-2 bg-secondary/30">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-[10px] font-bold text-ink">#{100 + ci * 10 + i}</span>
-                      <span className="text-[9px] text-ink/50">{5 + i}min</span>
+                  <div key={i} className="rounded-lg border border-ink/5 p-2.5 bg-background shadow-[0_2px_4px_rgba(0,0,0,0.02)] relative overflow-hidden group/item">
+                    <div className="absolute top-0 left-0 w-1 h-full bg-ink/5" />
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[9px] font-black text-ink">#{100 + ci * 10 + i}</span>
+                      <span className="text-[8px] font-bold text-ink/40 bg-ink/5 px-1.5 py-0.5 rounded-full">{5 + i}m</span>
                     </div>
-                    <div className="h-1 rounded bg-ink/10 w-3/4" />
-                    <div className="h-1 rounded bg-ink/10 w-1/2 mt-1" />
+                    <div className="space-y-1">
+                      <div className="h-1.5 rounded-full bg-ink/10 w-5/6" />
+                      <div className="h-1.5 rounded-full bg-ink/5 w-1/2" />
+                    </div>
                   </div>
                 ))}
               </div>
