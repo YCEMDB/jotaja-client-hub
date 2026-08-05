@@ -91,13 +91,13 @@
   --input:      #E5E2DE;
   --ring:       #E36D42;
 
-  --shadow-xs: 0 1px 2px rgba(43, 43, 43, 0.05);
-  --shadow-sm: 0 2px 4px rgba(43, 43, 43, 0.04);
-  --shadow-md: 0 4px 8px rgba(43, 43, 43, 0.06);
-  --shadow-lg: 0 8px 16px rgba(43, 43, 43, 0.08);
-  --shadow-xl: 0 16px 32px rgba(43, 43, 43, 0.1);
-  --shadow-brutal: 0 0 0 0 transparent; /* Desativado para esta fase */
-  --shadow-glow: 0 12px 32px -8px rgba(227, 109, 66, 0.25);
+  --shadow-xs: 0 1px 2px rgba(23, 35, 51, 0.05);
+  --shadow-sm: 0 2px 4px rgba(23, 35, 51, 0.04);
+  --shadow-md: 0 4px 12px rgba(23, 35, 51, 0.08);
+  --shadow-lg: 0 12px 24px rgba(23, 35, 51, 0.1);
+  --shadow-xl: 0 20px 40px rgba(23, 35, 51, 0.12);
+  --shadow-brutal: 0 0 0 0 transparent;
+  --shadow-glow: 0 12px 32px -8px rgba(216, 122, 67, 0.25);
 
   --transition-smooth: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }

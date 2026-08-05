@@ -59,11 +59,14 @@ export function Beneficios() {
                   <div
                     style={{
                       height: "100%",
-                      padding: "22px 24px",
-                      borderRadius: 20,
-                      border: "1px solid var(--hairline)",
-                      backgroundColor: "var(--surface-1)",
+                      padding: "32px",
+                      borderRadius: 24,
+                      border: "1px solid var(--border)",
+                      backgroundColor: "var(--card)",
+                      boxShadow: "var(--shadow-sm)",
+                      transition: "var(--transition-smooth)",
                     }}
+                    className="hover:shadow-md hover:border-accent/20"
                   >
                     <div
                       style={{
