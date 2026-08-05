@@ -18,30 +18,15 @@ export function FAQMesivo() {
     >
       <div style={{ maxWidth: 800, marginInline: "auto", paddingInline: "clamp(16px, 4vw, 32px)" }}>
         <MotionReveal variant="fade">
-          <div style={{ textAlign: "center", maxWidth: 560, marginInline: "auto" }}>
-            <span
-              style={{
-                fontSize: 12,
-                fontWeight: 600,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                color: "var(--accent)",
-              }}
-            >
+          <div className="text-center max-w-xl mx-auto mb-16">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-accent mb-6 block">
               FAQ
             </span>
-            <h2
-              style={{
-                marginTop: 12,
-                fontSize: "clamp(2rem, 3.4vw, 2.75rem)",
-                lineHeight: 1.05,
-                color: "var(--fg-hi)",
-              }}
-            >
-              Perguntas <span className="mesivo-accent">frequentes</span>
+            <h2 className="text-[clamp(2.5rem,5vw,4.5rem)] font-extrabold leading-[0.95] tracking-tight mb-8">
+              Perguntas <span className="text-accent">frequentes</span>
             </h2>
-            <p style={{ marginTop: 12, color: "var(--fg-mid)" }}>
-              Tudo que você precisa saber antes de começar.
+            <p className="text-lg font-medium text-muted-foreground">
+              Tudo que você precisa saber antes de transformar sua operação.
             </p>
           </div>
         </MotionReveal>

@@ -17,9 +17,9 @@ import {
 import { mesivoFaq } from "@/components/mesivo-landing/faq-data";
 
 const SITE_URL = "https://comandahub.online";
-const TITLE = "Mesivo | Gestão completa para restaurantes";
+const TITLE = "Mesivo | O sistema operacional do seu restaurante";
 const DESCRIPTION =
-  "Cardápio digital, pedidos online, PDV, mesas, comandas, cozinha e caixa sincronizados em tempo real. Sem comissão por venda, com fluxo pensado para a rotina real do restaurante.";
+  "Gestão profissional para restaurantes: cardápio digital, PDV, mesas e cozinha sincronizados. A operação perfeita começa aqui.";
 
 export const Route = createFileRoute("/")({
   beforeLoad: async () => {

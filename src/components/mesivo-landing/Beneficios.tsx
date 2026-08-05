@@ -31,15 +31,10 @@ export function Beneficios() {
               Por que Mesivo
             </span>
             <h2
-              style={{
-                marginTop: 12,
-                fontSize: "clamp(2rem, 3.6vw, 3rem)",
-                lineHeight: 1.02,
-                color: "var(--fg-hi)",
-              }}
+              className="mt-6 text-[clamp(2.5rem,5vw,4.5rem)] leading-[0.95] tracking-tight font-extrabold text-foreground"
             >
               O que a operação{" "}
-              <span className="mesivo-accent">ganha</span> quando tudo conversa.
+              <span className="text-accent">ganha</span> quando tudo conversa.
             </h2>
           </div>
         </MotionReveal>
@@ -57,30 +52,26 @@ export function Beneficios() {
               {beneficios.map((b) => (
                 <MotionStaggerItem key={b.t}>
                   <div
-                    style={{
-                      height: "100%",
-                      padding: "32px",
-                      borderRadius: 24,
-                      border: "1px solid var(--border)",
-                      backgroundColor: "var(--card)",
-                      boxShadow: "var(--shadow-sm)",
-                      transition: "var(--transition-smooth)",
-                    }}
-                    className="hover:shadow-md hover:border-accent/20"
+                    className="group relative h-full p-10 rounded-[32px] border border-black/[0.03] bg-white shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
                   >
+                    <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[32px]" />
                     <div
-                      style={{
-                        fontSize: 17,
-                        fontWeight: 700,
-                        color: "var(--fg-hi)",
-                        letterSpacing: "-0.01em",
-                      }}
+                      className="relative z-10"
                     >
-                      {b.t}
+                      <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-muted/50 text-accent transition-colors group-hover:bg-accent group-hover:text-white">
+                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <h3
+                        className="text-xl font-bold text-foreground tracking-tight mb-3"
+                      >
+                        {b.t}
+                      </h3>
+                      <p className="text-muted-foreground text-base leading-relaxed">
+                        {b.d}
+                      </p>
                     </div>
-                    <p style={{ marginTop: 8, color: "var(--fg-mid)", fontSize: 14, lineHeight: 1.55 }}>
-                      {b.d}
-                    </p>
                   </div>
                 </MotionStaggerItem>
               ))}
