@@ -56,18 +56,22 @@ export function Beneficios() {
                   >
                     <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[32px]" />
                     <div
-                      style={{
-                        fontSize: 17,
-                        fontWeight: 700,
-                        color: "var(--fg-hi)",
-                        letterSpacing: "-0.01em",
-                      }}
+                      className="relative z-10"
                     >
-                      {b.t}
+                      <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-muted/50 text-accent transition-colors group-hover:bg-accent group-hover:text-white">
+                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <h3
+                        className="text-xl font-bold text-foreground tracking-tight mb-3"
+                      >
+                        {b.t}
+                      </h3>
+                      <p className="text-muted-foreground text-base leading-relaxed">
+                        {b.d}
+                      </p>
                     </div>
-                    <p style={{ marginTop: 8, color: "var(--fg-mid)", fontSize: 14, lineHeight: 1.55 }}>
-                      {b.d}
-                    </p>
                   </div>
                 </MotionStaggerItem>
               ))}
