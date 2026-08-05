@@ -328,7 +328,7 @@ function Dashboard() {
       <OnboardingChecklist restaurantId={restaurantId} canWrite={canWriteOnboarding} />
       <PlanUsageBanner restaurantId={restaurantId} />
 
-      <div className="flex flex-wrap items-center gap-2 text-xs">
+      <div className="flex flex-wrap items-center gap-3 text-xs mb-2">
         <Badge variant="secondary" className="gap-1">
           Atualizado {relative}
         </Badge>
