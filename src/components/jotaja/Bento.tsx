@@ -87,7 +87,7 @@ export function Bento() {
               </p>
               <div className="relative flex-1 mt-4">
                 <div className="absolute -bottom-10 -right-8 w-[60%] rounded-[2.5rem] border-[8px] border-ink shadow-brutal-lg rotate-[6deg] group-hover:rotate-[3deg] transition-transform bg-background overflow-hidden aspect-[9/19]">
-                  <MockupPhoneCardapio />
+                  <MockupPhoneCardapio className="[&_.logo-mark-animated]:!brightness-100" />
                 </div>
               </div>
             </div>

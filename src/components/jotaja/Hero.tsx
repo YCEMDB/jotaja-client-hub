@@ -296,7 +296,7 @@ function ProductMockup() {
           delay={heroSequence.mockup + 0.1}
           className="flex items-center gap-2 px-5 py-4 border-b border-ink/5 bg-background/40 backdrop-blur-sm"
         >
-          <MesivoMark size={22} />
+          <MesivoMark size={22} className="logo-mark-animated" />
           <span className="font-display text-base tracking-tight text-ink uppercase">mesivo</span>
           <div className="ml-auto flex items-center gap-3">
             <div className="h-6 w-px bg-ink/10" />
