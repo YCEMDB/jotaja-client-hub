@@ -35,32 +35,33 @@ const faqs = [
 
 export function FAQ() {
   return (
-    <section id="faq" className="py-24 md:py-32 bg-background">
-      <div className="container mx-auto px-6">
+    <section id="faq" className="py-24 md:py-32 bg-background relative overflow-hidden">
+      <div className="absolute inset-0 bg-grid opacity-[0.03] pointer-events-none" />
+      <div className="container mx-auto px-6 relative">
         <Reveal className="max-w-2xl mx-auto text-center">
-          <span className="text-xs font-semibold uppercase tracking-widest text-primary">
-            FAQ
-          </span>
-          <h2 className="mt-3 text-3xl md:text-4xl font-bold tracking-tight">
-            Perguntas frequentes
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-orange/10 border-2 border-brand-orange/20 text-brand-orange font-bold text-[10px] uppercase tracking-widest mb-4">
+            Dúvidas Comuns
+          </div>
+          <h2 className="font-display text-4xl md:text-6xl text-ink leading-[0.9] tracking-tighter uppercase mb-6">
+            FAQ<span className="text-brand-orange">.</span>
           </h2>
-          <p className="mt-4 text-muted-foreground">
-            Tudo que você precisa saber antes de começar.
+          <p className="text-ink/60 max-w-lg mx-auto">
+            Tudo que você precisa saber para começar a gerenciar seu restaurante com eficiência hoje mesmo.
           </p>
         </Reveal>
 
         <Reveal delay={0.1} className="mt-12 max-w-2xl mx-auto">
-          <Accordion type="single" collapsible className="w-full">
+          <Accordion type="single" collapsible className="w-full space-y-3">
             {faqs.map((faq, i) => (
               <AccordionItem
                 key={i}
                 value={`item-${i}`}
-                className="border-b border-border last:border-0"
+                className="border-4 border-ink bg-card rounded-2xl overflow-hidden shadow-brutal px-2 transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none"
               >
-                <AccordionTrigger className="text-left text-sm font-semibold py-5 hover:no-underline hover:text-primary">
+                <AccordionTrigger className="text-left font-display text-base md:text-lg text-ink py-6 hover:no-underline uppercase tracking-tight">
                   {faq.q}
                 </AccordionTrigger>
-                <AccordionContent className="text-sm text-muted-foreground leading-relaxed pb-5">
+                <AccordionContent className="text-sm md:text-base text-ink/70 leading-relaxed pb-6">
                   {faq.a}
                 </AccordionContent>
               </AccordionItem>

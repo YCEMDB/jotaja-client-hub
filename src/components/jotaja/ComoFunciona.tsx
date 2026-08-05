@@ -101,10 +101,12 @@ const toneClasses: Record<Step["tone"], { chip: string; ring: string; text: stri
 export function ComoFunciona() {
   return (
     <MotionSection
-      className="relative bg-secondary py-24 md:py-32 border-y-[3px] border-ink overflow-hidden"
+      className="relative bg-secondary py-24 md:py-32 border-y-[4px] border-ink overflow-hidden"
       aria-label="Fluxo de pedidos"
     >
-      <div className="absolute inset-0 bg-grid opacity-[0.05] pointer-events-none" />
+      <div className="absolute inset-0 bg-grid opacity-[0.07] pointer-events-none" />
+      <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-ink/5 to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-ink/5 to-transparent pointer-events-none" />
 
       <div className="container mx-auto px-6 relative">
         <div className="max-w-3xl mb-16">

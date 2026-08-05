@@ -67,10 +67,11 @@ export function Planos() {
   return (
     <MotionSection
       id="planos"
-      className="py-24 md:py-32 bg-secondary border-y border-border"
+      className="py-24 md:py-32 bg-secondary border-y-4 border-ink relative overflow-hidden"
       aria-label="Planos e preços"
     >
-      <div className="container mx-auto px-6">
+      <div className="absolute inset-0 bg-grid opacity-[0.05] pointer-events-none" />
+      <div className="container mx-auto px-6 relative">
         <MotionReveal className="max-w-2xl mx-auto text-center">
           <span className="text-xs font-semibold uppercase tracking-widest text-brand-orange">
             Planos
