@@ -5647,6 +5647,15 @@ export type Database = {
         }
         Returns: undefined
       }
+      update_restaurant_hours: {
+        Args: {
+          p_open_mode: string
+          p_opening_hours: Json
+          p_restaurant_id: string
+          p_timezone: string
+        }
+        Returns: undefined
+      }
       update_stock_ingredient: {
         Args: {
           p_id: string
