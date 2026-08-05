@@ -6,7 +6,7 @@ import { dur, easeOut, heroSequence, shift } from "./motion-tokens";
 type Props = {
   /** Cada string vira uma linha revelada por máscara. */
   lines: ReactNode[];
-  as?: "h1" | "h2" | "h3" | "p";
+  as?: "h1" | "h2" | "h3" | "p" | "div";
   className?: string;
   lineClassName?: string;
   delay?: number;

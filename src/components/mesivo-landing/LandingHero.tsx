@@ -63,13 +63,13 @@ export function LandingHero() {
 
         {/* Cinematic Dashboard Showcase - Refined following image-11.png style */}
         <MotionReveal variant="up" delay={0.7} className="mt-28 w-full">
-          <div className="relative w-full max-w-6xl mx-auto perspective-2000">
+          <div className="relative w-full max-w-6xl mx-auto perspective-2000 px-4 md:px-0">
             <motion.div
               style={{
                 rotateX: useTransform(scrollYProgress, [0, 0.3], [10, 0]),
                 scale: useTransform(scrollYProgress, [0, 0.3], [0.92, 1]),
               }}
-              className="relative w-full aspect-[16/10] bg-white rounded-3xl shadow-[0_50px_100px_-20px_rgba(23,58,52,0.12)] border border-border overflow-hidden"
+              className="relative w-full aspect-[16/10] bg-white rounded-[40px] shadow-[0_50px_100px_-20px_rgba(23,58,52,0.12)] border border-border overflow-hidden"
             >
               {/* Dashboard UI mockup following visual brand guide */}
               <div className="flex h-full text-left">
