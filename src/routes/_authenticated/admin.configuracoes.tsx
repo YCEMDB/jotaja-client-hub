@@ -1193,7 +1193,7 @@ function ImpressaoTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
               <div className="space-y-2 animate-in fade-in slide-in-from-top-1">
                 <div className="flex items-center justify-between gap-2">
                   <Label className="text-xs font-bold uppercase">Impressora Selecionada</Label>
-                  <Button variant="ghost" size="xs" onClick={loadPrinters} disabled={loadingPrinters} className="h-6 text-[10px]">
+                  <Button variant="ghost" size="sm" onClick={loadPrinters} disabled={loadingPrinters} className="h-6 text-[10px]">
                     {loadingPrinters ? <Loader2 className="h-3 w-3 animate-spin" /> : "Atualizar Lista"}
                   </Button>
                 </div>
