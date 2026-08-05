@@ -58,21 +58,21 @@ export type DemoMenuItem = {
 export const DEMO_MENU: DemoMenuItem[] = [
   {
     id: "m1",
-    name: "Prato Demonstração 1",
-    description: "Ingredientes demonstrativos, sem preço real.",
-    price: "R$ 29,90",
+    name: "Burger Mesivo",
+    description: "Blend 180g, queijo cheddar, bacon caramelizado.",
+    price: "R$ 38,00",
   },
   {
     id: "m2",
-    name: "Prato Demonstração 2",
-    description: "Somente para visualização de layout.",
-    price: "R$ 34,90",
+    name: "Pizza de Fermentação Natural",
+    description: "Molho de tomate italiano, mozzarella fresca.",
+    price: "R$ 62,00",
   },
   {
     id: "m3",
-    name: "Prato Demonstração 3",
-    description: "Conteúdo fictício para prototipagem.",
-    price: "R$ 39,90",
+    name: "Poke Especial do Chef",
+    description: "Salmão fresco, avocado, sunomono e arroz gohan.",
+    price: "R$ 54,00",
   },
 ];
 
