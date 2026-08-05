@@ -71,16 +71,11 @@ export function PlanosMesivo() {
               Planos
             </span>
             <h2
-              style={{
-                marginTop: 12,
-                fontSize: "clamp(2rem, 3.6vw, 3rem)",
-                lineHeight: 1.02,
-                color: "var(--fg-hi)",
-              }}
+              className="mt-6 text-[clamp(2.5rem,5vw,4.5rem)] leading-[0.95] tracking-tight font-extrabold text-foreground"
             >
-              Preços simples, <span className="mesivo-accent">sem surpresa</span>.
+              Preços simples, <span className="text-accent">sem surpresa</span>.
             </h2>
-            <p style={{ marginTop: 12, color: "var(--fg-mid)" }}>
+            <p className="mt-8 text-lg font-medium text-muted-foreground">
               14 dias grátis em qualquer plano. Mensalidade fixa, sem comissão por venda. Cancele quando quiser.
             </p>
           </div>
@@ -108,21 +103,7 @@ export function PlanosMesivo() {
               >
                 {p.highlighted && (
                   <span
-                    style={{
-                      position: "absolute",
-                      top: 0,
-                      left: "50%",
-                      transform: "translate(-50%, -50%)",
-                      padding: "6px 16px",
-                      borderRadius: 999,
-                      backgroundColor: "var(--accent)",
-                      color: "var(--accent-foreground)",
-                      fontSize: 12,
-                      fontWeight: 700,
-                      letterSpacing: "0.05em",
-                      textTransform: "uppercase",
-                      boxShadow: "0 4px 12px rgba(216, 122, 67, 0.3)",
-                    }}
+                    className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-1.5 rounded-full bg-accent text-white text-[10px] font-bold uppercase tracking-widest shadow-glow"
                   >
                     Mais escolhido
                   </span>

@@ -31,15 +31,10 @@ export function Beneficios() {
               Por que Mesivo
             </span>
             <h2
-              style={{
-                marginTop: 12,
-                fontSize: "clamp(2rem, 3.6vw, 3rem)",
-                lineHeight: 1.02,
-                color: "var(--fg-hi)",
-              }}
+              className="mt-6 text-[clamp(2.5rem,5vw,4.5rem)] leading-[0.95] tracking-tight font-extrabold text-foreground"
             >
               O que a operação{" "}
-              <span className="mesivo-accent">ganha</span> quando tudo conversa.
+              <span className="text-accent">ganha</span> quando tudo conversa.
             </h2>
           </div>
         </MotionReveal>
