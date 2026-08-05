@@ -908,8 +908,11 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
           Ao obter seu ID da preferência de pagamento, você deve avançar para as configurações do frontend para sites ou para aplicações móveis.
         </div>
         <div className="pt-2 border-t border-amber-200/50">
-          <strong>Webhook (obrigatório):</strong> cole a URL abaixo no painel do Mercado Pago em
-          {" "}<em>Suas integrações → Webhooks</em>. Evento: <strong>payment</strong>.
+          <strong>3. Configurar as notificações de pagamento</strong>
+          <br /><br />
+          Configure as notificações Webhooks para receber informações sobre eventos de criação e atualização de pagamentos na integração. <a href="https://www.mercadopago.com.br/developers/pt/docs/checkout-pro/additional-content/your-integrations/notifications/webhooks" target="_blank" rel="noreferrer" className="underline font-bold">Saiba mais</a>
+          <br /><br />
+          Cole a URL abaixo no painel do Mercado Pago em <em>Suas integrações → Webhooks</em>. Evento: <strong>payment</strong>.
         </div>
         <div className="flex gap-2 items-center">
           <code className="flex-1 bg-white px-2 py-1.5 rounded font-mono text-[11px] break-all">{webhookUrl}</code>
