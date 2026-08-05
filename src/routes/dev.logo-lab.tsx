@@ -117,15 +117,20 @@ function LogoOption1({ size = 48 }) {
       <defs>
         <linearGradient id={id} x1="0" y1="0" x2="48" y2="48">
           <stop offset="0" stopColor="#FFB82E" />
+          <stop offset="0.55" stopColor="#FF6B35" />
           <stop offset="1" stopColor="#F0522D" />
         </linearGradient>
       </defs>
-      {/* Geometria inspirada no gráfico de barras do dashboard */}
-      <rect x="6" y="24" width="8" height="18" rx="2" fill={`url(#${id})`} />
-      <rect x="20" y="10" width="8" height="32" rx="2" fill={`url(#${id})`} />
-      <rect x="34" y="18" width="8" height="24" rx="2" fill={`url(#${id})`} />
-      {/* Linha de tendência/conexão */}
-      <path d="M6 24L20 10L34 18L46 6" stroke="#FFF8EE" strokeWidth="3" strokeLinecap="round" opacity="0.3" />
+      {/* 
+         O "M" Mesivo: Sincronia de 3 pilares conectados.
+         Inspirado no fluxo Entrada -> Produção -> Saída.
+      */}
+      <rect x="4" y="14" width="10" height="20" rx="4" fill={`url(#${id})`} />
+      <rect x="17" y="4" width="14" height="40" rx="4" fill={`url(#${id})`} />
+      <rect x="34" y="14" width="10" height="20" rx="4" fill={`url(#${id})`} />
+      
+      {/* Detalhe de conexão central */}
+      <circle cx="24" cy="24" r="3" fill="#0F0A08" />
     </svg>
   );
 }
@@ -140,10 +145,13 @@ function LogoOption2({ size = 48 }) {
           <stop offset="1" stopColor="#F0522D" />
         </linearGradient>
       </defs>
-      {/* Anéis concêntricos inspirados no Donut Chart e status mobile */}
-      <circle cx="24" cy="24" r="20" stroke={`url(#${id})`} strokeWidth="4" strokeDasharray="80 40" />
-      <circle cx="24" cy="24" r="12" stroke="#FFF8EE" strokeWidth="2" opacity="0.2" />
-      <rect x="20" y="20" width="8" height="8" rx="2" fill={`url(#${id})`} />
+      {/* 
+         O Radar Operacional: Foco total no centro da operação.
+      */}
+      <circle cx="24" cy="24" r="20" stroke={`url(#${id})`} strokeWidth="5" strokeDasharray="90 30" />
+      <path d="M24 8V16M24 32V40M8 24H16M32 24H40" stroke="#FFF8EE" strokeWidth="2" strokeLinecap="round" opacity="0.4" />
+      <circle cx="24" cy="24" r="6" fill={`url(#${id})`} />
+      <path d="M24 24L34 14" stroke="#FFF8EE" strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
 }
@@ -158,12 +166,16 @@ function LogoOption3({ size = 48 }) {
           <stop offset="1" stopColor="#F0522D" />
         </linearGradient>
       </defs>
-      {/* Linhas de fluxo inspiradas no KDS e nas faixas de status */}
-      <rect x="4" y="8" width="40" height="6" rx="3" fill={`url(#${id})`} />
-      <rect x="4" y="21" width="40" height="6" rx="3" fill={`url(#${id})`} opacity="0.6" />
-      <rect x="4" y="34" width="40" height="6" rx="3" fill="#FFF8EE" opacity="0.15" />
-      {/* Marcador de posição atual (o ponto de foco da operação) */}
-      <circle cx="12" cy="24" r="5" fill="#FFF8EE" />
+      {/* 
+         O Grid de Comando: Ordem absoluta.
+      */}
+      <rect x="6" y="6" width="16" height="16" rx="3" fill={`url(#${id})`} />
+      <rect x="26" y="6" width="16" height="16" rx="3" fill="#FFF8EE" fillOpacity="0.1" stroke={`url(#${id})`} strokeWidth="1" />
+      <rect x="6" y="26" width="16" height="16" rx="3" fill="#FFF8EE" fillOpacity="0.1" stroke={`url(#${id})`} strokeWidth="1" />
+      <rect x="26" y="26" width="16" height="16" rx="3" fill={`url(#${id})`} />
+      
+      {/* Linha de fluxo diagonal */}
+      <path d="M4 44L44 4" stroke="#FFF8EE" strokeWidth="2" strokeLinecap="round" strokeDasharray="4 4" opacity="0.2" />
     </svg>
   );
 }
