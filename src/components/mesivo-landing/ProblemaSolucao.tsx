@@ -21,7 +21,7 @@ export function ProblemaSolucao() {
       aria-label="Antes e depois do Mesivo"
       style={{
         paddingBlock: "clamp(64px, 8vw, 120px)",
-        backgroundColor: "var(--mesivo-cream)",
+        backgroundColor: "var(--background)",
       }}
     >
       <div style={{ maxWidth: 1200, marginInline: "auto", paddingInline: "clamp(16px, 4vw, 32px)" }}>
@@ -33,7 +33,7 @@ export function ProblemaSolucao() {
                 fontWeight: 600,
                 letterSpacing: "0.14em",
                 textTransform: "uppercase",
-                color: "var(--mesivo-tomato)",
+                color: "var(--accent)",
               }}
             >
               O contraste
@@ -95,8 +95,8 @@ function Card({
       style={{
         borderRadius: 24,
         padding: "clamp(20px, 3vw, 32px)",
-        border: brand ? "1px solid var(--mesivo-tomato)" : "1px solid var(--hairline)",
-        backgroundColor: brand ? "var(--mesivo-warm-white)" : "color-mix(in oklab, var(--mesivo-cream) 60%, white 40%)",
+        border: brand ? "1px solid var(--accent)" : "1px solid var(--border)",
+        backgroundColor: brand ? "var(--card)" : "var(--muted)",
         boxShadow: brand
           ? "0 20px 40px -24px color-mix(in oklab, var(--mesivo-tomato) 30%, transparent)"
           : "none",
@@ -112,8 +112,8 @@ function Card({
             width: 28,
             height: 28,
             borderRadius: 999,
-            backgroundColor: brand ? "var(--mesivo-tomato)" : "var(--hairline)",
-            color: brand ? "var(--mesivo-white)" : "var(--fg-mid)",
+            backgroundColor: brand ? "var(--accent)" : "var(--border)",
+            color: brand ? "var(--accent-foreground)" : "var(--muted-foreground)",
             fontWeight: 700,
             fontSize: 14,
           }}
@@ -126,7 +126,7 @@ function Card({
             fontWeight: 700,
             letterSpacing: "0.12em",
             textTransform: "uppercase",
-            color: brand ? "var(--mesivo-tomato)" : "var(--fg-mid)",
+            color: brand ? "var(--accent)" : "var(--muted-foreground)",
           }}
         >
           {label}

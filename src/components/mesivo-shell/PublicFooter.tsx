@@ -42,8 +42,8 @@ export function PublicFooter() {
   return (
     <footer
       style={{
-        backgroundColor: "var(--mesivo-coffee)",
-        color: "var(--mesivo-white)",
+        backgroundColor: "var(--primary)",
+        color: "var(--primary-foreground)",
         fontFamily: "var(--font-ui)",
       }}
     >
@@ -65,12 +65,12 @@ export function PublicFooter() {
               display: "inline-flex",
               alignItems: "center",
               gap: 10,
-              color: "var(--mesivo-white)",
+              color: "var(--primary-foreground)",
               textDecoration: "none",
             }}
           >
             <MesivoMark size={32} />
-            <span style={{ fontFamily: "var(--font-ui)", fontSize: "1.5rem", fontWeight: 800, letterSpacing: "-0.05em" }}>mesivo</span>
+            <span style={{ fontFamily: "var(--font-display)", fontSize: "1.5rem", fontWeight: 800, letterSpacing: "-0.05em" }}>mesivo</span>
           </Link>
           <p
             style={{
@@ -95,7 +95,7 @@ export function PublicFooter() {
                 fontSize: "0.95rem",
                 letterSpacing: 0.5,
                 textTransform: "uppercase",
-                color: "var(--mesivo-mango)",
+                color: "var(--accent)",
               }}
             >
               {col.title}

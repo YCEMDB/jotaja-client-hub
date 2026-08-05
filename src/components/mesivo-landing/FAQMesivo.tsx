@@ -25,7 +25,7 @@ export function FAQMesivo() {
                 fontWeight: 600,
                 letterSpacing: "0.14em",
                 textTransform: "uppercase",
-                color: "var(--mesivo-tomato)",
+                color: "var(--accent)",
               }}
             >
               FAQ
