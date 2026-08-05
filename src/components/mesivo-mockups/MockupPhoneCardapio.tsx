@@ -9,19 +9,18 @@ export function MockupPhoneCardapio({ className }: { className?: string }) {
       role="img"
       aria-label="Mockup do cardápio digital Mesivo em um telefone (dados demonstrativos)"
       style={{
-        width: 260,
-        borderRadius: 32,
-        border: "6px solid var(--mesivo-coffee)",
+        width: "100%",
+        height: "100%",
         backgroundColor: "var(--mesivo-warm-white)",
         padding: 16,
         fontFamily: "var(--font-ui)",
-        boxShadow: "0 20px 40px -20px rgba(52,36,29,0.5)",
+        boxShadow: "none",
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
         <MesivoMark size={22} decorative />
-        <div style={{ fontWeight: 800, color: "var(--fg-hi)", fontFamily: "var(--font-display)" }}>
-          Restaurante Demo
+        <div style={{ fontWeight: 800, color: "var(--fg-hi)", fontFamily: "var(--font-display)", textTransform: 'uppercase' }}>
+          MESIVO
         </div>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -43,9 +42,6 @@ export function MockupPhoneCardapio({ className }: { className?: string }) {
           </article>
         ))}
       </div>
-      <p style={{ margin: "10px 0 0", fontSize: 10, color: "var(--fg-low)", fontStyle: "italic" }}>
-        Dados demonstrativos.
-      </p>
     </div>
   );
 }

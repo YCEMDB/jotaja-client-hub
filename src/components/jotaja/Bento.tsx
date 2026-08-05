@@ -1,6 +1,6 @@
 import { Smartphone, ShoppingBag, CreditCard, Bike, Tag, BarChart3, Users, MessageSquare, Zap } from "lucide-react";
-import heroKanban from "@/assets/hero-admin-kanban.png";
 import heroMobile from "@/assets/hero-app-mobile.png";
+import { MockupAdminKanban, MockupPhoneCardapio } from "@/components/mesivo-mockups";
 
 /**
  * Bento grid that consolidates Vantagens + Funcionalidades.
@@ -39,15 +39,13 @@ export function Bento() {
                 <ShoppingBag className="w-3 h-3" />
                 Pedidos em tempo real
               </div>
-              <h3 className="font-display text-3xl md:text-4xl text-ink mt-3 max-w-xs leading-tight">
-                Kanban que pulsa com sua cozinha.
+              <h3 className="font-display text-3xl md:text-4xl text-ink mt-3 max-w-sm leading-[0.9] tracking-tighter uppercase">
+                KANBAN QUE PULSA COM A SUA OPERAÇÃO.
               </h3>
             </div>
-            <img
-              src={heroKanban}
-              alt="Painel kanban de pedidos"
-              className="absolute bottom-0 right-0 w-[85%] md:w-[78%] translate-x-6 translate-y-8 group-hover:translate-y-6 transition-transform border-2 border-ink rounded-xl shadow-card-xl"
-            />
+            <div className="absolute bottom-0 right-0 w-[95%] translate-x-4 translate-y-6 group-hover:translate-y-4 transition-transform border-2 border-ink rounded-xl shadow-card-xl bg-background overflow-hidden">
+              <MockupAdminKanban />
+            </div>
           </div>
 
           {/* TALL — phone screenshot */}
@@ -58,19 +56,17 @@ export function Bento() {
                 <Smartphone className="w-3 h-3" />
                 Cardápio digital
               </div>
-              <h3 className="font-display text-3xl md:text-4xl text-background mt-3 max-w-[14ch] leading-tight">
-                Sua loja na palma do cliente.
+              <h3 className="font-display text-3xl md:text-4xl text-background mt-3 max-w-[14ch] leading-[0.9] tracking-tighter uppercase">
+                SUA LOJA NA PALMA DO CLIENTE.
               </h3>
               <p className="text-background/85 mt-2 text-sm max-w-[28ch]">
                 Cores, logo, fotos. URL própria. QR Code pra mesa.
                 PWA instalável no celular.
               </p>
               <div className="relative flex-1 mt-4">
-                <img
-                  src={heroMobile}
-                  alt="Cardápio digital no celular"
-                  className="absolute -bottom-12 right-0 w-[70%] rounded-[2rem] border-[6px] border-ink shadow-brutal-lg rotate-[6deg] group-hover:rotate-[3deg] transition-transform"
-                />
+                <div className="absolute -bottom-12 right-0 w-[75%] rounded-[2.5rem] border-[8px] border-ink shadow-brutal-lg rotate-[6deg] group-hover:rotate-[3deg] transition-transform bg-background overflow-hidden aspect-[9/19]">
+                  <MockupPhoneCardapio />
+                </div>
               </div>
             </div>
           </div>
@@ -93,8 +89,8 @@ export function Bento() {
                 <Bike className="w-5 h-5" strokeWidth={2.5} />
               </div>
               <div>
-                <h3 className="font-display text-xl text-ink leading-tight">
-                  Áreas + taxas por bairro
+                <h3 className="font-display text-xl text-ink leading-[0.9] tracking-tight uppercase">
+                  ÁREAS + TAXAS POR BAIRRO
                 </h3>
                 <p className="text-xs text-ink/60 mt-1.5 leading-snug">
                   Atribua entregadores, calcule frete por CEP e acompanhe o status.
@@ -107,8 +103,8 @@ export function Bento() {
           <div className="col-span-6 lg:col-span-3 row-span-2 group relative rounded-2xl border-2 border-ink bg-brand-violet text-background p-5 shadow-brutal hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all overflow-hidden">
             <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-background/10" />
             <Tag className="w-7 h-7 relative" strokeWidth={2.5} />
-            <h3 className="font-display text-2xl mt-3 leading-tight relative">
-              Cupons em<br />segundos
+            <h3 className="font-display text-2xl mt-3 leading-[0.9] tracking-tight uppercase relative">
+              CUPONS EM<br />SEGUNDOS
             </h3>
             <p className="text-[11px] uppercase tracking-widest font-bold opacity-70 mt-2 relative">
               % ou R$ fixo
@@ -134,7 +130,7 @@ export function Bento() {
                   />
                 ))}
               </div>
-              <p className="font-display text-lg text-background mt-3 leading-tight">
+              <p className="font-display text-lg text-background mt-3 leading-[0.9] tracking-tight uppercase">
                 Vendas, ticket, picos
               </p>
             </div>
@@ -161,8 +157,8 @@ export function Bento() {
           {/* CRM */}
           <div className="col-span-6 lg:col-span-4 row-span-2 group relative rounded-2xl border-2 border-ink bg-card p-5 shadow-brutal hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all">
             <Users className="w-7 h-7 text-brand-orange" strokeWidth={2.5} />
-            <h3 className="font-display text-xl text-ink mt-3 leading-tight">
-              Base de clientes sua.
+            <h3 className="font-display text-xl text-ink mt-3 leading-[0.9] tracking-tight uppercase">
+              BASE DE CLIENTES SUA.
             </h3>
             <p className="text-xs text-ink/60 mt-1.5">
               Histórico, ticket médio e contato — sem ninguém no meio.
@@ -172,8 +168,8 @@ export function Bento() {
           {/* WhatsApp */}
           <div className="col-span-6 lg:col-span-3 row-span-2 group relative rounded-2xl border-2 border-ink bg-success text-success-foreground p-5 shadow-brutal hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all">
             <MessageSquare className="w-7 h-7" strokeWidth={2.5} fill="currentColor" />
-            <h3 className="font-display text-xl mt-3 leading-tight">
-              WhatsApp<br />integrado
+            <h3 className="font-display text-xl mt-3 leading-[0.9] tracking-tight uppercase">
+              WHATSAPP<br />INTEGRADO
             </h3>
             <p className="text-[11px] uppercase tracking-widest font-bold opacity-80 mt-2">
               Notif + suporte

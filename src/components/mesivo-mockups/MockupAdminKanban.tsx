@@ -21,8 +21,6 @@ export function MockupAdminKanban({ className }: { className?: string }) {
         gap: 12,
         gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
         padding: 16,
-        borderRadius: 20,
-        border: "1.5px solid var(--hairline)",
         backgroundColor: "var(--surface-1)",
         fontFamily: "var(--font-ui)",
       }}
@@ -53,17 +51,6 @@ export function MockupAdminKanban({ className }: { className?: string }) {
           ))}
         </div>
       ))}
-      <p
-        style={{
-          gridColumn: "1 / -1",
-          margin: 0,
-          fontSize: 11,
-          color: "var(--fg-low)",
-          fontStyle: "italic",
-        }}
-      >
-        Dados demonstrativos — nenhum pedido real.
-      </p>
     </div>
   );
 }
