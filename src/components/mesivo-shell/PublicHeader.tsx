@@ -112,14 +112,14 @@ export function PublicHeader({ variant = "default" }: { variant?: PublicShellVar
             {variant === "landing" ? (
               <a
                 href="#cadastro"
-                className="inline-flex h-9 items-center justify-center rounded-full px-5 text-sm font-bold transition-all bg-primary text-primary-foreground hover:scale-105 active:scale-95"
+                className="inline-flex h-9 items-center justify-center rounded-full px-5 text-sm font-bold transition-all bg-primary text-primary-foreground hover:scale-105 active:scale-95 shadow-sm hover:shadow-glow"
               >
-                Acessar
+                Começar
               </a>
             ) : (
               <Link
                 to="/contato"
-                className="inline-flex h-9 items-center justify-center rounded-full px-5 text-sm font-bold transition-all bg-primary text-primary-foreground hover:scale-105 active:scale-95"
+                className="inline-flex h-9 items-center justify-center rounded-full px-5 text-sm font-bold transition-all bg-primary text-primary-foreground hover:scale-105 active:scale-95 shadow-sm hover:shadow-glow"
               >
                 Contato
               </Link>
