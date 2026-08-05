@@ -152,46 +152,84 @@ function LoginForm() {
   };
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
-      <div>
-        <Label htmlFor="email">Email</Label>
-        <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+    <form onSubmit={onSubmit} className="space-y-6">
+      <div className="space-y-2">
+        <Label htmlFor="email" className="text-sm font-black uppercase tracking-widest text-ink">E-mail</Label>
+        <Input 
+          id="email" 
+          type="email" 
+          value={email} 
+          onChange={(e) => setEmail(e.target.value)} 
+          placeholder="seu@restaurante.com"
+          required 
+          className="h-14 border-3 border-ink rounded-none text-lg font-bold placeholder:text-ink/30 focus-visible:ring-0 focus-visible:border-brand-orange transition-colors"
+        />
       </div>
-      <div>
+      <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label htmlFor="password">Senha</Label>
+          <Label htmlFor="password" className="text-sm font-black uppercase tracking-widest text-ink">Senha</Label>
           <button
             type="button"
             onClick={() => { setForgotEmail(email); setForgotOpen(true); }}
-            className="text-xs text-primary hover:underline font-semibold"
+            className="text-xs font-bold text-brand-magenta hover:text-brand-orange transition-colors uppercase tracking-tight underline underline-offset-4"
           >
-            Esqueci minha senha
+            Esqueci a senha
           </button>
         </div>
-        <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <Input 
+          id="password" 
+          type="password" 
+          value={password} 
+          onChange={(e) => setPassword(e.target.value)} 
+          placeholder="••••••••"
+          required 
+          className="h-14 border-3 border-ink rounded-none text-lg font-bold placeholder:text-ink/30 focus-visible:ring-0 focus-visible:border-brand-orange transition-colors"
+        />
       </div>
-      <Button type="submit" className="w-full" disabled={submitting}>
-        {submitting ? "Entrando..." : "Entrar"}
+      <Button 
+        type="submit" 
+        className="w-full h-16 bg-ink hover:bg-brand-orange text-white text-xl font-black rounded-none uppercase italic tracking-tighter shadow-brutal active:translate-y-1 active:translate-x-1 active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed" 
+        disabled={submitting}
+      >
+        {submitting ? "VERIFICANDO..." : "ACESSAR PAINEL"}
       </Button>
 
       {forgotOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={() => setForgotOpen(false)}>
-          <Card className="w-full max-w-md p-6" onClick={(e) => e.stopPropagation()}>
-            <h2 className="text-xl font-bold mb-1">Recuperar senha</h2>
-            <p className="text-sm text-muted-foreground mb-4">
-              Digite seu email e enviaremos um link para você criar uma nova senha.
+        <div className="fixed inset-0 z-[100] bg-ink/90 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-300" onClick={() => setForgotOpen(false)}>
+          <Card className="w-full max-w-md border-4 border-ink shadow-[12px_12px_0_0_#ff6b35] p-8 rounded-none bg-white relative overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className="absolute top-0 left-0 w-full h-2 bg-brand-magenta" />
+            <h2 className="text-3xl font-black mb-2 text-ink uppercase italic tracking-tighter">RECOBRAR SENHA</h2>
+            <p className="text-ink/60 font-medium mb-8 leading-snug">
+              Enviaremos um link de recuperação para o e-mail cadastrado.
             </p>
-            <div className="space-y-3">
-              <div>
-                <Label htmlFor="forgot-email">Email</Label>
-                <Input id="forgot-email" type="email" value={forgotEmail} onChange={(e) => setForgotEmail(e.target.value)} autoFocus />
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="forgot-email" className="text-sm font-black uppercase tracking-widest text-ink">E-mail de Cadastro</Label>
+                <Input 
+                  id="forgot-email" 
+                  type="email" 
+                  value={forgotEmail} 
+                  onChange={(e) => setForgotEmail(e.target.value)} 
+                  autoFocus 
+                  className="h-14 border-3 border-ink rounded-none text-lg font-bold focus-visible:ring-0 focus-visible:border-brand-magenta"
+                />
               </div>
-              <div className="flex gap-2">
-                <Button type="button" variant="outline" className="flex-1" onClick={() => setForgotOpen(false)}>
-                  Cancelar
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  className="flex-1 h-14 border-3 border-ink rounded-none font-black uppercase tracking-tight hover:bg-ink hover:text-white transition-all" 
+                  onClick={() => setForgotOpen(false)}
+                >
+                  VOLTAR
                 </Button>
-                <Button type="button" className="flex-1" disabled={forgotSubmitting} onClick={onForgot}>
-                  {forgotSubmitting ? "Enviando..." : "Enviar link"}
+                <Button 
+                  type="button" 
+                  className="flex-1 h-14 bg-brand-magenta hover:bg-ink text-white rounded-none font-black uppercase tracking-tight shadow-[4px_4px_0_0_#000] active:translate-y-1 transition-all" 
+                  disabled={forgotSubmitting} 
+                  onClick={onForgot}
+                >
+                  {forgotSubmitting ? "ENVIANDO..." : "ENVIAR LINK"}
                 </Button>
               </div>
             </div>
