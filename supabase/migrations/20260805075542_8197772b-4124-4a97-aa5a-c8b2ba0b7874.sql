@@ -1,0 +1,1 @@
+UPDATE public.restaurants SET active_payment_provider = 'mercado_pago', accept_pix_online = true WHERE slug = 'teste-mp-570e';
