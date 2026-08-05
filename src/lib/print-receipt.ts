@@ -1,5 +1,14 @@
-// Impressão térmica 80mm via window.print()
-// Funciona com qualquer impressora térmica configurada no navegador/sistema
+import qz from "qz-tray";
+
+// Configurações de impressão térmica 80mm e 58mm
+export type PrinterConfig = {
+  printerName: string;
+  autoPrint: boolean;
+  silent: boolean; // Se verdadeiro, usa QZ Tray para impressão sem diálogo
+  copies: number;
+  showCustomerData: boolean;
+  paperWidth: "80mm" | "58mm";
+};
 
 type PrintOrder = {
   order_number: number;
@@ -44,15 +53,34 @@ const TYPE_LABEL: Record<string, string> = {
   dine_in: "Consumir no local",
 };
 
-export function printReceipt(opts: {
+/**
+ * Conecta ao QZ Tray se necessário
+ */
+async function ensureQZ() {
+  if (!qz.websocket.isActive()) {
+    try {
+      await qz.websocket.connect();
+    } catch (err) {
+      console.error("Erro ao conectar ao QZ Tray:", err);
+      throw new Error("QZ Tray não está respondendo. Verifique se o aplicativo está aberto.");
+    }
+  }
+}
+
+/**
+ * Gera o HTML do recibo
+ */
+function generateReceiptHtml(opts: {
   restaurantName: string;
   restaurantPhone?: string | null;
   order: PrintOrder;
   items: PrintItem[];
+  paperWidth?: "80mm" | "58mm";
 }) {
-  const { restaurantName, restaurantPhone, order, items } = opts;
+  const { restaurantName, restaurantPhone, order, items, paperWidth = "80mm" } = opts;
   const date = new Date(order.created_at);
   const addr = order.delivery_address;
+  const widthPx = paperWidth === "58mm" ? "54mm" : "74mm";
 
   const itemsHtml = items.map((it) => {
     const optsArr: string[] = [];
@@ -73,14 +101,14 @@ export function printReceipt(opts: {
     `;
   }).join("");
 
-  const html = `<!doctype html>
+  return `<!doctype html>
 <html><head><meta charset="utf-8"/>
 <title>Pedido #${order.order_number}</title>
 <style>
-  @page { size: 80mm auto; margin: 3mm; }
+  @page { size: ${paperWidth} auto; margin: 3mm; }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
-  body { font-family: 'Courier New', monospace; font-size: 12px; color: #000; width: 74mm; }
+  body { font-family: 'Courier New', monospace; font-size: 12px; color: #000; width: ${widthPx}; }
   h1 { font-size: 16px; text-align: center; margin: 0 0 2px; }
   .center { text-align: center; }
   .small { font-size: 10px; }
@@ -131,20 +159,73 @@ export function printReceipt(opts: {
   <hr/>
   <div class="center small">Obrigado pela preferência!</div>
   <div style="height:20mm"></div>
-  <button onclick="window.print()">Imprimir</button>
-  <script>
-    window.addEventListener('load', () => { setTimeout(() => window.print(), 200); });
-  </script>
 </body></html>`;
+}
 
+/**
+ * Função principal para impressão (Suporta Browser ou QZ Tray)
+ */
+export async function printReceipt(opts: {
+  restaurantName: string;
+  restaurantPhone?: string | null;
+  order: PrintOrder;
+  items: PrintItem[];
+  config?: PrinterConfig;
+}) {
+  const config = opts.config || (JSON.parse(localStorage.getItem("printer_settings") || "null") as PrinterConfig) || {
+    silent: false,
+    paperWidth: "80mm",
+    copies: 1
+  };
+
+  const html = generateReceiptHtml({
+    ...opts,
+    paperWidth: config.paperWidth
+  });
+
+  if (config.silent && config.printerName) {
+    try {
+      await ensureQZ();
+      const printConfig = qz.configs.create(config.printerName);
+      const data: any[] = [{
+        type: 'html',
+        format: 'plain',
+        data: html
+      }];
+      
+      for (let i = 0; i < (config.copies || 1); i++) {
+        await qz.print(printConfig, data);
+      }
+      return true;
+    } catch (err: any) {
+      console.error("Falha na impressão automática:", err);
+      // Fallback para impressão via browser se falhar
+    }
+  }
+
+  // Fallback: Impressão via Window
   const w = window.open("", "_blank", "width=400,height=600");
   if (!w) {
     alert("Permita pop-ups para imprimir o pedido.");
-    return;
+    return false;
   }
+  
+  const browserHtml = html.replace("</body>", `
+    <button onclick="window.print()" style="margin: 10px auto; display: block; padding: 10px 20px;">Imprimir Manualmente</button>
+    <script>
+      window.addEventListener('load', () => { 
+        setTimeout(() => {
+          window.print();
+          if (window.location.search.includes('autoclose')) window.close();
+        }, 500); 
+      });
+    </script>
+  </body>`);
+
   w.document.open();
-  w.document.write(html);
+  w.document.write(browserHtml);
   w.document.close();
+  return true;
 }
 
 function escapeHtml(s: string) {
