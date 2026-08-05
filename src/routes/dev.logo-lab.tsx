@@ -85,7 +85,7 @@ function LogoLab() {
               <span className="logo-label">Opção {logo.label}</span>
               <div className="flex items-center gap-6">
                 <logo.component size={80} />
-                <span className="logo-name">mesivo</span>
+                <span className="logo-name uppercase">mesivo</span>
               </div>
               <p className="text-sm text-center text-gray-500 max-w-[240px]">
                 {logo.desc}
