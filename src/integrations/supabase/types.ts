@@ -1985,6 +1985,48 @@ export type Database = {
           },
         ]
       }
+      mercadopago_oauth_states: {
+        Row: {
+          created_at: string
+          expires_at: string
+          redirect_after: string
+          restaurant_id: string
+          state: string
+          used_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string
+          redirect_after?: string
+          restaurant_id: string
+          state?: string
+          used_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          redirect_after?: string
+          restaurant_id?: string
+          state?: string
+          used_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mercadopago_oauth_states_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mercadopago_oauth_states_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mp_webhook_events: {
         Row: {
           attempts: number
@@ -5132,6 +5174,20 @@ export type Database = {
       mark_order_paid_manual: {
         Args: { p_order_id: string }
         Returns: undefined
+      }
+      mercadopago_connect_complete: {
+        Args: {
+          p_access_token: string
+          p_merchant_id: string
+          p_public_key: string
+          p_refresh_token: string
+          p_state: string
+        }
+        Returns: Json
+      }
+      mercadopago_connect_init: {
+        Args: { p_redirect_after?: string; p_restaurant_id: string }
+        Returns: Json
       }
       merge_commands: {
         Args: { p_source_command_id: string; p_target_command_id: string }
