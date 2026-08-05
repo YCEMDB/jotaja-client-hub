@@ -17,6 +17,7 @@ import {
 import { BlockedStoreScreen } from "@/components/BlockedStoreScreen";
 import { GlobalAnnouncementsBanner } from "@/components/GlobalAnnouncementsBanner";
 import { SupportSessionBanner } from "@/components/SupportSessionBanner";
+import { Logo } from "@/components/jotaja/Logo";
 
 export const Route = createFileRoute("/_authenticated")({
   component: AuthLayout,
@@ -96,21 +97,13 @@ function SidebarBody({
       <Link
         to="/admin"
         onClick={onNavigate}
-        className={`relative p-5 flex items-center gap-3 border-b-2 border-background/10 hover:bg-background/5 transition-colors ${collapsed ? "justify-center px-2" : ""}`}
+        className={`relative p-5 flex items-center gap-3 border-b-2 border-background/10 hover:bg-background/5 transition-colors group ${collapsed ? "justify-center px-2" : ""}`}
         title="Mesivo"
       >
-        <div className="h-11 w-11 rounded-xl bg-gradient-sunset border-2 border-background grid place-items-center shadow-[3px_3px_0_0_oklch(0.12_0.025_25)] shrink-0 group">
-          <svg viewBox="0 0 48 48" className="h-7 w-7 transition-transform duration-500 group-hover:rotate-12" aria-hidden="true">
-            <rect x="12" y="13" width="20" height="4.5" rx="2.25" fill="#fff" />
-            <rect x="12" y="21.75" width="14" height="4.5" rx="2.25" fill="#fff" />
-            <rect x="12" y="30.5" width="20" height="4.5" rx="2.25" fill="#fff" />
-            <circle cx="36" cy="24" r="3.25" fill="#0a0a0a" />
-          </svg>
-        </div>
+        <Logo size="sm" variant="white" markOnly={collapsed} />
         {!collapsed && (
-          <div className="leading-none">
-            <div className="font-display text-lg tracking-tight">Mesivo</div>
-            <div className="text-[10px] uppercase tracking-[0.2em] text-background/50 mt-1">painel</div>
+          <div className="absolute top-1.5 right-1.5">
+            <div className="text-[8px] uppercase tracking-[0.2em] text-background/30 font-bold border border-background/20 px-1 rounded">Painel</div>
           </div>
         )}
       </Link>
