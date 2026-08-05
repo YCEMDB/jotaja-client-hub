@@ -71,7 +71,7 @@ export function PlanosMesivo() {
               {planos.map((p) => (
                 <MotionStaggerItem key={p.name} className="h-full">
                   <div
-                    className={`relative h-full flex flex-col p-12 rounded-[32px] border transition-editorial group ${
+                    className={`relative h-full flex flex-col p-12 rounded-[40px] border transition-editorial group ${
                       p.highlighted
                     ? "bg-deep-forest text-cream border-deep-forest shadow-2xl scale-[1.02] z-10"
                     : "bg-white border-border hover:shadow-xl shadow-sm"
