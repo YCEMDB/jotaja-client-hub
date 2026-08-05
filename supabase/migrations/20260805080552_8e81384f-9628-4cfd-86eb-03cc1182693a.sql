@@ -1,0 +1,2 @@
+ALTER TABLE public.restaurant_payment_integrations DROP CONSTRAINT IF EXISTS restaurant_payment_integrations_provider_check;
+ALTER TABLE public.restaurant_payment_integrations ADD CONSTRAINT restaurant_payment_integrations_provider_check CHECK (provider IN ('pagbank','mercadopago'));

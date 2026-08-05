@@ -27,7 +27,7 @@ import { toast } from "sonner";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
-import { mercadopagoConnectInit, createTestMercadoPagoPix } from "@/lib/payments/mercadopago.functions";
+import { mercadopagoConnectInit, createTestMercadoPagoPix, mercadopagoUseSandboxCredentials } from "@/lib/payments/mercadopago.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/configuracoes")({
   component: ConfigPage,
@@ -721,6 +721,7 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
   const connectFn = useServerFn(mercadopagoConnectInit);
   const webhookUrl = typeof window !== "undefined" ? `${window.location.origin}/api/public/mercadopago-webhook` : "";
   const createTestPix = useServerFn(createTestMercadoPagoPix);
+  const useSandboxFn = useServerFn(mercadopagoUseSandboxCredentials);
 
   const reload = async () => {
     setLoading(true);
@@ -937,7 +938,35 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
             Utilize a conexão simplificada para vincular sua conta do Mercado Pago em segundos e começar a receber via PIX.
           </p>
         </div>
+        <div className="border-t border-muted-foreground/10 pt-2 flex items-center justify-between gap-3">
+          <p className="text-[11px] opacity-85">Ambiente de testes (Sandbox)</p>
+          <Button
+            size="sm"
+            variant="outline"
+            className="h-8"
+            disabled={saving}
+            onClick={async () => {
+              setSaving(true);
+              try {
+                const res = await useSandboxFn({ data: { restaurantId: r.id } });
+                if (res.ok) {
+                  toast.success("Credenciais Sandbox aplicadas. PIX online liberado.");
+                  onSaved();
+                } else {
+                  toast.error(res.error || "Falha ao aplicar credenciais Sandbox");
+                }
+              } catch {
+                toast.error("Erro ao aplicar credenciais Sandbox");
+              } finally {
+                setSaving(false);
+              }
+            }}
+          >
+            Usar credenciais Sandbox
+          </Button>
+        </div>
       </div>
+
 
       <div>
         <Label>Access Token</Label>
