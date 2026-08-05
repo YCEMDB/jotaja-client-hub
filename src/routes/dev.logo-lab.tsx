@@ -116,21 +116,21 @@ function LogoOption1({ size = 48 }) {
     <svg width={size} height={size} viewBox="0 0 48 48" fill="none">
       <defs>
         <linearGradient id={id} x1="0" y1="0" x2="48" y2="48">
-          <stop offset="0" stopColor="#FFB82E" />
-          <stop offset="0.5" stopColor="#FF6B35" />
+          <stop offset="0" stopColor="#FF6B35" />
           <stop offset="1" stopColor="#E84393" />
         </linearGradient>
       </defs>
       {/* 
-         O M Monolítico: Inspirado no hardware Mesivo (totens e balcões).
-         Representa a solidez e a integração de 3 pilares.
+         O "M" MESIVO OPERACIONAL:
+         Geometria inspirada no hardware de autoatendimento e na precisão milimétrica.
+         Brutalismo elegante com proporções áureas.
       */}
-      <path d="M4 12C4 8.68629 6.68629 6 10 6H14V42H10C6.68629 42 4 39.3137 4 36V12Z" fill={`url(#${id})`} />
-      <rect x="17" y="2" width="14" height="44" rx="2" fill={`url(#${id})`} />
-      <path d="M34 6H38C41.3137 6 44 8.68629 44 12V36C44 39.3137 41.3137 42 38 42H34V6Z" fill={`url(#${id})`} />
+      <path d="M6 10C6 7.79086 7.79086 6 10 6H12V42H10C7.79086 42 6 40.2091 6 38V10Z" fill={`url(#${id})`} />
+      <rect x="18" y="4" width="12" height="40" rx="2" fill={`url(#${id})`} />
+      <path d="M36 6H38C40.2091 6 42 7.79086 42 10V38C42 40.2091 40.2091 42 38 42H36V6Z" fill={`url(#${id})`} />
       
-      {/* Conector de Fluxo Dinâmico */}
-      <rect x="19" y="20" width="10" height="8" rx="1" fill="#0F0A08" opacity="0.8" />
+      {/* Detalhe de Pulso (Conexão em tempo real) */}
+      <rect x="18" y="22" width="12" height="4" fill="#0F0A08" opacity="0.6" />
     </svg>
   );
 }
@@ -142,20 +142,21 @@ function LogoOption2({ size = 48 }) {
       <defs>
         <linearGradient id={id} x1="0" y1="0" x2="48" y2="48">
           <stop offset="0" stopColor="#7C5CFF" />
-          <stop offset="1" stopColor="#E84393" />
+          <stop offset="1" stopColor="#3B82F6" />
         </linearGradient>
       </defs>
       {/* 
-         O Nexus Operacional: A convergência de todos os canais.
-         Inspirado no radar de pedidos e na fluidez do PDV Mesivo.
+         NÚCLEO DE DADOS:
+         Inspirado na arquitetura de microsserviços e no fluxo de pedidos.
+         Simboliza a inteligência central que distribui ordens.
       */}
-      <circle cx="24" cy="24" r="20" stroke={`url(#${id})`} strokeWidth="4" strokeDasharray="1 10" strokeLinecap="round" />
-      <circle cx="24" cy="24" r="14" stroke="#FFF8EE" strokeWidth="1.5" opacity="0.15" />
+      <rect x="4" y="4" width="40" height="40" rx="6" stroke={`url(#${id})`} strokeWidth="3" strokeDasharray="12 6" />
+      <path d="M12 24H36M24 12V36" stroke="#FFF8EE" strokeWidth="2" strokeLinecap="round" opacity="0.2" />
       
-      {/* O "M" central estilizado por vetores de força */}
-      <path d="M16 32V16L24 24L32 16V32" stroke={`url(#${id})`} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+      {/* O "M" oculto na geometria de fluxo */}
+      <path d="M16 30V18L24 26L32 18V30" stroke={`url(#${id})`} strokeWidth="5" strokeLinecap="square" />
       
-      {/* Indicador de Status Ativo */}
+      {/* Ponto de origem (O Cliente) */}
       <circle cx="24" cy="24" r="3" fill="#FFF8EE" />
     </svg>
   );
@@ -172,18 +173,20 @@ function LogoOption3({ size = 48 }) {
         </linearGradient>
       </defs>
       {/* 
-         O Cubo de Dados: Inteligência e organização brutalista.
-         Inspirado nos módulos do Dashboard e na precisão do KDS.
+         ASCENSÃO OPERACIONAL:
+         Inspirado no KDS Mesivo (cozinha) e no crescimento de receita.
+         Formas ascendentes que formam um 'M' implícito.
       */}
-      <rect x="6" y="6" width="36" height="36" rx="4" stroke={`url(#${id})`} strokeWidth="2" strokeDasharray="6 4" />
+      <rect x="4" y="24" width="10" height="18" rx="3" fill={`url(#${id})`} />
+      <rect x="19" y="12" width="10" height="30" rx="3" fill={`url(#${id})`} />
+      <rect x="34" y="6" width="10" height="36" rx="3" fill={`url(#${id})`} />
       
-      {/* A forma do "M" esculpida em blocos operacionais */}
-      <rect x="10" y="20" width="6" height="14" rx="1.5" fill={`url(#${id})`} />
-      <rect x="21" y="14" width="6" height="20" rx="1.5" fill={`url(#${id})`} />
-      <rect x="32" y="20" width="6" height="14" rx="1.5" fill={`url(#${id})`} />
+      {/* Linha de Corte de Eficiência */}
+      <path d="M4 36L44 8" stroke="#FFF8EE" strokeWidth="2" strokeLinecap="round" strokeDasharray="4 8" opacity="0.4" />
       
-      {/* Nodo de Inteligência */}
-      <path d="M10 10H14M34 10H38" stroke="#FFF8EE" strokeWidth="2" strokeLinecap="round" opacity="0.3" />
+      {/* Check de conclusão */}
+      <circle cx="39" cy="11" r="5" fill="#FFF8EE" />
+      <path d="M37 11L38.5 12.5L41 10" stroke="#FF6B35" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
