@@ -6,12 +6,13 @@ type LogoProps = {
   markOnly?: boolean;
   /** Larger mark size for hero/auth contexts */
   size?: "sm" | "md" | "lg";
+  variant?: "ink" | "white";
 };
 
 /**
  * Mesivo logo lockup — Utiliza o MesivoMark (Nexus Brutalista) + wordmark.
  */
-export function Logo({ className = "", markOnly = false, size = "md" }: LogoProps) {
+export function Logo({ className = "", markOnly = false, size = "md", variant = "ink" }: LogoProps) {
   const markPixelSize =
     size === "sm" ? 32 : size === "lg" ? 64 : 44;
   
@@ -35,7 +36,7 @@ export function Logo({ className = "", markOnly = false, size = "md" }: LogoProp
 
       {!markOnly && (
         <span
-          className={`logo-wordmark font-display ${wordSize} leading-none tracking-tight text-ink uppercase`}
+          className={`logo-wordmark font-display ${wordSize} leading-none tracking-tight ${variant === "white" ? "text-white" : "text-ink"} uppercase`}
           style={{ letterSpacing: "-0.02em" }}
         >
           mesivo
