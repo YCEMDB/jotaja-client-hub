@@ -884,13 +884,9 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
             Conectar com Mercado Pago
           </Button>
         </div>
-        <div className="border-t border-muted-foreground/10 pt-2">
-          <p className="font-semibold flex-col items-start gap-1 opacity-85 text-[11px] leading-relaxed">
-            Para começar, busque no menu lateral as credenciais de teste e use-as na implementação do SDK no seu backend para acessar as funcionalidades do Mercado Pago. <a href="https://www.mercadopago.com.br/developers/panel/app" target="_blank" rel="noreferrer" className="underline font-bold text-blue-600">Saiba mais</a>
-            <br /><br />
-            <strong>Instalar o SDK e iniciar a biblioteca com suas credenciais de teste</strong>
-            <br /><br />
-            O SDK de backend permitirá que você opere via servidor para gerenciar preferências de pagamento, processar transações e outras operações críticas.
+        <div className="border-t border-muted-foreground/10 pt-2 text-[11px] leading-relaxed opacity-85">
+          <p>
+            Utilize a conexão simplificada para vincular sua conta do Mercado Pago em segundos e começar a receber via PIX.
           </p>
         </div>
       </div>
