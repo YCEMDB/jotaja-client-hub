@@ -3,66 +3,124 @@
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
 
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
-  --font-sans: "Manrope", system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", monospace;
-  --font-serif: "Instrument Serif", serif;
+  --font-display: "Archivo Black", system-ui, sans-serif;
+  --font-sans: "Hind", system-ui, sans-serif;
 
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
-  --radius-xl: 32px;
-  --radius-2xl: 40px;
-  --radius-3xl: 64px;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
+  --color-primary-glow: var(--primary-glow);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-soft: var(--accent-soft);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
   --color-border: var(--border);
-  
-  --color-deep-forest: #173A34;
-  --color-cream: #F8F5EF;
-  --color-copper: #D87A43;
-  --color-sage: #5F8D67;
-  --color-error: #C44747;
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Brand accents — Sunset Blaze */
+  --color-brand-orange: var(--brand-orange);
+  --color-brand-magenta: var(--brand-magenta);
+  --color-brand-violet: var(--brand-violet);
+  --color-brand-amber: var(--brand-amber);
+  --color-ink: var(--ink);
 }
 
 :root {
-  --background: #F8F5EF;
-  --foreground: #1A1A1A;
-  --deep-forest: #173A34;
-  --copper: #D87A43;
-  --sage: #5F8D67;
-  --error: #C44747;
+  --radius: 1.25rem;
 
-  --primary: #173A34;
-  --primary-foreground: #F8F5EF;
-  --accent: #D87A43;
-  --accent-foreground: #FFFFFF;
+  /* SUNSET BLAZE — bold, expressive, gastronomic energy */
+  --background: oklch(0.985 0.008 70);      /* warm off-white */
+  --foreground: oklch(0.15 0.02 30);        /* near-black ink */
+  --ink: oklch(0.12 0.025 25);
 
-  --muted: #F2EFE9;
-  --muted-foreground: #665F58;
-  --border: rgba(23, 58, 52, 0.08);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.15 0.02 30);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.15 0.02 30);
 
-  --shadow-sm: 0 2px 8px rgba(23, 58, 52, 0.04);
-  --shadow-md: 0 8px 24px rgba(23, 58, 52, 0.08);
-  --shadow-lg: 0 16px 48px rgba(23, 58, 52, 0.12);
-  --shadow-xl: 0 32px 64px rgba(23, 58, 52, 0.16);
-  --shadow-glow: 0 0 40px rgba(216, 122, 67, 0.15);
+  /* Primary: vibrant sunset orange #ff6b35 */
+  --primary: oklch(0.69 0.22 38);
+  --primary-foreground: oklch(0.99 0.005 70);
+  --primary-glow: oklch(0.76 0.18 50);
 
-  --transition-editorial: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  /* Accent: hot magenta #e84393 */
+  --accent: oklch(0.62 0.24 0);
+  --accent-foreground: oklch(0.99 0.005 70);
+  --accent-soft: oklch(0.96 0.04 20);
 
-  --font-ui: "Manrope", system-ui, sans-serif;
+  --secondary: oklch(0.97 0.02 70);
+  --secondary-foreground: oklch(0.15 0.02 30);
+
+  --muted: oklch(0.96 0.015 60);
+  --muted-foreground: oklch(0.45 0.02 30);
+
+  --warning: oklch(0.82 0.17 80);
+
+  --destructive: oklch(0.6 0.24 25);
+  --destructive-foreground: oklch(0.99 0.005 70);
+
+  --success: oklch(0.7 0.16 150);
+  --success-foreground: oklch(0.15 0.02 30);
+
+  --border: oklch(0.9 0.015 40);
+  --input: oklch(0.94 0.015 40);
+  --ring: oklch(0.69 0.22 38);
+
+  /* Brand palette tokens */
+  --brand-orange: oklch(0.69 0.22 38);
+  --brand-amber: oklch(0.78 0.17 65);
+  --brand-magenta: oklch(0.62 0.24 0);
+  --brand-violet: oklch(0.5 0.22 290);
+
+  --gradient-primary: linear-gradient(135deg, oklch(0.69 0.22 38), oklch(0.62 0.19 30));
+  /* Paleta estrutural Mesivo: âmbar → laranja-coral → laranja queimado (sem magenta/violeta). */
+  --gradient-sunset: linear-gradient(135deg, oklch(0.82 0.17 75) 0%, oklch(0.72 0.20 55) 35%, oklch(0.69 0.22 38) 70%, oklch(0.62 0.19 30) 100%);
+  --gradient-soft: linear-gradient(180deg, oklch(0.99 0.01 70), oklch(0.96 0.03 40));
+  --gradient-radial: radial-gradient(120% 80% at 50% 0%, oklch(0.95 0.06 45) 0%, oklch(0.985 0.008 70) 60%);
+  --gradient-mesh:
+    radial-gradient(at 20% 20%, oklch(0.82 0.17 75 / 0.32) 0px, transparent 50%),
+    radial-gradient(at 80% 30%, oklch(0.72 0.20 55 / 0.28) 0px, transparent 50%),
+    radial-gradient(at 60% 80%, oklch(0.69 0.22 38 / 0.22) 0px, transparent 50%);
+
+  --shadow-xs: 0 1px 2px oklch(0.15 0.02 30 / 0.06);
+  --shadow-sm: 0 2px 6px oklch(0.15 0.02 30 / 0.08), 0 1px 2px oklch(0.15 0.02 30 / 0.06);
+  --shadow-md: 0 6px 20px -4px oklch(0.15 0.02 30 / 0.12), 0 2px 6px oklch(0.15 0.02 30 / 0.06);
+  --shadow-lg: 0 16px 40px -8px oklch(0.15 0.02 30 / 0.16), 0 4px 12px oklch(0.15 0.02 30 / 0.08);
+  --shadow-xl: 0 32px 80px -16px oklch(0.15 0.02 30 / 0.24), 0 8px 24px oklch(0.15 0.02 30 / 0.1);
+  --shadow-brutal: 6px 6px 0 0 oklch(0.15 0.02 30);
+  --shadow-brutal-lg: 10px 10px 0 0 oklch(0.15 0.02 30);
+  --shadow-glow: 0 20px 60px -10px oklch(0.69 0.22 38 / 0.45);
+  --shadow-glow-magenta: 0 20px 60px -10px oklch(0.62 0.24 0 / 0.4);
+  --shadow-blue: var(--shadow-glow); /* backwards-compat alias */
+
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
 
 .dark {
   --background: oklch(0.14 0.02 30);
@@ -128,10 +186,9 @@
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    font-weight: 800;
-    letter-spacing: -0.04em;
-    line-height: 1.1;
-
+    font-weight: 900;
+    letter-spacing: -0.035em;
+    line-height: 0.95;
     text-transform: none;
     overflow-wrap: anywhere;
     word-break: break-word;
@@ -148,7 +205,6 @@
 }
 
 @layer utilities {
-  .perspective-2000 { perspective: 2000px; }
   .font-display { font-family: var(--font-display); }
   .font-sans { font-family: var(--font-sans); }
 
@@ -383,67 +439,71 @@
   .animate-glow-pulse { animation: glow-pulse 2.4s ease-in-out infinite; }
 
   /* --- BOTÕES shadcn: sheen + lift + press --- */
-  button[class*="inline-flex"][class*="rounded-"],
-  a[class*="inline-flex"][class*="rounded-"][class*="items-center"] {
+  button[class*="inline-flex"][class*="rounded-md"],
+  a[class*="inline-flex"][class*="rounded-md"][class*="items-center"] {
     position: relative;
     overflow: hidden;
     isolation: isolate;
-    transition: var(--transition-editorial);
-    font-weight: 600;
-    letter-spacing: -0.01em;
+    transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+                filter 0.2s ease;
   }
-  button[class*="inline-flex"][class*="rounded-"]::after,
-  a[class*="inline-flex"][class*="rounded-"][class*="items-center"]::after {
+  button[class*="inline-flex"][class*="rounded-md"]::after,
+  a[class*="inline-flex"][class*="rounded-md"][class*="items-center"]::after {
     content: "";
     position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-    transform: translateX(-100%) skewX(-15deg);
+    top: 0; left: 0; bottom: 0;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+    transform: translateX(-120%) skewX(-20deg);
     pointer-events: none;
     z-index: 1;
-    transition: transform 0.6s ease;
   }
-  button[class*="inline-flex"][class*="rounded-"]:hover:not(:disabled),
-  a[class*="inline-flex"][class*="rounded-"][class*="items-center"]:hover {
+  button[class*="inline-flex"][class*="rounded-md"]:hover:not(:disabled),
+  a[class*="inline-flex"][class*="rounded-md"][class*="items-center"]:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px -5px rgba(23, 58, 52, 0.1);
+    filter: brightness(1.05) saturate(1.08);
   }
-  button[class*="inline-flex"][class*="rounded-"]:hover:not(:disabled)::after,
-  a[class*="inline-flex"][class*="rounded-"][class*="items-center"]:hover::after {
-    transform: translateX(100%) skewX(-15deg);
+  button[class*="inline-flex"][class*="rounded-md"]:hover:not(:disabled)::after,
+  a[class*="inline-flex"][class*="rounded-md"][class*="items-center"]:hover::after {
+    animation: btn-sheen 0.9s cubic-bezier(0.22, 1, 0.36, 1);
   }
-  button[class*="inline-flex"][class*="rounded-"]:active:not(:disabled),
-  a[class*="inline-flex"][class*="rounded-"][class*="items-center"]:active {
-    transform: translateY(0) scale(0.98);
+  button[class*="inline-flex"][class*="rounded-md"]:active:not(:disabled),
+  a[class*="inline-flex"][class*="rounded-md"][class*="items-center"]:active {
+    transform: translateY(0) scale(0.97);
+    filter: brightness(0.98);
   }
 
   button[class*="bg-primary"]:hover:not(:disabled),
   a[class*="bg-primary"]:hover {
-    box-shadow: 0 15px 30px -8px rgba(23, 58, 52, 0.25);
+    box-shadow: var(--shadow-glow);
+  }
+  button[class*="bg-destructive"]:hover:not(:disabled) {
+    box-shadow: 0 20px 60px -10px oklch(0.6 0.24 25 / 0.45);
   }
 
-  /* --- CARDS shadcn: editorial lift --- */
-  [class*="rounded-"][class*="bg-card"][class*="border"],
-  .card-editorial {
-    transition: var(--transition-editorial);
-    border: 1px solid var(--border);
-    background-color: #FFFFFF;
+  /* --- CARDS shadcn: lift + halo laranja --- */
+  [class*="rounded-xl"][class*="bg-card"][class*="border"],
+  [class*="rounded-lg"][class*="bg-card"][class*="border"] {
+    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+                border-color 0.25s ease;
+    will-change: transform;
   }
-  [class*="rounded-"][class*="bg-card"][class*="border"]:hover,
-  .card-editorial:hover {
-    transform: translateY(-6px);
-    box-shadow: var(--shadow-lg);
-    border-color: rgba(23, 58, 52, 0.15);
+  [class*="rounded-xl"][class*="bg-card"][class*="border"]:hover,
+  [class*="rounded-lg"][class*="bg-card"][class*="border"]:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 24px 60px -18px oklch(0.15 0.02 30 / 0.25),
+      0 8px 20px -10px oklch(0.69 0.22 38 / 0.22);
+    border-color: color-mix(in oklab, var(--brand-orange) 40%, var(--border));
   }
 
-  /* Reforço de inputs */
-  input, select, textarea {
-    transition: var(--transition-editorial);
-    background-color: #FFFFFF;
-  }
-  input:focus, select:focus, textarea:focus {
-    border-color: var(--copper);
-    box-shadow: 0 0 0 4px rgba(216, 122, 67, 0.1);
+  a > [class*="bg-card"][class*="border"]:hover,
+  [role="button"][class*="bg-card"][class*="border"]:hover {
+    box-shadow:
+      0 30px 80px -20px oklch(0.15 0.02 30 / 0.3),
+      var(--shadow-glow);
   }
 
   /* Foco visível reforçado */
@@ -539,67 +599,65 @@
  * ===================================================================== */
 
 :root {
-  /* --- Paleta Mesivo (Diretor Criativo / The Ledger) --- */
-  --mesivo-cream:      #F8F6F3;
-  --mesivo-warm-white: #FFFFFF;
-  --mesivo-peach:      rgba(227, 109, 66, 0.08);
-  --mesivo-tomato:     #E36D42;
-  --mesivo-orange:     #E36D42;
-  --mesivo-mango:      #D4A73F;
-  --mesivo-leaf:       #3F7D58;
-  --mesivo-leaf-soft:  rgba(63, 125, 88, 0.08);
-  --mesivo-coffee:     #2B2B2B;
-  --mesivo-text:       #2B2B2B;
+  /* --- Paleta Mesivo (marketing) --- */
+  --mesivo-cream:      #FFF8EE;
+  --mesivo-warm-white: #FFFDFA;
+  --mesivo-peach:      #FFE7D5;
+  --mesivo-tomato:     #F0522D;
+  --mesivo-orange:     #FF6B35;
+  --mesivo-mango:      #FFB82E;
+  --mesivo-leaf:       #2F7D5B;
+  --mesivo-leaf-soft:  #E5F3EA;
+  --mesivo-coffee:     #34241D;
+  --mesivo-text:       #2A211D;
   --mesivo-muted:      #70645E;
-  --mesivo-border:     #E5E2DE;
+  --mesivo-border:     #ECDDD3;
   --mesivo-white:      #FFFFFF;
 
   /* --- Tipografia funcional --- */
-  --font-ui: "Manrope", system-ui, sans-serif;
+  --font-ui: "Manrope", system-ui, -apple-system, BlinkMacSystemFont,
+             "Segoe UI", sans-serif;
 
   /* --- Motion --- */
-  --dur-fast: 180ms;
-  --dur-base: 280ms;
-  --dur-slow: 450ms;
+  --dur-fast: 140ms;
+  --dur-base: 200ms;
+  --dur-slow: 320ms;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in:  cubic-bezier(0.4, 0, 1, 1);
 
-  /* --- Semantic tokens (Diretor Criativo) --- */
-  --surface:          var(--mesivo-cream);
-  --surface-1:        var(--mesivo-warm-white);
-  --surface-2:        var(--mesivo-peach);
-  --surface-3:        var(--mesivo-leaf-soft);
-  --surface-elevated: var(--mesivo-white);
-  --overlay:          rgba(43, 43, 43, 0.4);
-  --hairline:         var(--mesivo-border);
-  --hairline-strong:  var(--mesivo-coffee);
+  /* --- Semantic tokens (fallback = valores atuais / seguros) --- */
+  /* Superfícies */
+  --surface:          var(--background);
+  --surface-1:        var(--card);
+  --surface-2:        var(--muted);
+  --surface-3:        var(--secondary);
+  --surface-elevated: var(--popover);
+  --overlay:          oklch(0.12 0.025 25 / 0.5);
+  --hairline:         var(--border);
+  --hairline-strong:  var(--ink);
 
   /* Texto */
-  --fg-hi:     var(--mesivo-coffee);
-  --fg:        var(--mesivo-text);
-  --fg-mid:    var(--mesivo-muted);
-  --fg-low:    #9A8A82;
-  --fg-invert: var(--mesivo-white);
+  --fg-hi:     var(--ink);
+  --fg:        var(--foreground);
+  --fg-mid:    var(--muted-foreground);
+  --fg-low:    oklch(0.55 0.02 40);
+  --fg-invert: var(--primary-foreground);
 
   /* Marca semântica */
-  --accent:        var(--mesivo-tomato);
-  --accent-hover:  #C84B4B; /* Troca para danger/accent secundário no hover em alguns casos */
-  --accent-active: #B33518;
-  --accent-soft:   var(--mesivo-peach);
-  --accent-glow:   rgba(227, 109, 66, 0.2);
-  --accent-ink:    var(--mesivo-white);
+  --accent-hover:  oklch(0.63 0.24 38);
+  --accent-active: oklch(0.55 0.26 38);
+  --accent-soft:   oklch(0.96 0.04 40);
+  --accent-glow:   oklch(0.69 0.22 38 / 0.35);
+  --accent-ink:    var(--primary-foreground);
 
   /* Estados */
-  --success:      var(--mesivo-leaf);
-  --success-soft: var(--mesivo-leaf-soft);
-  --warning:      var(--mesivo-mango);
-  --warning-soft: rgba(212, 167, 63, 0.1);
-  --danger:       #C84B4B;
-  --danger-soft:  rgba(200, 75, 75, 0.1);
-  --info:         #4B7BEC;
-  --info-soft:    rgba(75, 123, 236, 0.1);
+  --success-soft: oklch(0.94 0.06 150);
+  --warning-soft: oklch(0.96 0.09 80);
+  --danger:       var(--destructive);
+  --danger-soft:  oklch(0.94 0.06 25);
+  --info:         oklch(0.6 0.15 240);
+  --info-soft:    oklch(0.94 0.04 240);
 }
-
 
 /* ---------------------------------------------------------------------
  * Contexto: MARKETING — creme + coral, aplicado no PublicShell novo
@@ -641,38 +699,6 @@
   color: var(--fg-hi);
   letter-spacing: -0.03em;
 }
-
-/* Landing (Onda B1) — Bricolage Grotesque display + Instrument Serif accent.
- * Escopo restrito ao PublicShell variant="landing" para não afetar
- * /empresa, /sobre e /contato (que permanecem no display global). */
-[data-theme="marketing"][data-variant="landing"] {
-  --font-display: "Manrope", system-ui, sans-serif;
-  --font-accent: "Instrument Serif", Georgia, serif;
-}
-[data-theme="marketing"][data-variant="landing"] h1,
-[data-theme="marketing"][data-variant="landing"] h2,
-[data-theme="marketing"][data-variant="landing"] h3,
-[data-theme="marketing"][data-variant="landing"] h4 {
-  font-family: var(--font-display);
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  line-height: 1.1;
-  text-transform: lowercase; /* Diretor Criativo prefere lowercase */
-}
-[data-theme="marketing"][data-variant="landing"] :is(h1,h2,h3,h4,h5,h6,p,li,a,button,input,textarea,label,span,strong,em,small,td,th) {
-  font-variant-numeric: tabular-nums lining-nums;
-}
-
-[data-theme="marketing"][data-variant="landing"] .mesivo-accent {
-  font-family: var(--font-accent);
-  font-weight: 400;
-  font-style: italic;
-  letter-spacing: -0.01em;
-}
-[data-theme="marketing"][data-variant="landing"] [id] {
-  scroll-margin-top: 88px;
-}
-
 
 /* ---------------------------------------------------------------------
  * Contexto: APP — neutro claro operacional (não aplicado nesta onda)

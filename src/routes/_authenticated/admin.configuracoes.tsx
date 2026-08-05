@@ -274,18 +274,14 @@ function HorariosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
 
   const save = async () => {
     setSaving(true);
-    const { error } = await supabase.rpc("update_restaurant_hours", {
-      p_restaurant_id: r.id,
-      p_opening_hours: hours,
-      p_open_mode: openMode,
-      p_timezone: tz,
-    });
+    const { error } = await supabase.from("restaurants")
+      .update({ opening_hours: hours, open_mode: openMode, timezone: tz })
+      .eq("id", r.id);
     setSaving(false);
     if (error) return toast.error(error.message);
     toast.success("Horários salvos");
     onSaved();
   };
-
 
   const TZS = [
     "America/Sao_Paulo","America/Manaus","America/Belem","America/Fortaleza",

@@ -1,26 +1,24 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { MotionConfig } from "motion/react";
 import { resolveHostToSlug } from "@/lib/custom-domain.functions";
-import { PublicShell } from "@/components/mesivo-shell/PublicShell";
-import { ScrollProgress } from "@/components/motion";
+import { Header } from "@/components/jotaja/Header";
+import { Hero } from "@/components/jotaja/Hero";
+import { Stats } from "@/components/jotaja/Stats";
+import { Bento } from "@/components/jotaja/Bento";
+import { ComoFunciona } from "@/components/jotaja/ComoFunciona";
+import { ComparativoIfood } from "@/components/jotaja/ComparativoIfood";
+import { Depoimentos } from "@/components/jotaja/Depoimentos";
+import { Planos } from "@/components/jotaja/Planos";
+import { FAQ } from "@/components/jotaja/FAQ";
+import { CTA } from "@/components/jotaja/CTA";
+import { Footer } from "@/components/jotaja/Footer";
 import { WhatsAppFloat } from "@/components/jotaja/WhatsAppFloat";
-import {
-  LandingHero,
-  ProblemaSolucao,
-  FluxoPedidos,
-  RecursosMesivo,
-  Beneficios,
-  PlanosMesivo,
-  FAQMesivo,
-  CTAFinal,
-  MesivoTemplates,
-} from "@/components/mesivo-landing";
-import { mesivoFaq } from "@/components/mesivo-landing/faq-data";
+import { ScrollProgress } from "@/components/motion";
+import { MotionConfig } from "motion/react";
 
 const SITE_URL = "https://comandahub.online";
-const TITLE = "Mesivo | Seu restaurante. Finalmente sincronizado.";
+const TITLE = "Mesivo | Gestão completa para restaurantes";
 const DESCRIPTION =
-  "O sistema operacional premium para restaurantes de alta performance. Gestão editorial, sincronia total e operação impecável.";
+  "Centralize pedidos, mesas, comandas, cardápio digital, delivery, retirada, caixa e cozinha em uma plataforma criada para a rotina real do seu restaurante.";
 
 export const Route = createFileRoute("/")({
   beforeLoad: async () => {
@@ -30,6 +28,7 @@ export const Route = createFileRoute("/")({
         throw redirect({ to: "/$slug", params: { slug } });
       }
     } catch (e: unknown) {
+      // Re-throw router redirects; swallow lookup errors so landing still renders.
       if (e && typeof e === "object" && "isRedirect" in e) throw e;
     }
   },
@@ -40,116 +39,27 @@ export const Route = createFileRoute("/")({
       {
         name: "keywords",
         content:
-          "gestão de restaurante, cardápio digital, pedidos online, comandas, mesas, PDV, cozinha, KDS, caixa, delivery próprio, sistema para restaurante",
+          "gestão de restaurante, cardápio digital, pedidos online, comandas digitais, controle de mesas, sistema para restaurante, delivery próprio, PDV, caixa, cozinha, KDS",
       },
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
       { property: "og:url", content: SITE_URL },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
-      { name: "theme-color", content: "#F8F5EF" },
     ],
-    links: [
-      { rel: "canonical", href: SITE_URL },
-      // Bricolage Grotesque (display marketing) + Instrument Serif (acento
-      // editorial pontual). Carregados apenas na landing — outras rotas
-      // marketing permanecem no display global.
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Instrument+Serif:ital@0;1&display=swap",
-      },
-    ],
+    links: [{ rel: "canonical", href: SITE_URL }],
     scripts: [
       {
-        // Estende o nó #software emitido no root com Offers reais dos planos
-        // (fonte: public.app_plans). Sem AggregateRating/Review — a marca
-        // Mesivo é nova e não há prova social auditável a apresentar.
         type: "application/ld+json",
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "SoftwareApplication",
-          "@id": `${SITE_URL}/#software`,
           name: "Mesivo",
           applicationCategory: "BusinessApplication",
-          operatingSystem: "Web, iOS, Android (PWA)",
-          url: SITE_URL,
+          operatingSystem: "Web",
           description: DESCRIPTION,
-          inLanguage: "pt-BR",
-          offers: {
-            "@type": "AggregateOffer",
-            priceCurrency: "BRL",
-            lowPrice: "97.00",
-            highPrice: "397.00",
-            offerCount: 3,
-            offers: [
-              {
-                "@type": "Offer",
-                name: "Starter",
-                price: "97.00",
-                priceCurrency: "BRL",
-                priceSpecification: {
-                  "@type": "UnitPriceSpecification",
-                  price: "97.00",
-                  priceCurrency: "BRL",
-                  billingIncrement: 1,
-                  unitCode: "MON",
-                },
-                category: "SubscriptionNewMember",
-                availability: "https://schema.org/InStock",
-                url: `${SITE_URL}/#planos`,
-              },
-              {
-                "@type": "Offer",
-                name: "Pro",
-                price: "197.00",
-                priceCurrency: "BRL",
-                priceSpecification: {
-                  "@type": "UnitPriceSpecification",
-                  price: "197.00",
-                  priceCurrency: "BRL",
-                  billingIncrement: 1,
-                  unitCode: "MON",
-                },
-                category: "SubscriptionNewMember",
-                availability: "https://schema.org/InStock",
-                url: `${SITE_URL}/#planos`,
-              },
-              {
-                "@type": "Offer",
-                name: "Business",
-                price: "397.00",
-                priceCurrency: "BRL",
-                priceSpecification: {
-                  "@type": "UnitPriceSpecification",
-                  price: "397.00",
-                  priceCurrency: "BRL",
-                  billingIncrement: 1,
-                  unitCode: "MON",
-                },
-                category: "SubscriptionNewMember",
-                availability: "https://schema.org/InStock",
-                url: `${SITE_URL}/#planos`,
-              },
-            ],
-          },
-        }),
-      },
-      {
-        // FAQPage gerado a partir de mesivoFaq (fonte única compartilhada
-        // com FAQMesivo.tsx) — garante paridade 1:1 com o FAQ visível.
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: mesivoFaq.map((f) => ({
-            "@type": "Question",
-            name: f.q,
-            acceptedAnswer: { "@type": "Answer", text: f.a },
-          })),
+          url: SITE_URL,
         }),
       },
     ],
@@ -159,20 +69,30 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    // reducedMotion="never" evita hydration mismatch — cada primitivo do
-    // motion/react troca para variantes reduzidas via useReducedMotionSafe.
+    // reducedMotion="never" impede que a Motion library remova estilos
+    // iniciais (opacity/transform) no cliente quando o usuário tem
+    // Reduced Motion ativo — o que causaria hydration mismatch contra o
+    // HTML do SSR. A preferência do usuário continua sendo respeitada
+    // pelos nossos componentes via useReducedMotionSafe, que trocam para
+    // uma variante de fade curto após a hidratação.
     <MotionConfig reducedMotion="never">
-      <PublicShell variant="landing">
+      <div className="min-h-screen bg-background text-foreground">
         <ScrollProgress />
-        <LandingHero />
-        <MesivoTemplates />
-        <RecursosMesivo />
-        <Beneficios />
-        <PlanosMesivo />
-        <FAQMesivo />
-        <CTAFinal />
-      </PublicShell>
-      <WhatsAppFloat />
+        <Header />
+        <main>
+          <Hero />
+          <Stats />
+          <Bento />
+          <ComoFunciona />
+          <ComparativoIfood />
+          <Depoimentos />
+          <Planos />
+          <FAQ />
+          <CTA />
+        </main>
+        <Footer />
+        <WhatsAppFloat />
+      </div>
     </MotionConfig>
   );
 }

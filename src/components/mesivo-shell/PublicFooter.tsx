@@ -41,51 +41,77 @@ const COLS: FooterCol[] = [
 export function PublicFooter() {
   return (
     <footer
-      className="bg-white border-t border-black/5"
       style={{
+        backgroundColor: "var(--mesivo-coffee)",
+        color: "var(--mesivo-white)",
         fontFamily: "var(--font-ui)",
       }}
     >
       <div
-        className="mx-auto grid gap-12 lg:grid-cols-[1.5fr_1fr_1fr_1fr] py-20 px-6 max-w-6xl"
+        style={{
+          maxWidth: 1200,
+          margin: "0 auto",
+          padding: "48px clamp(16px, 4vw, 32px)",
+          display: "grid",
+          gap: 32,
+          gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+        }}
       >
-        <div className="flex flex-col gap-6">
+        <div style={{ minWidth: 0 }}>
           <Link
             to="/"
             aria-label="Mesivo — início"
-            className="inline-flex items-center gap-2 group"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 10,
+              color: "var(--mesivo-white)",
+              textDecoration: "none",
+            }}
           >
             <MesivoMark size={32} />
-            <span 
-              className="text-2xl font-extrabold tracking-tighter"
-              style={{ fontFamily: "var(--font-display)" }}
-            >
-              mesivo
-            </span>
+            <span style={{ fontFamily: "var(--font-display)", fontSize: "1.35rem" }}>Mesivo</span>
           </Link>
           <p
-            className="text-base text-muted-foreground leading-relaxed max-w-sm"
+            style={{
+              marginTop: 12,
+              fontSize: 14,
+              lineHeight: 1.55,
+              color: "rgba(255,255,255,0.75)",
+              maxWidth: "36ch",
+            }}
           >
-            O sistema operacional para restaurantes que buscam sincronia total entre mesas, cozinha e caixa.
+            Plataforma brasileira para restaurantes centralizarem pedidos, mesas, cardápio digital,
+            delivery, caixa e gestão em um único lugar.
           </p>
-          <div className="flex gap-4">
-             {/* Social placeholders could go here if validated */}
-          </div>
         </div>
 
         {COLS.map((col) => (
-          <nav key={col.title} aria-label={col.title} className="flex flex-col gap-6">
+          <nav key={col.title} aria-label={col.title}>
             <h3
-              className="text-xs font-bold uppercase tracking-widest text-foreground"
+              style={{
+                margin: 0,
+                fontFamily: "var(--font-display)",
+                fontSize: "0.95rem",
+                letterSpacing: 0.5,
+                textTransform: "uppercase",
+                color: "var(--mesivo-mango)",
+              }}
             >
               {col.title}
             </h3>
-            <ul className="flex flex-col gap-3">
+            <ul
+              style={{ listStyle: "none", padding: 0, margin: "12px 0 0", display: "grid", gap: 8 }}
+            >
               {col.links.map((l) => (
                 <li key={l.to}>
                   <Link
                     to={l.to}
-                    className="text-sm text-muted-foreground hover:text-accent transition-colors"
+                    style={{
+                      color: "rgba(255,255,255,0.85)",
+                      textDecoration: "none",
+                      fontSize: 14,
+                    }}
                   >
                     {l.label}
                   </Link>
@@ -97,16 +123,21 @@ export function PublicFooter() {
       </div>
 
       <div
-        className="max-w-6xl mx-auto border-t border-black/5 py-8 px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-medium text-muted-foreground"
+        style={{
+          borderTop: "1px solid rgba(255,255,255,0.15)",
+          padding: "18px clamp(16px, 4vw, 32px)",
+          fontSize: 13,
+          color: "rgba(255,255,255,0.65)",
+          maxWidth: 1200,
+          margin: "0 auto",
+          display: "flex",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: 8,
+        }}
       >
-        <div className="flex items-center gap-6">
-          <span>© {new Date().getFullYear()} Mesivo</span>
-          <span>Feito no Brasil</span>
-        </div>
-        <div className="flex items-center gap-6">
-           <Link to="/termos" className="hover:text-foreground">Termos</Link>
-           <Link to="/privacidade" className="hover:text-foreground">Privacidade</Link>
-        </div>
+        <span>© {new Date().getFullYear()} Mesivo</span>
+        <span>Feito no Brasil</span>
       </div>
     </footer>
   );

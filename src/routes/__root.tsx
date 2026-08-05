@@ -6,15 +6,11 @@ import {
   useRouter,
   HeadContent,
   Scripts,
-  redirect,
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/hooks/useAuth";
-import { getMaintenanceStatus, checkMaintenanceAccess } from "@/lib/maintenance.functions";
-import { supabase } from "@/integrations/supabase/client";
-
 
 function NotFoundComponent() {
   return (
@@ -81,41 +77,11 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  beforeLoad: async ({ location }) => {
-    const path = location.pathname;
-
-    // Rotas que nunca devem ser bloqueadas pela tela de manutenção
-    if (path === "/manutencao") return;
-    if (path.startsWith("/auth")) return;
-    if (path.startsWith("/super")) return;
-
-    // O gate roda apenas no cliente: no SSR não existe sessão do Supabase
-    // (o token fica no localStorage), então super admins e usuários liberados
-    // seriam bloqueados indevidamente ao recarregar a página.
-    if (typeof window === "undefined") return;
-
-    const status = await getMaintenanceStatus();
-    if (!status.active) return;
-
-    try {
-      const { data } = await supabase.auth.getSession();
-      if (data.session) {
-        // Super admins e usuários com permissão especial continuam acessando
-        const { allowed } = await checkMaintenanceAccess();
-        if (allowed) return;
-      }
-    } catch {
-      // Usuário não autenticado ou sem permissão: trata como visitante comum
-    }
-
-    throw redirect({ to: "/manutencao" });
-  },
   head: () => ({
-
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { name: "theme-color", content: "#173A34" },
+      { name: "theme-color", content: "#FF6534" },
       { name: "robots", content: "index, follow, max-image-preview:large" },
       { name: "author", content: "Mesivo" },
       { httpEquiv: "content-language", content: "pt-BR" },
@@ -138,7 +104,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Archivo+Black&family=Manrope:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap" },
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg?v=mesivo1" },
       { rel: "alternate icon", type: "image/png", sizes: "32x32", href: "/favicon-32.png?v=mesivo1" },
       { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png?v=mesivo1" },

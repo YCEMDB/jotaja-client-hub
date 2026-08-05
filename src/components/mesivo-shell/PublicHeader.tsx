@@ -3,180 +3,155 @@ import { useEffect, useState } from "react";
 import { Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { MesivoMark } from "@/components/mesivo-graphics/MesivoMark";
-import type { PublicShellVariant } from "./PublicShell";
 
-type NavItem = { label: string; href: string; anchor?: boolean };
+type NavItem = { label: string; to: string };
 
-const defaultNav: NavItem[] = [
-  { label: "Empresa", href: "/empresa" },
-  { label: "Sobre", href: "/sobre" },
-  { label: "Blog", href: "/blog" },
-  { label: "Contato", href: "/contato" },
-];
-
-const landingNav: NavItem[] = [
-  { label: "Produto", href: "#produto", anchor: true },
-  { label: "Como funciona", href: "#como-funciona", anchor: true },
-  { label: "Recursos", href: "#recursos", anchor: true },
-  { label: "Planos", href: "#planos", anchor: true },
-  { label: "FAQ", href: "#faq", anchor: true },
+/**
+ * Links validados contra o inventário de rotas existente.
+ * Só entram itens que apontam para rotas reais e públicas.
+ */
+const navItems: NavItem[] = [
+  { label: "Empresa", to: "/empresa" },
+  { label: "Sobre", to: "/sobre" },
+  { label: "Blog", to: "/blog" },
+  { label: "Contato", to: "/contato" },
 ];
 
 /**
- * PublicHeader — cabeçalho do PublicShell.
- * variant="landing" troca a nav por âncoras internas da home.
- * Agora com visual premium: floating glass navbar.
+ * PublicHeader — cabeçalho do PublicShell (contexto marketing).
+ *
+ * - Primeiro render determinístico (scrolled=false).
+ * - Listener passivo + cleanup.
+ * - Menu mobile via <Sheet> shadcn (reaproveita focus trap, Esc,
+ *   scroll lock, restauração de foco).
+ * - Sem blur pesado; fundo translúcido apenas após scroll.
  */
-export function PublicHeader({ variant = "default" }: { variant?: PublicShellVariant }) {
+export function PublicHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const items = variant === "landing" ? landingNav : defaultNav;
-
-  const NavAnchor = ({ item, mobile = false }: { item: NavItem; mobile?: boolean }) => {
-    const className = mobile
-      ? "block rounded-lg px-3 py-3 text-base font-medium"
-      : "rounded-full px-4 py-1.5 text-sm font-semibold transition-all hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]";
-    const style = {
-      color: "var(--foreground)",
-      fontFamily: "var(--font-ui)",
-    } as const;
-    if (item.anchor) {
-      return (
-        <a href={item.href} className={className} style={style}>
-          {item.label}
-        </a>
-      );
-    }
-    return (
-      <Link
-        to={item.href}
-        className={className}
-        style={style}
-        activeProps={{ className: `${className} bg-black/5` }}
-      >
-        {item.label}
-      </Link>
-    );
-  };
-
   return (
     <header
-      className="fixed top-8 left-1/2 z-50 w-full max-w-4xl -translate-x-1/2 transition-all duration-700 px-6 pointer-events-none"
+      className="sticky top-0 z-40 w-full transition-colors"
+      style={{
+        backgroundColor: scrolled
+          ? "color-mix(in oklab, var(--mesivo-cream) 88%, transparent)"
+          : "transparent",
+        borderBottom: scrolled ? "1px solid var(--hairline)" : "1px solid transparent",
+      }}
     >
-      <div 
-        className="mx-auto flex h-12 items-center justify-between px-6 transition-all duration-700 pointer-events-auto"
-        style={{
-          backgroundColor: scrolled
-            ? "rgba(248, 245, 239, 0.8)"
-            : "rgba(248, 245, 239, 0)",
-          backdropFilter: scrolled ? "blur(12px)" : "none",
-          border: scrolled ? "1px solid rgba(23, 58, 52, 0.05)" : "1px solid transparent",
-          borderRadius: "999px",
-          transform: scrolled ? "scale(0.96)" : "scale(1)",
-        }}
-      >
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link
           to="/"
           aria-label="Mesivo — início"
-          className="inline-flex items-center gap-2 rounded-md focus-visible:outline-none"
+          className="inline-flex items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--mesivo-tomato)] focus-visible:ring-offset-2"
         >
-          <MesivoMark size={28} />
+          <MesivoMark size={32} />
           <span
-            className="text-lg font-extrabold tracking-tighter"
-            style={{ color: "var(--foreground)", fontFamily: "var(--font-display)" }}
+            className="text-lg font-bold tracking-tight"
+            style={{ color: "var(--mesivo-coffee)", fontFamily: "var(--font-display)" }}
           >
-            mesivo
+            Mesivo
           </span>
         </Link>
 
+        {/* Nav desktop */}
         <nav aria-label="Navegação principal" className="hidden md:block">
           <ul className="flex items-center gap-1">
-            {items.map((item) => (
-              <li key={item.href}>
-                <NavAnchor item={item} />
+            {navItems.map((item) => (
+              <li key={item.to}>
+                <Link
+                  to={item.to}
+                  className="rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-[var(--mesivo-peach)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--mesivo-tomato)]"
+                  style={{ color: "var(--mesivo-coffee)", fontFamily: "var(--font-ui)" }}
+                  activeProps={{
+                    style: { color: "var(--mesivo-tomato)", fontFamily: "var(--font-ui)" },
+                  }}
+                >
+                  {item.label}
+                </Link>
               </li>
             ))}
           </ul>
         </nav>
 
-        <div className="flex items-center gap-2">
-          <div className="hidden md:block">
-            {variant === "landing" ? (
-              <a
-                href="#cadastro"
-                className="inline-flex h-9 items-center justify-center rounded-full px-5 text-sm font-bold transition-all bg-primary text-primary-foreground hover:scale-105 active:scale-95 shadow-sm hover:shadow-glow"
-              >
-                Começar
-              </a>
-            ) : (
-              <Link
-                to="/contato"
-                className="inline-flex h-9 items-center justify-center rounded-full px-5 text-sm font-bold transition-all bg-primary text-primary-foreground hover:scale-105 active:scale-95 shadow-sm hover:shadow-glow"
-              >
-                Contato
-              </Link>
-            )}
-          </div>
+        <div className="hidden md:block">
+          <Link
+            to="/contato"
+            className="inline-flex h-10 items-center justify-center rounded-full px-5 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--mesivo-mango)] focus-visible:ring-offset-2"
+            style={{
+              backgroundColor: "var(--mesivo-tomato)",
+              color: "var(--mesivo-white)",
+              fontFamily: "var(--font-ui)",
+            }}
+          >
+            Falar com a gente
+          </Link>
+        </div>
 
-          <div className="md:hidden">
-            <Sheet open={open} onOpenChange={setOpen}>
-              <SheetTrigger asChild>
-                <button
-                  type="button"
-                  aria-label="Abrir menu"
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full hover:bg-black/5"
-                  style={{ color: "var(--foreground)" }}
-                >
-                  <Menu className="h-5 w-5" aria-hidden="true" />
-                </button>
-              </SheetTrigger>
-              <SheetContent
-                side="right"
-                className="w-[85vw] max-w-sm border-l border-black/5"
-                style={{ backgroundColor: "var(--background)" }}
+        {/* Menu mobile via Sheet (shadcn) */}
+        <div className="md:hidden">
+          <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger asChild>
+              <button
+                type="button"
+                aria-label="Abrir menu"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--mesivo-tomato)]"
+                style={{ color: "var(--mesivo-coffee)" }}
               >
-                <SheetTitle className="sr-only">Menu</SheetTitle>
-                <nav aria-label="Navegação principal (mobile)" className="mt-6">
-                  <ul className="flex flex-col gap-1">
-                    {items.map((item) => (
-                      <li key={item.href}>
-                        <SheetClose asChild>
-                          <NavAnchor item={item} mobile />
-                        </SheetClose>
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="mt-6">
-                    <SheetClose asChild>
-                      {variant === "landing" ? (
-                        <a
-                          href="#cadastro"
-                          className="inline-flex h-11 w-full items-center justify-center rounded-full px-5 text-sm font-bold bg-primary text-primary-foreground"
-                        >
-                          Começar grátis
-                        </a>
-                      ) : (
+                <Menu className="h-6 w-6" aria-hidden="true" />
+              </button>
+            </SheetTrigger>
+            <SheetContent
+              side="right"
+              className="w-[85vw] max-w-sm"
+              style={{ backgroundColor: "var(--mesivo-cream)" }}
+            >
+              <SheetTitle className="sr-only">Menu</SheetTitle>
+              <nav aria-label="Navegação principal (mobile)" className="mt-6">
+                <ul className="flex flex-col gap-1">
+                  {navItems.map((item) => (
+                    <li key={item.to}>
+                      <SheetClose asChild>
                         <Link
-                          to="/contato"
-                          className="inline-flex h-11 w-full items-center justify-center rounded-full px-5 text-sm font-bold bg-primary text-primary-foreground"
+                          to={item.to}
+                          className="block rounded-lg px-3 py-3 text-base font-medium"
+                          style={{
+                            color: "var(--mesivo-coffee)",
+                            fontFamily: "var(--font-ui)",
+                          }}
                         >
-                          Falar com a gente
+                          {item.label}
                         </Link>
-                      )}
-                    </SheetClose>
-                  </div>
-                </nav>
-              </SheetContent>
-            </Sheet>
-          </div>
+                      </SheetClose>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-6">
+                  <SheetClose asChild>
+                    <Link
+                      to="/contato"
+                      className="inline-flex h-11 w-full items-center justify-center rounded-full px-5 text-sm font-semibold"
+                      style={{
+                        backgroundColor: "var(--mesivo-tomato)",
+                        color: "var(--mesivo-white)",
+                        fontFamily: "var(--font-ui)",
+                      }}
+                    >
+                      Falar com a gente
+                    </Link>
+                  </SheetClose>
+                </div>
+              </nav>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </header>

@@ -1,19 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
-import { Settings2, AlertTriangle } from "lucide-react";
+import { Settings2 } from "lucide-react";
 import { toast } from "sonner";
 import { AdminPageLayout } from "@/components/AdminPageLayout";
 import { adminUpsertSetting, translateAdminError } from "@/lib/super-admin";
-import { setMaintenanceMode } from "@/lib/maintenance.functions";
-
 
 export const Route = createFileRoute("/_super/super/configuracoes")({
   component: ConfiguracoesPage,
@@ -34,13 +30,6 @@ function ConfiguracoesPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
 
-  const [maintenanceActive, setMaintenanceActive] = useState(false);
-  const [maintenanceMessage, setMaintenanceMessage] = useState("");
-  const [maintenanceReason, setMaintenanceReason] = useState("");
-  const [togglingMaintenance, setTogglingMaintenance] = useState(false);
-
-  const toggleMaintenance = useServerFn(setMaintenanceMode);
-
   const load = async () => {
     setLoading(true);
     const { data } = await supabase.from("app_settings").select("key,value");
@@ -55,8 +44,6 @@ function ConfiguracoesPage() {
             : JSON.stringify(v);
     });
     setValues(map);
-    setMaintenanceActive(map.maintenance_mode === "true");
-    setMaintenanceMessage(map.maintenance_message ?? "");
     setLoading(false);
   };
 
@@ -91,36 +78,6 @@ function ConfiguracoesPage() {
     }
   };
 
-  const handleMaintenanceToggle = async () => {
-    const reason = maintenanceReason.trim();
-    if (reason.length < 5) {
-      toast.error("Informe um motivo (mínimo 5 caracteres).");
-      return;
-    }
-    setTogglingMaintenance(true);
-    try {
-      const nextActive = !maintenanceActive;
-      const res = await toggleMaintenance({
-        data: {
-          active: nextActive,
-          message: maintenanceMessage,
-          reason,
-        },
-      });
-      toast.success(nextActive ? "Modo de manutenção ativado" : "Modo de manutenção desativado");
-      setMaintenanceReason("");
-      await load();
-      if (res.ok) {
-        // Força recarregamento para aplicar/retirar a tela de manutenção
-        window.location.reload();
-      }
-    } catch (err) {
-      toast.error(translateAdminError(err));
-    } finally {
-      setTogglingMaintenance(false);
-    }
-  };
-
   return (
     <AdminPageLayout
       kicker="Super-admin"
@@ -134,91 +91,6 @@ function ConfiguracoesPage() {
         <p className="text-muted-foreground">Carregando…</p>
       ) : (
         <div className="space-y-3">
-          <Card className={`p-4 space-y-3 border-2 ${maintenanceActive ? "border-destructive bg-destructive/5" : "border-border"}`}>
-            <div className="flex items-start gap-3">
-              <AlertTriangle className={`h-5 w-5 mt-0.5 ${maintenanceActive ? "text-destructive" : "text-muted-foreground"}`} />
-              <div className="flex-1">
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <h3 className="text-sm font-bold uppercase tracking-wide">Modo de manutenção</h3>
-                    <p className="text-xs text-muted-foreground">
-                      Quando ativo, todo o site e app ficam indisponíveis, exceto para super admins.
-                    </p>
-                  </div>
-                  <Switch
-                    checked={maintenanceActive}
-                    disabled={togglingMaintenance}
-                    aria-label="Modo de manutenção"
-                  />
-                </div>
-                <div className="mt-3 space-y-2">
-                  <Label className="text-xs font-semibold">Mensagem exibida publicamente</Label>
-                  <Textarea
-                    value={maintenanceMessage}
-                    onChange={(e) => setMaintenanceMessage(e.target.value)}
-                    placeholder="Estamos em manutenção..."
-                    rows={2}
-                    disabled={togglingMaintenance}
-                  />
-                  <Textarea
-                    placeholder="Motivo da ativação/desativação (mín. 5 caracteres) — auditado"
-                    value={maintenanceReason}
-                    onChange={(e) => setMaintenanceReason(e.target.value)}
-                    rows={2}
-                    disabled={togglingMaintenance}
-                  />
-                  <div className="flex items-center justify-end">
-                    <Button
-                      variant={maintenanceActive ? "default" : "destructive"}
-                      onClick={handleMaintenanceToggle}
-                      disabled={togglingMaintenance}
-                    >
-                      {togglingMaintenance
-                        ? "Aplicando…"
-                        : maintenanceActive
-                          ? "Desativar manutenção"
-                          : "Ativar manutenção"}
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="mt-4 space-y-2 border-t border-border pt-3">
-                  <Label className="text-xs font-semibold">Acesso liberado durante a manutenção</Label>
-                  <p className="text-[11px] text-muted-foreground">
-                    E-mails autorizados a usar o sistema normalmente mesmo com a manutenção ativa
-                    (separe por vírgula). Super admins têm acesso sempre.
-                  </p>
-                  <Textarea
-                    placeholder="pessoa@empresa.com, outra@empresa.com"
-                    value={values.maintenance_bypass_emails ?? ""}
-                    onChange={(e) =>
-                      setValues((v) => ({ ...v, maintenance_bypass_emails: e.target.value }))
-                    }
-                    rows={2}
-                  />
-                  <Textarea
-                    placeholder="Motivo da alteração (mín. 5 caracteres) — auditado"
-                    value={reasons.maintenance_bypass_emails ?? ""}
-                    onChange={(e) =>
-                      setReasons((r) => ({ ...r, maintenance_bypass_emails: e.target.value }))
-                    }
-                    rows={2}
-                  />
-                  <div className="flex items-center justify-end">
-                    <Button
-                      variant="outline"
-                      onClick={() => save("maintenance_bypass_emails")}
-                      disabled={saving === "maintenance_bypass_emails"}
-                    >
-                      {saving === "maintenance_bypass_emails" ? "Salvando…" : "Salvar liberações"}
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Card>
-
-
           {SETTINGS_KEYS.map((s) => (
             <Card key={s.key} className="p-4 space-y-2">
               <Label className="text-xs uppercase tracking-wider font-bold">{s.label}</Label>
@@ -248,4 +120,3 @@ function ConfiguracoesPage() {
     </AdminPageLayout>
   );
 }
-

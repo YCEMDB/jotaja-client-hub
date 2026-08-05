@@ -411,36 +411,54 @@ function PedidosPage() {
   if (!restaurantId) return <PageContainer><p className="text-ink/60">Configure seu restaurante primeiro.</p></PageContainer>;
 
   return (
-    <PageContainer padded={false} className="pt-8 md:pt-10 pb-8 h-[calc(100vh-3.5rem)] md:h-[calc(100vh-4rem)] flex flex-col px-6 sm:px-8 lg:px-12 xl:px-16">
-      <header className="mb-10 shrink-0 flex items-end justify-between gap-8 flex-wrap">
-        <div className="min-w-0 space-y-4">
-          <div className="inline-flex items-center gap-3">
-            <span className="h-2 w-2 rounded-full bg-copper animate-pulse" />
-            <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground">Ao vivo · Últimas 24h</span>
+    <PageContainer padded={false} className="pt-6 md:pt-8 pb-6 h-[calc(100vh-3.5rem)] md:h-[calc(100vh-4rem)] flex flex-col">
+      <header className="mb-6 shrink-0 flex items-end justify-between gap-6 flex-wrap">
+        <div className="min-w-0">
+          <div className="inline-flex items-center gap-2 mb-3">
+            <span className="h-2 w-2 rounded-full bg-brand-orange animate-pulse" />
+            <span className="text-[11px] uppercase tracking-[0.18em] font-bold text-ink/70">Ao vivo · Últimas 24h</span>
           </div>
-          <h1 className="font-display text-5xl md:text-6xl tracking-tight leading-[0.9] text-foreground m-0">
-            Pedidos
-            <span className="inline-block w-2 h-2 ml-2 bg-copper rounded-full" />
+          <h1 className="font-display text-5xl text-ink leading-[0.92] tracking-tight">
+            Pedidos<span className="inline-block w-3 h-3 ml-1 -mb-0.5 bg-brand-orange align-baseline" />
           </h1>
-          <div className="mt-6 flex items-center gap-4 text-sm text-muted-foreground font-sans">
-            <span className="font-medium text-foreground">{orders.length} pedidos</span>
-            <span className="opacity-20">|</span>
+          <p className="mt-2 text-sm text-ink/60 flex items-center gap-2">
+            <span>{orders.length} pedidos</span>
+            <span className="text-ink/30">·</span>
             {rtStatus === "live" && (
-              <span className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-sage">
-                <span className="w-1.5 h-1.5 rounded-full bg-sage" />
-                Sincronizado
+              <span className="inline-flex items-center gap-1.5 font-bold uppercase tracking-wide text-[11px] text-success">
+                <span className="inline-block h-2 w-2 rounded-full bg-success animate-pulse" />
+                Ao vivo
               </span>
             )}
-            {/* Outros estados omitidos para brevidade — manter lógica original se necessário */}
-          </div>
+            {rtStatus === "connecting" && (
+              <span className="inline-flex items-center gap-1.5 font-bold uppercase tracking-wide text-[11px] text-ink/50">
+                <span className="inline-block h-2 w-2 rounded-full bg-ink/40 animate-pulse" />
+                Conectando…
+              </span>
+            )}
+            {rtStatus === "polling" && (
+              <span className="inline-flex items-center gap-1.5 font-bold uppercase tracking-wide text-[11px] text-warning">
+                <span className="inline-block h-2 w-2 rounded-full bg-warning" />
+                Atualização periódica
+              </span>
+            )}
+            {rtStatus === "error" && (
+              <button
+                onClick={() => load()}
+                className="inline-flex items-center gap-1.5 font-bold uppercase tracking-wide text-[11px] text-destructive hover:underline"
+                title="Clique para atualizar manualmente"
+              >
+                <span className="inline-block h-2 w-2 rounded-full bg-destructive" />
+                Sem conexão — atualizar
+              </button>
+            )}
+          </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <Button
             variant={autoPrint ? "secondary" : "outline"}
-            size="lg"
-            className="rounded-full px-8 h-14"
+            size="sm"
             onClick={() => {
-
               const next = !autoPrint;
               setAutoPrint(next);
               localStorage.setItem("autoPrintOrders", next ? "1" : "0");
