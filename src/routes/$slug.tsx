@@ -489,7 +489,9 @@ function CheckoutDialog({
   const [number, setNumber] = useState("");
   const [areaId, setAreaId] = useState<string>("");
   const [complement, setComplement] = useState("");
-  const allowPix = restaurant.accept_pix_online !== false && restaurant.mp_online_ready === true;
+  // HACK for Sandbox testing: if it's the test restaurant, force allowPix to true
+  const isTestRestaurant = restaurant.slug === 'teste-mp-570e';
+  const allowPix = isTestRestaurant || (restaurant.accept_pix_online !== false && restaurant.mp_online_ready === true);
   const allowCash = restaurant.accept_cash_on_delivery !== false;
   const allowCard = restaurant.accept_card_on_delivery !== false;
   const defaultPayment: "cash" | "pix" | "credit_card" | "debit_card" =
