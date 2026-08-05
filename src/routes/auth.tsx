@@ -37,41 +37,66 @@ function AuthPage() {
   }, [user, loading, nav]);
 
   return (
-    <div className="min-h-screen grid lg:grid-cols-2 bg-background">
-      <div className="hidden lg:flex flex-col justify-between p-12 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground">
-        <Link to="/" className="flex items-center group bg-white rounded-xl px-4 py-3 w-fit">
+    <div className="min-h-screen grid lg:grid-cols-2 bg-ink overflow-hidden selection:bg-brand-magenta selection:text-white">
+      {/* Coluna Esquerda: Branding & Visual */}
+      <div className="hidden lg:flex flex-col justify-between p-12 bg-ink relative border-r-3 border-ink">
+        <div className="absolute inset-0 opacity-10 pointer-events-none bg-grid" />
+        <div className="absolute -top-24 -left-24 w-96 h-96 bg-brand-orange/20 blur-[120px] rounded-full" />
+        <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-brand-magenta/20 blur-[120px] rounded-full" />
+        
+        <Link to="/" className="relative z-10 flex items-center group bg-white border-3 border-ink shadow-brutal px-5 py-4 w-fit hover:-translate-y-1 hover:-translate-x-1 transition-transform">
           <Logo size="md" />
         </Link>
-        <div>
-          <h2 className="text-4xl font-bold leading-tight mb-4">
-            Seu delivery, sua marca,<br />zero comissão.
+
+        <div className="relative z-10 max-w-lg">
+          <h2 className="text-6xl font-black leading-none mb-8 text-white uppercase italic tracking-tighter">
+            A GESTÃO <span className="text-brand-orange drop-shadow-glow">QUE LIBERTA</span> SEU NEGÓCIO.
           </h2>
-          <p className="text-primary-foreground/80 text-lg">
-            Acesse o painel da sua loja para gerenciar pedidos, cardápio e entregadores.
+          <div className="flex gap-4 mb-6">
+            <div className="h-1 w-24 bg-brand-orange" />
+            <div className="h-1 w-12 bg-brand-magenta" />
+          </div>
+          <p className="text-white/80 text-xl font-medium tracking-tight border-l-3 border-brand-orange pl-6 py-2">
+            Acesse o painel central da MESIVO para controlar sua operação em tempo real. Cardápio, pedidos e entregas em um só lugar.
           </p>
         </div>
-        <p className="text-sm text-primary-foreground/60">© 2026 Mesivo</p>
+
+        <div className="relative z-10 flex items-center gap-4">
+          <div className="text-xs font-bold text-white/40 uppercase tracking-widest">© 2026 MESIVO PLATFORM</div>
+          <div className="h-px flex-1 bg-white/10" />
+        </div>
       </div>
 
-      <div className="flex items-center justify-center p-6 lg:p-12">
-        <Card className="w-full max-w-md p-8">
-          <div className="lg:hidden flex items-center mb-8">
+      {/* Coluna Direita: Login Form */}
+      <div className="flex items-center justify-center p-6 lg:p-12 bg-white relative">
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-noise" />
+        
+        <Card className="w-full max-w-md border-3 border-ink shadow-brutal p-8 md:p-10 rounded-none relative z-10 bg-white">
+          <div className="lg:hidden flex items-center justify-center mb-10">
             <Logo size="md" />
           </div>
 
-          <h1 className="text-2xl font-bold mb-1">Entrar</h1>
-          <p className="text-sm text-muted-foreground mb-6">
-            Acesse o painel da sua loja com suas credenciais.
-          </p>
+          <div className="mb-10 text-center lg:text-left">
+            <h1 className="text-4xl font-black mb-2 text-ink uppercase tracking-tighter italic">ENTRAR</h1>
+            <p className="text-ink/60 font-medium text-lg leading-snug">
+              Acesse seu terminal de comando.
+            </p>
+          </div>
 
           <LoginForm />
 
-          <p className="text-xs text-muted-foreground text-center mt-6">
-            Ainda não tem acesso?{" "}
-            <Link to="/" hash="cadastro" className="text-primary font-semibold underline">
-              Solicite seu teste grátis
-            </Link>
-          </p>
+          <div className="mt-10 pt-8 border-t-2 border-ink/10 text-center">
+            <p className="text-sm font-bold text-ink/60 uppercase tracking-tight">
+              Ainda não é um parceiro?{" "}
+              <Link 
+                to="/" 
+                hash="cadastro" 
+                className="text-brand-magenta hover:text-brand-orange transition-colors underline decoration-2 underline-offset-4"
+              >
+                Solicite acesso agora
+              </Link>
+            </p>
+          </div>
         </Card>
       </div>
     </div>
