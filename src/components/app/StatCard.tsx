@@ -40,7 +40,7 @@ export function StatCard({
       className={cn(
         "relative bg-card border-2 border-ink rounded-2xl p-5 md:p-6",
         "shadow-brutal hover:shadow-brutal-lg",
-        "hover:-translate-x-0.5 hover:-translate-y-0.5",
+        "hover:-translate-x-1 hover:-translate-y-1 active:translate-x-0 active:translate-y-0 transition-all duration-300",
         "transition-all overflow-hidden",
         className,
       )}

@@ -90,7 +90,8 @@ function SidebarBody({
 }) {
   return (
     <>
-      <div className="absolute inset-0 bg-noise opacity-40 pointer-events-none" />
+      <div className="absolute inset-0 bg-noise opacity-30 pointer-events-none mix-blend-overlay" />
+      <div className="absolute inset-0 bg-gradient-to-b from-ink/20 to-transparent pointer-events-none" />
 
       <Link
         to="/admin"
@@ -98,8 +99,8 @@ function SidebarBody({
         className={`relative p-5 flex items-center gap-3 border-b-2 border-background/10 hover:bg-background/5 transition-colors ${collapsed ? "justify-center px-2" : ""}`}
         title="Mesivo"
       >
-        <div className="h-11 w-11 rounded-xl bg-brand-orange border-2 border-background grid place-items-center shadow-[3px_3px_0_0_oklch(0.62_0.24_0)] shrink-0">
-          <svg viewBox="0 0 48 48" className="h-7 w-7" aria-hidden="true">
+        <div className="h-11 w-11 rounded-xl bg-gradient-sunset border-2 border-background grid place-items-center shadow-[3px_3px_0_0_oklch(0.12_0.025_25)] shrink-0 group">
+          <svg viewBox="0 0 48 48" className="h-7 w-7 transition-transform duration-500 group-hover:rotate-12" aria-hidden="true">
             <rect x="12" y="13" width="20" height="4.5" rx="2.25" fill="#fff" />
             <rect x="12" y="21.75" width="14" height="4.5" rx="2.25" fill="#fff" />
             <rect x="12" y="30.5" width="20" height="4.5" rx="2.25" fill="#fff" />
@@ -161,7 +162,7 @@ function SidebarBody({
                   activeProps={{
                     className: "!bg-brand-orange !text-ink !border-background shadow-[3px_3px_0_0_oklch(0.62_0.24_0)] translate-x-0.5",
                   }}
-                  className={`flex items-center ${collapsed ? "justify-center" : "gap-3"} px-3 py-2.5 rounded-lg text-sm font-bold uppercase tracking-wide border-2 border-transparent hover:bg-background/10 transition-all`}
+                  className={`flex items-center ${collapsed ? "justify-center" : "gap-3"} px-3 py-2.5 rounded-lg text-sm font-bold uppercase tracking-wide border-2 border-transparent hover:bg-background/10 hover:border-background/20 transition-all duration-200`}
                 >
                   <item.icon className="h-4 w-4 shrink-0" />
                   {!collapsed && item.label}
@@ -298,7 +299,7 @@ function AuthLayout() {
     <div className="min-h-screen flex bg-background overflow-x-hidden">
       {/* Desktop sidebar */}
       <aside
-        className={`${collapsed ? "w-16" : "w-64"} hidden md:flex transition-[width] duration-200 bg-ink text-background flex-col border-r-2 border-ink relative shrink-0`}
+        className={`${collapsed ? "w-16" : "w-64"} hidden md:flex transition-[width] duration-300 bg-ink text-background flex-col border-r-2 border-ink relative shrink-0 shadow-[4px_0_24px_rgba(0,0,0,0.2)]`}
       >
         <button
           onClick={toggleCollapsed}
@@ -341,8 +342,9 @@ function AuthLayout() {
           userEmail={user?.email}
           onSignOut={handleSignOut}
         />
-        <div className="absolute top-14 md:top-16 left-0 right-0 h-[40vh] bg-gradient-radial from-brand-orange/10 via-brand-magenta/5 to-transparent opacity-60 pointer-events-none" />
-        <div className="absolute inset-0 bg-grid opacity-[0.03] pointer-events-none" />
+        <div className="absolute top-14 md:top-16 left-0 right-0 h-[60vh] bg-gradient-radial from-brand-orange/15 via-brand-magenta/5 to-transparent opacity-70 pointer-events-none" />
+        <div className="absolute inset-0 bg-grid opacity-[0.04] pointer-events-none mix-blend-multiply" />
+        <div className="absolute inset-0 bg-noise opacity-10 pointer-events-none mix-blend-soft-light" />
         <div className="relative flex-1 min-w-0">
           <SupportSessionBanner />
           <GlobalAnnouncementsBanner />
