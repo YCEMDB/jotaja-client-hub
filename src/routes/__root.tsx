@@ -105,11 +105,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Archivo+Black&family=Manrope:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap" },
-      { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
-      { rel: "alternate icon", type: "image/png", sizes: "32x32", href: "/favicon.svg" },
-      { rel: "apple-touch-icon", sizes: "180x180", href: "/favicon.svg" },
+      { rel: "icon", type: "image/svg+xml", href: "/favicon.svg?v=2" },
+      { rel: "alternate icon", type: "image/png", sizes: "32x32", href: "/favicon.svg?v=2" },
+      { rel: "apple-touch-icon", sizes: "180x180", href: "/favicon.svg?v=2" },
       { rel: "manifest", href: "/site.webmanifest" },
-      { rel: "mask-icon", href: "/favicon.svg", color: "#FF6534" },
+      { rel: "mask-icon", href: "/favicon.svg?v=2", color: "#FF6534" },
     ],
     scripts: [
       {
