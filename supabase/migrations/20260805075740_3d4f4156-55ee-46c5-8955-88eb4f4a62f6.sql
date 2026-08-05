@@ -1,0 +1,1 @@
+UPDATE public.restaurants SET plan_id = 'pro' WHERE slug = 'teste-mp-570e';
