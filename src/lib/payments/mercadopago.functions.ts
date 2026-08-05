@@ -61,11 +61,13 @@ export const createTestMercadoPagoPix = createServerFn({ method: "POST" })
       .insert({
         restaurant_id: data.restaurantId,
         customer_name: "Teste Sandbox",
+        customer_phone: "00000000000",
         total: 15.00,
+        subtotal: 15.00,
         status: "pending",
-        payment_method: "pix",
+        payment: "pix",
         payment_status: "pending",
-        items: [{ name: "Teste Sandbox", price: 15.00, quantity: 1 }],
+        type: "delivery",
       })
       .select("id")
       .single();
