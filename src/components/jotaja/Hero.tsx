@@ -90,10 +90,15 @@ export function Hero() {
               className="font-display text-ink uppercase leading-[0.82] tracking-[-0.05em] text-[clamp(2.75rem,8.5vw,6.8rem)] drop-shadow-[0_2px_2px_rgba(0,0,0,0.05)]"
               ariaLabel="Gestão que liberta o seu restaurante."
               lines={[
-                "Gestão que",
-                <span key="l2">
-                  liberta o <span className="text-gradient-sunset drop-shadow-sm">seu negócio.</span>
+                <span className="block overflow-hidden pb-2" key="l1">
+                  <span className="inline-block hover:scale-[1.02] transition-transform duration-500 cursor-default">
+                    Gestão que
+                  </span>
+                </span>,
+                <span key="l2" className="block overflow-hidden">
+                  liberta o <span className="text-gradient-sunset drop-shadow-sm px-1">seu negócio.</span>
                 </span>
+
               ]}
             />
 
