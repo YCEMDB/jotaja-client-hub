@@ -575,65 +575,67 @@
  * ===================================================================== */
 
 :root {
-  /* --- Paleta Mesivo (marketing) --- */
-  --mesivo-cream:      #FFF8EE;
-  --mesivo-warm-white: #FFFDFA;
-  --mesivo-peach:      #FFE7D5;
-  --mesivo-tomato:     #F0522D;
-  --mesivo-orange:     #FF6B35;
-  --mesivo-mango:      #FFB82E;
-  --mesivo-leaf:       #2F7D5B;
-  --mesivo-leaf-soft:  #E5F3EA;
-  --mesivo-coffee:     #34241D;
-  --mesivo-text:       #2A211D;
+  /* --- Paleta Mesivo (Diretor Criativo / The Ledger) --- */
+  --mesivo-cream:      #F8F6F3;
+  --mesivo-warm-white: #FFFFFF;
+  --mesivo-peach:      rgba(227, 109, 66, 0.08);
+  --mesivo-tomato:     #E36D42;
+  --mesivo-orange:     #E36D42;
+  --mesivo-mango:      #D4A73F;
+  --mesivo-leaf:       #3F7D58;
+  --mesivo-leaf-soft:  rgba(63, 125, 88, 0.08);
+  --mesivo-coffee:     #2B2B2B;
+  --mesivo-text:       #2B2B2B;
   --mesivo-muted:      #70645E;
-  --mesivo-border:     #ECDDD3;
+  --mesivo-border:     #E5E2DE;
   --mesivo-white:      #FFFFFF;
 
   /* --- Tipografia funcional --- */
-  --font-ui: "Manrope", system-ui, -apple-system, BlinkMacSystemFont,
-             "Segoe UI", sans-serif;
+  --font-ui: "Manrope", system-ui, sans-serif;
 
   /* --- Motion --- */
-  --dur-fast: 140ms;
-  --dur-base: 200ms;
-  --dur-slow: 320ms;
+  --dur-fast: 180ms;
+  --dur-base: 280ms;
+  --dur-slow: 450ms;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in:  cubic-bezier(0.4, 0, 1, 1);
 
-  /* --- Semantic tokens (fallback = valores atuais / seguros) --- */
-  /* Superfícies */
-  --surface:          var(--background);
-  --surface-1:        var(--card);
-  --surface-2:        var(--muted);
-  --surface-3:        var(--secondary);
-  --surface-elevated: var(--popover);
-  --overlay:          oklch(0.12 0.025 25 / 0.5);
-  --hairline:         var(--border);
-  --hairline-strong:  var(--ink);
+  /* --- Semantic tokens (Diretor Criativo) --- */
+  --surface:          var(--mesivo-cream);
+  --surface-1:        var(--mesivo-warm-white);
+  --surface-2:        var(--mesivo-peach);
+  --surface-3:        var(--mesivo-leaf-soft);
+  --surface-elevated: var(--mesivo-white);
+  --overlay:          rgba(43, 43, 43, 0.4);
+  --hairline:         var(--mesivo-border);
+  --hairline-strong:  var(--mesivo-coffee);
 
   /* Texto */
-  --fg-hi:     var(--ink);
-  --fg:        var(--foreground);
-  --fg-mid:    var(--muted-foreground);
-  --fg-low:    oklch(0.55 0.02 40);
-  --fg-invert: var(--primary-foreground);
+  --fg-hi:     var(--mesivo-coffee);
+  --fg:        var(--mesivo-text);
+  --fg-mid:    var(--mesivo-muted);
+  --fg-low:    #9A8A82;
+  --fg-invert: var(--mesivo-white);
 
   /* Marca semântica */
-  --accent-hover:  oklch(0.63 0.24 38);
-  --accent-active: oklch(0.55 0.26 38);
-  --accent-soft:   oklch(0.96 0.04 40);
-  --accent-glow:   oklch(0.69 0.22 38 / 0.35);
-  --accent-ink:    var(--primary-foreground);
+  --accent:        var(--mesivo-tomato);
+  --accent-hover:  #C84B4B; /* Troca para danger/accent secundário no hover em alguns casos */
+  --accent-active: #B33518;
+  --accent-soft:   var(--mesivo-peach);
+  --accent-glow:   rgba(227, 109, 66, 0.2);
+  --accent-ink:    var(--mesivo-white);
 
   /* Estados */
-  --success-soft: oklch(0.94 0.06 150);
-  --warning-soft: oklch(0.96 0.09 80);
-  --danger:       var(--destructive);
-  --danger-soft:  oklch(0.94 0.06 25);
-  --info:         oklch(0.6 0.15 240);
-  --info-soft:    oklch(0.94 0.04 240);
+  --success:      var(--mesivo-leaf);
+  --success-soft: var(--mesivo-leaf-soft);
+  --warning:      var(--mesivo-mango);
+  --warning-soft: rgba(212, 167, 63, 0.1);
+  --danger:       #C84B4B;
+  --danger-soft:  rgba(200, 75, 75, 0.1);
+  --info:         #4B7BEC;
+  --info-soft:    rgba(75, 123, 236, 0.1);
 }
+
 
 /* ---------------------------------------------------------------------
  * Contexto: MARKETING — creme + coral, aplicado no PublicShell novo
