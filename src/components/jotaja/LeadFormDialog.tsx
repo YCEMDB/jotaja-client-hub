@@ -82,8 +82,8 @@ export function LeadForm({ variant = "light", onDone }: LeadFormProps) {
 
   const labelCls = variant === "dark" ? "text-background/80" : "text-ink/70";
   const inputCls = variant === "dark"
-    ? "bg-background/10 border-2 border-background/30 text-background placeholder:text-background/40 focus-visible:border-brand-orange"
-    : "bg-background border-2 border-ink text-ink focus-visible:border-brand-orange";
+    ? "bg-background/10 border-2 border-background/30 text-background placeholder:text-background/40 focus-visible:border-[#FF6B35]"
+    : "bg-background border-2 border-ink text-ink focus-visible:border-[#FF6B35]";
 
   return (
     <form onSubmit={submit} className="space-y-4">
@@ -153,7 +153,7 @@ export function LeadFormDialog({ trigger }: DialogProps) {
           <div className="absolute inset-0 bg-noise opacity-40 pointer-events-none" />
           <DialogHeader className="relative">
             <div className="inline-flex items-center gap-2 mb-2">
-              <span className="h-2 w-2 rounded-full bg-brand-orange animate-pulse" />
+              <span className="h-2 w-2 rounded-full bg-[#FF6B35] animate-pulse" />
               <span className="text-[11px] uppercase tracking-[0.2em] font-bold text-background/70">14 dias grátis · sem cartão</span>
             </div>
             <DialogTitle className="font-display text-2xl md:text-3xl text-background leading-tight tracking-tight">
