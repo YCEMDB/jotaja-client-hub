@@ -17,10 +17,10 @@ export const mercadopagoConnectInit = createServerFn({ method: "POST" })
     // Usaremos a mesma lógica de state que o PagBank, mas adaptada para MP no banco se necessário
     // Por enquanto, vamos assumir que o sistema de states pode ser genérico ou criaremos um específico.
     // Para agilidade, vamos usar um RPC que crie o state para MP.
-    const { data: initRes, error } = await supabase.rpc("mercadopago_connect_init", {
+    const { data: initRes, error } = await supabase.rpc("mercadopago_connect_init" as any, {
       p_restaurant_id: data.restaurantId,
       p_redirect_after: data.redirectAfter ?? "/admin/configuracoes?tab=pagamentos",
-    });
+    } as any);
 
     if (error) return { ok: false as const, error: error.message };
 
