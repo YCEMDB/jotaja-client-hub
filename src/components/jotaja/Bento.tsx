@@ -34,15 +34,15 @@ export function Bento() {
         <div className="grid grid-cols-12 gap-4 md:gap-5 auto-rows-[140px] md:auto-rows-[160px]">
           {/* BIG — kanban screenshot */}
           <div className="col-span-12 lg:col-span-7 row-span-3 group relative rounded-2xl border-2 border-ink bg-card overflow-hidden shadow-brutal hover:shadow-brutal-lg hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all">
-            <div className="absolute top-6 left-6 z-20">
+            <div className="absolute top-8 left-8 z-20">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-ink text-background text-[10px] font-bold uppercase tracking-widest shadow-glow-sm">
                 <Zap className="w-3 h-3 text-brand-orange animate-pulse" />
                 Live: Central de Pedidos
               </div>
-              <h3 className="font-display text-4xl md:text-5xl text-ink mt-4 max-w-md leading-[0.85] tracking-tighter uppercase">
+              <h3 className="font-display text-4xl md:text-5xl text-ink mt-4 max-w-sm leading-[0.85] tracking-tighter uppercase">
                 KANBAN QUE PULSA COM A <span className="text-brand-orange">SUA OPERAÇÃO.</span>
               </h3>
-              <p className="text-sm text-ink/60 mt-3 max-w-[32ch] font-bold uppercase tracking-wide">
+              <p className="text-sm text-ink/60 mt-3 max-w-[28ch] font-bold uppercase tracking-wide">
                 Gestão visual, intuitiva e sem atritos.
               </p>
             </div>
@@ -51,7 +51,7 @@ export function Bento() {
             <div className="absolute top-0 right-0 w-64 h-64 bg-brand-orange/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none z-10" />
 
             {/* Mockup Container com ajuste de posicionamento para evitar sobreposição */}
-            <div className="absolute bottom-0 right-0 w-[94%] translate-x-4 translate-y-16 group-hover:translate-y-10 transition-all duration-700 ease-out z-0">
+            <div className="absolute bottom-0 right-0 w-[98%] translate-x-8 translate-y-44 group-hover:translate-y-36 transition-all duration-700 ease-out z-0">
               <div className="relative border-[3px] border-ink rounded-2xl shadow-brutal-lg bg-background overflow-hidden transform group-hover:scale-[1.01] transition-transform">
                 {/* Browser bar realística */}
                 <div className="h-8 bg-ink border-b-2 border-ink flex items-center px-4 gap-2">
