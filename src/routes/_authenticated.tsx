@@ -246,7 +246,7 @@ function AuthLayout() {
 
   useEffect(() => {
     if (!loading && !user) nav({ to: "/auth" });
-    if (!loading && !metaLoading && user && !isSuperAdmin && !restaurantId && window.location.pathname !== "/admin/onboarding") {
+    if (!loading && !metaLoading && user && !isSuperAdmin && restaurants.length === 0 && window.location.pathname !== "/admin/onboarding") {
       nav({ to: "/admin/onboarding" });
     }
   }, [user, loading, metaLoading, restaurantId, isSuperAdmin, nav]);
