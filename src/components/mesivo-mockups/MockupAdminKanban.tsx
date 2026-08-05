@@ -21,8 +21,6 @@ export function MockupAdminKanban({ className }: { className?: string }) {
         gap: 12,
         gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
         padding: 16,
-        borderRadius: 0,
-        border: "none",
         backgroundColor: "var(--surface-1)",
         fontFamily: "var(--font-ui)",
       }}
