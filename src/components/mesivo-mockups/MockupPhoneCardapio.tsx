@@ -133,7 +133,13 @@ export function MockupPhoneCardapio({ className }: { className?: string }) {
                 display: 'grid',
                 placeItems: 'center'
               }}>
-                <ImageIcon size={16} color="rgba(0,0,0,0.2)" />
+                <img 
+                  src={item.name.includes("Burger") 
+                    ? "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=100&h=100&fit=crop" 
+                    : "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=100&h=100&fit=crop"} 
+                  alt={item.name}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
               </div>
             </div>
           ))}
