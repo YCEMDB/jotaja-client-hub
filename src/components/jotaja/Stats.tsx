@@ -27,7 +27,7 @@ export function Stats() {
   return (
     <section
       aria-label="Canais atendidos pela Mesivo"
-      className="relative bg-ink text-background border-y-[3px] border-ink overflow-hidden"
+      className="relative bg-ink text-background border-y-[3px] border-ink overflow-hidden flex items-center justify-center"
     >
       <div className="absolute inset-0 bg-noise opacity-40 pointer-events-none" />
 
