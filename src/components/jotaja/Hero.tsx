@@ -269,6 +269,9 @@ function ProductMockup() {
     >
       {/* Janela do navegador */}
       <div className="relative rounded-3xl overflow-hidden shadow-[0_32px_80px_-16px_rgba(0,0,0,0.15),0_0_0_1px_rgba(0,0,0,0.08)] bg-card/80 backdrop-blur-xl group/mockup">
+        {/* Subtle Scanline Effect on Mockup */}
+        <div className="absolute inset-0 pointer-events-none z-50 opacity-[0.03] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%]" />
+
         {/* Chrome / Window Titlebar */}
         <div className="flex items-center gap-2 px-4 py-3 bg-ink border-b border-white/5 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent opacity-20" />
