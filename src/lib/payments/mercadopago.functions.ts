@@ -98,7 +98,7 @@ export const createTestMercadoPagoPix = createServerFn({ method: "POST" })
 
     // 3. Gerar cobrança no Mercado Pago
     const idempotencyKey = `test-mp-${order.id}`;
-    const notificationUrl = `https://comandahub.online/api/public/mercadopago-webhook`;
+    const notificationUrl = `${process.env.PUBLIC_SITE_URL ?? "https://comandahub.online"}/api/public/mercadopago-webhook`;
     
     const res = await createPixCharge({
       accessToken: mpToken,
