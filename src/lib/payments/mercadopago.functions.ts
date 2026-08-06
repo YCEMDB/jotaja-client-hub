@@ -90,7 +90,10 @@ export const createTestMercadoPagoPix = createServerFn({ method: "POST" })
 
     if (orderErr || !order) {
       console.error("[mercadopago] test order creation failed:", orderErr);
-      return { ok: false as const, error: `Falha ao criar pedido de teste: ${orderErr?.message ?? 'erro desconhecido'}` };
+      return { 
+        ok: false as const, 
+        error: `Falha ao criar pedido de teste no banco: ${orderErr?.message || 'Erro de permissão RLS ou banco de dados'}`
+      };
     }
 
     // 3. Gerar cobrança no Mercado Pago
