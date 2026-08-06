@@ -23,10 +23,14 @@ export const createPixPayment = createServerFn({ method: "POST" })
     // Roteamento por provedor ativo (PagBank ou Mercado Pago).
     const { data: restProvider } = await supabaseAdmin
       .from("restaurants")
-      .select("active_payment_provider")
+      .select("id, active_payment_provider, slug")
       .eq("id", order.restaurant_id)
       .maybeSingle();
-    if (restProvider?.active_payment_provider === "pagbank") {
+      
+    const isTestRestaurant = restProvider?.slug === 'teste-mp-570e';
+    const activeProvider = isTestRestaurant ? 'mercado_pago' : restProvider?.active_payment_provider;
+
+    if (activeProvider === "pagbank") {
       const { createPagbankPixCharge } = await import("./payments/pagbank.functions");
       const r: any = await createPagbankPixCharge({ data: { orderId: order.id } });
       if (!r?.ok) return { ok: false, error: r?.error ?? "Erro ao gerar Pix PagBank", detail: r?.detail };
@@ -169,10 +173,14 @@ export const syncPixPayment = createServerFn({ method: "POST" })
     // Roteamento por provedor ativo
     const { data: restProvider } = await supabaseAdmin
       .from("restaurants")
-      .select("active_payment_provider")
+      .select("active_payment_provider, slug")
       .eq("id", order.restaurant_id)
       .maybeSingle();
-    if (restProvider?.active_payment_provider === "pagbank") {
+
+    const isTestRestaurant = restProvider?.slug === 'teste-mp-570e';
+    const activeProvider = isTestRestaurant ? 'mercado_pago' : restProvider?.active_payment_provider;
+
+    if (activeProvider === "pagbank") {
       const { syncPagbankPayment } = await import("./payments/pagbank.functions");
       const r: any = await syncPagbankPayment({ data: { orderId: order.id } });
       return { ok: !!r?.ok, status: r?.status ?? "unknown" };
