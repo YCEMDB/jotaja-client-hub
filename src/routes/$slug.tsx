@@ -514,9 +514,17 @@ function CheckoutDialog({
 
   useEffect(() => {
     if (!open) return;
+    console.log("Fetching delivery areas for restaurant:", restaurant.id);
     supabase.from("delivery_areas")
-      .select("*").eq("restaurant_id", restaurant.id).eq("is_active", true).order("neighborhood")
-      .then(({ data }) => setAreas((data ?? []) as DeliveryArea[]));
+      .select("*")
+      .eq("restaurant_id", restaurant.id)
+      .eq("is_active", true)
+      .order("neighborhood")
+      .then(({ data, error }) => {
+        if (error) console.error("Error fetching delivery areas:", error);
+        console.log("Delivery areas received:", data);
+        setAreas((data ?? []) as DeliveryArea[]);
+      });
   }, [open, restaurant.id]);
 
   const area = areas.find((a) => a.id === areaId) ?? null;
