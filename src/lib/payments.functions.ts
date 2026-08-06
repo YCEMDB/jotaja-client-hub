@@ -89,9 +89,20 @@ export const createPixPayment = createServerFn({ method: "POST" })
     // No sandbox do Mercado Pago, é obrigatório enviar o 'payer' com nome e e-mail.
     // O erro "Unauthorized use of live credentials" também pode ocorrer se o token
     // de teste (TEST-) for usado em produção ou se houver inconsistência no par de chaves.
-    const isProductionToken = rest.mp_access_token?.startsWith("APP_USR-");
+    // No sandbox do Mercado Pago, é obrigatório enviar o 'payer' com nome e e-mail.
+    // O erro "Unauthorized use of live credentials" ocorre quando há mismatch entre o token e o endpoint
+    // ou quando o MP identifica que o token de sandbox está sendo usado em um contexto que ele julga ser produção.
+    const isSandboxToken = rest.mp_access_token?.startsWith("TEST-");
     const mpUrl = "https://api.mercadopago.com/v1/payments";
     
+    // Log para depuração profunda no servidor
+    console.log("[mercadopago] Requesting Pix:", {
+      orderId: order.id,
+      restaurantId: order.restaurant_id,
+      tokenPrefix: rest.mp_access_token?.slice(0, 10),
+      isSandboxToken
+    });
+
     const res = await fetch(mpUrl, {
       method: "POST",
       headers: {
@@ -105,9 +116,9 @@ export const createPixPayment = createServerFn({ method: "POST" })
         payment_method_id: "pix",
         date_of_expiration: expiresAt.toISOString().replace("Z", "-03:00"),
         payer: {
-          email: order.customer_phone ? `${order.customer_phone.replace(/\D/g, '')}@teste.com` : `cliente-${order.id.slice(0, 8)}@comanda.app`,
-          first_name: order.customer_name?.split(" ")[0] || "Cliente",
-          last_name: order.customer_name?.split(" ").slice(1).join(" ") || "Teste",
+          email: order.customer_phone ? `${order.customer_phone.replace(/\D/g, '')}@testuser.com` : `test_user_${order.id.slice(0, 8)}@testuser.com`,
+          first_name: order.customer_name?.split(" ")[0] || "Test",
+          last_name: order.customer_name?.split(" ").slice(1).join(" ") || "User",
         },
         external_reference: order.id,
         notification_url: `${process.env.PUBLIC_SITE_URL ?? "https://comandahub.online"}/api/public/mercadopago-webhook`,

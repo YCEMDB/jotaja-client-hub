@@ -168,12 +168,13 @@ export const mercadopagoUseSandboxCredentials = createServerFn({ method: "POST" 
       p_restaurant_id: data.restaurantId,
       p_provider: "mercadopago",
       p_value: token,
+      p_environment: "sandbox",
     } as any);
     if (error) return { ok: false as const, error: error.message };
 
     await supabase
       .from("restaurants")
-      .update({ mp_public_key: publicKey ?? null, accept_pix_online: true })
+      .update({ mp_public_key: publicKey ?? null, accept_pix_online: true, active_payment_provider: 'mercado_pago' })
       .eq("id", data.restaurantId);
 
     return { ok: true as const };
