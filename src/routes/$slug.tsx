@@ -514,19 +514,17 @@ function CheckoutDialog({
   const [validatingCoupon, setValidatingCoupon] = useState(false);
 
   useEffect(() => {
-    // Forçar carregamento independente do estado 'open' para teste
-    console.log("TRIGGER: Fetching areas for", restaurant.id);
+    if (!open) return;
     supabase.from("delivery_areas")
       .select("*")
       .eq("restaurant_id", restaurant.id)
       .eq("is_active", true)
       .order("neighborhood")
       .then(({ data, error }) => {
-        if (error) console.error("RLS_ERROR:", error);
-        console.log("REST_ID:", restaurant.id, "AREAS_COUNT:", data?.length, "DATA:", data);
+        if (error) console.error("Error fetching delivery areas:", error);
         setAreas((data ?? []) as DeliveryArea[]);
       });
-  }, [restaurant.id]);
+  }, [open, restaurant.id]);
 
   const area = areas.find((a) => a.id === areaId) ?? null;
   const deliveryFee = orderType === "delivery" ? Number(area?.fee ?? 0) : 0;
