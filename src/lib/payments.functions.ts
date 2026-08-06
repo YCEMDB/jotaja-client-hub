@@ -205,7 +205,10 @@ export const verifyMercadoPago = createServerFn({ method: "POST" })
     const { data: status, error: statusErr } = await supabase.rpc("restaurant_mp_token_status", {
       p_restaurant_id: data.restaurantId,
     });
-    if (statusErr) return { ok: false as const, error: "Sem acesso a este restaurante" };
+    if (statusErr) {
+      console.error("[verifyMercadoPago] RPC Error:", statusErr);
+      return { ok: false as const, error: `Sem acesso a este restaurante: ${statusErr.message}` };
+    }
     if (!(status as { configured?: boolean })?.configured)
       return { ok: false as const, error: "Nenhum Access Token configurado" };
 
