@@ -607,7 +607,7 @@ function CheckoutDialog({
 
     // Upsert seguro de cliente via RPC (dedup por telefone, valida restaurante ativo)
     let custId: string | null = null;
-    {
+    try {
       const { data: upsertId, error: upErr } = await supabase.rpc("upsert_public_customer", {
         p_restaurant_id: restaurant.id,
         p_name: name.trim(),
@@ -619,6 +619,8 @@ function CheckoutDialog({
       } else {
         custId = (upsertId as string | null) ?? null;
       }
+    } catch (err) {
+      console.error("upsert_public_customer exception", err);
     }
 
     // Contrato novo: envia apenas identificadores e seleção.
