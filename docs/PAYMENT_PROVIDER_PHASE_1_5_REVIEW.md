@@ -1,101 +1,70 @@
 ---
-name: Mercado Pago Phase 1.5 Architectural Review
-description: Comprehensive architectural review and infrastructure design for Mercado Pago Connect integration
+name: Payment Provider Framework Phase 1.5 Review
+description: Architectural review for the Universal Payment Provider infrastructure
 type: design
 ---
 
-# Fase 1.5 — Revisão Arquitetural Completa (Mercado Pago Connect)
+# Fase 1.5 — Revisão da Infraestrutura Universal de Pagamentos
 
-Este documento detalha a infraestrutura, fluxos e segurança da integração Mercado Pago Connect, garantindo isolamento total e estabilidade da plataforma Mesivo.
+Este documento consolida a transição de uma integração específica (Mercado Pago) para um framework universal de Payment Providers na Mesivo.
 
-## 1. Arquitetura do Banco de Dados
+## 1. Visão Geral da Mudança Estrutural
 
-### Por que `restaurant_payment_accounts`?
-Atualmente, as credenciais estão em `restaurant_secrets`. A criação de `restaurant_payment_accounts` é necessária para:
-- **Multi-Provedor:** Suportar Mercado Pago, PagBank e outros no mesmo restaurante sem poluir a tabela de segredos genéricos.
-- **Normalização:** Separar metadados públicos (Merchant ID, Status da Conexão, Ambiente) de segredos sensíveis (Tokens).
-- **Escalabilidade:** Permitir que um restaurante tenha múltiplas contas ou métodos de pagamento de forma organizada.
+A plataforma Mesivo deixa de depender de implementações rígidas. O novo modelo de "Payment Provider Framework" isola cada gateway atrás de uma interface comum, garantindo que a adição de novos meios de pagamento no futuro seja trivial.
 
-### Estrutura Proposta
-- **Tabela:** `public.restaurant_payment_accounts`
-- **PK:** `id uuid DEFAULT gen_random_uuid()`
-- **Relacionamentos:** `restaurant_id uuid REFERENCES public.restaurants(id) ON DELETE CASCADE`
-- **Campos:**
-  - `provider`: `text` (check `mercado_pago`, `pagbank`)
-  - `provider_account_id`: `text` (ID único no MP)
-  - `status`: `text` (check `active`, `expired`, `disconnected`)
-  - `environment`: `text` (check `sandbox`, `production`)
-  - `metadata`: `jsonb` (Armazena informações não sensíveis como nome da conta, email MP)
-  - `created_at / updated_at`: `timestamptz`
-- **Índices:**
-  - `idx_payment_accounts_res_provider`: B-tree em `(restaurant_id, provider)` - busca rápida no checkout.
-  - `idx_payment_accounts_external_id`: Unique B-tree em `(provider, provider_account_id)` - essencial para webhooks.
-- **Auditoria:** Trigger que alimenta `public.audit_logs` em toda alteração de status ou provedor.
+## 2. Abstração do Banco de Dados
 
-## 2. Fluxo OAuth Detalhado
+### Transição de Nomenclatura
+- **DE:** `mercadopago_token`, `mp_access_token`, `restaurant_secrets` (poluída).
+- **PARA:** `restaurant_payment_accounts`, `provider_access_token`, `provider_refresh_token`.
 
-1.  **Início:** Admin clica em "Conectar". Frontend chama `mercadopagoConnectInit`.
-2.  **State:** Backend gera um `state` (UUID + Timestamp) e salva em `public.mercadopago_oauth_states`.
-3.  **Autorização:** Usuário é redirecionado para o MP com `client_id` e `state`.
-4.  **Callback:** MP redireciona para `/api/public/mercadopago/callback?code=...&state=...`.
-5.  **Validação:** O handler valida se o `state` existe, pertence ao restaurante e não expirou (Proteção CSRF).
-6.  **Exchange:** Backend chama API do MP para trocar `code` por `access_token` e `refresh_token`.
-7.  **Vault:** Os tokens são criptografados (AES-256) e salvos via RPC `SECURITY DEFINER` na tabela de secrets protegida.
-8.  **Account:** Cria/Atualiza o registro em `restaurant_payment_accounts`.
-9.  **Checkout:** Quando um cliente paga, o sistema busca a conta `active` do restaurante e usa o token do Vault.
-10. **Refresh:** Se o token expirar ou falhar, um job/handler usa o `refresh_token` para obter novos tokens e atualiza o Vault automaticamente.
+### Benefícios
+- **Desacoplamento:** O banco de dados não conhece as particularidades do Mercado Pago.
+- **Multi-Tenant Seguro:** Cada conta de pagamento é vinculada a um restaurante e a um provedor específico.
+- **Vault First:** Todos os tokens, independentemente do provedor, seguem o mesmo fluxo de criptografia AES-256 gerenciada centralmente.
 
-## 3. Multi-Tenant e Isolamento
+## 3. Camada de Integração (Service Layer)
 
-- **Isolamento de Dados:** Cada consulta ao banco incluirá obrigatoriamente `WHERE restaurant_id = auth.get_restaurant_id()`.
-- **RLS:** Políticas de `SELECT` em `restaurant_payment_accounts` garantem que funcionários só vejam a conta do seu próprio restaurante.
-- **Webhook Routing:** O webhook recebe o `provider_account_id`. O sistema busca o `restaurant_id` correspondente na tabela de contas, garantindo que o pagamento de um restaurante nunca seja creditado em outro.
-- **Refresh Token Isolation:** O processo de refresh é atômico por `account_id`, garantindo que uma falha em um restaurante não afete outros.
+### Interface de Provedor
+Foi definida uma interface padrão que todos os provedores (Stripe, PagBank, MP, etc.) devem seguir. Isso garante que o módulo de `Orders` e o `Financeiro` não precisem saber qual gateway está processando o pagamento.
 
-## 4. Segurança e Criptografia
+### Roteamento de Webhooks
+O sistema implementará um `WebhookResolver` central. Quando uma notificação chegar de qualquer provedor, o resolver:
+1. Identifica o provedor pela URL ou Payload.
+2. Localiza a `restaurant_payment_account` correspondente.
+3. Delega o processamento ao `ProviderHandler` específico.
+4. Normaliza o status da transação para o padrão Mesivo.
 
-- **Criptografia:** AES-256-GCM para tokens em repouso. A chave de criptografia é gerenciada pelo Supabase Vault, inacessível via API REST.
-- **CSRF:** O uso obrigatório do parâmetro `state` impede ataques de Cross-Site Request Forgery.
-- **Rate Limiting:** Implementado via `mercadopago_oauth_states` (máximo de 3 tentativas por hora por restaurante).
-- **Expiração:** `state` expira em 10 minutos. Tokens OAuth seguem a validade do provedor (MP).
-- **Auditoria:** Registro completo de "Connect", "Disconnect" e "Token Refresh" nos logs do sistema.
+## 4. Segurança e Auditoria
 
-## 5. Matriz de Impacto
+- **OAuth State Universal:** O controle de CSRF agora funciona para qualquer fluxo de autorização externo.
+- **Token Rotation:** O framework gerencia a expiração e renovação de tokens de forma genérica, baseando-se no campo `provider_token_expires_at`.
+- **Logs de Erro:** Cada provedor tem um `provider_error_log` dedicado na tabela de contas para diagnósticos rápidos sem expor tokens.
 
-| Módulo | Impacto | Risco | Alteração |
-| :--- | :--- | :--- | :--- |
-| **Checkout/Cardápio** | Nenhum | Baixo | Apenas passará a ler a nova tabela de contas se disponível. |
-| **Painel Admin** | Nenhum | Baixo | Nova aba de configuração adicionada sem tocar nas existentes. |
-| **Financeiro** | Nenhum | Baixo | Lançamentos continuam sendo feitos via `order_payments`. |
-| **Caixa/KDS/Mesas** | Nenhum | Nulo | Estes módulos não interagem com o provedor de pagamento. |
-| **RLS/Segurança** | Nenhum | Médio | Novas políticas serão adicionadas, sem alterar as atuais. |
+## 5. Matriz de Impacto e Isolamento
 
-## 6. Plano de Rollback
+| Módulo | Estratégia de Isolamento |
+| :--- | :--- |
+| **Financeiro** | Consome apenas o status normalizado do Mesivo. |
+| **Checkout** | Interage com a Service Layer genérica. |
+| **Admin UI** | Exibe cards dinâmicos baseados no status da conexão do provedor. |
+| **Vault** | Centraliza chaves de criptografia independentes do provedor. |
 
-1.  **Migrations:** Uso de `down.sql` para remover tabelas e tipos criados.
-2.  **Vault:** Os segredos novos serão versionados. Em caso de erro, os segredos antigos em `restaurant_secrets` permanecem intactos.
-3.  **Código:** A nova lógica será protegida por um Feature Flag (`mp_connect_enabled`). Desativar a flag volta o sistema ao comportamento anterior instantaneamente.
-4.  **Banco:** O `DROP TABLE` da nova tabela não afeta as tabelas core (`orders`, `restaurants`).
+## 6. Plano de Arquivos (Framework Universal)
 
-## 7. Plano de Testes
+### Estrutura de Pastas Proposta
+- `src/lib/payments/providers/` (Implementações específicas: `mercadopago/`, `pagbank/`, etc.)
+- `src/lib/payments/shared/` (Interface, Tipos, Webhook Resolver, Vault Helpers)
+- `src/routes/api/public/payments/webhook` (Endpoint universal)
+- `src/routes/api/public/payments/oauth` (Callback universal)
 
-- **Unitários:** Validação de criptografia/descriptografia.
-- **Integração:** Fluxo de troca de code (Mocked para CI, Real para Sandbox).
-- **Segurança:** Teste de injeção de `state` inválido e acesso cross-tenant.
-- **E2E (Playwright):** Fluxo completo desde o clique no admin até a confirmação do Pix no cardápio (Sandbox).
-- **Concorrência:** Múltiplos webhooks simultâneos para o mesmo pedido.
+## 7. Próximos Passos (Fase 2)
 
-## 8. Lista Exata de Arquivos (Planejado)
-
-### Arquivos Novos
-- `src/lib/payments/mercadopago-connect.server.ts`
-- `src/lib/payments/mercadopago.service.server.ts`
-- `supabase/migrations/[timestamp]_mp_connect_infra.sql`
-
-### Arquivos Modificados
-- `src/lib/payments/mercadopago-api.server.ts` (Refatoração interna)
-- `src/routes/api/public/mercadopago/callback.ts` (Implementação lógica)
-- `src/routes/_authenticated/admin.configuracoes.tsx` (Nova UI)
+Com a aprovação desta revisão universal, a Fase 2 (Infraestrutura) focará em:
+1. Criar a migração SQL com as tabelas genéricas e o ENUM `payment_provider`.
+2. Implementar as funções `SECURITY DEFINER` para manipulação segura de tokens.
+3. Desenvolver o esqueleto da `PaymentProviderInterface`.
+4. Mapear o Mercado Pago como a primeira implementação deste framework.
 
 ---
-**Status:** Revisão Arquitetural Fase 1.5 entregue. Nenhuma alteração de código realizada. Aguardando auditoria final para permissão da Fase 2.
+**Status:** Revisão Arquitetural Universal Concluída. Documentação alinhada aos novos requisitos de desacoplamento. Aguardando autorização para iniciar a Fase 2.

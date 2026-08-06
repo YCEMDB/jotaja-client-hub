@@ -1,63 +1,94 @@
 ---
-name: Mercado Pago Database Model
-description: Database schema and security model for Mercado Pago Connect in Mesivo V4
+name: Payment Provider Framework Database Model
+description: Generic database schema and security model for Mesivo Payment Providers
 type: feature
 ---
 
-# Modelagem de Banco de Dados — Mercado Pago (Mesivo V4)
+# Modelagem de Banco de Dados Universal — Payment Provider (Mesivo V4)
 
-## 1. Estrutura de Tabelas
+Este modelo substitui implementações específicas por uma estrutura genérica e extensível, capaz de suportar qualquer gateway de pagamento.
 
-### `public.restaurant_secrets` (Existente - Refatorar)
-Armazena as credenciais sensíveis.
-- `restaurant_id`: uuid (PK, FK restaurants)
-- `mp_access_token_encrypted`: bytea (AES-256 via pgcrypto)
-- `mp_refresh_token_encrypted`: bytea (AES-256 via pgcrypto) - **NOVO**
-- `mp_public_key`: text - **NOVO (Migrar de restaurants)**
-- `mp_merchant_id`: text - **NOVO**
-- `mp_token_expires_at`: timestamptz - **NOVO**
-- `mp_environment`: text (check 'sandbox', 'production')
+## 1. Estrutura de Tabelas Genéricas
+
+### `public.restaurant_payment_accounts`
+Armazena o estado da conexão e metadados públicos de qualquer provedor.
+- `id`: uuid (PK, default gen_random_uuid())
+- `restaurant_id`: uuid (FK restaurants, ON DELETE CASCADE)
+- `provider`: `payment_provider` (ENUM: 'mercadopago', 'pagbank', 'stripe', 'asaas', 'stone', etc.)
+- `provider_account_id`: text (ID único do usuário/conta no provedor)
+- `provider_user_id`: text (Identificador secundário, se necessário)
+- `provider_status`: text (active, disconnected, expired, error)
+- `provider_environment`: text (sandbox, production)
+- `provider_capabilities`: jsonb (Ex: {"pix": true, "credit_card": false})
+- `provider_metadata`: jsonb (Email, Nome da Loja no Provedor, etc.)
+- `provider_last_sync`: timestamptz
+- `provider_error_log`: text
+- `is_active`: boolean (Se esta é a conta principal para o provedor)
+- `created_at / updated_at`: timestamptz
+
+### `public.restaurant_payment_secrets` (Vault Protected)
+Armazena tokens sensíveis via RPC Security Definer.
+- `account_id`: uuid (PK, FK restaurant_payment_accounts)
+- `provider_access_token_encrypted`: bytea (AES-256 via pgcrypto)
+- `provider_refresh_token_encrypted`: bytea (AES-256 via pgcrypto)
+- `provider_token_expires_at`: timestamptz
+- `provider_scopes`: text[]
 - `updated_at`: timestamptz
 
-### `public.mercadopago_oauth_states` (Existente)
-Controle de CSRF e expiração para o fluxo OAuth.
+### `public.payment_oauth_states`
+Controle universal de CSRF para fluxos OAuth.
 - `state`: text (PK)
 - `restaurant_id`: uuid (FK)
+- `provider`: `payment_provider`
 - `redirect_after`: text
 - `created_at`: timestamptz
 - `expires_at`: timestamptz
 - `used_at`: timestamptz
 
-### `public.mp_webhook_events` (Existente - Refatorar)
-Auditoria e processamento de eventos.
+### `public.payment_webhook_events` (Consolidada)
+Log de auditoria e idempotência para todos os provedores.
 - `id`: bigint (PK)
-- `event_id`: text (Unique - Idempotência)
-- `restaurant_id`: uuid
+- `provider`: `payment_provider`
+- `event_id`: text (Unique por provider para Idempotência)
+- `account_id`: uuid (FK restaurant_payment_accounts)
 - `payload`: jsonb
-- `status`: text (received, processing, processed, failed, dlq)
-- `attempts`: int
+- `status`: text (received, processing, processed, failed, ignored)
+- `attempts`: int (default 0)
 - `last_error`: text
 - `processed_at`: timestamptz
 
-## 2. Índices e Performance
-- `idx_restaurant_secrets_env`: B-tree em `mp_environment` para auditoria rápida.
-- `idx_mp_webhook_event_id`: Unique B-tree em `event_id` (Idempotência crítica).
-- `idx_mp_webhook_retry`: B-tree composto `(status, next_retry_at)` para jobs de reprocessamento.
+## 2. Tipos e Enums
+
+```sql
+CREATE TYPE public.payment_provider AS ENUM (
+  'mercadopago', 
+  'pagbank', 
+  'stripe', 
+  'asaas', 
+  'stone', 
+  'cielo', 
+  'pagarme', 
+  'paypal'
+);
+```
 
 ## 3. Segurança e RLS (Row Level Security)
 
-### Políticas `restaurant_secrets`
-- **SELECT/UPDATE**: Apenas `authenticated` onde `auth.uid()` é o `owner` do restaurante ou possui papel `super_admin`.
-- **INSERT/DELETE**: Proibido via API (gerenciado apenas por RPCs `SECURITY DEFINER`).
+### Políticas `restaurant_payment_accounts`
+- **SELECT**: Apenas `authenticated` que pertençam ao restaurante ou `super_admin`.
+- **UPDATE**: Apenas `owner` ou `super_admin`.
+- **INSERT/DELETE**: Apenas via lógica de serviço controlada.
 
-### Políticas `mp_webhook_events`
-- **SELECT**: Apenas equipe do restaurante ou `super_admin`.
-- **INSERT**: Apenas via `service_role` (Webhook handler).
+### Políticas `restaurant_payment_secrets`
+- **ACESSO**: Totalmente bloqueado para SELECT via API.
+- **MANIPULAÇÃO**: Exclusiva via funções `SECURITY DEFINER` que validam o `restaurant_id`.
 
-## 4. Triggers e Auditoria
-- `trg_mp_secret_audit`: Grava em `public.audit_logs` toda vez que um token for rotacionado.
-- `trg_mp_webhook_process`: (Opcional) Notifica via `pg_net` ou similar para processamento assíncrono se necessário, embora o handler síncrono seja preferido para Mesivo V4.
+## 4. Índices Críticos
+- `idx_payment_accounts_lookup`: Unique B-tree em `(restaurant_id, provider, is_active)`.
+- `idx_payment_webhook_idempotency`: Unique B-tree em `(provider, event_id)`.
+- `idx_payment_accounts_external`: B-tree em `(provider, provider_account_id)` para roteamento de webhooks.
 
-## 5. Constraints
-- `chk_mp_env`: `CHECK (mp_environment IN ('sandbox', 'production'))`.
-- `chk_token_expiry`: `CHECK (mp_token_expires_at > created_at)`.
+## 5. Constraints de Negócio
+- `chk_provider_env`: `CHECK (provider_environment IN ('sandbox', 'production'))`.
+- `chk_provider_status`: `CHECK (provider_status IN ('active', 'disconnected', 'expired', 'error'))`.
+- `chk_oauth_expiry`: `CHECK (provider_token_expires_at > updated_at)`.
