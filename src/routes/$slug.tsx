@@ -178,7 +178,7 @@ function LojaPage() {
   } as React.CSSProperties;
 
   // Fonte oficial: is_open_now (calculada no servidor a partir de open_mode + opening_hours + timezone).
-  const isForcedOpenSlug = ['sabor-da-casa', 'teste-mp-570e'].includes(slug);
+  const isForcedOpenSlug = ['sabor-da-casa', 'teste-mp-570e', 'demo'].includes(slug);
   const openNow = isForcedOpenSlug || restaurant.is_open_now === true;
 
   return (
