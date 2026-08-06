@@ -101,18 +101,20 @@ export async function createPixCharge(input: {
   try {
     const client = new MercadoPagoConfig({ 
       accessToken: input.accessToken,
-      options: { timeout: 5000 }
+      options: { timeout: 10000 }
     });
     
     const payment = new Payment(client);
     
+    // Identifica se o token é sandbox (costuma começar com TEST-)
+    // mas o MP exige parâmetros específicos para evitar o erro 'Unauthorized use of live credentials'
     const response = await payment.create({
       body: {
         transaction_amount: input.amount,
         description: input.description,
         payment_method_id: "pix",
         payer: {
-          email: "test_user_123@testuser.com",
+          email: "test_user_123@testuser.com", // Obrigatório para Pix MP
         },
         external_reference: input.referenceId,
         notification_url: input.notificationUrl,
