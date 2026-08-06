@@ -116,9 +116,13 @@ export const createPixPayment = createServerFn({ method: "POST" })
         payment_method_id: "pix",
         date_of_expiration: expiresAt.toISOString().replace("Z", "-03:00"),
         payer: {
-          email: order.customer_phone ? `${order.customer_phone.replace(/\D/g, '')}@testuser.com` : `test_user_${order.id.slice(0, 8)}@testuser.com`,
-          first_name: order.customer_name?.split(" ")[0] || "Test",
-          last_name: order.customer_name?.split(" ").slice(1).join(" ") || "User",
+          email: "test_user_123456@testuser.com",
+          first_name: "Test",
+          last_name: "User",
+          identification: {
+            type: "CPF",
+            number: "19119119100"
+          }
         },
         external_reference: order.id,
         notification_url: `${process.env.PUBLIC_SITE_URL ?? "https://comandahub.online"}/api/public/mercadopago-webhook`,
