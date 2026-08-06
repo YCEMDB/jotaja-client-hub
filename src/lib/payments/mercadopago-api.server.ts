@@ -99,6 +99,10 @@ export async function createPixCharge(input: {
   notificationUrl: string;
 }): Promise<CreatePixResult> {
   try {
+    // Se o token começar com APP_USR-, o MP exige produção. 
+    // Se começar com TEST-, exige sandbox.
+    // O erro "Unauthorized use of live credentials" ocorre quando usamos um token de produção (APP_USR-)
+    // em uma requisição que o MP identifica como sandbox ou vice-versa.
     const client = new MercadoPagoConfig({ 
       accessToken: input.accessToken,
       options: { timeout: 10000 }
@@ -106,8 +110,6 @@ export async function createPixCharge(input: {
     
     const payment = new Payment(client);
     
-    // Identifica se o token é sandbox (costuma começar com TEST-)
-    // mas o MP exige parâmetros específicos para evitar o erro 'Unauthorized use of live credentials'
     const response = await payment.create({
       body: {
         transaction_amount: input.amount,
