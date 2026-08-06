@@ -521,8 +521,10 @@ function CheckoutDialog({
       .eq("is_active", true)
       .order("neighborhood")
       .then(({ data, error }) => {
-        if (error) console.error("Error fetching delivery areas:", error);
-        setAreas((data ?? []) as DeliveryArea[]);
+        if (error) console.error("[Checkout] Error fetching delivery areas:", error);
+        const activeAreas = (data ?? []) as DeliveryArea[];
+        console.log(`[Checkout] Loaded ${activeAreas.length} active delivery areas for restaurant ${restaurant.id}`);
+        setAreas(activeAreas);
       });
   }, [open, restaurant.id]);
 
