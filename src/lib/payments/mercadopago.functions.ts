@@ -88,7 +88,10 @@ export const createTestMercadoPagoPix = createServerFn({ method: "POST" })
       .select("id")
       .single();
 
-    if (orderErr || !order) return { ok: false as const, error: "Falha ao criar pedido de teste." };
+    if (orderErr || !order) {
+      console.error("[mercadopago] test order creation failed:", orderErr);
+      return { ok: false as const, error: `Falha ao criar pedido de teste: ${orderErr?.message ?? 'erro desconhecido'}` };
+    }
 
     // 3. Gerar cobrança no Mercado Pago
     const idempotencyKey = `test-mp-${order.id}`;
