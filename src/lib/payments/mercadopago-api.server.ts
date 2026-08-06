@@ -138,7 +138,11 @@ export async function createPixCharge(input: {
       expires_at: response.date_of_expiration || new Date(Date.now() + 30 * 60_000).toISOString(),
     };
   } catch (e: any) {
-    console.error("[mercadopago] sdk error", e);
+    console.error("[mercadopago] sdk error details:", {
+      message: e.message,
+      cause: e.cause,
+      stack: e.stack
+    });
     return { 
       ok: false, 
       error: e.cause?.[0]?.code ?? e.message ?? "sdk_error",
