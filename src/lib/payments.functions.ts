@@ -125,7 +125,9 @@ export const createPixPayment = createServerFn({ method: "POST" })
       return { 
         ok: false, 
         error: payload?.message ?? "Erro ao gerar PIX",
-        detail: payload?.cause?.[0]?.description ?? payload?.error
+        detail: payload?.cause?.[0]?.description ?? payload?.error,
+        status: res.status,
+        raw_error: payload
       };
     }
 

@@ -110,19 +110,21 @@ export async function createPixCharge(input: {
     
     const payment = new Payment(client);
     
-    const response = await payment.create({
-      body: {
-        transaction_amount: input.amount,
-        description: input.description,
-        payment_method_id: "pix",
-        payer: {
-          email: "test_user_123@testuser.com",
-          first_name: "Test",
-          last_name: "User"
-        },
-        external_reference: input.referenceId,
-        notification_url: input.notificationUrl,
+    const payload = {
+      transaction_amount: input.amount,
+      description: input.description,
+      payment_method_id: "pix",
+      payer: {
+        email: "test_user_123@testuser.com",
+        first_name: "Test",
+        last_name: "User"
       },
+      external_reference: input.referenceId,
+      notification_url: input.notificationUrl,
+    };
+
+    const response = await payment.create({
+      body: payload,
       requestOptions: {
         idempotencyKey: input.idempotencyKey,
       }
