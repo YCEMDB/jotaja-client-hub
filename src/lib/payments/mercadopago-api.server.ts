@@ -135,7 +135,8 @@ export async function createPixCharge(input: {
     console.error("[mercadopago] sdk error", e);
     return { 
       ok: false, 
-      error: e.cause?.[0]?.code ?? e.message ?? "sdk_error" 
+      error: e.cause?.[0]?.code ?? e.message ?? "sdk_error",
+      message: e.cause?.[0]?.description ?? e.message
     };
   }
 }
