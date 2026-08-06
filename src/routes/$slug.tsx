@@ -523,7 +523,7 @@ function CheckoutDialog({
       .order("neighborhood")
       .then(({ data, error }) => {
         if (error) console.error("Error fetching delivery areas:", error);
-        console.log("Delivery areas received:", data);
+        console.log("REST_ID:", restaurant.id, "AREAS:", data);
         setAreas((data ?? []) as DeliveryArea[]);
       });
   }, [open, restaurant.id]);
