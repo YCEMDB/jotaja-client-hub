@@ -178,7 +178,7 @@ function LojaPage() {
   } as React.CSSProperties;
 
   // Fonte oficial: is_open_now (calculada no servidor a partir de open_mode + opening_hours + timezone).
-  const isForcedOpenSlug = ['sabor-da-casa', 'teste-mp-570e', 'demo'].includes(slug);
+  const isForcedOpenSlug = ['sabor-da-casa', 'teste-mp-570e', 'demo', 'sabor-da-casa-demo'].includes(slug);
   const openNow = isForcedOpenSlug || restaurant.is_open_now === true;
 
   return (
@@ -492,7 +492,7 @@ function CheckoutDialog({
   const [complement, setComplement] = useState("");
   // HACK for Sandbox testing: if it's the test restaurant, force allowPix to true
   const isTestRestaurant = restaurant.slug === 'teste-mp-570e';
-  const allowPix = isTestRestaurant || (restaurant.accept_pix_online !== false && restaurant.mp_online_ready === true);
+  const allowPix = isTestRestaurant || (restaurant.accept_pix_online === true);
   const allowCash = restaurant.accept_cash_on_delivery !== false;
   const allowCard = restaurant.accept_card_on_delivery !== false;
   const defaultPayment: "cash" | "pix" | "credit_card" | "debit_card" =
@@ -521,8 +521,10 @@ function CheckoutDialog({
       .eq("is_active", true)
       .order("neighborhood")
       .then(({ data, error }) => {
-        if (error) console.error("Error fetching delivery areas:", error);
-        setAreas((data ?? []) as DeliveryArea[]);
+        if (error) console.error("[Checkout] Error fetching delivery areas:", error);
+        const activeAreas = (data ?? []) as DeliveryArea[];
+        console.log(`[Checkout] Loaded ${activeAreas.length} active delivery areas for restaurant ${restaurant.id}`);
+        setAreas(activeAreas);
       });
   }, [open, restaurant.id]);
 
@@ -607,7 +609,7 @@ function CheckoutDialog({
 
     // Upsert seguro de cliente via RPC (dedup por telefone, valida restaurante ativo)
     let custId: string | null = null;
-    {
+    try {
       const { data: upsertId, error: upErr } = await supabase.rpc("upsert_public_customer", {
         p_restaurant_id: restaurant.id,
         p_name: name.trim(),
@@ -619,6 +621,8 @@ function CheckoutDialog({
       } else {
         custId = (upsertId as string | null) ?? null;
       }
+    } catch (err) {
+      console.error("upsert_public_customer exception", err);
     }
 
     // Contrato novo: envia apenas identificadores e seleção.

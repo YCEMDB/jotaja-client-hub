@@ -23,10 +23,14 @@ export const createPixPayment = createServerFn({ method: "POST" })
     // Roteamento por provedor ativo (PagBank ou Mercado Pago).
     const { data: restProvider } = await supabaseAdmin
       .from("restaurants")
-      .select("active_payment_provider")
+      .select("id, active_payment_provider, slug")
       .eq("id", order.restaurant_id)
       .maybeSingle();
-    if (restProvider?.active_payment_provider === "pagbank") {
+      
+    const isTestRestaurant = restProvider?.slug === 'teste-mp-570e';
+    const activeProvider = isTestRestaurant ? 'mercado_pago' : restProvider?.active_payment_provider;
+
+    if (activeProvider === "pagbank") {
       const { createPagbankPixCharge } = await import("./payments/pagbank.functions");
       const r: any = await createPagbankPixCharge({ data: { orderId: order.id } });
       if (!r?.ok) return { ok: false, error: r?.error ?? "Erro ao gerar Pix PagBank", detail: r?.detail };
@@ -82,6 +86,9 @@ export const createPixPayment = createServerFn({ method: "POST" })
       notification_url: `${process.env.PUBLIC_SITE_URL ?? "https://comandahub.online"}/api/public/mercadopago-webhook`,
     };
 
+    // No sandbox do Mercado Pago, é obrigatório enviar o 'payer' com nome e e-mail.
+    // O erro "Unauthorized use of live credentials" também pode ocorrer se o token
+    // de teste (TEST-) for usado em produção ou se houver inconsistência no par de chaves.
     const res = await fetch("https://api.mercadopago.com/v1/payments", {
       method: "POST",
       headers: {
@@ -89,13 +96,34 @@ export const createPixPayment = createServerFn({ method: "POST" })
         "Content-Type": "application/json",
         "X-Idempotency-Key": order.id,
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify({
+        transaction_amount: Number(order.total),
+        description: `Pedido em ${rest.name}`,
+        payment_method_id: "pix",
+        date_of_expiration: expiresAt.toISOString().replace("Z", "-03:00"),
+        payer: {
+          email: order.customer_phone ? `${order.customer_phone}@teste.com` : `cliente-${order.id.slice(0, 8)}@comanda.app`,
+          first_name: order.customer_name?.split(" ")[0] ?? "Cliente",
+          last_name: order.customer_name?.split(" ").slice(1).join(" ") || "Teste",
+        },
+        external_reference: order.id,
+        notification_url: `${process.env.PUBLIC_SITE_URL ?? "https://comandahub.online"}/api/public/mercadopago-webhook`,
+      }),
     });
 
     const payload: any = await res.json();
     if (!res.ok) {
-      console.error("MP error:", payload);
-      return { ok: false, error: payload?.message ?? "Erro ao gerar PIX" };
+      console.error("[mercadopago] API failure:", {
+        status: res.status,
+        payload,
+        orderId: order.id,
+        isSandbox: rest.mp_access_token?.startsWith("TEST-")
+      });
+      return { 
+        ok: false, 
+        error: payload?.message ?? "Erro ao gerar PIX",
+        detail: payload?.cause?.[0]?.description ?? payload?.error
+      };
     }
 
     const qr = payload?.point_of_interaction?.transaction_data?.qr_code ?? null;
@@ -145,10 +173,14 @@ export const syncPixPayment = createServerFn({ method: "POST" })
     // Roteamento por provedor ativo
     const { data: restProvider } = await supabaseAdmin
       .from("restaurants")
-      .select("active_payment_provider")
+      .select("active_payment_provider, slug")
       .eq("id", order.restaurant_id)
       .maybeSingle();
-    if (restProvider?.active_payment_provider === "pagbank") {
+
+    const isTestRestaurant = restProvider?.slug === 'teste-mp-570e';
+    const activeProvider = isTestRestaurant ? 'mercado_pago' : restProvider?.active_payment_provider;
+
+    if (activeProvider === "pagbank") {
       const { syncPagbankPayment } = await import("./payments/pagbank.functions");
       const r: any = await syncPagbankPayment({ data: { orderId: order.id } });
       return { ok: !!r?.ok, status: r?.status ?? "unknown" };
