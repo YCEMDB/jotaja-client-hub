@@ -49,7 +49,14 @@ export const createTestMercadoPagoPix = createServerFn({ method: "POST" })
     let mpToken: string | null = null;
     
     // HACK for Sandbox testing
-    if (data.restaurantId === 'be9c67e2-fb36-4eff-aa81-476d22d64651') {
+    const TEST_RESTAURANT_SLUG = "teste-mp-570e";
+    const { data: testRest } = await supabase
+      .from("restaurants")
+      .select("id")
+      .eq("slug", TEST_RESTAURANT_SLUG)
+      .single();
+
+    if (data.restaurantId === testRest?.id) {
       mpToken = process.env["MERCADOPAGO_ACCESS_TOKEN_SANDBOX"] || null;
     }
 
