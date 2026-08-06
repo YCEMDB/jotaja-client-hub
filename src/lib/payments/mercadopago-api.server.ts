@@ -115,9 +115,13 @@ export async function createPixCharge(input: {
       description: input.description,
       payment_method_id: "pix",
       payer: {
-        email: "test_user_123@testuser.com",
+        email: "test_user_123456@testuser.com",
         first_name: "Test",
-        last_name: "User"
+        last_name: "User",
+        identification: {
+          type: "CPF",
+          number: "19119119100"
+        }
       },
       external_reference: input.referenceId,
       notification_url: input.notificationUrl,
