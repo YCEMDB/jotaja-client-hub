@@ -58,6 +58,7 @@ export const createTestMercadoPagoPix = createServerFn({ method: "POST" })
 
     if (data.restaurantId === testRest?.id) {
       mpToken = process.env["MERCADOPAGO_ACCESS_TOKEN_SANDBOX"] || null;
+      console.log("[mercadopago] Forced Sandbox Token for test restaurant:", !!mpToken);
     }
 
     if (!mpToken) {
@@ -157,6 +158,8 @@ export const mercadopagoUseSandboxCredentials = createServerFn({ method: "POST" 
     const { supabase } = context;
     const token = process.env["MERCADOPAGO_ACCESS_TOKEN_SANDBOX"];
     const publicKey = process.env["MERCADOPAGO_PUBLIC_KEY_SANDBOX"];
+    
+    console.log("[mercadopago] Applying sandbox credentials. Token exists:", !!token);
     if (!token) {
       return { ok: false as const, error: "Credenciais Sandbox não configuradas." };
     }

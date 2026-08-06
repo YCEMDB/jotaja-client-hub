@@ -99,9 +99,13 @@ export async function createPixCharge(input: {
   notificationUrl: string;
 }): Promise<CreatePixResult> {
   try {
+    // Se o token começar com APP_USR-, o MP exige produção. 
+    // Se começar com TEST-, exige sandbox.
+    // O erro "Unauthorized use of live credentials" ocorre quando usamos um token de produção (APP_USR-)
+    // em uma requisição que o MP identifica como sandbox ou vice-versa.
     const client = new MercadoPagoConfig({ 
       accessToken: input.accessToken,
-      options: { timeout: 5000 }
+      options: { timeout: 10000 }
     });
     
     const payment = new Payment(client);
@@ -113,6 +117,8 @@ export async function createPixCharge(input: {
         payment_method_id: "pix",
         payer: {
           email: "test_user_123@testuser.com",
+          first_name: "Test",
+          last_name: "User"
         },
         external_reference: input.referenceId,
         notification_url: input.notificationUrl,
@@ -132,7 +138,11 @@ export async function createPixCharge(input: {
       expires_at: response.date_of_expiration || new Date(Date.now() + 30 * 60_000).toISOString(),
     };
   } catch (e: any) {
-    console.error("[mercadopago] sdk error", e);
+    console.error("[mercadopago] sdk error details:", {
+      message: e.message,
+      cause: e.cause,
+      stack: e.stack
+    });
     return { 
       ok: false, 
       error: e.cause?.[0]?.code ?? e.message ?? "sdk_error",
