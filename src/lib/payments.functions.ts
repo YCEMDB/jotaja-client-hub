@@ -116,15 +116,22 @@ export const createPixPayment = createServerFn({ method: "POST" })
 
     const payload: any = await res.json();
     if (!res.ok) {
+      const errorMsg = payload?.message || "Erro ao gerar PIX";
+      const isLiveError = errorMsg.toLowerCase().includes("live credentials");
+      
       console.error("[mercadopago] API failure:", {
         status: res.status,
         payload,
         orderId: order.id,
-        isSandbox: rest.mp_access_token?.startsWith("TEST-")
+        isSandbox: rest.mp_access_token?.startsWith("TEST-"),
+        tokenPrefix: rest.mp_access_token?.slice(0, 8)
       });
+
       return { 
         ok: false, 
-        error: payload?.message ?? "Erro ao gerar PIX",
+        error: isLiveError 
+          ? "Erro de Credenciais: O token configurado não corresponde ao ambiente (Produção vs Sandbox). Verifique no painel do Mercado Pago."
+          : errorMsg,
         detail: payload?.cause?.[0]?.description ?? payload?.error,
         status: res.status,
         raw_error: payload
