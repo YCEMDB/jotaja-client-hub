@@ -89,7 +89,10 @@ export const createPixPayment = createServerFn({ method: "POST" })
     // No sandbox do Mercado Pago, é obrigatório enviar o 'payer' com nome e e-mail.
     // O erro "Unauthorized use of live credentials" também pode ocorrer se o token
     // de teste (TEST-) for usado em produção ou se houver inconsistência no par de chaves.
-    const res = await fetch("https://api.mercadopago.com/v1/payments", {
+    const isProductionToken = rest.mp_access_token?.startsWith("APP_USR-");
+    const mpUrl = "https://api.mercadopago.com/v1/payments";
+    
+    const res = await fetch(mpUrl, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${rest.mp_access_token}`,
@@ -102,8 +105,8 @@ export const createPixPayment = createServerFn({ method: "POST" })
         payment_method_id: "pix",
         date_of_expiration: expiresAt.toISOString().replace("Z", "-03:00"),
         payer: {
-          email: order.customer_phone ? `${order.customer_phone}@teste.com` : `cliente-${order.id.slice(0, 8)}@comanda.app`,
-          first_name: order.customer_name?.split(" ")[0] ?? "Cliente",
+          email: order.customer_phone ? `${order.customer_phone.replace(/\D/g, '')}@teste.com` : `cliente-${order.id.slice(0, 8)}@comanda.app`,
+          first_name: order.customer_name?.split(" ")[0] || "Cliente",
           last_name: order.customer_name?.split(" ").slice(1).join(" ") || "Teste",
         },
         external_reference: order.id,
@@ -122,7 +125,9 @@ export const createPixPayment = createServerFn({ method: "POST" })
       return { 
         ok: false, 
         error: payload?.message ?? "Erro ao gerar PIX",
-        detail: payload?.cause?.[0]?.description ?? payload?.error
+        detail: payload?.cause?.[0]?.description ?? payload?.error,
+        status: res.status,
+        raw_error: payload
       };
     }
 

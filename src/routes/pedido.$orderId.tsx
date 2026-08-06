@@ -67,7 +67,12 @@ function OrderTrackPage() {
     if (order.pix_qr_code || order.payment_status === "paid" || generating) return;
     setGenerating(true);
     createPix({ data: { orderId } })
-      .then((r) => { if (!r.ok) toast.error(r.error ?? "Erro PIX"); })
+      .then((r) => { 
+        if (!r.ok) {
+          console.error("[PIX ERROR]", r);
+          toast.error(r.error ?? "Erro PIX"); 
+        }
+      })
       .finally(() => { setGenerating(false); load(); });
   }, [order?.id]);
 
