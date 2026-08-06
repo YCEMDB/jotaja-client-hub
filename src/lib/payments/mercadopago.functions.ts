@@ -58,6 +58,7 @@ export const createTestMercadoPagoPix = createServerFn({ method: "POST" })
 
     if (data.restaurantId === testRest?.id) {
       mpToken = process.env["MERCADOPAGO_ACCESS_TOKEN_SANDBOX"] || null;
+      console.log("[mercadopago] Forced Sandbox Token for test restaurant:", !!mpToken);
     }
 
     if (!mpToken) {

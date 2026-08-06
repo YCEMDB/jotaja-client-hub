@@ -114,7 +114,9 @@ export async function createPixCharge(input: {
         description: input.description,
         payment_method_id: "pix",
         payer: {
-          email: "test_user_123@testuser.com", // Obrigatório para Pix MP
+          email: "test_user_123@testuser.com",
+          first_name: "Test",
+          last_name: "User"
         },
         external_reference: input.referenceId,
         notification_url: input.notificationUrl,
