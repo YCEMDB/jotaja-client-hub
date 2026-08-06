@@ -109,7 +109,10 @@ export const createTestMercadoPagoPix = createServerFn({ method: "POST" })
       notificationUrl,
     });
 
-    if (!res.ok) return res;
+    if (!res.ok) {
+      console.error("[mercadopago] createPixCharge failed:", res);
+      return res;
+    }
 
     // 4. Registrar o pagamento no banco (canonical)
     await supabase.rpc("payment_create_pending", {
