@@ -34,10 +34,17 @@ export const Route = createFileRoute('/api/public/payments/webhook')({
             headers: { 'Content-Type': 'application/json' }
           });
 
-        } catch (err) {
-          console.error('[webhook-route] Error processing webhook:', err);
-          return new Response('Internal Server Error', { status: 500 });
+        } catch (err: any) {
+          console.error('[webhook-route] Error processing webhook:', err.message, err.stack);
+          return new Response(JSON.stringify({ 
+            error: 'Internal Server Error',
+            message: err.message
+          }), { 
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+          });
         }
+
       }
     }
   }
