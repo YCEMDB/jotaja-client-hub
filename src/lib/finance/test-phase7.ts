@@ -36,11 +36,20 @@ export async function runPhase7Tests() {
 
     await processFinancialQueue();
     
+    // Check processing result
+    const { data: log1Check } = await supabaseAdmin
+      .from('payment_provider_webhook_logs')
+      .select('financial_processing_status, financial_processing_error')
+      .eq('id', log1!.id)
+      .single();
+
     const { data: tx1 } = await supabaseAdmin
       .from('financial_transactions')
       .select('*')
       .eq('payment_event_id', log1!.id)
-      .single();
+      .maybeSingle();
+
+    console.log(`Log1 Result: ${log1Check?.financial_processing_status}, Error: ${log1Check?.financial_processing_error}`);
 
     results.push({
       test: "TEST 1: Valid Settlement",
