@@ -2629,37 +2629,40 @@ export type Database = {
           account_id: string | null
           attempts: number | null
           created_at: string | null
-          event_id: string
+          headers: Json | null
           id: number
           last_error: string | null
           payload: Json
           processed_at: string | null
           provider: Database["public"]["Enums"]["payment_provider"]
-          status: string
+          provider_event_id: string
+          status: Database["public"]["Enums"]["webhook_process_status"] | null
         }
         Insert: {
           account_id?: string | null
           attempts?: number | null
           created_at?: string | null
-          event_id: string
+          headers?: Json | null
           id?: number
           last_error?: string | null
           payload: Json
           processed_at?: string | null
           provider: Database["public"]["Enums"]["payment_provider"]
-          status: string
+          provider_event_id: string
+          status?: Database["public"]["Enums"]["webhook_process_status"] | null
         }
         Update: {
           account_id?: string | null
           attempts?: number | null
           created_at?: string | null
-          event_id?: string
+          headers?: Json | null
           id?: number
           last_error?: string | null
           payload?: Json
           processed_at?: string | null
           provider?: Database["public"]["Enums"]["payment_provider"]
-          status?: string
+          provider_event_id?: string
+          status?: Database["public"]["Enums"]["webhook_process_status"] | null
         }
         Relationships: [
           {
@@ -5223,6 +5226,20 @@ export type Database = {
           to_status: Database["public"]["Enums"]["order_status"]
         }[]
       }
+      get_payment_account_for_routing: {
+        Args: {
+          p_provider: Database["public"]["Enums"]["payment_provider"]
+          p_provider_account_id: string
+        }
+        Returns: {
+          account_status: string
+          id: string
+          is_active: boolean
+          last_sync_at: string
+          provider: Database["public"]["Enums"]["payment_provider"]
+          restaurant_id: string
+        }[]
+      }
       get_product_recipe: { Args: { p_product_id: string }; Returns: Json }
       get_products_profitability_report: {
         Args: { p_from: string; p_restaurant_id: string; p_to: string }
@@ -6096,6 +6113,13 @@ export type Database = {
         | "closed"
         | "cancelled"
         | "blocked"
+      webhook_process_status:
+        | "RECEIVED"
+        | "VALIDATED"
+        | "PROCESSING"
+        | "PROCESSED"
+        | "FAILED"
+        | "IGNORED"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -6318,6 +6342,14 @@ export const Constants = {
         "closed",
         "cancelled",
         "blocked",
+      ],
+      webhook_process_status: [
+        "RECEIVED",
+        "VALIDATED",
+        "PROCESSING",
+        "PROCESSED",
+        "FAILED",
+        "IGNORED",
       ],
     },
   },

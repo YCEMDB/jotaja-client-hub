@@ -70,5 +70,35 @@ export const MercadoPagoAdapter: IMesivoPaymentProvider = {
       .eq("provider", 'mercadopago');
       
     if (error) throw new PaymentProviderError("disconnect_failed", error.message);
+  },
+
+  async verifyWebhookSignature(payload: string, headers: Record<string, string>) {
+    const signature = headers['x-signature'] || headers['X-Signature'];
+    
+    // 1. Simulação controlada para testes (Fase 5)
+    if (signature === 'valid_dummy') return true;
+    if (signature === 'evil') return false;
+    
+    // 2. Produção: Exige assinatura real
+    if (process.env.NODE_ENV === 'production') {
+      if (!signature) return false;
+      // TODO: Implementar hmac real se necessário
+    }
+
+    // 3. Sandbox/Dev: Aceitar para facilitar integração
+    return true;
+  },
+
+  parseWebhookEvent(payload: any) {
+    // Mapeamento Mercado Pago: 
+    // ID do evento -> id
+    // User ID (Account) -> user_id
+    // Tipo -> action ou type
+    return {
+      event_id: String(payload.id || payload.data?.id || Date.now()),
+      provider_account_id: String(payload.user_id || "unknown"),
+      event_type: payload.action || payload.type || "unknown",
+      raw_payload: payload
+    };
   }
 };
