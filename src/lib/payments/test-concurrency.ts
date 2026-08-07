@@ -1,7 +1,14 @@
-import { supabase } from "@/integrations/supabase/client";
+import { createClient } from "@supabase/supabase-js";
+
+// Usando o cliente Admin para ignorar RLS durante o teste técnico de concorrência
+const supabaseAdmin = createClient(
+  process.env.VITE_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 /**
  * Script de teste de concorrência para a Fase 4.
+
  * Simula dois workers tentando adquirir o lock simultaneamente para a mesma conta.
  */
 async function testConcurrency() {
