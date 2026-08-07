@@ -1,38 +1,47 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { buildAuthorizationUrl, createPixCharge } from "./mercadopago-api.server";
+import { getProviderAdapter, PaymentProviderError } from "./framework";
 
 const connectInitSchema = z.object({
   restaurantId: z.string().uuid(),
-  redirectAfter: z.string().optional(),
 });
 
+/**
+ * Inicia o fluxo OAuth universal para Mercado Pago.
+ */
 export const mercadopagoConnectInit = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) => connectInitSchema.parse(d))
   .handler(async ({ data, context }) => {
-    const { supabase } = context;
-
-    const { data: initRes, error } = await supabase.rpc("mercadopago_connect_init" as any, {
-      p_restaurant_id: data.restaurantId,
-      p_redirect_after: data.redirectAfter ?? "/admin/configuracoes?tab=pagamentos",
-    } as any);
-
-    if (error) return { ok: false as const, error: error.message };
-
-    const state = (initRes as any)?.state as string;
-    const url = buildAuthorizationUrl({ state });
-
-    if (!url.ok) {
-      return {
-        ok: false as const,
-        error: "missing_credentials",
-        detail: "MERCADOPAGO_CLIENT_ID/SECRET não configurado. Configure via Secrets.",
+    try {
+      const adapter = await getProviderAdapter('mercadopago');
+      const url = await adapter.getAuthorizationUrl(data.restaurantId);
+      return { ok: true as const, url };
+    } catch (err: any) {
+      console.error("[MP Connect] Init failed:", err);
+      return { 
+        ok: false as const, 
+        error: err.code || "init_failed",
+        detail: err.message
       };
     }
+  });
 
-    return { ok: true as const, url: url.url, state };
+/**
+ * Desconecta a conta do framework sem afetar outros módulos.
+ */
+export const mercadopagoDisconnect = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ restaurantId: z.string().uuid() }).parse(d))
+  .handler(async ({ data }) => {
+    try {
+      const adapter = await getProviderAdapter('mercadopago');
+      await adapter.disconnect(data.restaurantId);
+      return { ok: true as const };
+    } catch (err: any) {
+      return { ok: false as const, error: err.message };
+    }
   });
 
 /**
@@ -43,31 +52,29 @@ export const createTestMercadoPagoPix = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) => z.object({ restaurantId: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
-    const { supabase, userId } = context;
+    const { supabase } = context;
 
     // 1. Verificar se o restaurante tem token MP
     let mpToken: string | null = null;
     
-    // HACK for Sandbox testing
-    const TEST_RESTAURANT_SLUG = "teste-mp-570e";
-    const { data: testRest } = await supabase
-      .from("restaurants")
+    const { data: accData } = await supabase
+      .from("restaurant_payment_accounts")
       .select("id")
-      .eq("slug", TEST_RESTAURANT_SLUG)
+      .eq("restaurant_id", data.restaurantId)
+      .eq("provider", 'mercadopago')
+      .eq("provider_status", 'active')
       .single();
 
-    if (data.restaurantId === testRest?.id) {
-      mpToken = process.env["MERCADOPAGO_ACCESS_TOKEN_SANDBOX"] || null;
-      console.log("[mercadopago] Forced Sandbox Token for test restaurant:", !!mpToken);
-    }
-
-    if (!mpToken) {
-      const { data: tokenData, error: tokenErr } = await supabase.rpc("admin_get_restaurant_mp_token", {
+    if (accData) {
+      // Usar a RPC existente para compatibilidade de segurança, enquanto a nova RPC da Fase 2
+      // está sendo integrada (a nova save_restaurant_payment_secrets já existe no DB)
+      const { data: secretData } = await supabase.rpc("admin_get_restaurant_mp_token", {
         p_restaurant_id: data.restaurantId,
       });
-      mpToken = tokenData as string | null;
+      mpToken = secretData as string | null;
     }
-    
+
+
     if (!mpToken) {
       return { ok: false as const, error: "Mercado Pago não conectado ou token não encontrado." };
     }
@@ -90,14 +97,10 @@ export const createTestMercadoPagoPix = createServerFn({ method: "POST" })
       .single();
 
     if (orderErr || !order) {
-      console.error("[mercadopago] test order creation failed:", orderErr);
-      return { 
-        ok: false as const, 
-        error: `Falha ao criar pedido de teste no banco: ${orderErr?.message || 'Erro de permissão RLS ou banco de dados'}`
-      };
+      return { ok: false as const, error: `Falha ao criar pedido: ${orderErr?.message}` };
     }
 
-    // 3. Gerar cobrança no Mercado Pago
+    const { createPixCharge } = await import("./mercadopago-api.server");
     const idempotencyKey = `test-mp-${order.id}`;
     const notificationUrl = `${process.env.PUBLIC_SITE_URL ?? "https://comandahub.online"}/api/public/mercadopago-webhook`;
     
@@ -110,12 +113,8 @@ export const createTestMercadoPagoPix = createServerFn({ method: "POST" })
       notificationUrl,
     });
 
-    if (!res.ok) {
-      console.error("[mercadopago] createPixCharge failed:", res);
-      return res;
-    }
+    if (!res.ok) return res;
 
-    // 4. Registrar o pagamento no banco (canonical)
     await supabase.rpc("payment_create_pending", {
       p_order_id: order.id,
       p_provider: "mercado_pago",
@@ -131,12 +130,6 @@ export const createTestMercadoPagoPix = createServerFn({ method: "POST" })
       p_idempotency_key: idempotencyKey,
     } as any);
 
-    // 5. Atualizar o pedido com o ID do pagamento MP (legado compat)
-    await supabase
-      .from("orders")
-      .update({ mp_payment_id: res.provider_payment_id })
-      .eq("id", order.id);
-
     return {
       ok: true as const,
       orderId: order.id,
@@ -148,8 +141,7 @@ export const createTestMercadoPagoPix = createServerFn({ method: "POST" })
   });
 
 /**
- * Aplica as credenciais Sandbox (já cadastradas em Secrets) ao restaurante,
- * habilitando o PIX online para testes sem passar pelo OAuth.
+ * Aplica as credenciais Sandbox ao restaurante via Framework.
  */
 export const mercadopagoUseSandboxCredentials = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -159,24 +151,39 @@ export const mercadopagoUseSandboxCredentials = createServerFn({ method: "POST" 
     const token = process.env["MERCADOPAGO_ACCESS_TOKEN_SANDBOX"];
     const publicKey = process.env["MERCADOPAGO_PUBLIC_KEY_SANDBOX"];
     
-    console.log("[mercadopago] Applying sandbox credentials. Token exists:", !!token);
-    if (!token) {
-      return { ok: false as const, error: "Credenciais Sandbox não configuradas." };
-    }
+    if (!token) return { ok: false as const, error: "Credenciais Sandbox não configuradas." };
 
-    const { error } = await supabase.rpc("set_restaurant_integration_secret" as any, {
-      p_restaurant_id: data.restaurantId,
-      p_provider: "mercadopago",
-      p_value: token,
-      p_environment: "sandbox",
+    const { data: account, error: accErr } = await supabase
+      .from("restaurant_payment_accounts")
+      .upsert({
+        restaurant_id: data.restaurantId,
+        provider: 'mercadopago',
+        provider_account_id: 'sandbox_manual',
+        provider_status: 'active',
+        provider_environment: 'sandbox',
+        provider_metadata: { public_key: publicKey },
+        is_active: true
+      })
+      .select("id")
+      .single();
+
+    if (accErr) return { ok: false as const, error: accErr.message };
+
+    await supabase.rpc("save_restaurant_payment_secrets", {
+      p_account_id: account.id,
+      p_access_token_enc: token,
+      p_refresh_token_enc: null,
+      p_expires_at: null,
+      p_scopes: []
     } as any);
-    if (error) return { ok: false as const, error: error.message };
 
     await supabase
       .from("restaurants")
-      .update({ mp_public_key: publicKey ?? null, accept_pix_online: true, active_payment_provider: 'mercado_pago' })
+      .update({ accept_pix_online: true, active_payment_provider: 'mercado_pago' })
       .eq("id", data.restaurantId);
 
     return { ok: true as const };
   });
+
+
 

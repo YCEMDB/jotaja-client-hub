@@ -5659,6 +5659,14 @@ export type Database = {
         Args: { p_id: string; p_reason?: string }
         Returns: undefined
       }
+      save_payment_oauth_state: {
+        Args: {
+          p_provider: Database["public"]["Enums"]["payment_provider"]
+          p_redirect_after?: string
+          p_restaurant_id: string
+        }
+        Returns: Json
+      }
       save_restaurant_payment_secrets: {
         Args: {
           p_access_token_enc: string
@@ -5975,6 +5983,13 @@ export type Database = {
           p_phone?: string
           p_restaurant_id: string
           p_subtotal?: number
+        }
+        Returns: Json
+      }
+      verify_and_consume_oauth_state: {
+        Args: {
+          p_provider: Database["public"]["Enums"]["payment_provider"]
+          p_state: string
         }
         Returns: Json
       }
