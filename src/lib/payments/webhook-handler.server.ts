@@ -29,19 +29,20 @@ export async function handlePaymentWebhook(
     const event = adapter.parseWebhookEvent(jsonPayload);
     
     if (!event.event_id) {
+      console.warn(`[webhook-handler] Missing event_id for ${providerName}`);
       return { status: 400, message: "Bad Request: Missing event_id" };
     }
 
     // 3. Idempotência e Persistência Inicial
     const { data: logData, error: logErr } = await supabase
-      .from("payment_provider_webhook_logs" as any)
+      .from("payment_provider_webhook_logs")
       .insert({
         provider: providerName,
         provider_event_id: event.event_id,
         payload: jsonPayload,
         headers: headers,
         status: 'RECEIVED'
-      } as any)
+      })
       .select("id")
       .maybeSingle();
 
@@ -51,45 +52,56 @@ export async function handlePaymentWebhook(
         console.log(`[webhook-handler] Duplicate event ${event.event_id} for ${providerName}. Ignoring.`);
         return { status: 200, message: "IGNORED_DUPLICATE" };
       }
+      console.error(`[webhook-handler] DB Insert error:`, logErr);
       throw logErr;
     }
 
     const logId = (logData as any).id;
 
     // 4. Roteamento Interno (Resolver Restaurante)
-    const { data: account, error: routeErr } = await supabase.rpc("get_payment_account_for_routing" as any, {
+    const { data: accounts, error: routeErr } = await supabase.rpc("get_payment_account_for_routing", {
       p_provider: providerName,
       p_provider_account_id: event.provider_account_id
     });
 
-    if (routeErr || !account || (account as any).length === 0) {
+    if (routeErr) {
+      console.error(`[webhook-handler] RPC Routing error:`, routeErr);
+      throw routeErr;
+    }
+
+    const account = Array.isArray(accounts) ? accounts[0] : accounts;
+
+    if (!account) {
       console.log(`[webhook-handler] No active account found for ${providerName} ID ${event.provider_account_id}.`);
       await supabase
-        .from("payment_provider_webhook_logs" as any)
-        .update({ status: 'IGNORED' } as any)
+        .from("payment_provider_webhook_logs")
+        .update({ status: 'IGNORED' })
         .eq("id", logId);
       return { status: 200, message: "IGNORED_UNKNOWN_ACCOUNT", logId };
     }
 
-    const accountData = (account as any)[0];
-
     // 5. Vincular conta ao log e marcar como VALIDATED
-    await supabase
-      .from("payment_provider_webhook_logs" as any)
+    const { error: updateErr } = await supabase
+      .from("payment_provider_webhook_logs")
       .update({ 
-        account_id: accountData.id,
-        status: accountData.is_active ? 'VALIDATED' : 'IGNORED'
-      } as any)
+        account_id: account.id,
+        status: account.is_active ? 'VALIDATED' : 'IGNORED'
+      })
       .eq("id", logId);
 
+    if (updateErr) {
+      console.error(`[webhook-handler] DB Update error:`, updateErr);
+      throw updateErr;
+    }
+
     return { 
-      status: accountData.is_active ? 202 : 200, 
-      message: accountData.is_active ? "ACCEPTED" : "IGNORED_INACTIVE",
+      status: account.is_active ? 202 : 200, 
+      message: account.is_active ? "ACCEPTED" : "IGNORED_INACTIVE",
       logId 
     };
 
   } catch (err: any) {
-    console.error(`[webhook-handler] Critical error: ${err.message}`);
-    return { status: 500, message: "Internal Server Error" };
+    console.error(`[webhook-handler] Critical error: ${err.message}`, err);
+    return { status: 500, message: `Internal Server Error: ${err.message}` };
   }
 }
