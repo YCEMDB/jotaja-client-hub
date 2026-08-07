@@ -66,12 +66,14 @@ export const createTestMercadoPagoPix = createServerFn({ method: "POST" })
       .single();
 
     if (accData) {
-      const { data: secretData } = await supabase.rpc("admin_get_restaurant_payment_token", {
+      // Usar a RPC existente para compatibilidade de segurança, enquanto a nova RPC da Fase 2
+      // está sendo integrada (a nova save_restaurant_payment_secrets já existe no DB)
+      const { data: secretData } = await supabase.rpc("admin_get_restaurant_mp_token", {
         p_restaurant_id: data.restaurantId,
-        p_provider: 'mercadopago'
       });
       mpToken = secretData as string | null;
     }
+
 
     if (!mpToken) {
       return { ok: false as const, error: "Mercado Pago não conectado ou token não encontrado." };

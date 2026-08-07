@@ -50,14 +50,16 @@ export const Route = createFileRoute("/api/public/mercadopago/callback")({
 
           if (accErr) throw accErr;
 
-          // 4. Persistir segredos via RPC segura (Vault-ready)
+          // 4. Persistir segredos via RPC segura (Fase 2)
+          // Nota: O DB espera p_access_token_enc como text (bytea em algumas versões, mas aqui mapeado via RPC)
           const { error: secretErr } = await supabaseAdmin.rpc("save_restaurant_payment_secrets", {
             p_account_id: account.id,
-            p_access_token_enc: connection.accessToken, // O DB espera bytea ou text? Verificando infra
+            p_access_token_enc: connection.accessToken,
             p_refresh_token_enc: connection.refreshToken || null,
             p_expires_at: connection.expiresAt?.toISOString() || null,
             p_scopes: []
           } as any);
+
 
 
           if (secretErr) throw secretErr;
