@@ -2579,6 +2579,98 @@ export type Database = {
           },
         ]
       }
+      payment_oauth_states: {
+        Row: {
+          created_at: string | null
+          expires_at: string
+          provider: Database["public"]["Enums"]["payment_provider"]
+          redirect_after: string | null
+          restaurant_id: string
+          state: string
+          used_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          expires_at: string
+          provider: Database["public"]["Enums"]["payment_provider"]
+          redirect_after?: string | null
+          restaurant_id: string
+          state: string
+          used_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          expires_at?: string
+          provider?: Database["public"]["Enums"]["payment_provider"]
+          redirect_after?: string | null
+          restaurant_id?: string
+          state?: string
+          used_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_oauth_states_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_oauth_states_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_provider_webhook_logs: {
+        Row: {
+          account_id: string | null
+          attempts: number | null
+          created_at: string | null
+          event_id: string
+          id: number
+          last_error: string | null
+          payload: Json
+          processed_at: string | null
+          provider: Database["public"]["Enums"]["payment_provider"]
+          status: string
+        }
+        Insert: {
+          account_id?: string | null
+          attempts?: number | null
+          created_at?: string | null
+          event_id: string
+          id?: number
+          last_error?: string | null
+          payload: Json
+          processed_at?: string | null
+          provider: Database["public"]["Enums"]["payment_provider"]
+          status: string
+        }
+        Update: {
+          account_id?: string | null
+          attempts?: number | null
+          created_at?: string | null
+          event_id?: string
+          id?: number
+          last_error?: string | null
+          payload?: Json
+          processed_at?: string | null
+          provider?: Database["public"]["Enums"]["payment_provider"]
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_provider_webhook_logs_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "restaurant_payment_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payment_webhook_events: {
         Row: {
           error_code: string | null
@@ -3173,6 +3265,69 @@ export type Database = {
           },
         ]
       }
+      restaurant_payment_accounts: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          provider: Database["public"]["Enums"]["payment_provider"]
+          provider_account_id: string
+          provider_capabilities: Json | null
+          provider_environment: string
+          provider_error_log: string | null
+          provider_last_sync: string | null
+          provider_metadata: Json | null
+          provider_status: string
+          restaurant_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          provider: Database["public"]["Enums"]["payment_provider"]
+          provider_account_id: string
+          provider_capabilities?: Json | null
+          provider_environment: string
+          provider_error_log?: string | null
+          provider_last_sync?: string | null
+          provider_metadata?: Json | null
+          provider_status: string
+          restaurant_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          provider?: Database["public"]["Enums"]["payment_provider"]
+          provider_account_id?: string
+          provider_capabilities?: Json | null
+          provider_environment?: string
+          provider_error_log?: string | null
+          provider_last_sync?: string | null
+          provider_metadata?: Json | null
+          provider_status?: string
+          restaurant_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "restaurant_payment_accounts_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "restaurant_payment_accounts_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       restaurant_payment_integrations: {
         Row: {
           access_token_encrypted: string | null
@@ -3250,6 +3405,41 @@ export type Database = {
             columns: ["restaurant_id"]
             isOneToOne: false
             referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      restaurant_payment_secrets: {
+        Row: {
+          account_id: string
+          provider_access_token_encrypted: string | null
+          provider_refresh_token_encrypted: string | null
+          provider_scopes: string[] | null
+          provider_token_expires_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          account_id: string
+          provider_access_token_encrypted?: string | null
+          provider_refresh_token_encrypted?: string | null
+          provider_scopes?: string[] | null
+          provider_token_expires_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          account_id?: string
+          provider_access_token_encrypted?: string | null
+          provider_refresh_token_encrypted?: string | null
+          provider_scopes?: string[] | null
+          provider_token_expires_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "restaurant_payment_secrets_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: true
+            referencedRelation: "restaurant_payment_accounts"
             referencedColumns: ["id"]
           },
         ]
@@ -5469,6 +5659,16 @@ export type Database = {
         Args: { p_id: string; p_reason?: string }
         Returns: undefined
       }
+      save_restaurant_payment_secrets: {
+        Args: {
+          p_access_token_enc: string
+          p_account_id: string
+          p_expires_at: string
+          p_refresh_token_enc: string
+          p_scopes: string[]
+        }
+        Returns: undefined
+      }
       seed_default_automation_rules: {
         Args: { p_restaurant_id: string }
         Returns: number
@@ -5843,6 +6043,15 @@ export type Database = {
         | "cancelled"
       order_type: "delivery" | "pickup" | "dine_in"
       payment_method: "cash" | "pix" | "credit_card" | "debit_card" | "online"
+      payment_provider:
+        | "mercadopago"
+        | "pagbank"
+        | "stripe"
+        | "asaas"
+        | "stone"
+        | "cielo"
+        | "pagarme"
+        | "paypal"
       payment_status: "pending" | "paid" | "failed" | "refunded" | "expired"
       restaurant_plan: "trial" | "essential" | "professional"
       stock_movement_type:
@@ -6054,6 +6263,16 @@ export const Constants = {
       ],
       order_type: ["delivery", "pickup", "dine_in"],
       payment_method: ["cash", "pix", "credit_card", "debit_card", "online"],
+      payment_provider: [
+        "mercadopago",
+        "pagbank",
+        "stripe",
+        "asaas",
+        "stone",
+        "cielo",
+        "pagarme",
+        "paypal",
+      ],
       payment_status: ["pending", "paid", "failed", "refunded", "expired"],
       restaurant_plan: ["trial", "essential", "professional"],
       stock_movement_type: [
