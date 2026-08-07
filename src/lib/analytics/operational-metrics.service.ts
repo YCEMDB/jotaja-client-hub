@@ -17,21 +17,21 @@ export class OperationalMetricsService {
     const startDateIso = startDate.toISOString();
 
     // 1. Basic volume from processed orders/payments
-    const { data: txs, error } = await supabase
+    const { data: txs, error } = await (supabase
       .from("financial_transactions" as any)
-      .select("amount, created_at")
+      .select("amount, created_at") as any)
       .eq("restaurant_id", restaurantId)
       .gte("created_at", startDateIso);
 
     if (error) throw new Error(`Failed to fetch operational data: ${error.message}`);
 
-    const ordersCount = txs?.length || 0;
-    const paymentVolume = txs?.reduce((acc: number, curr: any) => acc + Number(curr.amount), 0) || 0;
+    const ordersCount = (txs as any[])?.length || 0;
+    const paymentVolume = (txs as any[])?.reduce((acc: number, curr: any) => acc + Number(curr.amount), 0) || 0;
     const dailyAverage = days > 0 ? ordersCount / days : 0;
 
     // 2. Peak Hours Analysis (Simple hourly grouping)
     const hourCounts: Record<number, number> = {};
-    txs?.forEach(tx => {
+    (txs as any[])?.forEach(tx => {
       const hour = new Date(tx.created_at).getHours();
       hourCounts[hour] = (hourCounts[hour] || 0) + 1;
     });
@@ -42,13 +42,13 @@ export class OperationalMetricsService {
       .map(([hour]) => `${hour.padStart(2, '0')}:00`);
 
     // 3. Active Payment Methods (from accounts)
-    const { data: accounts } = await supabase
+    const { data: accounts } = await (supabase
       .from("restaurant_payment_accounts" as any)
-      .select("provider")
+      .select("provider") as any)
       .eq("restaurant_id", restaurantId)
       .eq("status", "ACTIVE");
 
-    const activePaymentMethods = Array.from(new Set(accounts?.map(a => a.provider) || []));
+    const activePaymentMethods = Array.from(new Set((accounts as any[])?.map(a => a.provider) || []));
 
     return OperationalMetricsSchema.parse({
       restaurant_id: restaurantId,

@@ -15,23 +15,23 @@ export class FinancialAnalyticsService {
     endDate: string
   ): Promise<FinancialMetrics> {
     // 1. Fetch processed payments volume and count
-    const { data: payments, error } = await supabase
+    const { data: payments, error } = await (supabase
       .from("financial_transactions" as any)
-      .select("amount")
+      .select("amount") as any)
       .eq("restaurant_id", restaurantId)
       .gte("created_at", startDate)
       .lte("created_at", endDate);
 
     if (error) throw new Error(`Failed to fetch financial transactions: ${error.message}`);
 
-    const transactions = payments?.length || 0;
-    const revenue = payments?.reduce((acc: number, curr: any) => acc + Number(curr.amount), 0) || 0;
+    const transactions = (payments as any[])?.length || 0;
+    const revenue = (payments as any[])?.reduce((acc: number, curr: any) => acc + Number(curr.amount), 0) || 0;
     const averageTicket = transactions > 0 ? revenue / transactions : 0;
 
     // 2. Fetch payment attempts for rates (from processing logs)
-    const { data: events, error: eventsError } = await supabase
+    const { data: events, error: eventsError } = await (supabase
       .from("payment_processing_logs" as any)
-      .select("status")
+      .select("status") as any)
       .eq("restaurant_id", restaurantId)
       .gte("created_at", startDate)
       .lte("created_at", endDate);

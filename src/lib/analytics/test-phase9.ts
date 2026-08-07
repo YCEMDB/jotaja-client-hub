@@ -5,13 +5,13 @@ import { supabase } from "@/integrations/supabase/client";
 /**
  * Validation test for Phase 9 Analytics.
  */
-export async function testPhase9Analytics() {
+export async function runPhase9Tests() {
   console.log("🧪 Iniciando Testes Fase 9 - Financial Intelligence...");
   
   // 1. Get a test restaurant
-  const { data: restaurant } = await supabase
-    .from("restaurants")
-    .select("id")
+  const { data: restaurant } = await (supabase
+    .from("restaurants" as any)
+    .select("id") as any)
     .limit(1)
     .single();
 
@@ -20,7 +20,7 @@ export async function testPhase9Analytics() {
     return;
   }
 
-  const restaurantId = restaurant.id;
+  const restaurantId = (restaurant as any).id;
   const now = new Date().toISOString();
   const monthAgo = new Date();
   monthAgo.setDate(monthAgo.getDate() - 30);
@@ -44,9 +44,6 @@ export async function testPhase9Analytics() {
       peak: operational.peak_hours,
       methods: operational.active_payment_methods
     });
-
-    // Test 3: Data Isolation (Logic check)
-    // We ensure restaurant_id is always passed to the queries in the services.
 
     console.log("🚀 FASE 9 - TODOS OS TESTES PASSARAM!");
   } catch (err: any) {
