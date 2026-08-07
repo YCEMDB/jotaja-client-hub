@@ -13,6 +13,12 @@ export interface IMesivoPaymentProvider {
     expiresAt?: Date;
     metadata: Record<string, any>;
   }>;
+  refreshToken(restaurantId: string, refreshToken: string): Promise<{
+    accessToken: string;
+    refreshToken?: string;
+    expiresAt?: Date;
+    metadata?: Record<string, any>;
+  }>;
   disconnect(restaurantId: string): Promise<void>;
 }
 
