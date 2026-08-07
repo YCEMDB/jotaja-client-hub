@@ -1,8 +1,8 @@
 import { getProviderAdapter, PaymentProvider } from "./framework";
 import { createClient } from "@supabase/supabase-js";
 
-// Função para criar o cliente Admin sob demanda para garantir que as env vars sejam lidas corretamente
-function getSupabaseAdmin() {
+export function getSupabaseAdmin() {
+
   const url = process.env.VITE_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !key) {
