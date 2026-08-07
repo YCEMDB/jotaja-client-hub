@@ -121,7 +121,8 @@ export async function runPhase7Tests() {
        provider: 'mercadopago',
        external_payment_id: 'ext_4',
        amount: 140.00, // Divergent
-       status: 'SETTLED'
+       status: 'SETTLED',
+       type: 'CREDIT'
     });
     
     await processFinancialQueue();
