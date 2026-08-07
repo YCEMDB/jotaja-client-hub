@@ -1,4 +1,4 @@
-import { getProviderAdapter, PaymentProvider, PaymentProviderError } from "./framework";
+import { getProviderAdapter, PaymentProvider } from "./framework";
 import { createClient } from "@supabase/supabase-js";
 
 // Usando o cliente Admin para evitar problemas de RLS durante o roteamento de webhooks públicos
@@ -58,13 +58,11 @@ export async function handlePaymentWebhook(
       .select("id")
       .maybeSingle();
 
-    // Se falhar por constraint de unicidade
     if (logErr) {
       if (logErr.code === '23505') {
         console.log(`[webhook-handler] Duplicate event ${event.event_id} for ${providerName}. Ignoring.`);
         return { status: 200, message: "IGNORED_DUPLICATE" };
       }
-      console.error(`[webhook-handler] DB Insert error:`, logErr);
       throw logErr;
     }
 
@@ -76,10 +74,7 @@ export async function handlePaymentWebhook(
       p_provider_account_id: event.provider_account_id
     });
 
-    if (routeErr) {
-      console.error(`[webhook-handler] RPC Routing error:`, routeErr);
-      throw routeErr;
-    }
+    if (routeErr) throw routeErr;
 
     const account = Array.isArray(accounts) ? accounts[0] : accounts;
 
@@ -101,10 +96,7 @@ export async function handlePaymentWebhook(
       })
       .eq("id", logId);
 
-    if (updateErr) {
-      console.error(`[webhook-handler] DB Update error:`, updateErr);
-      throw updateErr;
-    }
+    if (updateErr) throw updateErr;
 
     return { 
       status: account.is_active ? 202 : 200, 
@@ -113,8 +105,8 @@ export async function handlePaymentWebhook(
     };
 
   } catch (err: any) {
-    console.error(`[webhook-handler] Critical error: ${err.message}`, err);
-    return { status: 500, message: `Internal Server Error: ${err.message}` };
+    console.error(`[webhook-handler] Critical error: ${err.message}`);
+    return { status: 500, message: `Internal Server Error` };
   }
 }
 
