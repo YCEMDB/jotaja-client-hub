@@ -4,6 +4,13 @@ import { supabase } from "@/integrations/supabase/client";
 
 export type PaymentProvider = 'mercadopago' | 'pagbank' | 'stripe' | 'asaas' | 'stone' | 'cielo' | 'pagarme' | 'paypal';
 
+export interface WebhookEvent {
+  event_id: string;
+  provider_account_id: string;
+  event_type?: string;
+  raw_payload?: any;
+}
+
 export interface IMesivoPaymentProvider {
   getAuthorizationUrl(restaurantId: string): Promise<string>;
   exchangeAuthorizationCode(code: string, state: string): Promise<{
@@ -20,6 +27,8 @@ export interface IMesivoPaymentProvider {
     metadata?: Record<string, any>;
   }>;
   disconnect(restaurantId: string): Promise<void>;
+  verifyWebhookSignature(payload: string, headers: Record<string, string>): Promise<boolean>;
+  parseWebhookEvent(payload: any): WebhookEvent;
 }
 
 export class PaymentProviderError extends Error {

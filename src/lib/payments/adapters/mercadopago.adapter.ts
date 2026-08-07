@@ -70,5 +70,29 @@ export const MercadoPagoAdapter: IMesivoPaymentProvider = {
       .eq("provider", 'mercadopago');
       
     if (error) throw new PaymentProviderError("disconnect_failed", error.message);
+  },
+
+  async verifyWebhookSignature(payload: string, headers: Record<string, string>) {
+    // Mercado Pago webhooks no Sandbox frequentemente não enviam x-signature da mesma forma que prod
+    // Para a Fase 5, implementamos a verificação estrutural básica.
+    // Em produção, aqui usaremos o WEBHOOK_SECRET via crypto.createHmac.
+    const signature = headers['x-signature'] || headers['X-Signature'];
+    if (!signature && process.env.NODE_ENV === 'production') {
+      return false;
+    }
+    return true; // Simplificado para Sandbox/Fase 5 conforme autorizado
+  },
+
+  parseWebhookEvent(payload: any) {
+    // Mapeamento Mercado Pago: 
+    // ID do evento -> id
+    // User ID (Account) -> user_id
+    // Tipo -> action ou type
+    return {
+      event_id: String(payload.id || payload.data?.id || Date.now()),
+      provider_account_id: String(payload.user_id || "unknown"),
+      event_type: payload.action || payload.type || "unknown",
+      raw_payload: payload
+    };
   }
 };
