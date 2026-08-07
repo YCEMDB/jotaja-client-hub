@@ -83,7 +83,7 @@ export async function testPaymentProcessingFlow() {
         id: `${testId}-old`, 
         action: 'payment.updated', 
         status: 'approved',
-        occurred_at: pastDate // Custom payload field for normalizer
+        occurred_at: pastDate 
       },
       status: 'VALIDATED' as any,
       account_id: account.id
@@ -93,23 +93,17 @@ export async function testPaymentProcessingFlow() {
 
   await runPaymentEventWorker();
 
-
   const { data: finalLog3 } = await supabaseAdmin
     .from("payment_provider_webhook_logs")
     .select("status, last_error")
     .eq("id", log3!.id)
     .single();
 
-  // Se o watermark da conta já foi atualizado pelo Teste 1 (que usou Date.now())
-  // E o evento 3 é processado depois, ele deve falhar se o processor identificar ordem incorreta.
-  // No Teste 1 usamos new Date().toISOString() no normalizador.
-  
   console.log(`Status final do log fora de ordem: ${finalLog3?.status}`);
   const test3Passed = finalLog3?.status === 'FAILED';
   console.log(`TEST 3 ${test3Passed ? 'PASSED' : 'FAILED'}`);
 
   console.log("\n--- TEST 4: Erro durante processamento e Retry ---");
-  // Simular erro via normalizador (provocando uma exceção no processador)
   const { data: log4 } = await supabaseAdmin
     .from("payment_provider_webhook_logs")
     .insert({
@@ -135,7 +129,6 @@ export async function testPaymentProcessingFlow() {
   console.log(`TEST 4 ${test4Passed ? 'PASSED' : 'FAILED'}`);
 
   console.log("\n--- TEST 5: Cinco falhas (Status final FAILED) ---");
-  // Atualizar para 4 tentativas e rodar o worker que causará a 5ª falha
   await supabaseAdmin
     .from("payment_provider_webhook_logs")
     .update({ attempts: 4, status: 'VALIDATED' as any })
@@ -153,7 +146,6 @@ export async function testPaymentProcessingFlow() {
   const test5Passed = (finalLog5?.attempts || 0) >= 5;
   console.log(`TEST 5 ${test5Passed ? 'PASSED' : 'FAILED'}`);
 
-
   console.log("\n--- TEST 6: Dois workers simultâneos (Atomic Lock) ---");
   const { data: log6 } = await supabaseAdmin
     .from("payment_provider_webhook_logs")
@@ -167,14 +159,12 @@ export async function testPaymentProcessingFlow() {
     .select("id")
     .single();
 
-  // Rodar dois processos de processamento em paralelo
   const { processPaymentEvent } = await import("./event-processor.server");
   await Promise.allSettled([
     processPaymentEvent(log6!.id, "worker-1"),
     processPaymentEvent(log6!.id, "worker-2")
   ]);
 
-  // Verificar logs de processamento para ver se houve dupla entrada PROCESSED
   const { data: procLogs } = await supabaseAdmin
     .from("payment_processing_logs")
     .select("status")
@@ -183,9 +173,7 @@ export async function testPaymentProcessingFlow() {
   const processedEntries = procLogs?.filter(l => l.status === 'PROCESSED');
   console.log(`Entradas PROCESSED encontradas: ${processedEntries?.length}`);
   const test6Passed = processedEntries?.length === 1;
-
   console.log(`TEST 6 ${test6Passed ? 'PASSED' : 'FAILED'}`);
-
 
   return {
     test1Passed,
@@ -196,5 +184,3 @@ export async function testPaymentProcessingFlow() {
     test6Passed
   };
 }
-
-
