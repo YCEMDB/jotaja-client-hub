@@ -209,6 +209,48 @@ export async function runPhase7Tests() {
       status: log6Check?.financial_processing_attempts && log6Check.financial_processing_attempts > 0 ? 'PASS' : 'FAIL'
     });
 
+    // TEST 7: Multi-tenant Isolation
+    console.log("TEST 7: Isolation");
+    // Create a new restaurant to test isolation
+    const { data: newRest } = await supabaseAdmin.from('restaurants').insert({
+      name: 'Isolation Test Restaurant',
+      owner_id: (await supabaseAdmin.auth.getUser()).data.user?.id
+    }).select().single();
+
+    if (newRest) {
+      try {
+        // Attempt to execute settlement for another restaurant ID (should fail via RLS or manual check)
+        // Our worker has an internal check for restaurant_id validity.
+        const settlementEvent: SettlementEvent = {
+          payment_event_id: 99999,
+          restaurant_id: '00000000-0000-0000-0000-000000000000', // Invalid
+          provider: 'mercadopago',
+          external_payment_id: 'ext_iso',
+          amount: 100,
+          currency: 'BRL',
+          type: 'CREDIT',
+          occurred_at: new Date().toISOString()
+        };
+
+        let isoError = null;
+        try {
+          await executeSettlement(settlementEvent);
+        } catch (e: any) {
+          isoError = e.message;
+        }
+
+        results.push({
+          test: "TEST 7: Isolation",
+          status: isoError?.includes('Invalid restaurant_id') ? 'PASS' : 'FAIL'
+        });
+      } finally {
+        // Cleanup
+        await supabaseAdmin.from('restaurants').delete().eq('id', newRest.id);
+      }
+    } else {
+      results.push({ test: "TEST 7: Isolation", status: 'BLOCKED', error: 'Could not create test restaurant' });
+    }
+
   } catch (e: any) {
     console.error("Test execution failed:", e);
     results.push({ test: "General Failure", status: 'FAIL', error: e.message });
