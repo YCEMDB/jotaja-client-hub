@@ -77,6 +77,42 @@ export async function exchangeAuthorizationCode(input: {
   }
 }
 
+export async function refreshToken(input: {
+  refreshToken: string;
+}) {
+  const creds = envCreds();
+  if (!creds) return { ok: false, error: "missing_credentials" };
+
+  try {
+    const res = await fetch(`${BASE_API}/oauth/token`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept": "application/json",
+      },
+      body: new URLSearchParams({
+        client_secret: creds.clientSecret,
+        client_id: creds.clientId,
+        grant_type: "refresh_token",
+        refresh_token: input.refreshToken,
+      }),
+    });
+
+    const body: any = await res.json();
+    if (!res.ok) return { ok: false, error: body?.message ?? `http_${res.status}`, status: res.status };
+
+    return {
+      ok: true as const,
+      access_token: body.access_token,
+      refresh_token: body.refresh_token ?? null,
+      expires_in: body.expires_in ?? null,
+    };
+  } catch (e) {
+    console.error("[mercadopago] refresh error", e);
+    return { ok: false, error: "network_error" };
+  }
+}
+
 /**
  * Cria uma cobrança Pix via Mercado Pago (Checkout Pro / API v1).
  */
