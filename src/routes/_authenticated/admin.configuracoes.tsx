@@ -712,9 +712,11 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
   const [testing, setTesting] = useState(false);
   const [account, setAccount] = useState<null | {
     environment: "production" | "sandbox";
+    status?: string;
     nickname: string | null;
     email: string | null;
   }>(null);
+
   const [copiedHook, setCopiedHook] = useState(false);
 
   const verify = useServerFn(verifyMercadoPago);
