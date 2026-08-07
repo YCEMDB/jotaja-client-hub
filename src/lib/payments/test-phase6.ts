@@ -11,7 +11,7 @@ export async function testPaymentProcessingFlow() {
 
   if (!restaurantId) throw new Error("Nenhum restaurante encontrado para o teste");
 
-  const { data: account } = await supabaseAdmin
+  const { data: account, error: accErr } = await supabaseAdmin
     .from("restaurant_payment_accounts")
     .insert({
       restaurant_id: restaurantId,
@@ -23,6 +23,7 @@ export async function testPaymentProcessingFlow() {
     .select("id")
     .single();
 
+  if (accErr || !account) throw new Error(`Erro ao criar conta de teste: ${accErr?.message}`);
   console.log(`Conta de teste criada: ${account.id}`);
 
   console.log("--- TEST 1: Evento VALIDATED processado ---");
@@ -40,7 +41,7 @@ export async function testPaymentProcessingFlow() {
     .select("id")
     .single();
 
-  if (logErr) throw logErr;
+  if (logErr || !log) throw new Error(`Erro ao criar log: ${logErr?.message}`);
   console.log(`Log criado com ID: ${log.id}`);
 
   // 2. Executar Worker
