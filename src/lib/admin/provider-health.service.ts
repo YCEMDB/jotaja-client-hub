@@ -6,16 +6,16 @@ export class ProviderHealthService {
    * Analisa a saúde dos provedores baseada nos logs de webhooks e processamento
    */
   static async getProvidersHealth(): Promise<ProviderHealthStatus[]> {
-    const { data, error } = await supabaseAdmin.rpc('get_providers_health_status');
+    const { data, error } = await (supabaseAdmin.rpc as any)('get_providers_health_status');
     
     if (error) throw error;
     
-    return data.map((p: any) => ({
+    return (data as any[]).map((p: any) => ({
       provider: p.provider,
-      events_received: p.total_events || 0,
-      failed_events: p.failed_events || 0,
-      average_processing_time_ms: p.avg_duration_ms || 0,
-      status: this.calculateStatus(p.failure_rate, p.avg_duration_ms)
+      events_received: Number(p.total_events || 0),
+      failed_events: Number(p.failed_events || 0),
+      average_processing_time_ms: Number(p.avg_duration_ms || 0),
+      status: this.calculateStatus(Number(p.failure_rate || 0), Number(p.avg_duration_ms || 0))
     }));
   }
 

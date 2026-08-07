@@ -12,8 +12,7 @@ export class AuditControlService {
     details: any;
     ip_address?: string;
   }): Promise<void> {
-    const { error } = await supabaseAdmin
-      .from('admin_audit_logs')
+    const { error } = await (supabaseAdmin.from as any)('admin_audit_logs')
       .insert([params]);
 
     if (error) {
@@ -25,13 +24,12 @@ export class AuditControlService {
    * Consulta o histórico de auditoria
    */
   static async getAuditHistory(limit = 100): Promise<AdminAuditLog[]> {
-    const { data, error } = await supabaseAdmin
-      .from('admin_audit_logs')
+    const { data, error } = await (supabaseAdmin.from as any)('admin_audit_logs')
       .select('*')
       .order('created_at', { ascending: false })
       .limit(limit);
 
     if (error) throw error;
-    return data;
+    return data as AdminAuditLog[];
   }
 }
