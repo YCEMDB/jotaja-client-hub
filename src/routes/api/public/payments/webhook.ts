@@ -15,6 +15,8 @@ export const Route = createFileRoute('/api/public/payments/webhook')({
         const provider = url.searchParams.get('provider') || 'mercadopago';
         
         try {
+          console.log('[webhook-route] Starting webhook processing...');
+
           const body = await request.text();
           
           // Capturar headers para auditoria
