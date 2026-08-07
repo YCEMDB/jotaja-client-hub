@@ -86,8 +86,15 @@ export async function processPaymentEvent(webhookLogId: number, workerId: string
   } catch (err: any) {
     console.error(`[event-processor] Error processing webhook ${webhookLogId}:`, err);
     
-    const attempts = 1; // Simplificado
-    const nextStatus = attempts >= 5 ? 'FAILED' : 'FAILED'; // Retry logic simplificada p/ POC
+    // Buscar tentativas atuais diretamente do log para incrementar corretamente
+    const { data: currentLog } = await supabaseAdmin
+      .from("payment_provider_webhook_logs")
+      .select("attempts")
+      .eq("id", webhookLogId)
+      .single();
+
+    const attempts = (currentLog?.attempts || 0) + 1;
+    const nextStatus = attempts >= 5 ? 'FAILED' : 'FAILED'; // Mantemos FAILED mas o log de processing registra o retry
 
     await supabaseAdmin
       .from("payment_provider_webhook_logs")
@@ -97,6 +104,7 @@ export async function processPaymentEvent(webhookLogId: number, workerId: string
         attempts: attempts
       })
       .eq("id", webhookLogId);
+
 
     await supabaseAdmin.from("payment_processing_logs").insert({
       webhook_log_id: webhookLogId,
