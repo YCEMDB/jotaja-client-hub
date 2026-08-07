@@ -5233,6 +5233,7 @@ export type Database = {
         }
         Returns: {
           account_status: string
+          id: string
           is_active: boolean
           last_sync_at: string
           provider: Database["public"]["Enums"]["payment_provider"]
