@@ -28,7 +28,7 @@ export const getAutomationHistory = createServerFn({ method: "GET" })
   });
 
 export const executeAutomationJobManual = createServerFn({ method: "POST" })
-  .validator((data: { jobId: string }) => z.object({ jobId: z.string() }).parse(data))
+  .inputValidator((data: { jobId: string }) => z.object({ jobId: z.string() }).parse(data))
   .handler(async ({ data: { jobId } }) => {
     // Manual trigger by SuperAdmin
     const { data: job, error: fetchError } = await supabase
