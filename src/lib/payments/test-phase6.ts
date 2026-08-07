@@ -73,24 +73,26 @@ export async function testPaymentProcessingFlow() {
   console.log(`TEST 2 ${test2Passed ? 'PASSED' : 'FAILED'} (Duplicate blocked by DB)`);
 
   console.log("\n--- TEST 3: Evento fora de ordem ---");
-  const pastDate = new Date(Date.now() - 10000).toISOString();
+  const pastDate = new Date(Date.now() - 3600000).toISOString(); // 1 hora atrás
   const { data: log3 } = await supabaseAdmin
     .from("payment_provider_webhook_logs")
     .insert({
       provider: 'mercadopago',
       provider_event_id: `${testId}-old`,
-      payload: { id: `${testId}-old`, action: 'payment.created' },
+      payload: { 
+        id: `${testId}-old`, 
+        action: 'payment.updated', 
+        status: 'approved',
+        occurred_at: pastDate // Custom payload field for normalizer
+      },
       status: 'VALIDATED' as any,
       account_id: account.id
     })
     .select("id")
     .single();
 
-  // Forçar o normalizador a retornar uma data passada seria difícil sem mock, 
-  // mas o processador usa a data do evento normalizado.
-  // Vamos simular via processador diretamente injetando um evento com data antiga.
-  
-  await runPaymentEventWorker(); // Processa o VALIDATED acima
+  await runPaymentEventWorker();
+
 
   const { data: finalLog3 } = await supabaseAdmin
     .from("payment_provider_webhook_logs")
