@@ -216,6 +216,7 @@ export async function runPhase7Tests() {
     // Create a new restaurant to test isolation
     const { data: newRest } = await supabaseAdmin.from('restaurants').insert({
       name: 'Isolation Test Restaurant',
+      slug: `iso-test-${Date.now()}`,
       owner_id: (await supabaseAdmin.auth.getUser()).data.user?.id || '00000000-0000-0000-0000-000000000000'
     }).select().single();
 
