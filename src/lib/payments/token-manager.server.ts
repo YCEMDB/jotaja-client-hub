@@ -9,14 +9,12 @@ const REFRESH_WINDOW_HOURS = 24;
 const JITTER_MS = 30 * 60 * 1000;
 
 export async function processTokenMaintenance() {
-  const correlationId = Math.random().toString(36).substring(7);
+  const correlationId = crypto.randomUUID();
   console.log(`[token-manager] Starting maintenance job. CID: ${correlationId}`);
 
   const next24h = new Date(Date.now() + REFRESH_WINDOW_HOURS * 60 * 60 * 1000 + (Math.random() * 2 * JITTER_MS - JITTER_MS)).toISOString();
   
-  // Buscar contas na tabela 'restaurant_payment_accounts' (Fase 2 infra)
-  // Precisamos verificar expires_at em segredo ou na conta se disponível.
-  // Como o banco está congelado, vamos buscar as que são 'connected' e 'is_active'.
+  // Buscar contas na tabela 'restaurant_payment_accounts'
   const { data: accounts, error } = await supabase
     .from("restaurant_payment_accounts")
     .select(`
@@ -51,8 +49,10 @@ export async function processTokenMaintenance() {
 
       console.log(`[token-manager] Account ${account.id} (${account.provider}) is in refresh window.`);
 
-      const res = await runTokenRefresh(account.id, account.restaurant_id, account.provider as any, secrets.provider_refresh_token_encrypted);
-      results.push({ account_id: account.id, restaurant_id: account.restaurant_id, provider: account.provider, status: res.status });
+      // O worker_id é gerado aqui para acompanhar todo o ciclo atômico
+      const workerId = crypto.randomUUID();
+      const res = await runTokenRefresh(account.id, account.restaurant_id, account.provider as any, secrets.provider_refresh_token_encrypted, workerId);
+      results.push({ account_id: account.id, restaurant_id: account.restaurant_id, provider: account.provider, status: res.status, worker_id: workerId });
     } catch (e) {
       console.error(`[token-manager] Critical error processing account ${account.id}. CID: ${correlationId}`, e);
       results.push({ account_id: account.id, restaurant_id: account.restaurant_id, provider: account.provider, status: "critical_error" });
@@ -62,24 +62,27 @@ export async function processTokenMaintenance() {
   return { ok: true, results, correlationId };
 }
 
-async function runTokenRefresh(accountId: string, restaurantId: string, provider: any, refreshTokenEnc: string | null) {
+async function runTokenRefresh(accountId: string, restaurantId: string, provider: any, refreshTokenEnc: string | null, workerId: string) {
   if (!refreshTokenEnc) return { status: "missing_refresh_token" };
 
-  const adapter = await getProviderAdapter(provider);
+  // 1. Tentar adquirir o lock atômico (Fase 4 - Pessimistic Locking)
+  const { data: locked, error: lockErr } = await supabase.rpc("try_acquire_refresh_lock" as any, {
+    p_account_id: accountId,
+    p_worker_id: workerId
+  });
+
+  if (lockErr || !locked) {
+    console.log(`[token-manager] Account ${accountId} is already locked by another worker. skipping. CID: ${workerId}`);
+    return { status: "already_locked" };
+  }
 
   try {
-    // Fase 4: Proteção contra concorrência via Advisory Lock
-    // Usamos o account_id como base para o lock
-    const lockId = hashUuidToBigInt(accountId);
-    
-    // Tentar adquirir o lock via RPC (deve ser transacional e automático)
-    // Como o banco está congelado, assumimos que o fluxo de refresh chamando o adapter
-    // e depois persistindo é atômico o suficiente para este checkpoint ou que 
-    // usaremos pg_advisory_xact_lock dentro da transação do Supabase se disponível.
+    const adapter = await getProviderAdapter(provider);
 
+    // 2. Executar o refresh HTTP (Região Crítica)
     const refreshed = await adapter.refreshToken(restaurantId, refreshTokenEnc);
 
-    // Persistir via RPC da Fase 3: save_restaurant_payment_secrets
+    // 3. Persistir via RPC da Fase 3: save_restaurant_payment_secrets
     const { error: saveErr } = await supabase.rpc("save_restaurant_payment_secrets" as any, {
       p_account_id: accountId,
       p_access_token_enc: refreshed.accessToken,
@@ -90,12 +93,12 @@ async function runTokenRefresh(accountId: string, restaurantId: string, provider
 
     if (saveErr) throw saveErr;
 
-    console.log(`[token-manager] Successfully refreshed ${provider} for account ${accountId}`);
+    console.log(`[token-manager] Successfully refreshed ${provider} for account ${accountId}. CID: ${workerId}`);
     return { status: "success" };
 
   } catch (err: any) {
     if (err instanceof PaymentProviderError && err.code === "reauthentication_required") {
-      console.warn(`[token-manager] Reauthentication required for account ${accountId}. Provider: ${provider}`);
+      console.warn(`[token-manager] Reauthentication required for account ${accountId}. Provider: ${provider}. CID: ${workerId}`);
       
       await supabase
         .from("restaurant_payment_accounts")
@@ -105,16 +108,13 @@ async function runTokenRefresh(accountId: string, restaurantId: string, provider
       return { status: "revoked" };
     }
 
-    console.error(`[token-manager] Failed to refresh ${provider} for account ${accountId}: ${err.message}`);
+    console.error(`[token-manager] Failed to refresh ${provider} for account ${accountId}: ${err.message}. CID: ${workerId}`);
     return { status: "error", message: err.message };
+  } finally {
+    // 4. Liberação condicional do lock (Fase 4)
+    await supabase.rpc("release_refresh_lock" as any, {
+      p_account_id: accountId,
+      p_worker_id: workerId
+    });
   }
 }
-
-function hashUuidToBigInt(uuid: string): string {
-  let hash = 0n;
-  for (let i = 0; i < uuid.length; i++) {
-    hash = (hash << 5n) - hash + BigInt(uuid.charCodeAt(i));
-  }
-  return (hash % 2147483647n).toString(); // BigInt compatível com advisory locks (32 ou 64 bits)
-}
-
