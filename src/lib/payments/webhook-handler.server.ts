@@ -35,6 +35,7 @@ export async function handlePaymentWebhook(
       return { status: 401, message: "Unauthorized" };
     }
 
+
     // 2. Parse do Evento
     let jsonPayload: any;
     try {

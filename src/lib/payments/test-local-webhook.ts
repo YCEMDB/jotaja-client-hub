@@ -21,44 +21,40 @@ async function runLocalTests() {
     if (accErr) throw new Error(`Falha ao criar conta: ${accErr.message}`);
     const accountId = account.id;
 
-    console.log(`[SETUP] Restaurante: ${restaurantId}, MP Account: ${providerAccountId} (ID: ${accountId})`);
+    console.log(`[SETUP] Conta MP: ${providerAccountId} (ID: ${accountId})`);
 
-    // 3. Teste: Webhook Válido
+    // 2. Teste: Webhook Válido
     console.log("\n[TESTE 1] Webhook Válido (Roteado)...");
-    const payload = JSON.stringify({ 
-      id: `evt_valid_${Date.now()}`,
+    const eventId1 = `evt_v1_${Date.now()}`;
+    const payload1 = JSON.stringify({ 
+      id: eventId1,
       user_id: providerAccountId,
       type: "payment.created" 
     });
-    const headers = { "x-signature": "valid_dummy" };
+    const result1 = await handlePaymentWebhook("mercadopago", payload1, { "x-signature": "valid_dummy" });
+    console.log("Resultado 1:", result1.status, result1.message);
 
-    const result = await handlePaymentWebhook("mercadopago", payload, headers);
-    console.log("Resultado:", JSON.stringify(result, null, 2));
-
-    if (result.status === 202) {
-      const { data: log } = await supabase
-        .from("payment_provider_webhook_logs")
-        .select("*")
-        .eq("id", result.logId)
-        .single();
-      console.log("Log Validado:", { 
-        status: log.status, 
-        account_id: log.account_id,
-        matched: log.account_id === accountId ? "SIM" : "NÃO" 
-      });
-    }
-
-    // 4. Teste: Duplicidade
+    // 3. Teste: Duplicidade
     console.log("\n[TESTE 2] Evento Duplicado...");
-    const resultDup = await handlePaymentWebhook("mercadopago", payload, headers);
+    const resultDup = await handlePaymentWebhook("mercadopago", payload1, { "x-signature": "valid_dummy" });
     console.log("Resultado Duplicado:", resultDup.message);
 
-    // 5. Teste: Assinatura Inválida
+    // 4. Teste: Assinatura Inválida
     console.log("\n[TESTE 3] Assinatura Inválida...");
-    const resultInvalid = await handlePaymentWebhook("mercadopago", payload, { "x-signature": "evil" });
-    console.log("Resultado Assinatura:", resultInvalid.status);
+    const eventId2 = `evt_invalid_${Date.now()}`;
+    const payload2 = JSON.stringify({ id: eventId2, user_id: providerAccountId });
+    const resultInvalid = await handlePaymentWebhook("mercadopago", payload2, { "x-signature": "evil" });
+    console.log("Resultado Assinatura (Deve ser 401):", resultInvalid.status);
 
-    // Limpeza parcial (apenas a conta de pagamento criada)
+    // 5. Teste: Conta Inativa
+    await supabase.from("restaurant_payment_accounts").update({ is_active: false }).eq("id", accountId);
+    console.log("\n[TESTE 4] Conta Inativa...");
+    const eventId3 = `evt_inactive_${Date.now()}`;
+    const payload3 = JSON.stringify({ id: eventId3, user_id: providerAccountId });
+    const resultInactive = await handlePaymentWebhook("mercadopago", payload3, { "x-signature": "valid_dummy" });
+    console.log("Resultado Inativa (Deve ser 200/IGNORED_INACTIVE):", resultInactive.status, resultInactive.message);
+
+    // Limpeza
     await supabase.from("restaurant_payment_accounts").delete().eq("id", accountId);
     console.log("\n[CLEANUP] Conta de teste removida.");
 
