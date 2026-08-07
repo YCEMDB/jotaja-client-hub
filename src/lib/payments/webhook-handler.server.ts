@@ -1,5 +1,11 @@
 import { getProviderAdapter, PaymentProvider, PaymentProviderError } from "./framework";
-import { supabase } from "@/integrations/supabase/client";
+import { createClient } from "@supabase/supabase-js";
+
+// Usando o cliente Admin para evitar problemas de RLS durante o roteamento de webhooks públicos
+const supabaseAdmin = createClient(
+  process.env.VITE_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export interface WebhookProcessingResult {
   status: number;
@@ -25,7 +31,13 @@ export async function handlePaymentWebhook(
     }
 
     // 2. Parse do Evento
-    const jsonPayload = JSON.parse(payload);
+    let jsonPayload: any;
+    try {
+      jsonPayload = JSON.parse(payload);
+    } catch (e) {
+      return { status: 400, message: "Invalid JSON" };
+    }
+
     const event = adapter.parseWebhookEvent(jsonPayload);
     
     if (!event.event_id) {
@@ -34,7 +46,7 @@ export async function handlePaymentWebhook(
     }
 
     // 3. Idempotência e Persistência Inicial
-    const { data: logData, error: logErr } = await supabase
+    const { data: logData, error: logErr } = await supabaseAdmin
       .from("payment_provider_webhook_logs")
       .insert({
         provider: providerName,
@@ -46,7 +58,7 @@ export async function handlePaymentWebhook(
       .select("id")
       .maybeSingle();
 
-    // Se falhar por constraint de unicidade (ON CONFLICT DO NOTHING embutido via 200/Ignore)
+    // Se falhar por constraint de unicidade
     if (logErr) {
       if (logErr.code === '23505') {
         console.log(`[webhook-handler] Duplicate event ${event.event_id} for ${providerName}. Ignoring.`);
@@ -59,7 +71,7 @@ export async function handlePaymentWebhook(
     const logId = (logData as any).id;
 
     // 4. Roteamento Interno (Resolver Restaurante)
-    const { data: accounts, error: routeErr } = await supabase.rpc("get_payment_account_for_routing", {
+    const { data: accounts, error: routeErr } = await supabaseAdmin.rpc("get_payment_account_for_routing", {
       p_provider: providerName,
       p_provider_account_id: event.provider_account_id
     });
@@ -73,7 +85,7 @@ export async function handlePaymentWebhook(
 
     if (!account) {
       console.log(`[webhook-handler] No active account found for ${providerName} ID ${event.provider_account_id}.`);
-      await supabase
+      await supabaseAdmin
         .from("payment_provider_webhook_logs")
         .update({ status: 'IGNORED' })
         .eq("id", logId);
@@ -81,7 +93,7 @@ export async function handlePaymentWebhook(
     }
 
     // 5. Vincular conta ao log e marcar como VALIDATED
-    const { error: updateErr } = await supabase
+    const { error: updateErr } = await supabaseAdmin
       .from("payment_provider_webhook_logs")
       .update({ 
         account_id: account.id,
@@ -105,3 +117,4 @@ export async function handlePaymentWebhook(
     return { status: 500, message: `Internal Server Error: ${err.message}` };
   }
 }
+
