@@ -49,7 +49,7 @@ export const PaymentNormalizer = {
       external_event_id: externalEventId,
       event_type: eventType,
       status,
-      occurred_at: new Date().toISOString(), // Idealmente extraído do payload se disponível
+      occurred_at: rawEvent.occurred_at || new Date().toISOString(),
       amount: amount ? Number(amount) : undefined,
       currency: rawEvent.data?.currency_id || rawEvent.currency_id || 'BRL'
     };
