@@ -171,9 +171,10 @@ export async function testPaymentProcessingFlow() {
     .eq("webhook_log_id", log6!.id);
 
   const processedEntries = procLogs?.filter(l => l.status === 'PROCESSED');
-  console.log(`Entradas PROCESSED encontradas: ${processedEntries?.length}`);
+  console.log(`Entradas PROCESSED encontradas: ${processedEntries?.length || 0}`);
   const test6Passed = processedEntries?.length === 1;
   console.log(`TEST 6 ${test6Passed ? 'PASSED' : 'FAILED'}`);
+
 
   return {
     test1Passed,
