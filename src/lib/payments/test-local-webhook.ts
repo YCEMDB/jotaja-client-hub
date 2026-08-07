@@ -4,31 +4,10 @@ async function runLocalTests() {
   console.log("=== INICIANDO TESTES LOCAIS (BYPASS HTTP) ===");
   
   const supabase = getSupabaseAdmin();
-  let restaurantId: string | null = null;
+  const restaurantId = "83fe78f2-7366-4baf-afd8-0755dd73f00f";
   
   try {
-    // 1. Buscar um restaurante existente para evitar violações de FK se não pudermos criar um
-    const { data: existingRest } = await supabase.from("restaurants").select("id").limit(1).single();
-    
-    if (existingRest) {
-      restaurantId = existingRest.id;
-      console.log(`[SETUP] Usando restaurante existente: ${restaurantId}`);
-    } else {
-      // Tentar criar um se a tabela estiver vazia
-      const { data: newRest, error: createErr } = await supabase
-        .from("restaurants")
-        .insert({ name: "Webhook Test", slug: `test-webhook-${Date.now()}` })
-        .select("id")
-        .maybeSingle();
-      
-      if (createErr || !newRest) {
-        throw new Error(`Falha ao obter restaurante: ${createErr?.message || "vazio"}`);
-      }
-      restaurantId = newRest.id;
-      console.log(`[SETUP] Criado novo restaurante: ${restaurantId}`);
-    }
-
-    // 2. Criar uma conta de pagamento temporária
+    // 1. Criar uma conta de pagamento temporária
     const providerAccountId = `mp_test_${Date.now()}`;
     const { data: account, error: accErr } = await supabase.from("restaurant_payment_accounts").insert({
       restaurant_id: restaurantId,
@@ -42,7 +21,7 @@ async function runLocalTests() {
     if (accErr) throw new Error(`Falha ao criar conta: ${accErr.message}`);
     const accountId = account.id;
 
-    console.log(`[SETUP] Conta MP: ${providerAccountId} (ID: ${accountId})`);
+    console.log(`[SETUP] Restaurante: ${restaurantId}, MP Account: ${providerAccountId} (ID: ${accountId})`);
 
     // 3. Teste: Webhook Válido
     console.log("\n[TESTE 1] Webhook Válido (Roteado)...");
