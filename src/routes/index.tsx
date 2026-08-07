@@ -75,24 +75,376 @@ function Index() {
     // HTML do SSR. A preferência do usuário continua sendo respeitada
     // pelos nossos componentes via useReducedMotionSafe, que trocam para
     // uma variante de fade curto após a hidratação.
-    <MotionConfig reducedMotion="never">
-      <div className="min-h-screen bg-background text-foreground">
-        <ScrollProgress />
-        <Header />
-        <main>
-          <Hero />
-          <Stats />
-          <Bento />
-          <ComoFunciona />
-          <ComparativoIfood />
-          <Depoimentos />
-          <Planos />
-          <FAQ />
-          <CTA />
-        </main>
-        <Footer />
-        <WhatsAppFloat />
+      <div className="min-h-screen bg-ink text-white p-10 font-mono whitespace-pre-wrap">
+        FASE 10 — ARCHITECTURE & IMPLEMENTATION PLAN
+
+FINANCIAL CONTROL CENTER & ADMIN GOVERNANCE
+
+==================================================
+
+IMPORTANTE:
+
+As seguintes fases estão concluídas e congeladas:
+
+FASE 5
+Webhook Gateway
+STATUS: STABLE
+
+FASE 6
+Payment Processing
+STATUS: STABLE
+
+FASE 7
+Financial Settlement
+STATUS: STABLE
+
+FASE 8
+Financial Operations
+STATUS: STABLE
+
+FASE 9
+Financial Analytics
+STATUS: STABLE
+
+FASE 0.5
+Cleanup & Governance Hardening
+STATUS: COMPLETE
+
+Esta fase NÃO altera o núcleo financeiro.
+Esta fase cria somente a camada administrativa de controle, observabilidade e governança.
+
+==================================================
+
+1. OBJETIVO
+
+Criar o Financial Control Center do Mesivo.
+
+O objetivo é fornecer ao SuperAdmin uma visão centralizada da saúde financeira da plataforma, sem interferir no processamento dos pagamentos.
+
+Responsabilidades:
+- Monitoramento financeiro global.
+- Auditoria operacional.
+- Saúde dos provedores de pagamento.
+- Controle de contas financeiras.
+- Acompanhamento de eventos.
+- Indicadores administrativos.
+- Gestão de incidentes financeiros.
+
+==================================================
+
+2. PRINCÍPIO ARQUITETURAL
+
+O Control Center é uma camada de leitura e governança.
+
+Fluxo permitido:
+WEBHOOK → PROCESSING → SETTLEMENT → FINANCIAL DATA → CONTROL CENTER
+
+O Control Center NÃO escreve diretamente em:
+- pagamentos;
+- pedidos;
+- liquidações;
+- eventos financeiros.
+
+==================================================
+
+3. ESCOPO AUTORIZADO
+
+Implementar:
+✓ Serviços administrativos de consulta.
+✓ Dashboard administrativo financeiro.
+✓ Indicadores globais.
+✓ Auditoria de eventos.
+✓ Monitoramento de provedores.
+✓ Alertas operacionais.
+✓ Histórico de ações administrativas.
+
+==================================================
+
+4. ESCOPO PROIBIDO
+
+NÃO implementar:
+❌ Alteração manual de pagamentos.
+❌ Cancelamento financeiro direto.
+❌ Criação manual de transações.
+❌ Bypass de settlement.
+❌ Alteração do webhook.
+❌ Alteração do processor.
+❌ Alteração das regras financeiras existentes.
+❌ Acesso sem auditoria.
+
+==================================================
+
+5. ARQUIVOS A CRIAR
+
+Criar:
+src/lib/admin/financial-control.service.ts
+Responsabilidade:
+- Consultas globais financeiras.
+- Agregações administrativas.
+- Métricas da plataforma.
+
+--------------------------------------------------
+
+Criar:
+src/lib/admin/provider-health.service.ts
+Responsabilidade:
+Monitorar:
+- Eventos recebidos.
+- Falhas.
+- Latência.
+- Retries.
+- Status dos providers.
+
+--------------------------------------------------
+
+Criar:
+src/lib/admin/audit-control.service.ts
+Responsabilidade:
+- Consultar ações administrativas.
+- Histórico.
+- Rastreamento.
+
+--------------------------------------------------
+
+Criar:
+src/routes/api/admin/financial/*
+APIs internas do SuperAdmin.
+
+==================================================
+
+6. MODELOS INTERNOS
+
+Criar:
+PlatformFinancialOverview
+Formato:
+{"{"}
+ total_restaurants,
+ total_transactions,
+ total_volume,
+ success_rate,
+ failure_rate,
+ pending_events
+{"}"}
+
+--------------------------------------------------
+
+ProviderHealthStatus
+Formato:
+{"{"}
+ provider,
+ events_received,
+ failed_events,
+ average_processing_time,
+ status
+{"}"}
+
+--------------------------------------------------
+
+FinancialIncident
+Formato:
+{"{"}
+ type,
+ severity,
+ restaurant_id,
+ event_id,
+ created_at,
+ status
+{"}"}
+
+==================================================
+
+7. NOVAS ROTAS ADMINISTRATIVAS
+
+Criar:
+GET /api/admin/financial/overview
+Retorna:
+- Volume global.
+- Restaurantes ativos.
+- Pagamentos.
+
+--------------------------------------------------
+
+GET /api/admin/financial/providers
+Retorna:
+- Saúde dos provedores.
+
+--------------------------------------------------
+
+GET /api/admin/financial/incidents
+Retorna:
+- Falhas.
+- Divergências.
+- Eventos críticos.
+
+--------------------------------------------------
+
+GET /api/admin/financial/audit
+Retorna:
+- Histórico administrativo.
+
+==================================================
+
+8. BANCO DE DADOS
+
+Antes de criar migrations:
+AUDITAR estrutura existente.
+Priorizar:
+Views.
+Consultas agregadas.
+Índices.
+Evitar duplicar:
+financial_transactions
+payment_logs
+reconciliation_logs
+
+==================================================
+
+9. SEGURANÇA ADMINISTRATIVA
+
+Obrigatório:
+Toda ação administrativa deve possuir:
+- usuário.
+- timestamp.
+- ação.
+- IP/session quando disponível.
+
+Nenhum dado financeiro deve ser acessível sem:
+- autenticação.
+- autorização.
+- permissão SuperAdmin.
+
+==================================================
+
+10. MULTI-TENANT
+
+Mesmo sendo SuperAdmin:
+Aplicar:
+- Rastreamento de tenant.
+- Filtros explícitos.
+- Logs de acesso.
+
+Nunca permitir:
+Consulta sem contexto.
+
+==================================================
+
+11. OBSERVABILIDADE
+
+Implementar métricas:
+Webhook:
+- volume recebido.
+- falhas.
+Processing:
+- tempo médio.
+- retries.
+Settlement:
+- divergências.
+- pendências.
+Analytics:
+- consultas.
+
+==================================================
+
+12. ALERTAS OPERACIONAIS
+
+Criar estrutura para detectar:
+Alta taxa de falha.
+↓
+Muitos retries.
+↓
+Divergência financeira.
+↓
+Provider instável.
+
+Somente gerar alertas.
+Não executar ações automáticas.
+
+==================================================
+
+13. TESTES OBRIGATÓRIOS
+
+TESTE 1
+SuperAdmin consulta visão global.
+Esperado:
+Dados corretos.
+
+------------------------------
+
+TESTE 2
+Usuário comum tenta acessar.
+Esperado:
+Bloqueado.
+
+------------------------------
+
+TESTE 3
+Consulta de provider.
+Esperado:
+Status correto.
+
+------------------------------
+
+TESTE 4
+Incidente financeiro criado.
+Esperado:
+Aparece no monitoramento.
+
+------------------------------
+
+TESTE 5
+Auditoria administrativa.
+Esperado:
+Registro completo.
+
+------------------------------
+
+TESTE 6
+Isolamento multi-tenant.
+Esperado:
+Sem vazamento.
+
+------------------------------
+
+TESTE 7
+Grande volume de dados.
+Esperado:
+Consulta performática.
+
+==================================================
+
+14. ARQUIVOS INTOCÁVEIS
+
+Manter congelados:
+src/routes/api/public/payments/webhook.ts
+src/lib/payments/*
+src/lib/finance/payment-settlement.server.ts
+src/lib/analytics/*
+src/lib/orders/*
+src/routes/checkout/*
+
+==================================================
+
+15. CRITÉRIOS DE CONCLUSÃO
+
+✅ Control Center funcionando.
+✅ SuperAdmin com visão financeira global.
+✅ Auditoria administrativa ativa.
+✅ Monitoramento de providers funcionando.
+✅ Alertas estruturados.
+✅ Multi-tenant validado.
+✅ Nenhuma alteração no núcleo financeiro.
+✅ Fases 5-9 permanecem intactas.
+
+==================================================
+
+FASE 10 — FINANCIAL CONTROL CENTER & ADMIN GOVERNANCE
+
+PLANO CONCLUÍDO.
+
+STATUS:
+🟡 AGUARDANDO APROVAÇÃO PARA INICIAR IMPLEMENTAÇÃO.
+
+NÃO IMPLEMENTAR NADA ATÉ APROVAÇÃO DO PLANO.
       </div>
-    </MotionConfig>
   );
 }
