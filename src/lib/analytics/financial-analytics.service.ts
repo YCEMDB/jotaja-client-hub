@@ -24,8 +24,9 @@ export class FinancialAnalyticsService {
 
     if (error) throw new Error(`Failed to fetch financial transactions: ${error.message}`);
 
-    const transactions = (payments as any[])?.length || 0;
-    const revenue = (payments as any[])?.reduce((acc: number, curr: any) => acc + Number(curr.amount), 0) || 0;
+    const paymentsArray = (payments as any[]) || [];
+    const transactions = paymentsArray.length;
+    const revenue = paymentsArray.reduce((acc: number, curr: any) => acc + Number(curr.amount), 0);
     const averageTicket = transactions > 0 ? revenue / transactions : 0;
 
     // 2. Fetch payment attempts for rates (from processing logs)
@@ -38,9 +39,10 @@ export class FinancialAnalyticsService {
 
     if (eventsError) throw new Error(`Failed to fetch processing logs: ${eventsError.message}`);
 
-    const totalEvents = events?.length || 0;
-    const paidEvents = events?.filter((e: any) => e.status === 'PAID').length || 0;
-    const failedEvents = events?.filter((e: any) => e.status === 'FAILED').length || 0;
+    const eventsArray = (events as any[]) || [];
+    const totalEvents = eventsArray.length;
+    const paidEvents = eventsArray.filter((e: any) => e.status === 'PAID').length;
+    const failedEvents = eventsArray.filter((e: any) => e.status === 'FAILED').length;
 
     const successfulRate = totalEvents > 0 ? (paidEvents / totalEvents) * 100 : 0;
     const failureRate = totalEvents > 0 ? (failedEvents / totalEvents) * 100 : 0;
