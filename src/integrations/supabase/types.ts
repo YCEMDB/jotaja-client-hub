@@ -3278,6 +3278,8 @@ export type Database = {
           provider_last_sync: string | null
           provider_metadata: Json | null
           provider_status: string
+          refresh_locked_at: string | null
+          refresh_locked_by: string | null
           restaurant_id: string
           updated_at: string | null
         }
@@ -3293,6 +3295,8 @@ export type Database = {
           provider_last_sync?: string | null
           provider_metadata?: Json | null
           provider_status: string
+          refresh_locked_at?: string | null
+          refresh_locked_by?: string | null
           restaurant_id: string
           updated_at?: string | null
         }
@@ -3308,6 +3312,8 @@ export type Database = {
           provider_last_sync?: string | null
           provider_metadata?: Json | null
           provider_status?: string
+          refresh_locked_at?: string | null
+          refresh_locked_by?: string | null
           restaurant_id?: string
           updated_at?: string | null
         }
@@ -5574,6 +5580,10 @@ export type Database = {
         }
         Returns: Json
       }
+      release_refresh_lock: {
+        Args: { p_account_id: string; p_worker_id: string }
+        Returns: boolean
+      }
       remove_team_member: {
         Args: { p_restaurant_id: string; p_user_id: string }
         Returns: undefined
@@ -5790,6 +5800,10 @@ export type Database = {
           p_target_session_id: string
         }
         Returns: number
+      }
+      try_acquire_refresh_lock: {
+        Args: { p_account_id: string; p_worker_id: string }
+        Returns: boolean
       }
       unaccent_immutable: { Args: { "": string }; Returns: string }
       unaccent_safe: { Args: { t: string }; Returns: string }
