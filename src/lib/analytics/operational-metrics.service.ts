@@ -25,13 +25,14 @@ export class OperationalMetricsService {
 
     if (error) throw new Error(`Failed to fetch operational data: ${error.message}`);
 
-    const ordersCount = (txs as any[])?.length || 0;
-    const paymentVolume = (txs as any[])?.reduce((acc: number, curr: any) => acc + Number(curr.amount), 0) || 0;
+    const txsArray = (txs as any[]) || [];
+    const ordersCount = txsArray.length;
+    const paymentVolume = txsArray.reduce((acc: number, curr: any) => acc + Number(curr.amount), 0);
     const dailyAverage = days > 0 ? ordersCount / days : 0;
 
     // 2. Peak Hours Analysis (Simple hourly grouping)
     const hourCounts: Record<number, number> = {};
-    (txs as any[])?.forEach(tx => {
+    txsArray.forEach(tx => {
       const hour = new Date(tx.created_at).getHours();
       hourCounts[hour] = (hourCounts[hour] || 0) + 1;
     });
@@ -48,7 +49,8 @@ export class OperationalMetricsService {
       .eq("restaurant_id", restaurantId)
       .eq("status", "ACTIVE");
 
-    const activePaymentMethods = Array.from(new Set((accounts as any[])?.map(a => a.provider) || []));
+    const accountsArray = (accounts as any[]) || [];
+    const activePaymentMethods = Array.from(new Set(accountsArray.map(a => a.provider)));
 
     return OperationalMetricsSchema.parse({
       restaurant_id: restaurantId,

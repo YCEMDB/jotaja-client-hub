@@ -10,8 +10,8 @@ const querySchema = z.object({
 
 export const Route = createFileRoute('/api/analytics/financial-summary')({
   validateSearch: (search: Record<string, unknown>) => querySchema.parse(search),
-  loader: async (context: any) => {
-    const search = context.search;
+  loader: async (args: any) => {
+    const search = args.deps ? args.deps : args.search;
     const { restaurantId, startDate, endDate } = search;
     const start = startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
     const end = endDate || new Date().toISOString();
