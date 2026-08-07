@@ -8,16 +8,17 @@ async function testConcurrency() {
   console.log("=== INICIANDO TESTE DE CONCORRÊNCIA (FASE 4) ===");
 
   // 1. Buscar uma conta ativa para o teste
-  const { data: accounts } = await supabase
+  const { data: accounts, error: fetchErr } = await supabase
     .from("restaurant_payment_accounts")
     .select("id, restaurant_id")
-    .eq("is_active", true)
-    .limit(1);
+    .eq("id", "00000000-0000-4000-a000-000000000001")
+    .single();
 
-  if (!accounts || accounts.length === 0) {
-    console.error("ERRO: Nenhuma conta ativa encontrada para o teste.");
+  if (fetchErr || !accounts) {
+    console.error("ERRO: Nenhuma conta ativa encontrada para o teste.", fetchErr);
     return;
   }
+
 
   const accountId = accounts[0].id;
   const workerA = crypto.randomUUID();
