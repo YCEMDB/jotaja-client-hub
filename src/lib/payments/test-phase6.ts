@@ -18,7 +18,8 @@ export async function testPaymentProcessingFlow() {
       provider: 'mercadopago',
       provider_account_id: `provider-${testId}`,
       is_active: true,
-      provider_status: 'connected'
+      provider_status: 'connected',
+      provider_environment: 'sandbox'
     })
     .select("id")
     .single();
