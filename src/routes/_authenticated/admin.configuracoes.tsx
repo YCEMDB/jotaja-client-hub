@@ -855,16 +855,21 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
             {loading || testing ? (
               <Badge variant="secondary" className="gap-1"><Loader2 className="h-3 w-3 animate-spin" /> verificando</Badge>
             ) : isConnected ? (
-              <Badge className="gap-1 bg-emerald-600 hover:bg-emerald-600 text-white">
+              <Badge className={`gap-1 border-2 border-ink ${
+                account.status === 'reauthentication_required' 
+                  ? "bg-amber-400 text-ink shadow-brutal" 
+                  : "bg-emerald-600 hover:bg-emerald-600 text-white shadow-brutal"
+              }`}>
                 <ShieldCheck className="h-3 w-3" />
-                {account.environment === "production" ? "Conectado" : "Conectado (Sandbox)"}
+                {account.status === 'reauthentication_required' ? "Ação Necessária" : (account.environment === "production" ? "Conectado" : "Conectado (Sandbox)")}
               </Badge>
             ) : isInvalid ? (
-              <Badge variant="destructive" className="gap-1"><ShieldAlert className="h-3 w-3" /> token inválido</Badge>
+              <Badge variant="destructive" className="gap-1 border-2 border-ink shadow-brutal"><ShieldAlert className="h-3 w-3" /> token inválido</Badge>
             ) : (
-              <Badge variant="outline">Não conectado</Badge>
+              <Badge variant="outline" className="border-2 border-ink shadow-brutal">Não conectado</Badge>
             )}
           </h3>
+
           <p className="text-sm text-muted-foreground mt-1">
             Conecte sua conta do Mercado Pago para gerar QR Codes PIX automáticos. O dinheiro cai direto na sua conta.
           </p>
