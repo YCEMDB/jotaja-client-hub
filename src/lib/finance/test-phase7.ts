@@ -181,31 +181,28 @@ export async function runPhase7Tests() {
 
     // TEST 6: Exception/Retry (Simulate failure then fix)
     console.log("TEST 6: Error/Retry");
-    // Insert log that will fail because we'll provide invalid data (missing restaurant_id check in worker)
     const { data: log6 } = await supabaseAdmin
       .from('payment_provider_webhook_logs')
       .insert({
-        account_id: account.id, // This is valid, but we'll force a throw in executeSettlement by passing bad event
+        account_id: account.id,
         provider: 'mercadopago',
         provider_event_id: `test_p7_6_${Date.now()}`,
-        payload: { id: 'ext_6', status: 'approved', transaction_amount: 300.00 },
+        payload: { id: 'ext_6', status: 'approved', transaction_amount: 'INVALID' }, // Force numeric conversion error
         status: 'PROCESSED',
         financial_processing_status: 'PENDING'
       })
       .select()
       .single();
 
-    // Temporarily mess up internal state or cause a throw - actually, the worker catches errors.
-    // If we pass a payload that causes executeSettlement to fail (like a zero amount if it had a check),
-    // it registers an attempt.
-    // Let's just run it and assume something might fail or we manually verify the retry count increment.
     await processFinancialQueue();
     
     const { data: log6Check } = await supabaseAdmin
       .from('payment_provider_webhook_logs')
-      .select('financial_processing_attempts, financial_processing_status')
+      .select('financial_processing_attempts, financial_processing_status, financial_processing_error')
       .eq('id', log6!.id)
       .single();
+
+    console.log(`Log6 attempts: ${log6Check?.financial_processing_attempts}, error: ${log6Check?.financial_processing_error}`);
 
     results.push({
       test: "TEST 6: Retry Logic",
