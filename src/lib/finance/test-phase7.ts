@@ -1,5 +1,7 @@
 import { processFinancialQueue } from "./financial-event-worker";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { SettlementEvent } from "./financial-types";
+import { executeSettlement } from "./payment-settlement.server";
 
 /**
  * Test Validation for Phase 7
@@ -214,7 +216,7 @@ export async function runPhase7Tests() {
     // Create a new restaurant to test isolation
     const { data: newRest } = await supabaseAdmin.from('restaurants').insert({
       name: 'Isolation Test Restaurant',
-      owner_id: (await supabaseAdmin.auth.getUser()).data.user?.id
+      owner_id: (await supabaseAdmin.auth.getUser()).data.user?.id || '00000000-0000-0000-0000-000000000000'
     }).select().single();
 
     if (newRest) {
