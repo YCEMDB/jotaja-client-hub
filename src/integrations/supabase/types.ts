@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_audit_logs: {
+        Row: {
+          action: string
+          admin_id: string
+          created_at: string | null
+          details: Json | null
+          id: string
+          ip_address: string | null
+          target_resource: string
+        }
+        Insert: {
+          action: string
+          admin_id: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          ip_address?: string | null
+          target_resource: string
+        }
+        Update: {
+          action?: string
+          admin_id?: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          ip_address?: string | null
+          target_resource?: string
+        }
+        Relationships: []
+      }
       app_plans: {
         Row: {
           features: Json
@@ -1903,6 +1933,57 @@ export type Database = {
           },
           {
             foreignKeyName: "finance_reconciliations_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      financial_incidents: {
+        Row: {
+          created_at: string | null
+          details: Json | null
+          event_id: string | null
+          id: string
+          restaurant_id: string | null
+          severity: string
+          status: string
+          type: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          details?: Json | null
+          event_id?: string | null
+          id?: string
+          restaurant_id?: string | null
+          severity: string
+          status?: string
+          type: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          details?: Json | null
+          event_id?: string | null
+          id?: string
+          restaurant_id?: string | null
+          severity?: string
+          status?: string
+          type?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "financial_incidents_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "financial_incidents_restaurant_id_fkey"
             columns: ["restaurant_id"]
             isOneToOne: false
             referencedRelation: "restaurants_team_view"
@@ -5374,10 +5455,21 @@ export type Database = {
           restaurant_id: string
         }[]
       }
+      get_platform_financial_metrics: { Args: never; Returns: Json }
       get_product_recipe: { Args: { p_product_id: string }; Returns: Json }
       get_products_profitability_report: {
         Args: { p_from: string; p_restaurant_id: string; p_to: string }
         Returns: Json
+      }
+      get_providers_health_status: {
+        Args: never
+        Returns: {
+          avg_duration_ms: number
+          failed_events: number
+          failure_rate: number
+          provider: string
+          total_events: number
+        }[]
       }
       get_public_categories: {
         Args: { p_slug: string }
@@ -5424,6 +5516,13 @@ export type Database = {
       }
       get_stock_overview: { Args: { p_restaurant_id: string }; Returns: Json }
       get_table_map: { Args: { p_restaurant_id: string }; Returns: Json }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       import_delivery_areas: {
         Args: { p_reason?: string; p_restaurant_id: string; p_rows: Json }
         Returns: {
