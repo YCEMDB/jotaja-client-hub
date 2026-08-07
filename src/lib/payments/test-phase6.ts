@@ -5,30 +5,43 @@ export async function testPaymentProcessingFlow() {
   const supabaseAdmin = getSupabaseAdmin();
   const testId = `test-${Date.now()}`;
 
+  // 0. Preparar conta fake se não existir
+  const { data: restaurants } = await supabaseAdmin.from("restaurants").select("id").limit(1);
+  const restaurantId = restaurants?.[0]?.id;
+
+  if (!restaurantId) throw new Error("Nenhum restaurante encontrado para o teste");
+
+  const { data: account } = await supabaseAdmin
+    .from("restaurant_payment_accounts")
+    .insert({
+      restaurant_id: restaurantId,
+      provider: 'mercadopago',
+      provider_account_id: `provider-${testId}`,
+      is_active: true,
+      provider_status: 'connected'
+    })
+    .select("id")
+    .single();
+
+  console.log(`Conta de teste criada: ${account.id}`);
+
   console.log("--- TEST 1: Evento VALIDATED processado ---");
   
-  // 1. Criar um log VALIDATED fake
+  // 1. Criar um log VALIDATED fake associado à conta
   const { data: log, error: logErr } = await supabaseAdmin
     .from("payment_provider_webhook_logs")
     .insert({
       provider: 'mercadopago',
       provider_event_id: testId,
       payload: { id: testId, action: 'payment.created', type: 'payment' },
-      status: 'VALIDATED' as any
+      status: 'VALIDATED' as any,
+      account_id: account.id
     })
     .select("id")
     .single();
 
   if (logErr) throw logErr;
   console.log(`Log criado com ID: ${log.id}`);
-
-  // Debug: check current status
-  const { data: check } = await supabaseAdmin
-    .from("payment_provider_webhook_logs")
-    .select("status")
-    .eq("id", log.id)
-    .single();
-  console.log(`Status inicial no banco: ${check?.status}`);
 
   // 2. Executar Worker
   await runPaymentEventWorker();
