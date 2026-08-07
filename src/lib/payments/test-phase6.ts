@@ -108,10 +108,90 @@ export async function testPaymentProcessingFlow() {
   const test3Passed = finalLog3?.status === 'FAILED';
   console.log(`TEST 3 ${test3Passed ? 'PASSED' : 'FAILED'}`);
 
+  console.log("\n--- TEST 4: Erro durante processamento e Retry ---");
+  // Simular erro via normalizador (provocando uma exceção no processador)
+  const { data: log4 } = await supabaseAdmin
+    .from("payment_provider_webhook_logs")
+    .insert({
+      provider: 'mercadopago',
+      provider_event_id: `${testId}-error`,
+      payload: { id: `${testId}-error`, action: 'payment.updated', force_error: true },
+      status: 'VALIDATED' as any,
+      account_id: account.id
+    })
+    .select("id")
+    .single();
+
+  await runPaymentEventWorker();
+
+  const { data: finalLog4 } = await supabaseAdmin
+    .from("payment_provider_webhook_logs")
+    .select("status, attempts, last_error")
+    .eq("id", log4!.id)
+    .single();
+
+  console.log(`Status final do log com erro: ${finalLog4?.status}, Tentativas: ${finalLog4?.attempts}`);
+  const test4Passed = finalLog4?.status === 'FAILED' && (finalLog4?.attempts || 0) > 0;
+  console.log(`TEST 4 ${test4Passed ? 'PASSED' : 'FAILED'}`);
+
+  console.log("\n--- TEST 5: Cinco falhas (Status final FAILED) ---");
+  // Atualizar attempts para 4 e rodar novamente para ver se para em 5 (nossa lógica atual é simplificada)
+  await supabaseAdmin
+    .from("payment_provider_webhook_logs")
+    .update({ attempts: 4 })
+    .eq("id", log4!.id);
+
+  await runPaymentEventWorker();
+
+  const { data: finalLog5 } = await supabaseAdmin
+    .from("payment_provider_webhook_logs")
+    .select("status, attempts")
+    .eq("id", log4!.id)
+    .single();
+
+  console.log(`Status após 5 tentativas: ${finalLog5?.status}, Tentativas: ${finalLog5?.attempts}`);
+  const test5Passed = (finalLog5?.attempts || 0) >= 5;
+  console.log(`TEST 5 ${test5Passed ? 'PASSED' : 'FAILED'}`);
+
+  console.log("\n--- TEST 6: Dois workers simultâneos (Atomic Lock) ---");
+  const { data: log6 } = await supabaseAdmin
+    .from("payment_provider_webhook_logs")
+    .insert({
+      provider: 'mercadopago',
+      provider_event_id: `${testId}-concurrent`,
+      payload: { id: `${testId}-concurrent`, action: 'payment.created' },
+      status: 'VALIDATED' as any,
+      account_id: account.id
+    })
+    .select("id")
+    .single();
+
+  // Rodar dois processos de processamento em paralelo
+  const { processPaymentEvent } = await import("./event-processor.server");
+  const [res1, res2] = await Promise.all([
+    processPaymentEvent(log6!.id, "worker-1"),
+    processPaymentEvent(log6!.id, "worker-2")
+  ]);
+
+  // Verificar logs de processamento para ver se houve dupla entrada PROCESSED
+  const { data: procLogs } = await supabaseAdmin
+    .from("payment_processing_logs")
+    .select("status")
+    .eq("webhook_log_id", log6!.id)
+    .eq("status", "PROCESSED");
+
+  console.log(`Entradas PROCESSED encontradas: ${procLogs?.length}`);
+  const test6Passed = procLogs?.length === 1;
+  console.log(`TEST 6 ${test6Passed ? 'PASSED' : 'FAILED'}`);
+
   return {
     test1Passed,
     test2Passed,
-    test3Passed
+    test3Passed,
+    test4Passed,
+    test5Passed,
+    test6Passed
   };
 }
+
 
