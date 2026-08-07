@@ -110,6 +110,9 @@ import { Route as ApiPublicPaymentsMaintenanceRouteImport } from './routes/api/p
 import { Route as ApiPublicPagbankCallbackRouteImport } from './routes/api/public/pagbank/callback'
 import { Route as ApiPublicMercadopagoCallbackRouteImport } from './routes/api/public/mercadopago/callback'
 import { Route as ApiPublicHooksCommunicationWorkerRouteImport } from './routes/api/public/hooks/communication-worker'
+import { Route as ApiAdminMonitoringStatusRouteImport } from './routes/api/admin/monitoring/status'
+import { Route as ApiAdminMonitoringHistoryRouteImport } from './routes/api/admin/monitoring/history'
+import { Route as ApiAdminMonitoringAlertsRouteImport } from './routes/api/admin/monitoring/alerts'
 import { Route as AuthenticatedAdminMesasEditorRouteImport } from './routes/_authenticated/admin.mesas.editor'
 import { Route as AuthenticatedAdminMesasCadastroRouteImport } from './routes/_authenticated/admin.mesas.cadastro'
 import { Route as ApiPublicHooksPagbankWebhookKeyRouteImport } from './routes/api/public/hooks/pagbank.$webhookKey'
@@ -656,6 +659,24 @@ const ApiPublicHooksCommunicationWorkerRoute =
     path: '/api/public/hooks/communication-worker',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiAdminMonitoringStatusRoute =
+  ApiAdminMonitoringStatusRouteImport.update({
+    id: '/api/admin/monitoring/status',
+    path: '/api/admin/monitoring/status',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiAdminMonitoringHistoryRoute =
+  ApiAdminMonitoringHistoryRouteImport.update({
+    id: '/api/admin/monitoring/history',
+    path: '/api/admin/monitoring/history',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiAdminMonitoringAlertsRoute =
+  ApiAdminMonitoringAlertsRouteImport.update({
+    id: '/api/admin/monitoring/alerts',
+    path: '/api/admin/monitoring/alerts',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedAdminMesasEditorRoute =
   AuthenticatedAdminMesasEditorRouteImport.update({
     id: '/editor',
@@ -773,6 +794,9 @@ export interface FileRoutesByFullPath {
   '/super/': typeof SuperSuperIndexRoute
   '/admin/mesas/cadastro': typeof AuthenticatedAdminMesasCadastroRoute
   '/admin/mesas/editor': typeof AuthenticatedAdminMesasEditorRoute
+  '/api/admin/monitoring/alerts': typeof ApiAdminMonitoringAlertsRoute
+  '/api/admin/monitoring/history': typeof ApiAdminMonitoringHistoryRoute
+  '/api/admin/monitoring/status': typeof ApiAdminMonitoringStatusRoute
   '/api/public/hooks/communication-worker': typeof ApiPublicHooksCommunicationWorkerRoute
   '/api/public/mercadopago/callback': typeof ApiPublicMercadopagoCallbackRoute
   '/api/public/pagbank/callback': typeof ApiPublicPagbankCallbackRoute
@@ -878,6 +902,9 @@ export interface FileRoutesByTo {
   '/super': typeof SuperSuperIndexRoute
   '/admin/mesas/cadastro': typeof AuthenticatedAdminMesasCadastroRoute
   '/admin/mesas/editor': typeof AuthenticatedAdminMesasEditorRoute
+  '/api/admin/monitoring/alerts': typeof ApiAdminMonitoringAlertsRoute
+  '/api/admin/monitoring/history': typeof ApiAdminMonitoringHistoryRoute
+  '/api/admin/monitoring/status': typeof ApiAdminMonitoringStatusRoute
   '/api/public/hooks/communication-worker': typeof ApiPublicHooksCommunicationWorkerRoute
   '/api/public/mercadopago/callback': typeof ApiPublicMercadopagoCallbackRoute
   '/api/public/pagbank/callback': typeof ApiPublicPagbankCallbackRoute
@@ -986,6 +1013,9 @@ export interface FileRoutesById {
   '/_super/super/': typeof SuperSuperIndexRoute
   '/_authenticated/admin/mesas/cadastro': typeof AuthenticatedAdminMesasCadastroRoute
   '/_authenticated/admin/mesas/editor': typeof AuthenticatedAdminMesasEditorRoute
+  '/api/admin/monitoring/alerts': typeof ApiAdminMonitoringAlertsRoute
+  '/api/admin/monitoring/history': typeof ApiAdminMonitoringHistoryRoute
+  '/api/admin/monitoring/status': typeof ApiAdminMonitoringStatusRoute
   '/api/public/hooks/communication-worker': typeof ApiPublicHooksCommunicationWorkerRoute
   '/api/public/mercadopago/callback': typeof ApiPublicMercadopagoCallbackRoute
   '/api/public/pagbank/callback': typeof ApiPublicPagbankCallbackRoute
@@ -1093,6 +1123,9 @@ export interface FileRouteTypes {
     | '/super/'
     | '/admin/mesas/cadastro'
     | '/admin/mesas/editor'
+    | '/api/admin/monitoring/alerts'
+    | '/api/admin/monitoring/history'
+    | '/api/admin/monitoring/status'
     | '/api/public/hooks/communication-worker'
     | '/api/public/mercadopago/callback'
     | '/api/public/pagbank/callback'
@@ -1198,6 +1231,9 @@ export interface FileRouteTypes {
     | '/super'
     | '/admin/mesas/cadastro'
     | '/admin/mesas/editor'
+    | '/api/admin/monitoring/alerts'
+    | '/api/admin/monitoring/history'
+    | '/api/admin/monitoring/status'
     | '/api/public/hooks/communication-worker'
     | '/api/public/mercadopago/callback'
     | '/api/public/pagbank/callback'
@@ -1305,6 +1341,9 @@ export interface FileRouteTypes {
     | '/_super/super/'
     | '/_authenticated/admin/mesas/cadastro'
     | '/_authenticated/admin/mesas/editor'
+    | '/api/admin/monitoring/alerts'
+    | '/api/admin/monitoring/history'
+    | '/api/admin/monitoring/status'
     | '/api/public/hooks/communication-worker'
     | '/api/public/mercadopago/callback'
     | '/api/public/pagbank/callback'
@@ -1383,6 +1422,9 @@ export interface RootRouteChildren {
   DevProtoMotoboyRoute: typeof DevProtoMotoboyRoute
   DevProtoPdvRoute: typeof DevProtoPdvRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
+  ApiAdminMonitoringAlertsRoute: typeof ApiAdminMonitoringAlertsRoute
+  ApiAdminMonitoringHistoryRoute: typeof ApiAdminMonitoringHistoryRoute
+  ApiAdminMonitoringStatusRoute: typeof ApiAdminMonitoringStatusRoute
   ApiPublicHooksCommunicationWorkerRoute: typeof ApiPublicHooksCommunicationWorkerRoute
   ApiPublicMercadopagoCallbackRoute: typeof ApiPublicMercadopagoCallbackRoute
   ApiPublicPagbankCallbackRoute: typeof ApiPublicPagbankCallbackRoute
@@ -2106,6 +2148,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksCommunicationWorkerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/admin/monitoring/status': {
+      id: '/api/admin/monitoring/status'
+      path: '/api/admin/monitoring/status'
+      fullPath: '/api/admin/monitoring/status'
+      preLoaderRoute: typeof ApiAdminMonitoringStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/monitoring/history': {
+      id: '/api/admin/monitoring/history'
+      path: '/api/admin/monitoring/history'
+      fullPath: '/api/admin/monitoring/history'
+      preLoaderRoute: typeof ApiAdminMonitoringHistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/monitoring/alerts': {
+      id: '/api/admin/monitoring/alerts'
+      path: '/api/admin/monitoring/alerts'
+      fullPath: '/api/admin/monitoring/alerts'
+      preLoaderRoute: typeof ApiAdminMonitoringAlertsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/admin/mesas/editor': {
       id: '/_authenticated/admin/mesas/editor'
       path: '/editor'
@@ -2298,6 +2361,9 @@ const rootRouteChildren: RootRouteChildren = {
   DevProtoMotoboyRoute: DevProtoMotoboyRoute,
   DevProtoPdvRoute: DevProtoPdvRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
+  ApiAdminMonitoringAlertsRoute: ApiAdminMonitoringAlertsRoute,
+  ApiAdminMonitoringHistoryRoute: ApiAdminMonitoringHistoryRoute,
+  ApiAdminMonitoringStatusRoute: ApiAdminMonitoringStatusRoute,
   ApiPublicHooksCommunicationWorkerRoute:
     ApiPublicHooksCommunicationWorkerRoute,
   ApiPublicMercadopagoCallbackRoute: ApiPublicMercadopagoCallbackRoute,
@@ -2316,13 +2382,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

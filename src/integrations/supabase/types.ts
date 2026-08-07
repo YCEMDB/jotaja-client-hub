@@ -1940,6 +1940,66 @@ export type Database = {
           },
         ]
       }
+      financial_alert_events: {
+        Row: {
+          alert_type: string
+          created_at: string
+          deduplication_key: string
+          details: Json | null
+          id: string
+          metric_value: number | null
+          provider: string | null
+          resolved_at: string | null
+          restaurant_id: string | null
+          severity: string
+          status: string
+          threshold_value: number | null
+        }
+        Insert: {
+          alert_type: string
+          created_at?: string
+          deduplication_key: string
+          details?: Json | null
+          id?: string
+          metric_value?: number | null
+          provider?: string | null
+          resolved_at?: string | null
+          restaurant_id?: string | null
+          severity: string
+          status?: string
+          threshold_value?: number | null
+        }
+        Update: {
+          alert_type?: string
+          created_at?: string
+          deduplication_key?: string
+          details?: Json | null
+          id?: string
+          metric_value?: number | null
+          provider?: string | null
+          resolved_at?: string | null
+          restaurant_id?: string | null
+          severity?: string
+          status?: string
+          threshold_value?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "financial_alert_events_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "financial_alert_events_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       financial_incidents: {
         Row: {
           created_at: string | null
