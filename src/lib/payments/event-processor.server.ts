@@ -117,7 +117,11 @@ async function validateStateTransition(restaurantId: string, event: InternalPaym
     .eq("id", event.account_id)
     .single();
 
-  if (accErr) throw new EventProcessorError("account_fetch_error", "Error fetching account for state validation");
+  if (accErr) {
+    console.error(`[event-processor] Error fetching account ${event.account_id}:`, accErr);
+    throw new EventProcessorError("account_fetch_error", `Error fetching account: ${accErr.message}`);
+  }
+
 
   const eventTime = new Date(event.occurred_at).getTime();
   const lastTime = account.last_event_occurred_at ? new Date(account.last_event_occurred_at).getTime() : 0;
