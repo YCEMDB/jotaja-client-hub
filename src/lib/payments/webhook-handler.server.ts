@@ -1,11 +1,15 @@
 import { getProviderAdapter, PaymentProvider } from "./framework";
 import { createClient } from "@supabase/supabase-js";
 
-// Usando o cliente Admin para evitar problemas de RLS durante o roteamento de webhooks públicos
-const supabaseAdmin = createClient(
-  process.env.VITE_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Função para criar o cliente Admin sob demanda para garantir que as env vars sejam lidas corretamente
+function getSupabaseAdmin() {
+  const url = process.env.VITE_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) {
+    throw new Error("Missing Supabase configuration (URL or Service Role Key)");
+  }
+  return createClient(url, key);
+}
 
 export interface WebhookProcessingResult {
   status: number;
@@ -21,6 +25,7 @@ export async function handlePaymentWebhook(
   const providerName = provider.toLowerCase() as PaymentProvider;
   
   try {
+    const supabaseAdmin = getSupabaseAdmin();
     const adapter = await getProviderAdapter(providerName);
     
     // 1. Validar Assinatura (Antes de qualquer roteamento)
@@ -107,7 +112,5 @@ export async function handlePaymentWebhook(
   } catch (err: any) {
     console.error(`[webhook-handler] Critical error: ${err.message}`, err);
     return { status: 500, message: `Internal Server Error: ${err.message}` };
-
   }
 }
-
