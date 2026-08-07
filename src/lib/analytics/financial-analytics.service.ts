@@ -25,7 +25,7 @@ export class FinancialAnalyticsService {
     if (error) throw new Error(`Failed to fetch financial transactions: ${error.message}`);
 
     const transactions = payments?.length || 0;
-    const revenue = payments?.reduce((acc, curr) => acc + Number(curr.amount), 0) || 0;
+    const revenue = payments?.reduce((acc: number, curr: any) => acc + Number(curr.amount), 0) || 0;
     const averageTicket = transactions > 0 ? revenue / transactions : 0;
 
     // 2. Fetch payment attempts for rates (from processing logs)
@@ -39,14 +39,13 @@ export class FinancialAnalyticsService {
     if (eventsError) throw new Error(`Failed to fetch processing logs: ${eventsError.message}`);
 
     const totalEvents = events?.length || 0;
-    const paidEvents = events?.filter(e => e.status === 'PAID').length || 0;
-    const failedEvents = events?.filter(e => e.status === 'FAILED').length || 0;
+    const paidEvents = events?.filter((e: any) => e.status === 'PAID').length || 0;
+    const failedEvents = events?.filter((e: any) => e.status === 'FAILED').length || 0;
 
     const successfulRate = totalEvents > 0 ? (paidEvents / totalEvents) * 100 : 0;
     const failureRate = totalEvents > 0 ? (failedEvents / totalEvents) * 100 : 0;
 
     // 3. (Optional) Fetch previous period for growth comparison
-    // Simplified for this implementation
     const growthPercentage = 0; 
 
     return FinancialMetricsSchema.parse({

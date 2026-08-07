@@ -26,7 +26,7 @@ export class OperationalMetricsService {
     if (error) throw new Error(`Failed to fetch operational data: ${error.message}`);
 
     const ordersCount = txs?.length || 0;
-    const paymentVolume = txs?.reduce((acc, curr) => acc + Number(curr.amount), 0) || 0;
+    const paymentVolume = txs?.reduce((acc: number, curr: any) => acc + Number(curr.amount), 0) || 0;
     const dailyAverage = days > 0 ? ordersCount / days : 0;
 
     // 2. Peak Hours Analysis (Simple hourly grouping)
