@@ -113,6 +113,9 @@ import { Route as ApiPublicHooksCommunicationWorkerRouteImport } from './routes/
 import { Route as ApiAdminMonitoringStatusRouteImport } from './routes/api/admin/monitoring/status'
 import { Route as ApiAdminMonitoringHistoryRouteImport } from './routes/api/admin/monitoring/history'
 import { Route as ApiAdminMonitoringAlertsRouteImport } from './routes/api/admin/monitoring/alerts'
+import { Route as ApiAdminAutomationJobsRouteImport } from './routes/api/admin/automation/jobs'
+import { Route as ApiAdminAutomationHistoryRouteImport } from './routes/api/admin/automation/history'
+import { Route as ApiAdminAutomationExecuteRouteImport } from './routes/api/admin/automation/execute'
 import { Route as AuthenticatedAdminMesasEditorRouteImport } from './routes/_authenticated/admin.mesas.editor'
 import { Route as AuthenticatedAdminMesasCadastroRouteImport } from './routes/_authenticated/admin.mesas.cadastro'
 import { Route as ApiPublicHooksPagbankWebhookKeyRouteImport } from './routes/api/public/hooks/pagbank.$webhookKey'
@@ -677,6 +680,23 @@ const ApiAdminMonitoringAlertsRoute =
     path: '/api/admin/monitoring/alerts',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiAdminAutomationJobsRoute = ApiAdminAutomationJobsRouteImport.update({
+  id: '/api/admin/automation/jobs',
+  path: '/api/admin/automation/jobs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminAutomationHistoryRoute =
+  ApiAdminAutomationHistoryRouteImport.update({
+    id: '/api/admin/automation/history',
+    path: '/api/admin/automation/history',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiAdminAutomationExecuteRoute =
+  ApiAdminAutomationExecuteRouteImport.update({
+    id: '/api/admin/automation/execute',
+    path: '/api/admin/automation/execute',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedAdminMesasEditorRoute =
   AuthenticatedAdminMesasEditorRouteImport.update({
     id: '/editor',
@@ -794,6 +814,9 @@ export interface FileRoutesByFullPath {
   '/super/': typeof SuperSuperIndexRoute
   '/admin/mesas/cadastro': typeof AuthenticatedAdminMesasCadastroRoute
   '/admin/mesas/editor': typeof AuthenticatedAdminMesasEditorRoute
+  '/api/admin/automation/execute': typeof ApiAdminAutomationExecuteRoute
+  '/api/admin/automation/history': typeof ApiAdminAutomationHistoryRoute
+  '/api/admin/automation/jobs': typeof ApiAdminAutomationJobsRoute
   '/api/admin/monitoring/alerts': typeof ApiAdminMonitoringAlertsRoute
   '/api/admin/monitoring/history': typeof ApiAdminMonitoringHistoryRoute
   '/api/admin/monitoring/status': typeof ApiAdminMonitoringStatusRoute
@@ -902,6 +925,9 @@ export interface FileRoutesByTo {
   '/super': typeof SuperSuperIndexRoute
   '/admin/mesas/cadastro': typeof AuthenticatedAdminMesasCadastroRoute
   '/admin/mesas/editor': typeof AuthenticatedAdminMesasEditorRoute
+  '/api/admin/automation/execute': typeof ApiAdminAutomationExecuteRoute
+  '/api/admin/automation/history': typeof ApiAdminAutomationHistoryRoute
+  '/api/admin/automation/jobs': typeof ApiAdminAutomationJobsRoute
   '/api/admin/monitoring/alerts': typeof ApiAdminMonitoringAlertsRoute
   '/api/admin/monitoring/history': typeof ApiAdminMonitoringHistoryRoute
   '/api/admin/monitoring/status': typeof ApiAdminMonitoringStatusRoute
@@ -1013,6 +1039,9 @@ export interface FileRoutesById {
   '/_super/super/': typeof SuperSuperIndexRoute
   '/_authenticated/admin/mesas/cadastro': typeof AuthenticatedAdminMesasCadastroRoute
   '/_authenticated/admin/mesas/editor': typeof AuthenticatedAdminMesasEditorRoute
+  '/api/admin/automation/execute': typeof ApiAdminAutomationExecuteRoute
+  '/api/admin/automation/history': typeof ApiAdminAutomationHistoryRoute
+  '/api/admin/automation/jobs': typeof ApiAdminAutomationJobsRoute
   '/api/admin/monitoring/alerts': typeof ApiAdminMonitoringAlertsRoute
   '/api/admin/monitoring/history': typeof ApiAdminMonitoringHistoryRoute
   '/api/admin/monitoring/status': typeof ApiAdminMonitoringStatusRoute
@@ -1123,6 +1152,9 @@ export interface FileRouteTypes {
     | '/super/'
     | '/admin/mesas/cadastro'
     | '/admin/mesas/editor'
+    | '/api/admin/automation/execute'
+    | '/api/admin/automation/history'
+    | '/api/admin/automation/jobs'
     | '/api/admin/monitoring/alerts'
     | '/api/admin/monitoring/history'
     | '/api/admin/monitoring/status'
@@ -1231,6 +1263,9 @@ export interface FileRouteTypes {
     | '/super'
     | '/admin/mesas/cadastro'
     | '/admin/mesas/editor'
+    | '/api/admin/automation/execute'
+    | '/api/admin/automation/history'
+    | '/api/admin/automation/jobs'
     | '/api/admin/monitoring/alerts'
     | '/api/admin/monitoring/history'
     | '/api/admin/monitoring/status'
@@ -1341,6 +1376,9 @@ export interface FileRouteTypes {
     | '/_super/super/'
     | '/_authenticated/admin/mesas/cadastro'
     | '/_authenticated/admin/mesas/editor'
+    | '/api/admin/automation/execute'
+    | '/api/admin/automation/history'
+    | '/api/admin/automation/jobs'
     | '/api/admin/monitoring/alerts'
     | '/api/admin/monitoring/history'
     | '/api/admin/monitoring/status'
@@ -1422,6 +1460,9 @@ export interface RootRouteChildren {
   DevProtoMotoboyRoute: typeof DevProtoMotoboyRoute
   DevProtoPdvRoute: typeof DevProtoPdvRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
+  ApiAdminAutomationExecuteRoute: typeof ApiAdminAutomationExecuteRoute
+  ApiAdminAutomationHistoryRoute: typeof ApiAdminAutomationHistoryRoute
+  ApiAdminAutomationJobsRoute: typeof ApiAdminAutomationJobsRoute
   ApiAdminMonitoringAlertsRoute: typeof ApiAdminMonitoringAlertsRoute
   ApiAdminMonitoringHistoryRoute: typeof ApiAdminMonitoringHistoryRoute
   ApiAdminMonitoringStatusRoute: typeof ApiAdminMonitoringStatusRoute
@@ -2169,6 +2210,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAdminMonitoringAlertsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/admin/automation/jobs': {
+      id: '/api/admin/automation/jobs'
+      path: '/api/admin/automation/jobs'
+      fullPath: '/api/admin/automation/jobs'
+      preLoaderRoute: typeof ApiAdminAutomationJobsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/automation/history': {
+      id: '/api/admin/automation/history'
+      path: '/api/admin/automation/history'
+      fullPath: '/api/admin/automation/history'
+      preLoaderRoute: typeof ApiAdminAutomationHistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/automation/execute': {
+      id: '/api/admin/automation/execute'
+      path: '/api/admin/automation/execute'
+      fullPath: '/api/admin/automation/execute'
+      preLoaderRoute: typeof ApiAdminAutomationExecuteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/admin/mesas/editor': {
       id: '/_authenticated/admin/mesas/editor'
       path: '/editor'
@@ -2361,6 +2423,9 @@ const rootRouteChildren: RootRouteChildren = {
   DevProtoMotoboyRoute: DevProtoMotoboyRoute,
   DevProtoPdvRoute: DevProtoPdvRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
+  ApiAdminAutomationExecuteRoute: ApiAdminAutomationExecuteRoute,
+  ApiAdminAutomationHistoryRoute: ApiAdminAutomationHistoryRoute,
+  ApiAdminAutomationJobsRoute: ApiAdminAutomationJobsRoute,
   ApiAdminMonitoringAlertsRoute: ApiAdminMonitoringAlertsRoute,
   ApiAdminMonitoringHistoryRoute: ApiAdminMonitoringHistoryRoute,
   ApiAdminMonitoringStatusRoute: ApiAdminMonitoringStatusRoute,

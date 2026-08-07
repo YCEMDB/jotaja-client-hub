@@ -171,6 +171,123 @@ export type Database = {
           },
         ]
       }
+      automation_execution_logs: {
+        Row: {
+          action: string
+          created_at: string
+          details: Json | null
+          error: string | null
+          id: string
+          job_id: string
+          result: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          details?: Json | null
+          error?: string | null
+          id?: string
+          job_id: string
+          result: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          details?: Json | null
+          error?: string | null
+          id?: string
+          job_id?: string
+          result?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_execution_logs_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "automation_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automation_jobs: {
+        Row: {
+          attempts: number
+          completed_at: string | null
+          created_at: string
+          deduplication_key: string
+          error: string | null
+          id: string
+          max_attempts: number
+          payload: Json
+          priority: string
+          restaurant_id: string | null
+          result: Json | null
+          source_incident_id: string | null
+          started_at: string | null
+          status: string
+          type: string
+          updated_at: string | null
+        }
+        Insert: {
+          attempts?: number
+          completed_at?: string | null
+          created_at?: string
+          deduplication_key: string
+          error?: string | null
+          id?: string
+          max_attempts?: number
+          payload?: Json
+          priority?: string
+          restaurant_id?: string | null
+          result?: Json | null
+          source_incident_id?: string | null
+          started_at?: string | null
+          status?: string
+          type: string
+          updated_at?: string | null
+        }
+        Update: {
+          attempts?: number
+          completed_at?: string | null
+          created_at?: string
+          deduplication_key?: string
+          error?: string | null
+          id?: string
+          max_attempts?: number
+          payload?: Json
+          priority?: string
+          restaurant_id?: string | null
+          result?: Json | null
+          source_incident_id?: string | null
+          started_at?: string | null
+          status?: string
+          type?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_jobs_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automation_jobs_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automation_jobs_source_incident_id_fkey"
+            columns: ["source_incident_id"]
+            isOneToOne: false
+            referencedRelation: "financial_incidents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cash_movements: {
         Row: {
           amount: number
