@@ -31,9 +31,15 @@ async function runWebhookTests() {
       type: "payment.created" 
     })
   });
-  const validData = await resValid.json();
+  const validText = await resValid.text();
   console.log(`Status: ${resValid.status} (Esperado: 202)`);
-  console.log(`Mensagem: ${validData.message}`);
+  try {
+    const validData = JSON.parse(validText);
+    console.log(`Mensagem: ${validData.message}`);
+  } catch (e) {
+    console.log(`Resposta não-JSON: ${validText.slice(0, 100)}...`);
+  }
+
 
   // 3. Teste: Duplicidade
   console.log("\n[TESTE 3] Evento Duplicado...");

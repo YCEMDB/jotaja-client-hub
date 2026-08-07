@@ -77,7 +77,7 @@ export async function handlePaymentWebhook(
     await supabase
       .from("payment_provider_webhook_logs" as any)
       .update({ 
-        account_id: accountData.id || null, // Se a RPC não retornar ID, precisaremos ajustar a RPC
+        account_id: accountData.id,
         status: accountData.is_active ? 'VALIDATED' : 'IGNORED'
       } as any)
       .eq("id", logId);
