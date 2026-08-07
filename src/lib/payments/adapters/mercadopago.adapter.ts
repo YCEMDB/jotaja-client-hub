@@ -35,6 +35,7 @@ export const MercadoPagoAdapter: IMesivoPaymentProvider = {
         public_key: exchange.public_key,
         merchant_id: exchange.user_id 
       }
+    };
   },
   
   async refreshToken(_restaurantId: string, refreshToken: string) {
