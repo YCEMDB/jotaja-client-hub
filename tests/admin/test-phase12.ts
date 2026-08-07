@@ -11,7 +11,7 @@ async function testPhase12() {
     const mockIncident = {
       id: crypto.randomUUID(),
       type: 'WORKER_FAILURE',
-      restaurant_id: crypto.randomUUID(),
+      restaurant_id: '83fe78f2-7366-4baf-afd8-0755dd73f00f',
       severity: 'HIGH',
       details: { process: 'payment-processor', error: 'Connection timeout' }
     };
