@@ -18,7 +18,7 @@ export class OperationalMetricsService {
 
     // 1. Basic volume from processed orders/payments
     const { data: txs, error } = await supabase
-      .from("financial_transactions")
+      .from("financial_transactions" as any)
       .select("amount, created_at")
       .eq("restaurant_id", restaurantId)
       .gte("created_at", startDateIso);
@@ -43,7 +43,7 @@ export class OperationalMetricsService {
 
     // 3. Active Payment Methods (from accounts)
     const { data: accounts } = await supabase
-      .from("restaurant_payment_accounts")
+      .from("restaurant_payment_accounts" as any)
       .select("provider")
       .eq("restaurant_id", restaurantId)
       .eq("status", "ACTIVE");

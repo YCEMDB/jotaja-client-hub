@@ -16,7 +16,7 @@ export class FinancialAnalyticsService {
   ): Promise<FinancialMetrics> {
     // 1. Fetch processed payments volume and count
     const { data: payments, error } = await supabase
-      .from("financial_transactions")
+      .from("financial_transactions" as any)
       .select("amount")
       .eq("restaurant_id", restaurantId)
       .gte("created_at", startDate)
@@ -30,7 +30,7 @@ export class FinancialAnalyticsService {
 
     // 2. Fetch payment attempts for rates (from processing logs)
     const { data: events, error: eventsError } = await supabase
-      .from("payment_processing_logs")
+      .from("payment_processing_logs" as any)
       .select("status")
       .eq("restaurant_id", restaurantId)
       .gte("created_at", startDate)
