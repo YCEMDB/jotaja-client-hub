@@ -1910,6 +1910,128 @@ export type Database = {
           },
         ]
       }
+      financial_reconciliation_logs: {
+        Row: {
+          created_at: string
+          details: Json | null
+          difference: number | null
+          expected_amount: number
+          financial_transaction_id: string | null
+          id: string
+          received_amount: number
+          restaurant_id: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          details?: Json | null
+          difference?: number | null
+          expected_amount: number
+          financial_transaction_id?: string | null
+          id?: string
+          received_amount: number
+          restaurant_id: string
+          status: string
+        }
+        Update: {
+          created_at?: string
+          details?: Json | null
+          difference?: number | null
+          expected_amount?: number
+          financial_transaction_id?: string | null
+          id?: string
+          received_amount?: number
+          restaurant_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "financial_reconciliation_logs_financial_transaction_id_fkey"
+            columns: ["financial_transaction_id"]
+            isOneToOne: false
+            referencedRelation: "financial_transactions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "financial_reconciliation_logs_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "financial_reconciliation_logs_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      financial_transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          external_payment_id: string
+          id: string
+          payment_event_id: number
+          provider: string
+          restaurant_id: string
+          settled_at: string | null
+          status: Database["public"]["Enums"]["financial_transaction_status"]
+          type: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string
+          external_payment_id: string
+          id?: string
+          payment_event_id: number
+          provider: string
+          restaurant_id: string
+          settled_at?: string | null
+          status?: Database["public"]["Enums"]["financial_transaction_status"]
+          type: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          external_payment_id?: string
+          id?: string
+          payment_event_id?: number
+          provider?: string
+          restaurant_id?: string
+          settled_at?: string | null
+          status?: Database["public"]["Enums"]["financial_transaction_status"]
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "financial_transactions_payment_event_id_fkey"
+            columns: ["payment_event_id"]
+            isOneToOne: true
+            referencedRelation: "payment_provider_webhook_logs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "financial_transactions_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "financial_transactions_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       global_announcements: {
         Row: {
           created_at: string
@@ -2629,6 +2751,9 @@ export type Database = {
           account_id: string | null
           attempts: number | null
           created_at: string | null
+          financial_processing_attempts: number | null
+          financial_processing_error: string | null
+          financial_processing_status: string | null
           headers: Json | null
           id: number
           last_error: string | null
@@ -2642,6 +2767,9 @@ export type Database = {
           account_id?: string | null
           attempts?: number | null
           created_at?: string | null
+          financial_processing_attempts?: number | null
+          financial_processing_error?: string | null
+          financial_processing_status?: string | null
           headers?: Json | null
           id?: number
           last_error?: string | null
@@ -2655,6 +2783,9 @@ export type Database = {
           account_id?: string | null
           attempts?: number | null
           created_at?: string | null
+          financial_processing_attempts?: number | null
+          financial_processing_error?: string | null
+          financial_processing_status?: string | null
           headers?: Json | null
           id?: number
           last_error?: string | null
@@ -6085,6 +6216,11 @@ export type Database = {
         | "refunded"
         | "partially_refunded"
         | "failed"
+      financial_transaction_status:
+        | "PENDING"
+        | "SETTLED"
+        | "FAILED"
+        | "REVERSED"
       lead_status: "new" | "contacted" | "approved" | "rejected"
       order_status:
         | "pending"
@@ -6310,6 +6446,12 @@ export const Constants = {
         "refunded",
         "partially_refunded",
         "failed",
+      ],
+      financial_transaction_status: [
+        "PENDING",
+        "SETTLED",
+        "FAILED",
+        "REVERSED",
       ],
       lead_status: ["new", "contacted", "approved", "rejected"],
       order_status: [
