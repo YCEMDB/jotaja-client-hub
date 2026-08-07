@@ -27,7 +27,7 @@ import { toast } from "sonner";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
-import { mercadopagoConnectInit, createTestMercadoPagoPix, mercadopagoUseSandboxCredentials } from "@/lib/payments/mercadopago.functions";
+import { mercadopagoConnectInit, createTestMercadoPagoPix, mercadopagoUseSandboxCredentials, mercadopagoDisconnect } from "@/lib/payments/mercadopago.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/configuracoes")({
   component: ConfigPage,
