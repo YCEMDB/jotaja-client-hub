@@ -24,18 +24,35 @@ export interface InternalPaymentEvent {
  */
 export const PaymentNormalizer = {
   normalize(provider: PaymentProvider, accountId: string, restaurantId: string, rawEvent: any): InternalPaymentEvent {
-    // Mapeamento básico comum extraído do adapter
+    let eventType = rawEvent.action || rawEvent.type || "unknown";
+    let status: PaymentEventStatus = 'PENDING';
+    let amount = rawEvent.data?.transaction_amount || rawEvent.transaction_amount;
+    let externalEventId = String(rawEvent.id || rawEvent.data?.id || Date.now());
+
+    // Mapeamento específico Mercado Pago
+    if (provider === 'mercadopago') {
+      if (eventType === 'payment.created') status = 'PENDING';
+      if (eventType === 'payment.updated') {
+        const mpStatus = rawEvent.data?.status || rawEvent.status;
+        if (mpStatus === 'approved') status = 'PAID';
+        if (mpStatus === 'rejected' || mpStatus === 'cancelled') status = 'FAILED';
+        if (mpStatus === 'refunded') status = 'REFUNDED';
+        if (mpStatus === 'in_process') status = 'AUTHORIZED';
+      }
+    }
+
     return {
       id: crypto.randomUUID(),
       provider,
       restaurant_id: restaurantId,
       account_id: accountId,
-      external_event_id: String(rawEvent.id || rawEvent.data?.id || Date.now()),
-      event_type: rawEvent.action || rawEvent.type || "unknown",
-      status: 'PENDING', // Default, será refinado pelo processador
-      occurred_at: new Date().toISOString(),
-      amount: rawEvent.data?.transaction_amount || rawEvent.transaction_amount,
+      external_event_id: externalEventId,
+      event_type: eventType,
+      status,
+      occurred_at: new Date().toISOString(), // Idealmente extraído do payload se disponível
+      amount: amount ? Number(amount) : undefined,
       currency: rawEvent.data?.currency_id || rawEvent.currency_id || 'BRL'
     };
   }
+
 };
