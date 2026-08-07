@@ -5822,6 +5822,10 @@ export type Database = {
         Args: { p_account_id: string; p_worker_id: string }
         Returns: boolean
       }
+      try_acquire_webhook_processing_lock: {
+        Args: { _webhook_log_id: number; _worker_id: string }
+        Returns: boolean
+      }
       unaccent_immutable: { Args: { "": string }; Returns: string }
       unaccent_safe: { Args: { t: string }; Returns: string }
       unassign_driver: {

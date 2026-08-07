@@ -14,13 +14,21 @@ export async function testPaymentProcessingFlow() {
       provider: 'mercadopago',
       provider_event_id: testId,
       payload: { id: testId, action: 'payment.created', type: 'payment' },
-      status: 'VALIDATED'
+      status: 'VALIDATED' as any
     })
     .select("id")
     .single();
 
   if (logErr) throw logErr;
   console.log(`Log criado com ID: ${log.id}`);
+
+  // Debug: check current status
+  const { data: check } = await supabaseAdmin
+    .from("payment_provider_webhook_logs")
+    .select("status")
+    .eq("id", log.id)
+    .single();
+  console.log(`Status inicial no banco: ${check?.status}`);
 
   // 2. Executar Worker
   await runPaymentEventWorker();
@@ -43,10 +51,10 @@ export async function testPaymentProcessingFlow() {
       provider: 'mercadopago',
       provider_event_id: testId,
       payload: {},
-      status: 'RECEIVED'
+      status: 'RECEIVED' as any
     });
   
-  const test2Passed = dupErr?.code === '23505'; // Unique violation
+  const test2Passed = dupErr?.code === '23505';
   console.log(`TEST 2 ${test2Passed ? 'PASSED' : 'FAILED'} (Duplicate blocked by DB)`);
 
   return {
