@@ -20,7 +20,7 @@ async function testConcurrency() {
   }
 
 
-  const accountId = accounts[0].id;
+  const accountId = accounts.id;
   const workerA = crypto.randomUUID();
   const workerB = crypto.randomUUID();
 
