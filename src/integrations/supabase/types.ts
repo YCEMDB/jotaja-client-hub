@@ -3273,6 +3273,7 @@ export type Database = {
           created_at: string | null
           id: string
           is_active: boolean | null
+          last_event_occurred_at: string | null
           provider: Database["public"]["Enums"]["payment_provider"]
           provider_account_id: string
           provider_capabilities: Json | null
@@ -3290,6 +3291,7 @@ export type Database = {
           created_at?: string | null
           id?: string
           is_active?: boolean | null
+          last_event_occurred_at?: string | null
           provider: Database["public"]["Enums"]["payment_provider"]
           provider_account_id: string
           provider_capabilities?: Json | null
@@ -3307,6 +3309,7 @@ export type Database = {
           created_at?: string | null
           id?: string
           is_active?: boolean | null
+          last_event_occurred_at?: string | null
           provider?: Database["public"]["Enums"]["payment_provider"]
           provider_account_id?: string
           provider_capabilities?: Json | null
@@ -5820,6 +5823,10 @@ export type Database = {
       }
       try_acquire_refresh_lock: {
         Args: { p_account_id: string; p_worker_id: string }
+        Returns: boolean
+      }
+      try_acquire_webhook_processing_lock: {
+        Args: { _webhook_log_id: number; _worker_id: string }
         Returns: boolean
       }
       unaccent_immutable: { Args: { "": string }; Returns: string }
