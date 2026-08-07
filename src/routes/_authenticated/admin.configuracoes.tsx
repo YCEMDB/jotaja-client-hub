@@ -719,6 +719,8 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
 
   const verify = useServerFn(verifyMercadoPago);
   const connectFn = useServerFn(mercadopagoConnectInit);
+  const disconnectPPFFn = useServerFn(mercadopagoDisconnect);
+
   const webhookUrl = typeof window !== "undefined" ? `${window.location.origin}/api/public/mercadopago-webhook` : "";
   const createTestPix = useServerFn(createTestMercadoPagoPix);
   const useSandboxFn = useServerFn(mercadopagoUseSandboxCredentials);
@@ -798,19 +800,31 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
   const disconnect = async () => {
     if (!confirm("Remover a conexão com o Mercado Pago? Pedidos via PIX serão pausados.")) return;
     setSaving(true);
-    const { error } = await supabase.rpc("set_restaurant_integration_secret", {
-      p_restaurant_id: r.id,
-      p_provider: "mercadopago",
-      p_value: null as unknown as string,
-    });
-    setSaving(false);
-    if (error) return toast.error(error.message);
-    setToken("");
-    setHasSavedToken(false);
-    setAccount(null);
-    toast.success("Mercado Pago desconectado");
-    onSaved();
+    
+    try {
+      // 1. Desconectar via Framework (Fase 3)
+      await disconnectPPFFn({ data: { restaurantId: r.id } });
+
+      // 2. Desconectar via legado (Compatibilidade Fase 3)
+      await supabase.rpc("set_restaurant_integration_secret", {
+        p_restaurant_id: r.id,
+        p_provider: "mercadopago",
+        p_value: null as unknown as string,
+      });
+
+      toast.success("Mercado Pago desconectado");
+      setToken("");
+      setHasSavedToken(false);
+      setAccount(null);
+      onSaved();
+    } catch (err: any) {
+      toast.error(err.message || "Erro ao desconectar");
+    } finally {
+      setSaving(false);
+    }
   };
+
+
 
 
 
