@@ -758,9 +758,11 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
       if (res.ok) {
         setAccount({
           environment: res.environment,
+          status: (res as any).status || 'active',
           nickname: res.account.nickname,
           email: res.account.email,
         });
+
         if (!silent) toast.success(`Conectado como ${res.account.nickname ?? res.account.email ?? "Mercado Pago"}`);
       } else {
         setAccount(null);
