@@ -104,6 +104,7 @@ import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/l
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
+import { Route as ApiPublicPaymentsMaintenanceRouteImport } from './routes/api/public/payments/maintenance'
 import { Route as ApiPublicPagbankCallbackRouteImport } from './routes/api/public/pagbank/callback'
 import { Route as ApiPublicMercadopagoCallbackRouteImport } from './routes/api/public/mercadopago/callback'
 import { Route as ApiPublicHooksCommunicationWorkerRouteImport } from './routes/api/public/hooks/communication-worker'
@@ -617,6 +618,12 @@ const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
   path: '/lovable/email/auth/preview',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicPaymentsMaintenanceRoute =
+  ApiPublicPaymentsMaintenanceRouteImport.update({
+    id: '/api/public/payments/maintenance',
+    path: '/api/public/payments/maintenance',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicPagbankCallbackRoute =
   ApiPublicPagbankCallbackRouteImport.update({
     id: '/api/public/pagbank/callback',
@@ -754,6 +761,7 @@ export interface FileRoutesByFullPath {
   '/api/public/hooks/communication-worker': typeof ApiPublicHooksCommunicationWorkerRoute
   '/api/public/mercadopago/callback': typeof ApiPublicMercadopagoCallbackRoute
   '/api/public/pagbank/callback': typeof ApiPublicPagbankCallbackRoute
+  '/api/public/payments/maintenance': typeof ApiPublicPaymentsMaintenanceRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
@@ -856,6 +864,7 @@ export interface FileRoutesByTo {
   '/api/public/hooks/communication-worker': typeof ApiPublicHooksCommunicationWorkerRoute
   '/api/public/mercadopago/callback': typeof ApiPublicMercadopagoCallbackRoute
   '/api/public/pagbank/callback': typeof ApiPublicPagbankCallbackRoute
+  '/api/public/payments/maintenance': typeof ApiPublicPaymentsMaintenanceRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
@@ -961,6 +970,7 @@ export interface FileRoutesById {
   '/api/public/hooks/communication-worker': typeof ApiPublicHooksCommunicationWorkerRoute
   '/api/public/mercadopago/callback': typeof ApiPublicMercadopagoCallbackRoute
   '/api/public/pagbank/callback': typeof ApiPublicPagbankCallbackRoute
+  '/api/public/payments/maintenance': typeof ApiPublicPaymentsMaintenanceRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
@@ -1065,6 +1075,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/communication-worker'
     | '/api/public/mercadopago/callback'
     | '/api/public/pagbank/callback'
+    | '/api/public/payments/maintenance'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
@@ -1167,6 +1178,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/communication-worker'
     | '/api/public/mercadopago/callback'
     | '/api/public/pagbank/callback'
+    | '/api/public/payments/maintenance'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
@@ -1271,6 +1283,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/communication-worker'
     | '/api/public/mercadopago/callback'
     | '/api/public/pagbank/callback'
+    | '/api/public/payments/maintenance'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
@@ -1346,6 +1359,7 @@ export interface RootRouteChildren {
   ApiPublicHooksCommunicationWorkerRoute: typeof ApiPublicHooksCommunicationWorkerRoute
   ApiPublicMercadopagoCallbackRoute: typeof ApiPublicMercadopagoCallbackRoute
   ApiPublicPagbankCallbackRoute: typeof ApiPublicPagbankCallbackRoute
+  ApiPublicPaymentsMaintenanceRoute: typeof ApiPublicPaymentsMaintenanceRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
   LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
   LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
@@ -2022,6 +2036,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LovableEmailAuthPreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/payments/maintenance': {
+      id: '/api/public/payments/maintenance'
+      path: '/api/public/payments/maintenance'
+      fullPath: '/api/public/payments/maintenance'
+      preLoaderRoute: typeof ApiPublicPaymentsMaintenanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/pagbank/callback': {
       id: '/api/public/pagbank/callback'
       path: '/api/public/pagbank/callback'
@@ -2238,6 +2259,7 @@ const rootRouteChildren: RootRouteChildren = {
     ApiPublicHooksCommunicationWorkerRoute,
   ApiPublicMercadopagoCallbackRoute: ApiPublicMercadopagoCallbackRoute,
   ApiPublicPagbankCallbackRoute: ApiPublicPagbankCallbackRoute,
+  ApiPublicPaymentsMaintenanceRoute: ApiPublicPaymentsMaintenanceRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
   LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
   LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,

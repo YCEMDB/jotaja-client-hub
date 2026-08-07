@@ -37,6 +37,26 @@ export const MercadoPagoAdapter: IMesivoPaymentProvider = {
       }
     };
   },
+  
+  async refreshToken(_restaurantId: string, refreshToken: string) {
+    const { refreshToken: mpRefreshToken } = await import("../mercadopago-api.server");
+    const refresh = await mpRefreshToken({ refreshToken });
+    
+    if (!refresh.ok) {
+      // Diferenciar erros definitivos para reautenticação
+      const isDefinitive = refresh.error === "invalid_grant" || refresh.status === 400 || refresh.status === 401;
+      throw new PaymentProviderError(
+        isDefinitive ? "reauthentication_required" : "refresh_failed", 
+        refresh.error
+      );
+    }
+
+    return {
+      accessToken: refresh.access_token,
+      refreshToken: refresh.refresh_token ?? undefined,
+      expiresAt: refresh.expires_in ? new Date(Date.now() + refresh.expires_in * 1000) : undefined,
+    };
+  },
 
   async disconnect(restaurantId: string) {
     const { error } = await supabase

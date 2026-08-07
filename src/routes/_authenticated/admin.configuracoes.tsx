@@ -712,9 +712,11 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
   const [testing, setTesting] = useState(false);
   const [account, setAccount] = useState<null | {
     environment: "production" | "sandbox";
+    status?: string;
     nickname: string | null;
     email: string | null;
   }>(null);
+
   const [copiedHook, setCopiedHook] = useState(false);
 
   const verify = useServerFn(verifyMercadoPago);
@@ -758,9 +760,11 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
       if (res.ok) {
         setAccount({
           environment: res.environment,
+          status: (res as any).status || 'active',
           nickname: res.account.nickname,
           email: res.account.email,
         });
+
         if (!silent) toast.success(`Conectado como ${res.account.nickname ?? res.account.email ?? "Mercado Pago"}`);
       } else {
         setAccount(null);
@@ -855,16 +859,21 @@ function PagamentosTab({ r, onSaved }: { r: Restaurant; onSaved: () => void }) {
             {loading || testing ? (
               <Badge variant="secondary" className="gap-1"><Loader2 className="h-3 w-3 animate-spin" /> verificando</Badge>
             ) : isConnected ? (
-              <Badge className="gap-1 bg-emerald-600 hover:bg-emerald-600 text-white">
+              <Badge className={`gap-1 border-2 border-ink ${
+                account.status === 'reauthentication_required' 
+                  ? "bg-amber-400 text-ink shadow-brutal" 
+                  : "bg-emerald-600 hover:bg-emerald-600 text-white shadow-brutal"
+              }`}>
                 <ShieldCheck className="h-3 w-3" />
-                {account.environment === "production" ? "Conectado" : "Conectado (Sandbox)"}
+                {account.status === 'reauthentication_required' ? "Ação Necessária" : (account.environment === "production" ? "Conectado" : "Conectado (Sandbox)")}
               </Badge>
             ) : isInvalid ? (
-              <Badge variant="destructive" className="gap-1"><ShieldAlert className="h-3 w-3" /> token inválido</Badge>
+              <Badge variant="destructive" className="gap-1 border-2 border-ink shadow-brutal"><ShieldAlert className="h-3 w-3" /> token inválido</Badge>
             ) : (
-              <Badge variant="outline">Não conectado</Badge>
+              <Badge variant="outline" className="border-2 border-ink shadow-brutal">Não conectado</Badge>
             )}
           </h3>
+
           <p className="text-sm text-muted-foreground mt-1">
             Conecte sua conta do Mercado Pago para gerar QR Codes PIX automáticos. O dinheiro cai direto na sua conta.
           </p>

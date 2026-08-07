@@ -260,24 +260,34 @@ export const verifyMercadoPago = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { supabase } = context;
 
-    // Enforce access via SECURITY DEFINER RPC (returns configured/status only)
-    const { data: status, error: statusErr } = await supabase.rpc("restaurant_mp_token_status", {
-      p_restaurant_id: data.restaurantId,
-    });
-    if (statusErr) {
-      console.error("[verifyMercadoPago] RPC Error:", statusErr);
-      return { ok: false as const, error: `Sem acesso a este restaurante: ${statusErr.message}` };
+    // 1. Verificar na infraestrutura nova (Fase 2+)
+    const { data: accountData } = await supabase
+      .from("restaurant_payment_accounts")
+      .select("id, provider_status, provider_environment")
+      .eq("restaurant_id", data.restaurantId)
+      .eq("provider", "mercadopago")
+      .maybeSingle();
+
+    // 2. Fallback para RPC legada se não encontrar na infra nova
+    let token = "";
+    if (accountData) {
+      const { data: secretData } = await supabaseAdmin.rpc("admin_get_restaurant_mp_token", {
+        p_restaurant_id: data.restaurantId,
+      });
+      token = ((secretData as string | null) ?? "").trim();
+    } else {
+      const { data: status } = await supabase.rpc("restaurant_mp_token_status", {
+        p_restaurant_id: data.restaurantId,
+      });
+      if ((status as { configured?: boolean })?.configured) {
+        const { data: tokenData } = await supabaseAdmin.rpc("admin_get_restaurant_mp_token", {
+          p_restaurant_id: data.restaurantId,
+        });
+        token = ((tokenData as string | null) ?? "").trim();
+      }
     }
-    if (!(status as { configured?: boolean })?.configured)
-      return { ok: false as const, error: "Nenhum Access Token configurado" };
 
-    // Fetch decrypted token server-side only
-    const { data: tokenData } = await supabaseAdmin.rpc("admin_get_restaurant_mp_token", {
-      p_restaurant_id: data.restaurantId,
-    });
-    const token = ((tokenData as string | null) ?? "").trim();
     if (!token) return { ok: false as const, error: "Nenhum Access Token configurado" };
-
 
     try {
       const res = await fetch("https://api.mercadopago.com/users/me", {
@@ -292,12 +302,12 @@ export const verifyMercadoPago = createServerFn({ method: "POST" })
         return { ok: false as const, error: body?.message ?? `Erro ${res.status} ao consultar Mercado Pago` };
       }
 
-      const env: "production" | "sandbox" =
-        token.startsWith("TEST-") ? "sandbox" : "production";
+      const env: "production" | "sandbox" = token.startsWith("TEST-") ? "sandbox" : "production";
 
       return {
         ok: true as const,
         environment: env,
+        status: accountData?.provider_status || 'active',
         account: {
           id: body?.id ? String(body.id) : null,
           nickname: body?.nickname ?? null,
@@ -311,4 +321,5 @@ export const verifyMercadoPago = createServerFn({ method: "POST" })
       return { ok: false as const, error: "Falha de rede ao contatar o Mercado Pago" };
     }
   });
+
 
