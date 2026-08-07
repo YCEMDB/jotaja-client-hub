@@ -84,7 +84,7 @@ export class FinancialMonitorService {
 
     if (error || !data || data.length === 0) return [];
 
-    return data.map(div => ({
+    return data.map((div: any) => ({
       type: 'RECONCILIATION_DIVERGENCE',
       severity: rule.severity,
       metric_value: 1,
