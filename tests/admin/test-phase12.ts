@@ -7,29 +7,34 @@ async function testPhase12() {
   console.log('--- Phase 12 Implementation Test (Admin Mode) ---');
 
   try {
-    // 1. Create a mock incident
-    const mockIncident = {
-      id: crypto.randomUUID(),
-      type: 'WORKER_FAILURE',
-      restaurant_id: '83fe78f2-7366-4baf-afd8-0755dd73f00f',
-      severity: 'HIGH',
-      details: { process: 'payment-processor', error: 'Connection timeout' }
-    };
+    // 1. Get valid restaurant
+    const { data: restaurants } = await supabase.from('restaurants').select('id').limit(1);
+    const restaurantId = restaurants?.[0]?.id;
+    if (!restaurantId) throw new Error('No restaurant found for testing');
 
-    console.log('Step 1: Handling incident...');
-    // We need to inject supabaseAdmin into the services for testing
-    // or ensure they use it. Since they use the default client, we'll
-    // manually create the job using the admin client for the test.
-    
-    const deduplicationKey = `incident:${mockIncident.id}:FAILED_PROCESS_RECOVERY`;
-    
+    // 2. Create a mock incident to satisfy foreign key
+    const mockIncidentId = crypto.randomUUID();
+    const { error: incidentError } = await supabase.from('financial_incidents').insert({
+      id: mockIncidentId,
+      type: 'WORKER_FAILURE',
+      severity: 'HIGH',
+      restaurant_id: restaurantId,
+      status: 'OPEN',
+      details: { process: 'payment-processor' }
+    });
+
+    if (incidentError) throw incidentError;
+    console.log('Mock incident created:', mockIncidentId);
+
+    // 3. Create Automation Job
+    const deduplicationKey = `incident:${mockIncidentId}:FAILED_PROCESS_RECOVERY`;
     const { data: job, error: createError } = await supabase
       .from('automation_jobs')
       .insert({
         type: 'FAILED_PROCESS_RECOVERY',
-        restaurant_id: mockIncident.restaurant_id,
-        source_incident_id: mockIncident.id,
-        payload: mockIncident.details,
+        restaurant_id: restaurantId,
+        source_incident_id: mockIncidentId,
+        payload: { process: 'payment-processor' },
         deduplication_key: deduplicationKey,
         status: 'PENDING',
         priority: 'HIGH',
@@ -39,13 +44,10 @@ async function testPhase12() {
       .select()
       .single();
 
-    if (createError) {
-      console.error('Error creating job with admin client:', createError);
-      throw createError;
-    }
-    console.log('Job created successfully with Admin Client:', job.id);
+    if (createError) throw createError;
+    console.log('Job created successfully:', job.id);
 
-    // 2. Test Idempotency (Admin Mode)
+    // 4. Test Idempotency
     console.log('Step 2: Testing idempotency...');
     const { error: dupError } = await supabase
       .from('automation_jobs')
@@ -56,35 +58,23 @@ async function testPhase12() {
       });
     
     if (!dupError || dupError.code !== '23505') {
-       throw new Error('Idempotency check failed: Duplicate key didn\'t trigger error');
+       throw new Error('Idempotency check failed: Duplicate key did not trigger error');
     }
     console.log('Idempotency verified.');
 
-    // 3. Execute job (We call the worker logic directly)
-    console.log('Step 3: Executing job...');
-    // Note: The services themselves use the public client which will fail RLS
-    // In a real serverFn, it runs with super_admin privileges.
-    // For this test, we verify the logic flow by using the admin client to update status
-    
-    await supabase.from('automation_jobs').update({ status: 'RUNNING' }).eq('id', job.id);
+    // 5. Verify manual execution flow (mocking worker steps via admin)
+    console.log('Step 3: Verifying execution flow...');
+    await supabase.from('automation_jobs').update({ status: 'RUNNING', started_at: new Date().toISOString() }).eq('id', job.id);
     await supabase.from('automation_jobs').update({ status: 'SUCCESS', completed_at: new Date().toISOString() }).eq('id', job.id);
 
-    // 4. Verify results
-    const { data: updatedJob } = await supabase
-      .from('automation_jobs')
-      .select('*')
-      .eq('id', job.id)
-      .single();
-
-    if (updatedJob?.status !== 'SUCCESS') {
-      throw new Error(`Job status update failed. Status: ${updatedJob?.status}`);
-    }
+    const { data: updatedJob } = await supabase.from('automation_jobs').select('*').eq('id', job.id).single();
+    if (updatedJob?.status !== 'SUCCESS') throw new Error('Status update failed');
     console.log('Job lifecycle verified.');
 
     console.log('--- Phase 12 Test Result: PASS ---');
   } catch (err: any) {
     console.error('--- Phase 12 Test Result: FAIL ---');
-    console.error(err.message);
+    console.error(err.message || err);
     process.exit(1);
   }
 }
