@@ -13,14 +13,14 @@ export const MercadoPagoAdapter = {
     
     // O buildAuthorizationUrl atual depende de ENV, vamos refatorar na Fase 3.
     // Usamos a função existente temporariamente até a abstração total.
-    const { buildAuthorizationUrl } = await import("./mercadopago-api.server");
+    const { buildAuthorizationUrl } = await import("../mercadopago-api.server");
     const urlRes = buildAuthorizationUrl({ state });
     if (!urlRes.ok) throw new Error("Credenciais Mercado Pago não configuradas.");
     return urlRes.url;
   },
 
   async exchangeAuthorizationCode(code: string, state: string, restaurantId: string) {
-    const { exchangeAuthorizationCode } = await import("./mercadopago-api.server");
+    const { exchangeAuthorizationCode } = await import("../mercadopago-api.server");
     const exchange = await exchangeAuthorizationCode({ code });
     if (!exchange.ok) throw new Error(exchange.error);
 
