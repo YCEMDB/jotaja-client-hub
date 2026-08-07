@@ -1,0 +1,1 @@
+ALTER TABLE public.automation_jobs ADD COLUMN updated_at timestamptz DEFAULT now();
