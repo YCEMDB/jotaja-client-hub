@@ -1,42 +1,54 @@
 import { supabase } from "@/integrations/supabase/client";
+import { IMesivoPaymentProvider, PaymentProviderError } from "../framework";
 
-/**
- * Adaptador para Mercado Pago seguindo o contrato universal.
- */
-export const MercadoPagoAdapter = {
-  async getAuthorizationUrl(restaurantId: string, state: string) {
-    const { data: initRes, error } = await supabase.rpc("mercadopago_connect_init" as any, {
+export const MercadoPagoAdapter: IMesivoPaymentProvider = {
+  async getAuthorizationUrl(restaurantId: string) {
+    // 1. Iniciar state universal (Fase 2 infra)
+    const { data: stateData, error: stateErr } = await supabase.rpc("save_payment_oauth_state" as any, {
       p_restaurant_id: restaurantId,
-      p_redirect_after: "/admin/configuracoes?tab=pagamentos",
+      p_provider: 'mercadopago',
+      p_redirect_after: "/admin/configuracoes?tab=pagamentos"
     });
-    if (error) throw new Error(error.message);
     
-    // O buildAuthorizationUrl atual depende de ENV, vamos refatorar na Fase 3.
-    // Usamos a função existente temporariamente até a abstração total.
+    if (stateErr) throw new PaymentProviderError("state_creation_failed", stateErr.message);
+    const state = (stateData as any).state;
+
     const { buildAuthorizationUrl } = await import("../mercadopago-api.server");
     const urlRes = buildAuthorizationUrl({ state });
-    if (!urlRes.ok) throw new Error("Credenciais Mercado Pago não configuradas.");
+    
+    if (!urlRes.ok) throw new PaymentProviderError("missing_credentials", "Mercado Pago Client ID/Secret not configured.");
     return urlRes.url;
   },
 
-  async exchangeAuthorizationCode(code: string, state: string, restaurantId: string) {
+  async exchangeAuthorizationCode(code: string, state: string) {
     const { exchangeAuthorizationCode } = await import("../mercadopago-api.server");
     const exchange = await exchangeAuthorizationCode({ code });
-    if (!exchange.ok) throw new Error(exchange.error);
+    
+    if (!exchange.ok) throw new PaymentProviderError("exchange_failed", exchange.error);
 
-    // O retorno deve ser mapeado para o contrato universal.
-    // accountId virá do provider_account_id da tabela.
     return {
-      accountId: exchange.user_id ?? "unknown",
+      providerAccountId: exchange.user_id ?? "unknown",
       accessToken: exchange.access_token,
       refreshToken: exchange.refresh_token ?? undefined,
       expiresAt: exchange.expires_in ? new Date(Date.now() + exchange.expires_in * 1000) : undefined,
-      metadata: { public_key: exchange.public_key }
+      metadata: { 
+        public_key: exchange.public_key,
+        merchant_id: exchange.user_id 
+      }
     };
   },
-  
-  async getAccount(accessToken: string) {
-     // A ser implementado conforme integração MP
-     return { providerAccountId: "unknown", metadata: {} };
+
+  async disconnect(restaurantId: string) {
+    const { error } = await supabase
+      .from("restaurant_payment_accounts")
+      .update({ 
+        provider_status: 'disconnected',
+        is_active: false,
+        updated_at: new Date().toISOString()
+      })
+      .eq("restaurant_id", restaurantId)
+      .eq("provider", 'mercadopago');
+      
+    if (error) throw new PaymentProviderError("disconnect_failed", error.message);
   }
 };

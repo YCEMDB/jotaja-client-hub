@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { exchangeAuthorizationCode } from "@/lib/payments/mercadopago-api.server";
+import { getProviderAdapter } from "@/lib/payments/framework";
 
 export const Route = createFileRoute("/api/public/mercadopago/callback")({
   server: {
@@ -14,35 +14,60 @@ export const Route = createFileRoute("/api/public/mercadopago/callback")({
 
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-        // Validar o state usando RPC para evitar erro de tipo na tabela que acabou de ser criada
-        const { data: states, error: stateErr } = await supabaseAdmin
-          .from("mercadopago_oauth_states" as any)
-          .select("*")
-          .eq("state", state)
-          .limit(1);
-
-        const stateRow = states?.[0];
-
-        if (stateErr || !stateRow || (stateRow as any).used_at) 
-          return redirectWithError(siteBase, "invalid_state");
-
-        const exchange = await exchangeAuthorizationCode({ code });
-        if (!exchange.ok) return redirectWithError(siteBase, "exchange_failed");
-
-        // Salvar as credenciais via RPC seguro
-        const { error: completeErr } = await supabaseAdmin.rpc("mercadopago_connect_complete" as any, {
+        // 1. Validar state universal (Fase 2)
+        const { data: stateRow, error: stateErr } = await supabaseAdmin.rpc("verify_and_consume_oauth_state" as any, {
           p_state: state,
-          p_access_token: exchange.access_token,
-          p_refresh_token: exchange.refresh_token,
-          p_public_key: exchange.public_key,
-          p_merchant_id: exchange.user_id,
-        } as any);
+          p_provider: 'mercadopago'
+        });
 
-        if (completeErr) return redirectWithError(siteBase, "save_failed");
+        if (stateErr || !stateRow) {
+          console.error("[MP Callback] State validation failed:", stateErr);
+          return redirectWithError(siteBase, "invalid_state");
+        }
 
-        const dest = new URL((stateRow as any).redirect_after ?? "/admin/configuracoes?tab=pagamentos", siteBase);
-        dest.searchParams.set("mercadopago", "connected");
-        return Response.redirect(dest.toString(), 302);
+        const restaurantId = (stateRow as any).restaurant_id;
+
+        try {
+          // 2. Usar o Adapter universal
+          const adapter = await getProviderAdapter('mercadopago');
+          const connection = await adapter.exchangeAuthorizationCode(code, state);
+
+          // 3. Persistir conta (Fase 2)
+          const { data: account, error: accErr } = await supabaseAdmin
+            .from("restaurant_payment_accounts")
+            .upsert({
+              restaurant_id: restaurantId,
+              provider: 'mercadopago',
+              provider_account_id: connection.providerAccountId,
+              provider_status: 'active',
+              provider_environment: connection.accessToken.startsWith('TEST-') ? 'sandbox' : 'production',
+              provider_metadata: connection.metadata,
+              is_active: true,
+              updated_at: new Date().toISOString()
+            })
+            .select("id")
+            .single();
+
+          if (accErr) throw accErr;
+
+          // 4. Persistir segredos via RPC segura (Vault-ready)
+          const { error: secretErr } = await supabaseAdmin.rpc("save_restaurant_payment_secrets", {
+            p_account_id: account.id,
+            p_access_token_enc: Buffer.from(connection.accessToken), // Idealmente criptografado aqui ou no DB
+            p_refresh_token_enc: connection.refreshToken ? Buffer.from(connection.refreshToken) : null,
+            p_expires_at: connection.expiresAt?.toISOString() || null,
+            p_scopes: []
+          });
+
+          if (secretErr) throw secretErr;
+
+          const dest = new URL((stateRow as any).redirect_after ?? "/admin/configuracoes?tab=pagamentos", siteBase);
+          dest.searchParams.set("mercadopago", "connected");
+          return Response.redirect(dest.toString(), 302);
+        } catch (err: any) {
+          console.error("[MP Callback] Error:", err);
+          return redirectWithError(siteBase, err.code || "connection_failed");
+        }
       },
     },
   },
@@ -53,3 +78,4 @@ function redirectWithError(siteBase: string, code: string): Response {
   dest.searchParams.set("mercadopago_error", code);
   return Response.redirect(dest.toString(), 302);
 }
+
