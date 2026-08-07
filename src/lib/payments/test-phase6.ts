@@ -7,7 +7,7 @@ export async function testPaymentProcessingFlow() {
 
   console.log("--- TEST 1: Evento VALIDATED processado ---");
   
-  // 1. Criar um log VALIDATED fake (simulando Mercado Pago)
+  // 1. Criar um log VALIDATED fake
   const { data: log, error: logErr } = await supabaseAdmin
     .from("payment_provider_webhook_logs")
     .insert({

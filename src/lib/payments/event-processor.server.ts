@@ -24,10 +24,16 @@ export async function processPaymentEvent(webhookLogId: number, workerId: string
     _worker_id: workerId
   });
 
-  if (lockErr || !acquired) {
-    console.log(`[event-processor] Could not acquire lock for webhook ${webhookLogId}`);
+  if (lockErr) {
+    console.error(`[event-processor] Lock RPC error for webhook ${webhookLogId}:`, lockErr);
     return;
   }
+  
+  if (!acquired) {
+    console.log(`[event-processor] Could not acquire lock for webhook ${webhookLogId} (status might not be VALIDATED/FAILED)`);
+    return;
+  }
+
 
   try {
     // 2. Buscar dados do log
