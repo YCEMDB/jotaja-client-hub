@@ -150,7 +150,7 @@ export async function testPaymentProcessingFlow() {
     .single();
 
   console.log(`Status após 5 tentativas: ${finalLog5?.status}, Tentativas: ${finalLog5?.attempts}`);
-  const test5Passed = (finalLog5?.attempts || 0) >= 5;
+  const test5Passed = (finalLog5?.attempts || 0) === 5;
   console.log(`TEST 5 ${test5Passed ? 'PASSED' : 'FAILED'}`);
 
   console.log("\n--- TEST 6: Dois workers simultâneos (Atomic Lock) ---");
@@ -168,7 +168,7 @@ export async function testPaymentProcessingFlow() {
 
   // Rodar dois processos de processamento em paralelo
   const { processPaymentEvent } = await import("./event-processor.server");
-  const [res1, res2] = await Promise.all([
+  await Promise.allSettled([
     processPaymentEvent(log6!.id, "worker-1"),
     processPaymentEvent(log6!.id, "worker-2")
   ]);
@@ -183,6 +183,7 @@ export async function testPaymentProcessingFlow() {
   console.log(`Entradas PROCESSED encontradas: ${procLogs?.length}`);
   const test6Passed = procLogs?.length === 1;
   console.log(`TEST 6 ${test6Passed ? 'PASSED' : 'FAILED'}`);
+
 
   return {
     test1Passed,
