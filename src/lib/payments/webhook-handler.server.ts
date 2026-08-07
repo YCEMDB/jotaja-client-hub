@@ -105,8 +105,9 @@ export async function handlePaymentWebhook(
     };
 
   } catch (err: any) {
-    console.error(`[webhook-handler] Critical error: ${err.message}`);
-    return { status: 500, message: `Internal Server Error` };
+    console.error(`[webhook-handler] Critical error: ${err.message}`, err);
+    return { status: 500, message: `Internal Server Error: ${err.message}` };
+
   }
 }
 
