@@ -1,0 +1,93 @@
+import { supabase } from "@/integrations/supabase/client";
+
+/**
+ * Script de teste de concorrência para a Fase 4.
+ * Simula dois workers tentando adquirir o lock simultaneamente para a mesma conta.
+ */
+async function testConcurrency() {
+  console.log("=== INICIANDO TESTE DE CONCORRÊNCIA (FASE 4) ===");
+
+  // 1. Buscar uma conta ativa para o teste
+  const { data: accounts } = await supabase
+    .from("restaurant_payment_accounts")
+    .select("id, restaurant_id")
+    .eq("is_active", true)
+    .limit(1);
+
+  if (!accounts || accounts.length === 0) {
+    console.error("ERRO: Nenhuma conta ativa encontrada para o teste.");
+    return;
+  }
+
+  const accountId = accounts[0].id;
+  const workerA = crypto.randomUUID();
+  const workerB = crypto.randomUUID();
+
+  console.log(`Testando Conta: ${accountId}`);
+  console.log(`Worker A: ${workerA}`);
+  console.log(`Worker B: ${workerB}`);
+
+  // Teste 1: Aquisição simultânea
+  console.log("\n1. Teste: Aquisição Simultânea...");
+  const [resA, resB] = await Promise.all([
+    supabase.rpc("try_acquire_refresh_lock" as any, { p_account_id: accountId, p_worker_id: workerA }),
+    supabase.rpc("try_acquire_refresh_lock" as any, { p_account_id: accountId, p_worker_id: workerB })
+  ]);
+
+  console.log(`Worker A Lock: ${resA.data} ${resA.error ? resA.error.message : ""}`);
+  console.log(`Worker B Lock: ${resB.data} ${resB.error ? resB.error.message : ""}`);
+
+  const successCount = (resA.data ? 1 : 0) + (resB.data ? 1 : 0);
+  if (successCount === 1) {
+    console.log("RESULTADO: SUCESSO. Apenas um worker obteve o lock.");
+  } else {
+    console.error(`RESULTADO: FALHA. ${successCount} workers obtiveros o lock simultaneamente.`);
+  }
+
+  // Teste 2: Liberação indevida (B tenta liberar o lock de A)
+  console.log("\n2. Teste: Liberação Indevida (B tenta liberar o lock de A)...");
+  const winner = resA.data ? workerA : workerB;
+  const loser = resA.data ? workerB : workerA;
+
+  const { data: releaseByLoser } = await supabase.rpc("release_refresh_lock" as any, { 
+    p_account_id: accountId, 
+    p_worker_id: loser 
+  });
+  console.log(`Worker Perdedor tentou liberar: ${releaseByLoser}`);
+
+  const { data: checkLock } = await supabase
+    .from("restaurant_payment_accounts")
+    .select("refresh_locked_by")
+    .eq("id", accountId)
+    .single();
+
+  if (checkLock?.refresh_locked_by === winner) {
+    console.log("RESULTADO: SUCESSO. O lock permanece com o vencedor.");
+  } else {
+    console.error("RESULTADO: FALHA. O lock foi liberado ou alterado indevidamente.");
+  }
+
+  // Teste 3: Liberação correta
+  console.log("\n3. Teste: Liberação Correta...");
+  const { data: releaseByWinner } = await supabase.rpc("release_refresh_lock" as any, { 
+    p_account_id: accountId, 
+    p_worker_id: winner 
+  });
+  console.log(`Worker Vencedor liberou: ${releaseByWinner}`);
+
+  const { data: checkLockFinal } = await supabase
+    .from("restaurant_payment_accounts")
+    .select("refresh_locked_by, refresh_locked_at")
+    .eq("id", accountId)
+    .single();
+
+  if (!checkLockFinal?.refresh_locked_by && !checkLockFinal?.refresh_locked_at) {
+    console.log("RESULTADO: SUCESSO. Lock liberado corretamente.");
+  } else {
+    console.error("RESULTADO: FALHA. Lock ainda presente após liberação.");
+  }
+
+  console.log("\n=== FIM DOS TESTES ===");
+}
+
+testConcurrency();
