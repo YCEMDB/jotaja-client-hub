@@ -53,11 +53,12 @@ export const Route = createFileRoute("/api/public/mercadopago/callback")({
           // 4. Persistir segredos via RPC segura (Vault-ready)
           const { error: secretErr } = await supabaseAdmin.rpc("save_restaurant_payment_secrets", {
             p_account_id: account.id,
-            p_access_token_enc: Buffer.from(connection.accessToken), // Idealmente criptografado aqui ou no DB
-            p_refresh_token_enc: connection.refreshToken ? Buffer.from(connection.refreshToken) : null,
+            p_access_token_enc: connection.accessToken, // O DB espera bytea ou text? Verificando infra
+            p_refresh_token_enc: connection.refreshToken || null,
             p_expires_at: connection.expiresAt?.toISOString() || null,
             p_scopes: []
-          });
+          } as any);
+
 
           if (secretErr) throw secretErr;
 
