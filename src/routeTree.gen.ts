@@ -73,7 +73,6 @@ import { Route as DevProtoDashboardRouteImport } from './routes/dev.proto.dashbo
 import { Route as DevProtoCardapioRouteImport } from './routes/dev.proto.cardapio'
 import { Route as ApiPublicMercadopagoWebhookRouteImport } from './routes/api/public/mercadopago-webhook'
 import { Route as ApiPublic_domainCheckRouteImport } from './routes/api/public/__domain-check'
-import { Route as ApiAnalyticsFinancialSummaryRouteImport } from './routes/api/analytics/financial-summary'
 import { Route as SuperSuperPlanosRouteImport } from './routes/_super/super.planos'
 import { Route as SuperSuperLojasRouteImport } from './routes/_super/super.lojas'
 import { Route as SuperSuperLeadsRouteImport } from './routes/_super/super.leads'
@@ -448,12 +447,6 @@ const ApiPublic_domainCheckRoute = ApiPublic_domainCheckRouteImport.update({
   path: '/api/public',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiAnalyticsFinancialSummaryRoute =
-  ApiAnalyticsFinancialSummaryRouteImport.update({
-    id: '/api/analytics/financial-summary',
-    path: '/api/analytics/financial-summary',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const SuperSuperPlanosRoute = SuperSuperPlanosRouteImport.update({
   id: '/super/planos',
   path: '/super/planos',
@@ -759,7 +752,6 @@ export interface FileRoutesByFullPath {
   '/super/leads': typeof SuperSuperLeadsRoute
   '/super/lojas': typeof SuperSuperLojasRoute
   '/super/planos': typeof SuperSuperPlanosRoute
-  '/api/analytics/financial-summary': typeof ApiAnalyticsFinancialSummaryRoute
   '/api/public': typeof ApiPublic_domainCheckRoute
   '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
   '/dev/proto/cardapio': typeof DevProtoCardapioRoute
@@ -864,7 +856,6 @@ export interface FileRoutesByTo {
   '/super/leads': typeof SuperSuperLeadsRoute
   '/super/lojas': typeof SuperSuperLojasRoute
   '/super/planos': typeof SuperSuperPlanosRoute
-  '/api/analytics/financial-summary': typeof ApiAnalyticsFinancialSummaryRoute
   '/api/public': typeof ApiPublic_domainCheckRoute
   '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
   '/dev/proto/cardapio': typeof DevProtoCardapioRoute
@@ -972,7 +963,6 @@ export interface FileRoutesById {
   '/_super/super/leads': typeof SuperSuperLeadsRoute
   '/_super/super/lojas': typeof SuperSuperLojasRoute
   '/_super/super/planos': typeof SuperSuperPlanosRoute
-  '/api/analytics/financial-summary': typeof ApiAnalyticsFinancialSummaryRoute
   '/api/public/__domain-check': typeof ApiPublic_domainCheckRoute
   '/api/public/mercadopago-webhook': typeof ApiPublicMercadopagoWebhookRoute
   '/dev/proto/cardapio': typeof DevProtoCardapioRoute
@@ -1079,7 +1069,6 @@ export interface FileRouteTypes {
     | '/super/leads'
     | '/super/lojas'
     | '/super/planos'
-    | '/api/analytics/financial-summary'
     | '/api/public'
     | '/api/public/mercadopago-webhook'
     | '/dev/proto/cardapio'
@@ -1184,7 +1173,6 @@ export interface FileRouteTypes {
     | '/super/leads'
     | '/super/lojas'
     | '/super/planos'
-    | '/api/analytics/financial-summary'
     | '/api/public'
     | '/api/public/mercadopago-webhook'
     | '/dev/proto/cardapio'
@@ -1291,7 +1279,6 @@ export interface FileRouteTypes {
     | '/_super/super/leads'
     | '/_super/super/lojas'
     | '/_super/super/planos'
-    | '/api/analytics/financial-summary'
     | '/api/public/__domain-check'
     | '/api/public/mercadopago-webhook'
     | '/dev/proto/cardapio'
@@ -1373,7 +1360,6 @@ export interface RootRouteChildren {
   SegmentosHamburgueriaRoute: typeof SegmentosHamburgueriaRoute
   SegmentosPizzariaRoute: typeof SegmentosPizzariaRoute
   BlogIndexRoute: typeof BlogIndexRoute
-  ApiAnalyticsFinancialSummaryRoute: typeof ApiAnalyticsFinancialSummaryRoute
   ApiPublic_domainCheckRoute: typeof ApiPublic_domainCheckRoute
   ApiPublicMercadopagoWebhookRoute: typeof ApiPublicMercadopagoWebhookRoute
   DevProtoCardapioRoute: typeof DevProtoCardapioRoute
@@ -1847,13 +1833,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublic_domainCheckRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/analytics/financial-summary': {
-      id: '/api/analytics/financial-summary'
-      path: '/api/analytics/financial-summary'
-      fullPath: '/api/analytics/financial-summary'
-      preLoaderRoute: typeof ApiAnalyticsFinancialSummaryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_super/super/planos': {
       id: '/_super/super/planos'
       path: '/super/planos'
@@ -2288,7 +2267,6 @@ const rootRouteChildren: RootRouteChildren = {
   SegmentosHamburgueriaRoute: SegmentosHamburgueriaRoute,
   SegmentosPizzariaRoute: SegmentosPizzariaRoute,
   BlogIndexRoute: BlogIndexRoute,
-  ApiAnalyticsFinancialSummaryRoute: ApiAnalyticsFinancialSummaryRoute,
   ApiPublic_domainCheckRoute: ApiPublic_domainCheckRoute,
   ApiPublicMercadopagoWebhookRoute: ApiPublicMercadopagoWebhookRoute,
   DevProtoCardapioRoute: DevProtoCardapioRoute,
@@ -2316,3 +2294,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
