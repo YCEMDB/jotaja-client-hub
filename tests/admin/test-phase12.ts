@@ -1,7 +1,7 @@
-import { AutomationQueueService } from './src/lib/automation/automation-queue.service';
-import { AutomationWorkerService } from './src/lib/automation/automation-worker.service';
-import { FinancialAutomationService } from './src/lib/automation/financial-automation.service';
-import { supabase } from './src/integrations/supabase/client';
+import { AutomationQueueService } from '../../src/lib/automation/automation-queue.service';
+import { AutomationWorkerService } from '../../src/lib/automation/automation-worker.service';
+import { FinancialAutomationService } from '../../src/lib/automation/financial-automation.service';
+import { supabase } from '../../src/integrations/supabase/client';
 
 async function testPhase12() {
   console.log('--- Phase 12 Implementation Test ---');
