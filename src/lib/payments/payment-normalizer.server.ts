@@ -24,6 +24,8 @@ export interface InternalPaymentEvent {
  */
 export const PaymentNormalizer = {
   normalize(provider: PaymentProvider, accountId: string, restaurantId: string, rawEvent: any): InternalPaymentEvent {
+    if (rawEvent.force_error) throw new Error("Forced normalization error");
+
     let eventType = rawEvent.action || rawEvent.type || "unknown";
     let status: PaymentEventStatus = 'PENDING';
     let amount = rawEvent.data?.transaction_amount || rawEvent.transaction_amount;
