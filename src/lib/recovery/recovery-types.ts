@@ -62,6 +62,7 @@ export interface VerificationLog {
 export interface RestoreDrill {
   id: string;
   backup_id: string;
+  restaurant_id?: string;
   environment: string;
   drill_type: string;
   started_at: string;
