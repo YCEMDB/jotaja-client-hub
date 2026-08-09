@@ -22,8 +22,9 @@ export const getIncidents = createServerFn({ method: "GET" })
   });
 
 export const acknowledgeIncident = createServerFn({ method: "POST" })
-  .validator((data: { id: string }) => z.object({ id: z.string() }).parse(data))
+  .inputValidator((data: { id: string }) => data)
   .handler(async ({ data }) => {
+
     const { id } = data;
 
     const { error } = await supabaseAdmin
