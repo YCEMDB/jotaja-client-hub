@@ -141,8 +141,9 @@ export async function createPixCharge(input: {
     // em uma requisição que o MP identifica como sandbox ou vice-versa.
     const client = new MercadoPagoConfig({ 
       accessToken: input.accessToken,
-      options: { timeout: 10000 }
+      options: { timeout: 15000 }
     });
+
     
     const payment = new Payment(client);
     
