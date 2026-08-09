@@ -39,17 +39,8 @@ async function runTests() {
   console.log('SLO Evaluation Completed.');
 
   console.log('Step 4: Testing capacity engine...');
-  await CapacityService.recordCapacity({
-    resource_type: 'WEBHOOK_WORKER_QUEUE',
-    current_load: 5,
-    max_capacity: 100,
-    status: 'NORMAL',
-    timestamp: new Date().toISOString(),
-    details: { queue_name: 'webhooks' }
-  });
-  
-  const capacityAnalysis = await CapacityService.analyzeQueue('WEBHOOK_WORKER_QUEUE');
-  console.log('Capacity Analysis Status:', capacityAnalysis.status);
+  const capacityStatus = await CapacityService.analyzeQueue('WEBHOOKS', 50, 10);
+  console.log('Capacity Analysis Status:', capacityStatus);
 
   console.log('Step 5: Generating Reliability Score...');
   const snapshot = await ReliabilityScoreService.generateSnapshot('GLOBAL');
