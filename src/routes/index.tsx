@@ -82,9 +82,9 @@ function Index() {
         <main>
           {/* FASE 19 — ONDA 2
 
-MERCADO PAGO CARTÃO — PRODUCTION ACTIVATION
+MERCADO PAGO CARTÃO — PRODUÇÃO E VALIDAÇÃO FINAL
 
-A auditoria forense E2E da Onda 2 foi concluída.
+A Onda 2 foi previamente implementada e auditada.
 
 STATUS ATUAL:
 
@@ -94,11 +94,15 @@ A Onda 1 — Mercado Pago PIX permanece:
 
 🟢 PRODUCTION VERIFIED
 
-O objetivo desta etapa é exclusivamente ativar e validar o Mercado Pago Cartão em produção.
+OBJETIVO
 
-REGRA ABSOLUTA
+Ativar o Mercado Pago Cartão em produção e comprovar o fluxo financeiro completo com uma transação real e controlada.
 
-NÃO implementar novas funcionalidades.
+Esta execução NÃO deve implementar novas funcionalidades.
+
+REGRAS ABSOLUTAS
+
+NÃO alterar o PIX.
 
 NÃO implementar Refund.
 
@@ -106,43 +110,51 @@ NÃO implementar PagBank.
 
 NÃO iniciar Fase 20.
 
-NÃO alterar a arquitetura de pagamentos.
+NÃO refatorar o framework de pagamentos.
 
-NÃO alterar o fluxo PIX.
+NÃO recriar webhook, processing, settlement ou reconciliation.
 
-NÃO modificar as Fases 5–18 salvo se uma falha comprovada impedir a ativação.
+Reutilizar integralmente as estruturas existentes.
 
-1. CONFIGURAÇÃO DE PRODUÇÃO
+1. PRÉ-CHECK DE PRODUÇÃO
 
-Auditar e configurar somente o necessário para produção:
+Antes de alterar qualquer configuração, verificar:
 
-Mercado Pago Production credentials;
+credenciais Production do Mercado Pago;
 
 OAuth Production;
 
-redirect URI de produção;
+Redirect URI;
 
-webhook de produção;
+Webhook Production;
+
+URL pública do webhook;
+
+ambiente utilizado pelo adapter;
 
 secrets;
 
-ambiente;
+configuração do restaurante;
 
-URLs;
+conta Mercado Pago conectada.
 
-configuração do adapter.
+Não expor ou registrar secrets.
 
-Nunca colocar credenciais diretamente no código.
+Se qualquer configuração obrigatória estiver ausente:
 
-Nunca expor secrets no frontend.
+PARAR e informar exatamente o bloqueador.
 
-Nunca registrar tokens nos logs.
+Não criar mock para contornar o problema.
 
-2. OAUTH
+2. CONEXÃO DO RESTAURANTE
 
 Validar o fluxo real:
 
 Restaurante
+↓
+Configurações
+↓
+Pagamentos
 ↓
 Conectar Mercado Pago
 ↓
@@ -152,113 +164,211 @@ Autorização
 ↓
 Callback
 ↓
-Conta vinculada ao restaurant_id
+restaurant_payment_accounts
 ↓
 CONNECTED
 
 
-Confirmar que cada restaurante utiliza sua própria conta Mercado Pago.
+Confirmar que a conta Mercado Pago pertence ao restaurante correto.
 
-3. CARTÃO REAL
+3. TESTE CONTROLADO DE CARTÃO
 
-Realizar um teste controlado de produção.
+Executar uma transação de teste controlada no ambiente de produção, respeitando as condições e mecanismos oficiais do Mercado Pago.
 
-Fluxo:
+O teste deve comprovar:
 
-Cliente
-↓
 Checkout
 ↓
-Tokenização oficial Mercado Pago
+Tokenização
 ↓
-Mesivo Server Function
+Server Function
 ↓
 Mercado Pago Production
 ↓
 Autorização
 ↓
+Provider Payment ID
+
+
+Nunca armazenar:
+
+PAN;
+
+CVV;
+
+dados completos do cartão;
+
+tokens sensíveis em logs.
+
+4. WEBHOOK REAL
+
+Após a transação, verificar o recebimento do webhook real.
+
+Confirmar:
+
+endpoint correto;
+
+assinatura válida;
+
+evento persistido;
+
+provider payment ID;
+
+normalização;
+
+idempotência;
+
+processamento.
+
+Fluxo esperado:
+
+Mercado Pago
+↓
 Webhook
 ↓
-Processing
+payment_provider_webhook_logs
+↓
+PaymentNormalizer
+↓
+Event Processor
+
+
+5. PROCESSAMENTO
+
+Confirmar que o evento percorreu corretamente as Fases 5 e 6.
+
+Verificar:
+
+lock;
+
+estado;
+
+watermark;
+
+processamento;
+
+ausência de duplicidade;
+
+tratamento de eventos fora de ordem.
+
+6. SETTLEMENT
+
+Confirmar a passagem pela Fase 7.
+
+Validar:
+
+Pagamento aprovado
 ↓
 Settlement
 ↓
-Reconciliation
+financial_transactions
+
+
+Confirmar:
+
+payment_event_id;
+
+restaurant_id;
+
+provider_payment_id;
+
+amount;
+
+currency;
+
+unicidade.
+
+Resultado esperado:
+
+1 pagamento → 1 settlement
+
+7. RECONCILIATION
+
+Comparar os dados do Mercado Pago com os registros do Mesivo.
+
+Validar:
+
+valor;
+
+moeda;
+
+payment ID;
+
+status;
+
+settlement;
+
+taxas, quando disponíveis.
+
+Resultado esperado:
+
+MATCHED
+
+Se houver divergência:
+
+DIVERGENT
+
+Nunca mascarar a divergência.
+
+8. PEDIDO
+
+Confirmar que o pedido correspondente terminou no estado financeiro correto.
+
+Fluxo esperado:
+
+PENDING
 ↓
-Pedido PAID
+PAYMENT PROCESSING
+↓
+APPROVED
+↓
+PAID
 
-
-O teste deve utilizar uma operação autorizada e controlada.
-
-Não armazenar dados sensíveis do cartão.
-
-4. VALIDAR APROVAÇÃO
-
-Confirmar que o pagamento real:
-
-recebeu provider payment ID;
-
-foi aprovado;
-
-recebeu webhook;
-
-foi processado;
-
-atualizou o pedido;
-
-criou settlement;
-
-apareceu em financial_transactions;
-
-passou pela reconciliação.
-
-5. VALIDAR WEBHOOK
-
-Confirmar que o webhook de produção:
-
-chegou;
-
-teve assinatura validada;
-
-foi persistido;
-
-foi normalizado;
-
-foi processado;
-
-não gerou duplicidade.
-
-6. VALIDAR IDEMPOTÊNCIA
-
-Após o teste aprovado, verificar:
-
-1 pagamento
-1 evento financeiro
-1 settlement
-
-
-Confirmar que retries ou eventos duplicados não criaram novas transações.
-
-7. VALIDAR MULTI-TENANT
 
 Confirmar que:
 
+pedido não ficou pendente;
+
+pedido não foi pago duas vezes;
+
+nenhuma transação financeira duplicada foi criada.
+
+9. TESTE DE IDEMPOTÊNCIA
+
+Após o pagamento, verificar o comportamento diante de:
+
+webhook duplicado;
+
+retry;
+
+processamento repetido.
+
+Resultado obrigatório:
+
+1 provider payment
+1 payment event
+1 settlement
+1 financial transaction
+
+
+10. SEGURANÇA MULTI-TENANT
+
+Validar novamente:
+
 Restaurante A
-→ Mercado Pago A
-→ Pedido A
-→ Transação A
+↓
+Conta Mercado Pago A
+↓
+Pedido A
+↓
+Transação A
 
 
-Não pode acessar ou utilizar:
+Confirmar que nenhum dado ou credencial de outro restaurante pode ser utilizado.
 
-Mercado Pago B
-Pedido B
-Transação B
+11. REGRESSÃO DO PIX
 
-
-8. VALIDAR PIX APÓS ATIVAÇÃO
-
-Executar uma regressão mínima do PIX.
+Depois da ativação do cartão, executar uma verificação do fluxo PIX.
 
 Confirmar:
 
@@ -266,41 +376,23 @@ criação;
 
 webhook;
 
-processing;
+processamento;
 
 settlement;
 
 reconciliation.
 
-O resultado obrigatório é:
+Resultado obrigatório:
 
 🟢 PIX REGRESSION PASS
 
-Se houver qualquer regressão:
+Se o PIX quebrar:
 
-PARAR E REVERTER A ALTERAÇÃO.
+PARAR imediatamente e reverter somente a alteração responsável.
 
-9. OBSERVABILIDADE
+12. NÃO DECLARAR PRODUCTION VERIFIED SEM EVIDÊNCIA
 
-Confirmar integração com:
-
-Monitoring;
-
-Security;
-
-Governance;
-
-Incident Management;
-
-Reliability;
-
-Integrity.
-
-Qualquer erro crítico deve gerar evidência adequada nos mecanismos já existentes.
-
-10. NÃO DECLARAR SUCESSO PREMATURAMENTE
-
-Não considerar:
+Não utilizar como prova:
 
 build PASS;
 
@@ -308,104 +400,107 @@ type check PASS;
 
 sandbox PASS;
 
-payment request criada;
+documentação atualizada;
 
-como prova de produção.
+código implementado;
 
-A classificação PRODUCTION VERIFIED exige evidência do fluxo real:
+padrão request criada.
 
-Checkout
-→ Mercado Pago Production
-→ pagamento aprovado
-→ webhook real
-→ processamento
-→ settlement
-→ reconciliation
+A única classificação definitiva exige evidência do fluxo de produção.
 
-
-11. CHECKPOINT FINAL
+13. CHECKPOINT FINAL
 
 Gerar:
 
 FASE 19 — ONDA 2
 
-MERCADO PAGO CARTÃO — PRODUCTION ACTIVATION CHECKPOINT
+MERCADO PAGO CARTÃO — PRODUCTION VALIDATION CHECKPOINT
 
-OAuth Production
+Production Configuration
 
-Status.
+🟢 / 🟡 / 🔴
 
-Card Payment Production
+OAuth
 
-Status.
+🟢 / 🟡 / 🔴
+
+Card Payment
+
+🟢 / 🟡 / 🔴
 
 Tokenization
 
-Status.
+🟢 / 🟡 / 🔴
 
 Webhook
 
-Status.
+🟢 / 🟡 / 🔴
 
 Processing
 
-Status.
+🟢 / 🟡 / 🔴
 
 Settlement
 
-Status.
+🟢 / 🟡 / 🔴
 
 Reconciliation
 
-Status.
-
-Multi-Tenant
-
-Status.
+🟢 / 🟡 / 🔴
 
 Idempotency
 
-Status.
+🟢 / 🟡 / 🔴
+
+Multi-Tenant
+
+🟢 / 🟡 / 🔴
 
 Security
 
-Status.
+🟢 / 🟡 / 🔴
 
 PIX Regression
 
-Status.
+🟢 / 🟡 / 🔴
 
 Production E2E
 
-Status.
+🟢 / 🟡 / 🔴
 
-CLASSIFICAÇÃO
+RESULTADO FINAL
+
+Classificar obrigatoriamente como uma destas três opções:
 
 🟢 PRODUCTION VERIFIED
 
-Somente se o fluxo real completo tiver sido comprovado.
+Fluxo real completo comprovado.
 
-🟡 PRODUCTION CONFIGURED / VALIDATION PENDING
+🟡 PRODUCTION PENDING
 
-Se produção estiver configurada, mas ainda não houver transação real validada.
+Produção configurada, mas ainda sem evidência suficiente de transação real completa.
 
 🔴 NOT READY
 
-Se houver bloqueador.
+Existe bloqueador técnico.
 
-REGRA FINAL
+REGRA DE ENCERRAMENTO
 
 Se o resultado for:
 
 🟢 PRODUCTION VERIFIED
 
-então a Fase 19 — Onda 2 estará oficialmente concluída.
+marcar:
 
-Somente depois disso será permitido planejar a próxima etapa:
+FASE 19 — ONDA 2 — COMPLETE
 
-REFUND / ESTORNO
+e NÃO implementar mais nada nesta execução.
 
-Não implementar Refund nesta execução. */}
+O próximo trabalho será planejado separadamente:
+
+REFUND / ESTORNO DO MERCADO PAGO
+
+Se não houver possibilidade de realizar uma transação real neste momento, NÃO inventar evidência e NÃO declarar Production Verified. Registrar exatamente o que falta. */}
           <Hero />
           <Stats />
           <Bento />
