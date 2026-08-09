@@ -5,8 +5,7 @@ export const Route = createFileRoute('/api/admin/security/events')({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        const { data, error } = await supabase
-          .from('security_events')
+        const { data, error } = await (supabase.from('security_events' as any) as any)
           .select('*')
           .order('created_at', { ascending: false })
           .limit(50);

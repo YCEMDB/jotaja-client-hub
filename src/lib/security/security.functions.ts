@@ -3,14 +3,13 @@ import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 
 export const getSecurityEvents = createServerFn({ method: "GET" })
-  .input(z.object({
+  .validator((input: any) => z.object({
     limit: z.number().optional().default(50),
     offset: z.number().optional().default(0),
     type: z.string().optional()
-  }))
-  .handler(async ({ input }) => {
-    let query = supabase
-      .from('security_events')
+  }).parse(input))
+  .handler(async ({ data: input }) => {
+    let query = (supabase.from('security_events' as any) as any)
       .select('*')
       .order('created_at', { ascending: false })
       .range(input.offset, input.offset + input.limit - 1);
@@ -26,19 +25,18 @@ export const getSecurityEvents = createServerFn({ method: "GET" })
 
 export const getSecurityStatus = createServerFn({ method: "GET" })
   .handler(async () => {
-    const { data: events, error } = await supabase
-      .from('security_events')
+    const { data: events, error } = await (supabase.from('security_events' as any) as any)
       .select('severity, status')
       .eq('status', 'PENDING');
 
     if (error) throw error;
 
-    const criticalCount = events?.filter(e => e.severity === 'CRITICAL').length || 0;
-    const highCount = events?.filter(e => e.severity === 'HIGH').length || 0;
+    const criticalCount = (events as any[])?.filter(e => e.severity === 'CRITICAL').length || 0;
+    const highCount = (events as any[])?.filter(e => e.severity === 'HIGH').length || 0;
 
     return {
       status: criticalCount > 0 ? 'CRITICAL' : highCount > 0 ? 'WARNING' : 'HEALTHY',
-      pending_alerts: events?.length || 0,
+      pending_alerts: (events as any[])?.length || 0,
       critical_threats: criticalCount
     };
   });

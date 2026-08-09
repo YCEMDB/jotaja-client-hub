@@ -1,5 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import { ThreatEvent, ThreatCategory, ThreatSeverity, ThreatStatus } from "./security-types";
+import { ThreatCategory, ThreatSeverity, ThreatStatus } from "./security-types";
 import { GovernanceAuditService } from "@/lib/governance/governance-audit.service";
 
 export class SecurityAuditService {
@@ -31,8 +31,8 @@ export class SecurityAuditService {
   }) {
     const sanitizedMetadata = this.sanitize(params.metadata);
     
-    // 1. Log to security_events table
-    const { error } = await supabase.from('security_events').insert([{
+    // Log directly via supabase object to bypass type checking for the new table
+    const { error } = await (supabase.from('security_events' as any) as any).insert([{
       event_type: params.event_type,
       severity: params.severity,
       risk_score: params.risk_score,
@@ -48,7 +48,6 @@ export class SecurityAuditService {
       console.error('[SecurityAuditService] Failed to log security event:', error);
     }
 
-    // 2. Integration with Governance (Phase 13)
     if (params.actor_id && params.actor_role) {
       await GovernanceAuditService.logEvent({
         event_type: 'ADMIN_SECURITY_ACTION',
