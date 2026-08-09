@@ -17,7 +17,7 @@ export interface PlatformIncident {
   title: string;
   description: string | null;
   root_cause?: string | null;
-  affected_scope: 'GLOBAL' | 'TENANT';
+  affected_scope: string;
   restaurant_id?: string | null;
   started_at: string;
   acknowledged_at?: string | null;

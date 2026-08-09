@@ -3,6 +3,7 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { IncidentEngineService } from "./incidents/incident-engine.service";
 import { RecoveryService } from "./recovery/recovery.service";
 import { ObservabilityService } from "./observability/observability.service";
+import { z } from "zod";
 
 export const getPlatformHealth = createServerFn({ method: "GET" })
   .handler(async () => {
@@ -21,9 +22,9 @@ export const getIncidents = createServerFn({ method: "GET" })
   });
 
 export const acknowledgeIncident = createServerFn({ method: "POST" })
-  .input((data: { id: string }) => data)
-  .handler(async ({ input }) => {
-    const { id } = input;
+  .validator((data: { id: string }) => z.object({ id: z.string() }).parse(data))
+  .handler(async ({ data }) => {
+    const { id } = data;
 
     const { error } = await supabaseAdmin
       .from('platform_incidents')
@@ -36,13 +37,11 @@ export const acknowledgeIncident = createServerFn({ method: "POST" })
 
     if (error) throw error;
 
-
     await IncidentEngineService.addTimelineEvent(
       id,
       'INCIDENT_ACKNOWLEDGED',
       'Incident acknowledged by SuperAdmin'
     );
-
     
     return { success: true };
   });

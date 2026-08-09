@@ -3,7 +3,7 @@ export type RecoveryLevel = 'LEVEL-0' | 'LEVEL-1' | 'LEVEL-2' | 'LEVEL-3' | 'LEV
 export interface RecoveryAction {
   id: string;
   incident_id: string | null;
-  recovery_level: RecoveryLevel;
+  recovery_level: string;
   action_type: string;
   status: string;
   payload: any;
