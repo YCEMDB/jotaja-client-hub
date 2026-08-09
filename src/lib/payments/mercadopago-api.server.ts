@@ -216,13 +216,13 @@ export async function createCardCharge(input: {
     
     const payment = new Payment(client);
     
-    const payload = {
+    const payload: any = {
       transaction_amount: input.amount,
       token: input.token,
       description: input.description,
       installments: input.installments,
       payment_method_id: input.paymentMethodId,
-      issuer_id: input.issuerId,
+      issuer_id: input.issuerId ? Number(input.issuerId) : undefined,
       payer: {
         email: input.email,
       },
