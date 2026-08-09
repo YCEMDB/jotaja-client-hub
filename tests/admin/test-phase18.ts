@@ -7,9 +7,12 @@ async function testPhase18() {
   console.log("--- FASE 18 TEST SUITE ---");
 
   try {
+    const restaurantId = "83fe78f2-7366-4baf-afd8-0755dd73f00f";
+
     // 1. Register Backup
     console.log("1. Testing Backup Registration...");
     const { data: backup, error: regError } = await inventoryService.registerBackup({
+      restaurant_id: restaurantId,
       external_id: `test-backup-${Date.now()}`,
       provider: "SUPABASE",
       source: "TEST_SUITE",
@@ -67,7 +70,7 @@ async function testPhase18() {
 
     // 6. Readiness
     console.log("6. Testing Recovery Readiness...");
-    const readiness = await readinessService.measureReadiness();
+    const readiness = await readinessService.measureReadiness(restaurantId);
     console.log(`✅ Readiness status: ${readiness.status} (${readiness.readiness_score}%)`);
 
     console.log("\n--- FASE 18: ALL TESTS PASSED ---");
