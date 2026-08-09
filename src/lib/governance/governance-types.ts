@@ -29,6 +29,7 @@ export interface GovernanceMetadata {
   delta?: {
     before: any;
     after: any;
+    changes?: any;
   };
   ip?: string;
   user_agent?: string;

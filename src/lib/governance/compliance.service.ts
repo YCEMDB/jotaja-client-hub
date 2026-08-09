@@ -25,8 +25,7 @@ export class ComplianceService {
     const oneYearAgo = new Date();
     oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
     
-    const { count, error } = await supabaseAdmin
-      .from('platform_governance_events')
+    const { count, error } = await (supabaseAdmin.from as any)('platform_governance_events')
       .delete({ count: 'exact' })
       .lt('created_at', oneYearAgo.toISOString());
       

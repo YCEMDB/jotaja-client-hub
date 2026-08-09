@@ -113,6 +113,7 @@ import { Route as ApiPublicHooksCommunicationWorkerRouteImport } from './routes/
 import { Route as ApiAdminMonitoringStatusRouteImport } from './routes/api/admin/monitoring/status'
 import { Route as ApiAdminMonitoringHistoryRouteImport } from './routes/api/admin/monitoring/history'
 import { Route as ApiAdminMonitoringAlertsRouteImport } from './routes/api/admin/monitoring/alerts'
+import { Route as ApiAdminGovernanceEventsRouteImport } from './routes/api/admin/governance/events'
 import { Route as ApiAdminAutomationJobsRouteImport } from './routes/api/admin/automation/jobs'
 import { Route as ApiAdminAutomationHistoryRouteImport } from './routes/api/admin/automation/history'
 import { Route as ApiAdminAutomationExecuteRouteImport } from './routes/api/admin/automation/execute'
@@ -680,6 +681,12 @@ const ApiAdminMonitoringAlertsRoute =
     path: '/api/admin/monitoring/alerts',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiAdminGovernanceEventsRoute =
+  ApiAdminGovernanceEventsRouteImport.update({
+    id: '/api/admin/governance/events',
+    path: '/api/admin/governance/events',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiAdminAutomationJobsRoute = ApiAdminAutomationJobsRouteImport.update({
   id: '/api/admin/automation/jobs',
   path: '/api/admin/automation/jobs',
@@ -817,6 +824,7 @@ export interface FileRoutesByFullPath {
   '/api/admin/automation/execute': typeof ApiAdminAutomationExecuteRoute
   '/api/admin/automation/history': typeof ApiAdminAutomationHistoryRoute
   '/api/admin/automation/jobs': typeof ApiAdminAutomationJobsRoute
+  '/api/admin/governance/events': typeof ApiAdminGovernanceEventsRoute
   '/api/admin/monitoring/alerts': typeof ApiAdminMonitoringAlertsRoute
   '/api/admin/monitoring/history': typeof ApiAdminMonitoringHistoryRoute
   '/api/admin/monitoring/status': typeof ApiAdminMonitoringStatusRoute
@@ -928,6 +936,7 @@ export interface FileRoutesByTo {
   '/api/admin/automation/execute': typeof ApiAdminAutomationExecuteRoute
   '/api/admin/automation/history': typeof ApiAdminAutomationHistoryRoute
   '/api/admin/automation/jobs': typeof ApiAdminAutomationJobsRoute
+  '/api/admin/governance/events': typeof ApiAdminGovernanceEventsRoute
   '/api/admin/monitoring/alerts': typeof ApiAdminMonitoringAlertsRoute
   '/api/admin/monitoring/history': typeof ApiAdminMonitoringHistoryRoute
   '/api/admin/monitoring/status': typeof ApiAdminMonitoringStatusRoute
@@ -1042,6 +1051,7 @@ export interface FileRoutesById {
   '/api/admin/automation/execute': typeof ApiAdminAutomationExecuteRoute
   '/api/admin/automation/history': typeof ApiAdminAutomationHistoryRoute
   '/api/admin/automation/jobs': typeof ApiAdminAutomationJobsRoute
+  '/api/admin/governance/events': typeof ApiAdminGovernanceEventsRoute
   '/api/admin/monitoring/alerts': typeof ApiAdminMonitoringAlertsRoute
   '/api/admin/monitoring/history': typeof ApiAdminMonitoringHistoryRoute
   '/api/admin/monitoring/status': typeof ApiAdminMonitoringStatusRoute
@@ -1155,6 +1165,7 @@ export interface FileRouteTypes {
     | '/api/admin/automation/execute'
     | '/api/admin/automation/history'
     | '/api/admin/automation/jobs'
+    | '/api/admin/governance/events'
     | '/api/admin/monitoring/alerts'
     | '/api/admin/monitoring/history'
     | '/api/admin/monitoring/status'
@@ -1266,6 +1277,7 @@ export interface FileRouteTypes {
     | '/api/admin/automation/execute'
     | '/api/admin/automation/history'
     | '/api/admin/automation/jobs'
+    | '/api/admin/governance/events'
     | '/api/admin/monitoring/alerts'
     | '/api/admin/monitoring/history'
     | '/api/admin/monitoring/status'
@@ -1379,6 +1391,7 @@ export interface FileRouteTypes {
     | '/api/admin/automation/execute'
     | '/api/admin/automation/history'
     | '/api/admin/automation/jobs'
+    | '/api/admin/governance/events'
     | '/api/admin/monitoring/alerts'
     | '/api/admin/monitoring/history'
     | '/api/admin/monitoring/status'
@@ -1463,6 +1476,7 @@ export interface RootRouteChildren {
   ApiAdminAutomationExecuteRoute: typeof ApiAdminAutomationExecuteRoute
   ApiAdminAutomationHistoryRoute: typeof ApiAdminAutomationHistoryRoute
   ApiAdminAutomationJobsRoute: typeof ApiAdminAutomationJobsRoute
+  ApiAdminGovernanceEventsRoute: typeof ApiAdminGovernanceEventsRoute
   ApiAdminMonitoringAlertsRoute: typeof ApiAdminMonitoringAlertsRoute
   ApiAdminMonitoringHistoryRoute: typeof ApiAdminMonitoringHistoryRoute
   ApiAdminMonitoringStatusRoute: typeof ApiAdminMonitoringStatusRoute
@@ -2210,6 +2224,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAdminMonitoringAlertsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/admin/governance/events': {
+      id: '/api/admin/governance/events'
+      path: '/api/admin/governance/events'
+      fullPath: '/api/admin/governance/events'
+      preLoaderRoute: typeof ApiAdminGovernanceEventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/admin/automation/jobs': {
       id: '/api/admin/automation/jobs'
       path: '/api/admin/automation/jobs'
@@ -2426,6 +2447,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAdminAutomationExecuteRoute: ApiAdminAutomationExecuteRoute,
   ApiAdminAutomationHistoryRoute: ApiAdminAutomationHistoryRoute,
   ApiAdminAutomationJobsRoute: ApiAdminAutomationJobsRoute,
+  ApiAdminGovernanceEventsRoute: ApiAdminGovernanceEventsRoute,
   ApiAdminMonitoringAlertsRoute: ApiAdminMonitoringAlertsRoute,
   ApiAdminMonitoringHistoryRoute: ApiAdminMonitoringHistoryRoute,
   ApiAdminMonitoringStatusRoute: ApiAdminMonitoringStatusRoute,

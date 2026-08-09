@@ -39,8 +39,7 @@ export class GovernanceAuditService {
   }): Promise<void> {
     const sanitizedMetadata = this.sanitize(params.metadata || {});
 
-    const { error } = await supabaseAdmin
-      .from('platform_governance_events')
+    const { error } = await (supabaseAdmin.from as any)('platform_governance_events')
       .insert([{
         event_type: params.event_type,
         actor_id: params.actor_id,
@@ -55,8 +54,6 @@ export class GovernanceAuditService {
 
     if (error) {
       console.error('[GovernanceAuditService] Failed to log governance event:', error);
-      // We don't throw here to avoid breaking the main flow, 
-      // but in a real compliance system we might want to retry or alert.
     }
   }
 
@@ -70,8 +67,7 @@ export class GovernanceAuditService {
     limit?: number;
     offset?: number;
   }): Promise<GovernanceEvent[]> {
-    let query = supabaseAdmin
-      .from('platform_governance_events')
+    let query = (supabaseAdmin.from as any)('platform_governance_events')
       .select('*')
       .order('created_at', { ascending: false });
 
@@ -86,3 +82,4 @@ export class GovernanceAuditService {
     return data as GovernanceEvent[];
   }
 }
+
