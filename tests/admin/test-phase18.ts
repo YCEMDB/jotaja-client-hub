@@ -55,6 +55,7 @@ async function testPhase18() {
     console.log("5. Testing Restore Drill Registry...");
     const drill = await drillsService.registerDrill({
       backup_id: backup.id,
+      restaurant_id: restaurantId,
       environment: "SANDBOX",
       drill_type: "INTEGRITY_TEST",
       notes: "Automated test drill"

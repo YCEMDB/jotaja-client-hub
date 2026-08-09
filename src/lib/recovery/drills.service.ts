@@ -8,6 +8,7 @@ export class DrillsService {
       .from("restore_drills")
       .insert({
         backup_id: data.backup_id!,
+        restaurant_id: data.restaurant_id,
         environment: data.environment || "SANDBOX",
         drill_type: data.drill_type || "RESTORE_TEST",
         operator_id: data.operator_id,

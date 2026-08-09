@@ -4795,6 +4795,7 @@ export type Database = {
           observed_rpo_seconds: number | null
           observed_rto_seconds: number | null
           operator_id: string | null
+          restaurant_id: string | null
           result: Database["public"]["Enums"]["restore_drill_result"]
           started_at: string
         }
@@ -4810,6 +4811,7 @@ export type Database = {
           observed_rpo_seconds?: number | null
           observed_rto_seconds?: number | null
           operator_id?: string | null
+          restaurant_id?: string | null
           result?: Database["public"]["Enums"]["restore_drill_result"]
           started_at?: string
         }
@@ -4825,6 +4827,7 @@ export type Database = {
           observed_rpo_seconds?: number | null
           observed_rto_seconds?: number | null
           operator_id?: string | null
+          restaurant_id?: string | null
           result?: Database["public"]["Enums"]["restore_drill_result"]
           started_at?: string
         }
@@ -4834,6 +4837,20 @@ export type Database = {
             columns: ["backup_id"]
             isOneToOne: false
             referencedRelation: "backup_inventory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "restore_drills_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "restore_drills_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
             referencedColumns: ["id"]
           },
         ]
