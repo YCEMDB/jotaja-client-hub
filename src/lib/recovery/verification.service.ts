@@ -44,7 +44,7 @@ export class VerificationService {
         backup_id: backupId,
         status,
         checksum_status: checksumStatus,
-        observed_checksum: options.observed_checksum || options.observedChecksum,
+        observed_checksum: options.observedChecksum,
         duration_ms: duration,
         error_message: errorMessage,
         evidence: options.evidence || {},
