@@ -1,8 +1,9 @@
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
-import { IncidentEngineService } from "../../src/lib/incidents/incident-engine.service";
-import { RecoveryService } from "../../src/lib/recovery/recovery.service";
-import { ObservabilityService } from "../../src/lib/observability/observability.service";
+import { IncidentEngineService } from "@/lib/incidents/incident-engine.service";
+import { RecoveryService } from "@/lib/recovery/recovery.service";
+import { ObservabilityService } from "@/lib/observability/observability.service";
+
 
 
 async function runTests() {
