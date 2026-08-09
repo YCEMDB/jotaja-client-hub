@@ -6,9 +6,6 @@ import { ReliabilityScoreService } from "../../src/lib/reliability/reliability-s
 async function runTests() {
   console.log('🚀 Starting Phase 16 Test Suite...');
 
-  // Helper to wait for DB cache
-  const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
   console.log('Step 1: Recording baseline metrics...');
   
   // Record several latency metrics
@@ -38,8 +35,8 @@ async function runTests() {
   console.log('Latency Profile:', profile);
 
   console.log('Step 3: Evaluating SLOs...');
-  const sloResults = await SLOService.evaluateSLOs();
-  console.log('SLO Evaluation Results count:', sloResults.length);
+  await SLOService.evaluateSLOs();
+  console.log('SLO Evaluation Completed.');
 
   console.log('Step 4: Testing capacity engine...');
   await CapacityService.recordCapacity({
