@@ -1,13 +1,14 @@
-import { supabase } from "@/integrations/supabase/client";
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { BackupRecord, BackupStatus } from "./recovery-types";
 
 export class InventoryService {
   /**
    * Register a new backup in the inventory.
    * Ensures idempotency via provider + external_id.
+   * Uses supabaseAdmin to manage the inventory as this is a governance operation.
    */
   async registerBackup(data: Partial<BackupRecord>): Promise<{ data: BackupRecord | null; error: any }> {
-    const { data: record, error } = await supabase
+    const { data: record, error } = await supabaseAdmin
       .from("backup_inventory")
       .upsert(
         {
@@ -33,7 +34,7 @@ export class InventoryService {
   }
 
   async getBackupById(id: string): Promise<BackupRecord | null> {
-    const { data } = await supabase
+    const { data } = await supabaseAdmin
       .from("backup_inventory")
       .select("*")
       .eq("id", id)
@@ -43,7 +44,7 @@ export class InventoryService {
   }
 
   async listBackups(limit = 50): Promise<BackupRecord[]> {
-    const { data } = await supabase
+    const { data } = await supabaseAdmin
       .from("backup_inventory")
       .select("*")
       .order("created_at", { ascending: false })
@@ -58,7 +59,7 @@ export class InventoryService {
       update.evidence = evidence;
     }
     
-    await supabase
+    await supabaseAdmin
       .from("backup_inventory")
       .update(update)
       .eq("id", id);

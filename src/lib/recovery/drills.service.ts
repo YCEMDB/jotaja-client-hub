@@ -1,10 +1,10 @@
-import { supabase } from "@/integrations/supabase/client";
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { RestoreDrill, RestoreDrillResult } from "./recovery-types";
 import { IntegrityService } from "../integrity/integrity.service";
 
 export class DrillsService {
   async registerDrill(data: Partial<RestoreDrill>): Promise<RestoreDrill> {
-    const { data: record, error } = await supabase
+    const { data: record, error } = await supabaseAdmin
       .from("restore_drills")
       .insert({
         backup_id: data.backup_id!,
@@ -29,7 +29,7 @@ export class DrillsService {
     rpo?: number;
     evidence?: Record<string, any>;
   }): Promise<void> {
-    const { data: drill, error } = await supabase
+    const { data: drill, error } = await supabaseAdmin
       .from("restore_drills")
       .update({
         result,

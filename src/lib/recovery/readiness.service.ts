@@ -1,4 +1,4 @@
-import { supabase } from "@/integrations/supabase/client";
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { ReadinessSnapshot, ReadinessStatus } from "./recovery-types";
 import { inventoryService } from "./inventory.service";
 
@@ -36,7 +36,7 @@ export class ReadinessService {
     details.has_fresh_backup = hasFreshBackup;
     details.readiness_score = score;
 
-    const { data: snapshot, error } = await supabase
+    const { data: snapshot, error } = await supabaseAdmin
       .from("recovery_readiness_snapshots")
       .insert({
         status,
@@ -48,12 +48,6 @@ export class ReadinessService {
       .single();
 
     if (error) throw error;
-
-    // Send signals to Phase 11 (Monitoring) if not ready
-    if (status !== 'READY') {
-      // Logic to trigger alerts would go here
-      console.warn(`[RECOVERY ALERT] Readiness is ${status} with score ${score}`);
-    }
 
     return snapshot as unknown as ReadinessSnapshot;
   }

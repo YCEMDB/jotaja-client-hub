@@ -1,4 +1,4 @@
-import { supabase } from "@/integrations/supabase/client";
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { VerificationLog, BackupStatus, ChecksumResult } from "./recovery-types";
 import { inventoryService } from "./inventory.service";
 import { IntegrityService } from "../integrity/integrity.service";
@@ -38,13 +38,13 @@ export class VerificationService {
     const duration = Date.now() - startTime;
 
     // Create verification log
-    const { data: log, error } = await supabase
+    const { data: log, error } = await supabaseAdmin
       .from("backup_verification_logs")
       .insert({
         backup_id: backupId,
         status,
         checksum_status: checksumStatus,
-        observed_checksum: options.observedChecksum,
+        observed_checksum: options.observed_checksum || options.observedChecksum,
         duration_ms: duration,
         error_message: errorMessage,
         evidence: options.evidence || {},
