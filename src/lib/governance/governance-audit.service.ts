@@ -67,15 +67,14 @@ export class GovernanceAuditService {
     limit?: number;
     offset?: number;
   }): Promise<GovernanceEvent[]> {
-    let query = (supabaseAdmin.from as any)('platform_governance_events')
-      .select('*')
-      .order('created_at', { ascending: false });
+    const table = (supabaseAdmin.from as any)('platform_governance_events');
+    let query = table.select('*').order('created_at', { ascending: false });
 
-    if (filters.event_type) query = query.eq('event_type', filters.event_type);
-    if (filters.actor_id) query = query.eq('actor_id', filters.actor_id);
-    if (filters.restaurant_id) query = query.eq('restaurant_id', filters.restaurant_id);
+    if (filters.event_type) query = (query as any).eq('event_type', filters.event_type);
+    if (filters.actor_id) query = (query as any).eq('actor_id', filters.actor_id);
+    if (filters.restaurant_id) query = (query as any).eq('restaurant_id', filters.restaurant_id);
     
-    const { data, error } = await query
+    const { data, error } = await (query as any)
       .range(filters.offset || 0, (filters.offset || 0) + (filters.limit || 50) - 1);
 
     if (error) throw error;
