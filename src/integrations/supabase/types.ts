@@ -288,6 +288,36 @@ export type Database = {
           },
         ]
       }
+      backup_validation_logs: {
+        Row: {
+          backup_id: string | null
+          created_at: string
+          duration_ms: number | null
+          id: string
+          integrity_score: number | null
+          notes: string | null
+          status: string
+        }
+        Insert: {
+          backup_id?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          id?: string
+          integrity_score?: number | null
+          notes?: string | null
+          status: string
+        }
+        Update: {
+          backup_id?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          id?: string
+          integrity_score?: number | null
+          notes?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       cash_movements: {
         Row: {
           amount: number
@@ -3110,6 +3140,98 @@ export type Database = {
           },
         ]
       }
+      platform_incident_timeline: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          incident_id: string
+          message: string
+          metadata: Json | null
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          incident_id: string
+          message: string
+          metadata?: Json | null
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          incident_id?: string
+          message?: string
+          metadata?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_incident_timeline_incident_id_fkey"
+            columns: ["incident_id"]
+            isOneToOne: false
+            referencedRelation: "platform_incidents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_incidents: {
+        Row: {
+          acknowledged_at: string | null
+          affected_scope: string
+          closed_at: string | null
+          created_at: string
+          description: string | null
+          id: string
+          incident_key: string
+          metadata: Json | null
+          resolved_at: string | null
+          restaurant_id: string | null
+          root_cause: string | null
+          severity: Database["public"]["Enums"]["incident_severity"]
+          started_at: string
+          status: Database["public"]["Enums"]["incident_status"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          acknowledged_at?: string | null
+          affected_scope: string
+          closed_at?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          incident_key: string
+          metadata?: Json | null
+          resolved_at?: string | null
+          restaurant_id?: string | null
+          root_cause?: string | null
+          severity?: Database["public"]["Enums"]["incident_severity"]
+          started_at?: string
+          status?: Database["public"]["Enums"]["incident_status"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          acknowledged_at?: string | null
+          affected_scope?: string
+          closed_at?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          incident_key?: string
+          metadata?: Json | null
+          resolved_at?: string | null
+          restaurant_id?: string | null
+          root_cause?: string | null
+          severity?: Database["public"]["Enums"]["incident_severity"]
+          started_at?: string
+          status?: Database["public"]["Enums"]["incident_status"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       print_jobs: {
         Row: {
           attempts: number
@@ -3545,6 +3667,53 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      recovery_execution_logs: {
+        Row: {
+          action_type: string
+          actor_id: string | null
+          created_at: string
+          executed_at: string | null
+          id: string
+          incident_id: string | null
+          payload: Json | null
+          recovery_level: string
+          result: Json | null
+          status: string
+        }
+        Insert: {
+          action_type: string
+          actor_id?: string | null
+          created_at?: string
+          executed_at?: string | null
+          id?: string
+          incident_id?: string | null
+          payload?: Json | null
+          recovery_level: string
+          result?: Json | null
+          status: string
+        }
+        Update: {
+          action_type?: string
+          actor_id?: string | null
+          created_at?: string
+          executed_at?: string | null
+          id?: string
+          incident_id?: string | null
+          payload?: Json | null
+          recovery_level?: string
+          result?: Json | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recovery_execution_logs_incident_id_fkey"
+            columns: ["incident_id"]
+            isOneToOne: false
+            referencedRelation: "platform_incidents"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       restaurant_invites: {
         Row: {
@@ -6497,6 +6666,15 @@ export type Database = {
         | "SETTLED"
         | "FAILED"
         | "REVERSED"
+      incident_severity: "SEV-1" | "SEV-2" | "SEV-3" | "SEV-4"
+      incident_status:
+        | "DETECTED"
+        | "ACKNOWLEDGED"
+        | "INVESTIGATING"
+        | "MITIGATING"
+        | "RECOVERING"
+        | "RESOLVED"
+        | "CLOSED"
       lead_status: "new" | "contacted" | "approved" | "rejected"
       order_status:
         | "pending"
@@ -6728,6 +6906,16 @@ export const Constants = {
         "SETTLED",
         "FAILED",
         "REVERSED",
+      ],
+      incident_severity: ["SEV-1", "SEV-2", "SEV-3", "SEV-4"],
+      incident_status: [
+        "DETECTED",
+        "ACKNOWLEDGED",
+        "INVESTIGATING",
+        "MITIGATING",
+        "RECOVERING",
+        "RESOLVED",
+        "CLOSED",
       ],
       lead_status: ["new", "contacted", "approved", "rejected"],
       order_status: [
