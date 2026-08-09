@@ -288,6 +288,75 @@ export type Database = {
           },
         ]
       }
+      backup_inventory: {
+        Row: {
+          checksum: string | null
+          completed_at: string | null
+          created_at: string
+          environment: string
+          evidence: Json | null
+          external_id: string | null
+          id: string
+          metadata: Json | null
+          provider: string
+          restaurant_id: string | null
+          retention_until: string | null
+          scope: string
+          size_bytes: number | null
+          source: string
+          status: Database["public"]["Enums"]["backup_status"]
+        }
+        Insert: {
+          checksum?: string | null
+          completed_at?: string | null
+          created_at?: string
+          environment: string
+          evidence?: Json | null
+          external_id?: string | null
+          id?: string
+          metadata?: Json | null
+          provider: string
+          restaurant_id?: string | null
+          retention_until?: string | null
+          scope: string
+          size_bytes?: number | null
+          source: string
+          status?: Database["public"]["Enums"]["backup_status"]
+        }
+        Update: {
+          checksum?: string | null
+          completed_at?: string | null
+          created_at?: string
+          environment?: string
+          evidence?: Json | null
+          external_id?: string | null
+          id?: string
+          metadata?: Json | null
+          provider?: string
+          restaurant_id?: string | null
+          retention_until?: string | null
+          scope?: string
+          size_bytes?: number | null
+          source?: string
+          status?: Database["public"]["Enums"]["backup_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "backup_inventory_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "backup_inventory_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       backup_validation_logs: {
         Row: {
           backup_id: string | null
@@ -317,6 +386,53 @@ export type Database = {
           status?: string
         }
         Relationships: []
+      }
+      backup_verification_logs: {
+        Row: {
+          backup_id: string
+          checksum_status: Database["public"]["Enums"]["checksum_result"]
+          duration_ms: number | null
+          error_message: string | null
+          evidence: Json | null
+          id: string
+          integrity_reference_id: string | null
+          observed_checksum: string | null
+          status: Database["public"]["Enums"]["backup_status"]
+          verified_at: string
+        }
+        Insert: {
+          backup_id: string
+          checksum_status?: Database["public"]["Enums"]["checksum_result"]
+          duration_ms?: number | null
+          error_message?: string | null
+          evidence?: Json | null
+          id?: string
+          integrity_reference_id?: string | null
+          observed_checksum?: string | null
+          status: Database["public"]["Enums"]["backup_status"]
+          verified_at?: string
+        }
+        Update: {
+          backup_id?: string
+          checksum_status?: Database["public"]["Enums"]["checksum_result"]
+          duration_ms?: number | null
+          error_message?: string | null
+          evidence?: Json | null
+          id?: string
+          integrity_reference_id?: string | null
+          observed_checksum?: string | null
+          status?: Database["public"]["Enums"]["backup_status"]
+          verified_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "backup_verification_logs_backup_id_fkey"
+            columns: ["backup_id"]
+            isOneToOne: false
+            referencedRelation: "backup_inventory"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       cash_movements: {
         Row: {
@@ -3963,6 +4079,78 @@ export type Database = {
           },
         ]
       }
+      recovery_metrics: {
+        Row: {
+          id: string
+          measured_at: string
+          metadata: Json | null
+          metric_name: string
+          observed_value: number | null
+          status: string
+          target_value: number | null
+        }
+        Insert: {
+          id?: string
+          measured_at?: string
+          metadata?: Json | null
+          metric_name: string
+          observed_value?: number | null
+          status: string
+          target_value?: number | null
+        }
+        Update: {
+          id?: string
+          measured_at?: string
+          metadata?: Json | null
+          metric_name?: string
+          observed_value?: number | null
+          status?: string
+          target_value?: number | null
+        }
+        Relationships: []
+      }
+      recovery_readiness_snapshots: {
+        Row: {
+          details: Json
+          id: string
+          measured_at: string
+          readiness_score: number
+          restaurant_id: string | null
+          status: Database["public"]["Enums"]["recovery_readiness_status"]
+        }
+        Insert: {
+          details: Json
+          id?: string
+          measured_at?: string
+          readiness_score: number
+          restaurant_id?: string | null
+          status: Database["public"]["Enums"]["recovery_readiness_status"]
+        }
+        Update: {
+          details?: Json
+          id?: string
+          measured_at?: string
+          readiness_score?: number
+          restaurant_id?: string | null
+          status?: Database["public"]["Enums"]["recovery_readiness_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recovery_readiness_snapshots_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recovery_readiness_snapshots_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       restaurant_invites: {
         Row: {
           accepted_at: string | null
@@ -4590,6 +4778,79 @@ export type Database = {
             columns: ["plan_id"]
             isOneToOne: false
             referencedRelation: "app_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      restore_drills: {
+        Row: {
+          backup_id: string
+          completed_at: string | null
+          drill_type: string
+          environment: string
+          evidence: Json | null
+          id: string
+          integrity_reference_id: string | null
+          notes: string | null
+          observed_rpo_seconds: number | null
+          observed_rto_seconds: number | null
+          operator_id: string | null
+          restaurant_id: string | null
+          result: Database["public"]["Enums"]["restore_drill_result"]
+          started_at: string
+        }
+        Insert: {
+          backup_id: string
+          completed_at?: string | null
+          drill_type: string
+          environment: string
+          evidence?: Json | null
+          id?: string
+          integrity_reference_id?: string | null
+          notes?: string | null
+          observed_rpo_seconds?: number | null
+          observed_rto_seconds?: number | null
+          operator_id?: string | null
+          restaurant_id?: string | null
+          result?: Database["public"]["Enums"]["restore_drill_result"]
+          started_at?: string
+        }
+        Update: {
+          backup_id?: string
+          completed_at?: string | null
+          drill_type?: string
+          environment?: string
+          evidence?: Json | null
+          id?: string
+          integrity_reference_id?: string | null
+          notes?: string | null
+          observed_rpo_seconds?: number | null
+          observed_rto_seconds?: number | null
+          operator_id?: string | null
+          restaurant_id?: string | null
+          result?: Database["public"]["Enums"]["restore_drill_result"]
+          started_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "restore_drills_backup_id_fkey"
+            columns: ["backup_id"]
+            isOneToOne: false
+            referencedRelation: "backup_inventory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "restore_drills_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "restore_drills_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
             referencedColumns: ["id"]
           },
         ]
@@ -6858,8 +7119,18 @@ export type Database = {
     }
     Enums: {
       app_role: "super_admin" | "owner" | "employee" | "manager" | "driver"
+      backup_status:
+        | "EXPECTED"
+        | "CREATED"
+        | "AVAILABLE"
+        | "VERIFIED"
+        | "EXPIRED"
+        | "MISSING"
+        | "CORRUPTED"
+        | "FAILED"
       cash_movement_type: "sale" | "reinforcement" | "withdrawal" | "expense"
       cash_session_status: "open" | "closed"
+      checksum_result: "VALID" | "INVALID" | "NOT_AVAILABLE" | "NOT_VERIFIED"
       comm_category:
         | "orders"
         | "payment"
@@ -6944,7 +7215,15 @@ export type Database = {
         | "pagarme"
         | "paypal"
       payment_status: "pending" | "paid" | "failed" | "refunded" | "expired"
+      recovery_readiness_status: "READY" | "DEGRADED" | "NOT_READY" | "UNKNOWN"
       restaurant_plan: "trial" | "essential" | "professional"
+      restore_drill_result:
+        | "PLANNED"
+        | "RUNNING"
+        | "PASSED"
+        | "FAILED"
+        | "CANCELLED"
+        | "NOT_VERIFIED"
       stock_movement_type:
         | "entry"
         | "exit"
@@ -7093,8 +7372,19 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["super_admin", "owner", "employee", "manager", "driver"],
+      backup_status: [
+        "EXPECTED",
+        "CREATED",
+        "AVAILABLE",
+        "VERIFIED",
+        "EXPIRED",
+        "MISSING",
+        "CORRUPTED",
+        "FAILED",
+      ],
       cash_movement_type: ["sale", "reinforcement", "withdrawal", "expense"],
       cash_session_status: ["open", "closed"],
+      checksum_result: ["VALID", "INVALID", "NOT_AVAILABLE", "NOT_VERIFIED"],
       comm_category: [
         "orders",
         "payment",
@@ -7188,7 +7478,16 @@ export const Constants = {
         "paypal",
       ],
       payment_status: ["pending", "paid", "failed", "refunded", "expired"],
+      recovery_readiness_status: ["READY", "DEGRADED", "NOT_READY", "UNKNOWN"],
       restaurant_plan: ["trial", "essential", "professional"],
+      restore_drill_result: [
+        "PLANNED",
+        "RUNNING",
+        "PASSED",
+        "FAILED",
+        "CANCELLED",
+        "NOT_VERIFIED",
+      ],
       stock_movement_type: [
         "entry",
         "exit",
