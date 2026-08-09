@@ -4,9 +4,7 @@ import { createHmac, createHash, timingSafeEqual } from "node:crypto";
 
 /**
  * Webhook Mercado Pago — agora escreve no módulo canônico order_payments
- * via RPC payment_apply_provider_event. Mantém compat com pedidos antigos
- * cujo pagamento ainda não foi backfilled (raro): tenta criar order_payment
- * pending sob demanda a partir de orders.mp_payment_id.
+ * via RPC payment_apply_provider_event.
  */
 function verifyMpSignature(request: Request, _rawBody: string, paymentId: string | null): boolean {
   const secret = process.env.MP_WEBHOOK_SECRET;
@@ -82,6 +80,7 @@ export const Route = createFileRoute("/api/public/mercadopago-webhook")({
           const newStatus = mapMpStatus(status);
           const amount = Number(payment?.transaction_amount ?? order.total);
           const paidAt = payment?.date_approved ?? null;
+          const method = payment?.payment_method_id === "pix" ? "pix" : "credit_card";
 
           // Garante linha canônica em order_payments (backfill just-in-time se necessário)
           const { data: existing } = await supabaseAdmin
@@ -90,6 +89,7 @@ export const Route = createFileRoute("/api/public/mercadopago-webhook")({
             .eq("provider", "mercado_pago")
             .eq("provider_payment_id", String(paymentId))
             .maybeSingle();
+            
           if (!existing) {
             await supabaseAdmin.rpc("payment_create_pending", {
               p_order_id: order.id,
@@ -98,7 +98,7 @@ export const Route = createFileRoute("/api/public/mercadopago-webhook")({
               p_provider_order_id: null,
               p_amount: Number(order.total),
               p_currency: "BRL",
-              p_method: "pix",
+              p_method: method,
               p_qr_text: null,
               p_qr_image_url: null,
               p_expires_at: null,
