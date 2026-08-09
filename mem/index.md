@@ -8,3 +8,7 @@ Domain: comandahub.online — DNS migrado para Cloudflare.
 
 ## Memories
 - [Typography system](mem://design/typography) — Mesivo A.1 approved: font roles, scale, weights, mobile rules, wordmark policy
+- [Phase 10 - Financial Control Center](mem://features/phase-10-financial-control-center) — Admin governance and observability.
+- [Phase 11 - Financial Monitoring](mem://features/phase-11-financial-monitoring) — Automated alerting and anomaly detection.
+- [Phase 12 - Financial Automation](mem://features/phase-12-automation) — Self-healing orchestration.
+- [Phase 13 - Platform Governance](mem://features/phase-13-governance) — Governance and compliance layer (PLAN READY).
