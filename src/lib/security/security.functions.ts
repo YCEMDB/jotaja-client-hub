@@ -3,11 +3,11 @@ import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 
 export const getSecurityEvents = createServerFn({ method: "GET" })
-  .validator((input: any) => z.object({
+  .inputValidator((data) => z.object({
     limit: z.number().optional().default(50),
     offset: z.number().optional().default(0),
     type: z.string().optional()
-  }).parse(input))
+  }).parse(data))
   .handler(async ({ data: input }) => {
     let query = (supabase.from('security_events' as any) as any)
       .select('*')
