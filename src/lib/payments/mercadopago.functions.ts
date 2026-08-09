@@ -2,6 +2,8 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { getProviderAdapter, PaymentProviderError } from "./framework";
+import { createPixCharge } from "./mercadopago-api.server";
+
 
 const connectInitSchema = z.object({
   restaurantId: z.string().uuid(),
@@ -185,5 +187,87 @@ export const mercadopagoUseSandboxCredentials = createServerFn({ method: "POST" 
     return { ok: true as const };
   });
 
+/**
+ * Onda 1: Mercado Pago Pix em Produção (Real)
+ */
+export const mercadopagoCreateRealPix = createServerFn({ method: "POST" })
+  .inputValidator((d) => z.object({ orderId: z.string().uuid() }).parse(d))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    
+    // 1. Obter dados do pedido
+    const { data: order, error: oErr } = await supabaseAdmin
+      .from("orders")
+      .select("id, total, restaurant_id, customer_name, payment_status")
+      .eq("id", data.orderId)
+      .maybeSingle();
 
+    if (oErr || !order) return { ok: false as const, error: "Pedido não encontrado" };
+    if (order.payment_status === 'paid') return { ok: true as const, alreadyPaid: true };
+
+    // 2. Obter token do restaurante (Seguro via RPC admin)
+    const { data: tokenData } = await supabaseAdmin.rpc("admin_get_restaurant_mp_token", {
+      p_restaurant_id: order.restaurant_id,
+    });
+    const mpToken = (tokenData as string | null) ?? null;
+
+    if (!mpToken) return { ok: false as const, error: "Mercado Pago não configurado para este restaurante." };
+
+    // 3. Obter nome do restaurante para descrição
+    const { data: restRow } = await supabaseAdmin
+      .from("restaurants")
+      .select("name")
+      .eq("id", order.restaurant_id)
+      .maybeSingle();
+
+    const idempotencyKey = `prod-mp-${order.id}`;
+    const notificationUrl = `${process.env.PUBLIC_SITE_URL ?? "https://comandahub.online"}/api/public/mercadopago-webhook`;
+    
+    // 4. Chamar API real via Adapter/API Server
+    const res = await createPixCharge({
+      accessToken: mpToken,
+      idempotencyKey,
+      referenceId: `order:${order.id}`,
+      amount: Number(order.total),
+      description: `Pedido em ${restRow?.name || 'Mesivo'}`,
+      notificationUrl,
+    });
+
+    if (!res.ok) return res;
+
+    // 5. Persistir na infra canônica (Fase 7/17)
+    await supabaseAdmin.rpc("payment_create_pending", {
+      p_order_id: order.id,
+      p_provider: "mercado_pago",
+      p_provider_payment_id: res.provider_payment_id,
+      p_provider_order_id: null,
+      p_amount: Number(order.total),
+      p_currency: "BRL",
+      p_method: "pix",
+      p_qr_text: res.qr_code_text,
+      p_qr_image_url: res.qr_code_image_url,
+      p_expires_at: res.expires_at,
+      p_reference_id: `order:${order.id}`,
+      p_idempotency_key: idempotencyKey,
+    } as never);
+
+    // 6. Atualizar a tabela orders para a UI pública legada refletir o Pix
+    await supabaseAdmin
+      .from("orders")
+      .update({
+        pix_qr_code: res.qr_code_text,
+        pix_qr_code_base64: res.qr_code_image_url,
+        pix_expires_at: res.expires_at,
+        mp_payment_id: res.provider_payment_id,
+        pix_txid: res.provider_payment_id
+      })
+      .eq("id", order.id);
+
+    return {
+      ok: true as const,
+      paymentId: res.provider_payment_id,
+      qrCode: res.qr_code_text,
+      ticketUrl: res.qr_code_image_url
+    };
+  });
 
