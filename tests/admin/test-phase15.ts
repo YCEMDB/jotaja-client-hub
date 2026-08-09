@@ -47,7 +47,7 @@ async function runTests() {
       "LEVEL-1",
       "RETRY_SYNC",
       { retry: 1 },
-      "00000000-0000-0000-0000-000000000000" // Mock SuperAdmin ID
+      "69739ef7-3396-440b-bd2e-4656790123e2" // Valid User ID
     );
     console.log("Recovery started:", recovery.id);
     
