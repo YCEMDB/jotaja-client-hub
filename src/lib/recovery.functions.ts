@@ -16,18 +16,13 @@ export const getReadinessStatus = createServerFn({ method: "GET" })
   });
 
 export const verifyBackupById = createServerFn({ method: "POST" })
-  .validator((data: { backupId: string }) => z.object({ backupId: z.string() }).parse(data))
+  .inputValidator((data) => z.object({ backupId: z.string() }).parse(data))
   .handler(async ({ data }) => {
     return await verificationService.verifyBackup(data.backupId);
   });
 
 export const recordRestoreDrill = createServerFn({ method: "POST" })
-  .validator((data: { 
-    backupId: string, 
-    environment: string, 
-    drillType: string, 
-    notes?: string 
-  }) => z.object({ 
+  .inputValidator((data) => z.object({ 
     backupId: z.string(),
     environment: z.string(),
     drillType: z.string(),
