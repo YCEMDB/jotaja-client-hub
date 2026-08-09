@@ -25,6 +25,7 @@ export const acknowledgeIncident = createServerFn({ method: "POST" })
   .handler(async ({ input }) => {
     const { id } = input;
 
+    const { error } = await supabaseAdmin
       .from('platform_incidents')
       .update({
         status: 'ACKNOWLEDGED',
@@ -34,6 +35,7 @@ export const acknowledgeIncident = createServerFn({ method: "POST" })
       .eq('id', id);
 
     if (error) throw error;
+
 
     await IncidentEngineService.addTimelineEvent(
       id,
