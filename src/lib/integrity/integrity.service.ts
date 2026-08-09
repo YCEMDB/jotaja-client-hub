@@ -144,7 +144,7 @@ export class IntegrityService {
     // Log verification
     await supabaseAdmin.from('integrity_verification_logs').insert({
       chain_id: chainId,
-      restaurant_id: chain.restaurant_id,
+      restaurant_id: chain.restaurant_id || '', // Ensure non-null string
       status: result.status,
       error_details: result.error_details,
       last_verified_sequence: lastVerifiedSequence,
