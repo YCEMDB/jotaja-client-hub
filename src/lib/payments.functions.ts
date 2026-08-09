@@ -57,118 +57,18 @@ export const createPixPayment = createServerFn({ method: "POST" })
       };
     }
 
-    const [{ data: tokenData }, { data: restRow }] = await Promise.all([
-      supabaseAdmin.rpc("admin_get_restaurant_mp_token", { p_restaurant_id: order.restaurant_id }),
-      supabaseAdmin
-        .from("restaurants")
-        .select("name")
-        .eq("id", order.restaurant_id)
-        .maybeSingle(),
-    ]);
-    const rest = { mp_access_token: (tokenData as string | null) ?? null, name: restRow?.name ?? "" };
-
-    if (!rest.mp_access_token)
-      return { ok: false, error: "Restaurante não configurou Mercado Pago" };
-
-
-    const expiresAt = new Date(Date.now() + 30 * 60 * 1000);
-
-    const body = {
-      transaction_amount: Number(order.total),
-      description: `Pedido em ${rest.name}`,
-      payment_method_id: "pix",
-      date_of_expiration: expiresAt.toISOString().replace("Z", "-03:00"),
-      payer: {
-        email: `cliente-${order.id.slice(0, 8)}@comanda.app`,
-        first_name: order.customer_name?.split(" ")[0] ?? "Cliente",
-      },
-      external_reference: order.id,
-      notification_url: `${process.env.PUBLIC_SITE_URL ?? "https://comandahub.online"}/api/public/mercadopago-webhook`,
-    };
-
-    // No sandbox do Mercado Pago, é obrigatório enviar o 'payer' com nome e e-mail.
-    // O erro "Unauthorized use of live credentials" também pode ocorrer se o token
-    // de teste (TEST-) for usado em produção ou se houver inconsistência no par de chaves.
-    // No sandbox do Mercado Pago, é obrigatório enviar o 'payer' com nome e e-mail.
-    // O erro "Unauthorized use of live credentials" ocorre quando há mismatch entre o token e o endpoint
-    // ou quando o MP identifica que o token de sandbox está sendo usado em um contexto que ele julga ser produção.
-    const isSandboxToken = rest.mp_access_token?.startsWith("TEST-");
-    const mpUrl = "https://api.mercadopago.com/v1/payments";
+    const { mercadopagoCreateRealPix } = await import("./payments/mercadopago.functions");
+    const r: any = await mercadopagoCreateRealPix({ data: { orderId: order.id } });
     
-    // Log para depuração profunda no servidor
-    console.log("[mercadopago] Requesting Pix:", {
-      orderId: order.id,
-      restaurantId: order.restaurant_id,
-      tokenPrefix: rest.mp_access_token?.slice(0, 10),
-      isSandboxToken
-    });
-
-    const res = await fetch(mpUrl, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${rest.mp_access_token}`,
-        "Content-Type": "application/json",
-        "X-Idempotency-Key": order.id,
-      },
-      body: JSON.stringify({
-        transaction_amount: Number(order.total),
-        description: `Pedido em ${rest.name}`,
-        payment_method_id: "pix",
-        date_of_expiration: expiresAt.toISOString().replace("Z", "-03:00"),
-        payer: {
-          email: "test_user_123456@testuser.com",
-          first_name: "Test",
-          last_name: "User",
-          identification: {
-            type: "CPF",
-            number: "19119119100"
-          }
-        },
-        external_reference: order.id,
-        notification_url: `${process.env.PUBLIC_SITE_URL ?? "https://comandahub.online"}/api/public/mercadopago-webhook`,
-      }),
-    });
-
-    const payload: any = await res.json();
-    if (!res.ok) {
-      const errorMsg = payload?.message || "Erro ao gerar PIX";
-      const isLiveError = errorMsg.toLowerCase().includes("live credentials");
-      
-      console.error("[mercadopago] API failure:", {
-        status: res.status,
-        payload,
-        orderId: order.id,
-        isSandbox: rest.mp_access_token?.startsWith("TEST-"),
-        tokenPrefix: rest.mp_access_token?.slice(0, 8)
-      });
-
-      return { 
-        ok: false, 
-        error: isLiveError 
-          ? "Erro de Credenciais: O token configurado não corresponde ao ambiente (Produção vs Sandbox). Verifique no painel do Mercado Pago."
-          : errorMsg,
-        detail: payload?.cause?.[0]?.description ?? payload?.error,
-        status: res.status,
-        raw_error: payload
-      };
-    }
-
-    const qr = payload?.point_of_interaction?.transaction_data?.qr_code ?? null;
-    const qr64 = payload?.point_of_interaction?.transaction_data?.qr_code_base64 ?? null;
-
-    await supabaseAdmin
-      .from("orders")
-      .update({
-        pix_qr_code: qr,
-        pix_qr_code_base64: qr64,
-        pix_txid: payload?.id ? String(payload.id) : null,
-        mp_payment_id: payload?.id ? String(payload.id) : null,
-        pix_expires_at: expiresAt.toISOString(),
-      })
-      .eq("id", order.id);
-
-    return { ok: true, qr_code: qr, qr_code_base64: qr64 };
+    if (!r?.ok) return { ok: false, error: r?.error ?? "Erro ao gerar Pix Mercado Pago", detail: r?.detail };
+    
+    return { 
+      ok: true, 
+      qr_code: r.qrCode, 
+      qr_code_base64: r.ticketUrl 
+    };
   });
+
 
 const markPaidSchema = z.object({ orderId: z.string().uuid() });
 
