@@ -2347,6 +2347,179 @@ export type Database = {
         }
         Relationships: []
       }
+      integrity_chains: {
+        Row: {
+          algorithm: string
+          chain_type: string
+          created_at: string | null
+          genesis_hash: string
+          id: string
+          is_active: boolean | null
+          metadata: Json | null
+          restaurant_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          algorithm?: string
+          chain_type: string
+          created_at?: string | null
+          genesis_hash: string
+          id?: string
+          is_active?: boolean | null
+          metadata?: Json | null
+          restaurant_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          algorithm?: string
+          chain_type?: string
+          created_at?: string | null
+          genesis_hash?: string
+          id?: string
+          is_active?: boolean | null
+          metadata?: Json | null
+          restaurant_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "integrity_chains_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "integrity_chains_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      integrity_records: {
+        Row: {
+          chain_id: string
+          created_at: string | null
+          current_hash: string
+          entity_id: string
+          entity_type: string
+          id: string
+          metadata: Json | null
+          payload_hash: string
+          previous_hash: string
+          restaurant_id: string
+          sequence_number: number
+        }
+        Insert: {
+          chain_id: string
+          created_at?: string | null
+          current_hash: string
+          entity_id: string
+          entity_type: string
+          id?: string
+          metadata?: Json | null
+          payload_hash: string
+          previous_hash: string
+          restaurant_id: string
+          sequence_number: number
+        }
+        Update: {
+          chain_id?: string
+          created_at?: string | null
+          current_hash?: string
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          metadata?: Json | null
+          payload_hash?: string
+          previous_hash?: string
+          restaurant_id?: string
+          sequence_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "integrity_records_chain_id_fkey"
+            columns: ["chain_id"]
+            isOneToOne: false
+            referencedRelation: "integrity_chains"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "integrity_records_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "integrity_records_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      integrity_verification_logs: {
+        Row: {
+          chain_id: string
+          created_at: string | null
+          error_details: Json | null
+          id: string
+          last_verified_sequence: number | null
+          restaurant_id: string
+          status: string
+          verification_duration_ms: number | null
+          verified_by: string | null
+        }
+        Insert: {
+          chain_id: string
+          created_at?: string | null
+          error_details?: Json | null
+          id?: string
+          last_verified_sequence?: number | null
+          restaurant_id: string
+          status: string
+          verification_duration_ms?: number | null
+          verified_by?: string | null
+        }
+        Update: {
+          chain_id?: string
+          created_at?: string | null
+          error_details?: Json | null
+          id?: string
+          last_verified_sequence?: number | null
+          restaurant_id?: string
+          status?: string
+          verification_duration_ms?: number | null
+          verified_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "integrity_verification_logs_chain_id_fkey"
+            columns: ["chain_id"]
+            isOneToOne: false
+            referencedRelation: "integrity_chains"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "integrity_verification_logs_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "integrity_verification_logs_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       kitchen_stations: {
         Row: {
           color: string
@@ -3667,6 +3840,81 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      reconciliation_findings: {
+        Row: {
+          actual_data: Json | null
+          check_type: string
+          correlation_id: string | null
+          created_at: string | null
+          detected_at: string | null
+          divergence_data: Json
+          entity_id: string
+          entity_type: string
+          expected_data: Json | null
+          id: string
+          resolution_notes: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          restaurant_id: string
+          severity: string
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          actual_data?: Json | null
+          check_type: string
+          correlation_id?: string | null
+          created_at?: string | null
+          detected_at?: string | null
+          divergence_data: Json
+          entity_id: string
+          entity_type: string
+          expected_data?: Json | null
+          id?: string
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          restaurant_id: string
+          severity?: string
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          actual_data?: Json | null
+          check_type?: string
+          correlation_id?: string | null
+          created_at?: string | null
+          detected_at?: string | null
+          divergence_data?: Json
+          entity_id?: string
+          entity_type?: string
+          expected_data?: Json | null
+          id?: string
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          restaurant_id?: string
+          severity?: string
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reconciliation_findings_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reconciliation_findings_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants_team_view"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       recovery_execution_logs: {
         Row: {
