@@ -1,12 +1,13 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { IntegrityService } from "./integrity/integrity.service";
-import { supabase } from "@/integrations/supabase/client";
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 export const getIntegrityStatus = createServerFn({ method: "GET" })
   .inputValidator((data) => z.object({ restaurantId: z.string() }).parse(data))
   .handler(async ({ data }) => {
-    const { data: chains, error } = await supabase
+    // We use supabaseAdmin here as this is an admin internal function
+    const { data: chains, error } = await supabaseAdmin
       .from('integrity_chains')
       .select('*')
       .eq('restaurant_id', data.restaurantId);
