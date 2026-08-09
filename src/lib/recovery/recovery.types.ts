@@ -2,16 +2,17 @@ export type RecoveryLevel = 'LEVEL-0' | 'LEVEL-1' | 'LEVEL-2' | 'LEVEL-3' | 'LEV
 
 export interface RecoveryAction {
   id: string;
-  incident_id: string;
-  level: RecoveryLevel;
+  incident_id: string | null;
+  recovery_level: RecoveryLevel;
   action_type: string;
-  status: 'PENDING' | 'RUNNING' | 'SUCCESS' | 'FAILED';
-  payload: Record<string, any>;
-  result?: Record<string, any>;
-  actor_id: string;
-  executed_at?: string;
+  status: string;
+  payload: any;
+  result?: any;
+  actor_id: string | null;
+  executed_at?: string | null;
   created_at: string;
 }
+
 
 export interface BackupIntegrityCheck {
   id: string;

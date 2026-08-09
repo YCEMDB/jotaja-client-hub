@@ -21,23 +21,26 @@ export const getIncidents = createServerFn({ method: "GET" })
   });
 
 export const acknowledgeIncident = createServerFn({ method: "POST" })
-  .handler(async ({ data }: { data: { id: string } }) => {
-    const { error } = await supabaseAdmin
+  .input((data: { id: string }) => data)
+  .handler(async ({ input }) => {
+    const { id } = input;
+
       .from('platform_incidents')
       .update({
         status: 'ACKNOWLEDGED',
         acknowledged_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       })
-      .eq('id', data.id);
+      .eq('id', id);
 
     if (error) throw error;
 
     await IncidentEngineService.addTimelineEvent(
-      data.id,
+      id,
       'INCIDENT_ACKNOWLEDGED',
       'Incident acknowledged by SuperAdmin'
     );
+
     
     return { success: true };
   });

@@ -15,17 +15,17 @@ export interface PlatformIncident {
   severity: IncidentSeverity;
   status: IncidentStatus;
   title: string;
-  description: string;
-  root_cause?: string;
+  description: string | null;
+  root_cause?: string | null;
   affected_scope: 'GLOBAL' | 'TENANT';
-  restaurant_id?: string;
+  restaurant_id?: string | null;
   started_at: string;
-  acknowledged_at?: string;
-  resolved_at?: string;
-  closed_at?: string;
+  acknowledged_at?: string | null;
+  resolved_at?: string | null;
+  closed_at?: string | null;
   created_at: string;
   updated_at: string;
-  metadata: Record<string, any>;
+  metadata: any;
 }
 
 export interface IncidentTimelineEvent {
@@ -33,6 +33,7 @@ export interface IncidentTimelineEvent {
   incident_id: string;
   event_type: string;
   message: string;
-  metadata: Record<string, any>;
+  metadata: any;
   created_at: string;
 }
+
