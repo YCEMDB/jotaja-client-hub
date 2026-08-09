@@ -1,6 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { RestoreDrill, RestoreDrillResult } from "./recovery-types";
-import { integrityService } from "../integrity/integrity.service";
+import { IntegrityService } from "../integrity/integrity.service";
 
 export class DrillsService {
   async registerDrill(data: Partial<RestoreDrill>): Promise<RestoreDrill> {
@@ -47,16 +47,9 @@ export class DrillsService {
     // Phase 17 Integration
     if (result === "PASSED") {
       try {
-        await integrityService.recordIntegrity({
-          entity_type: "restore_drill",
-          entity_id: drillId,
-          payload: {
-            drill_id: drillId,
-            result,
-            rto: metrics.rto,
-            rpo: metrics.rpo
-          }
-        });
+        await IntegrityService.recordIntegrity({
+          chain_type: "governance_audit",
+          restaurant_id: drill.restaurant_id || "global",
       } catch (err) {
         console.error("Failed to record drill integrity:", err);
       }

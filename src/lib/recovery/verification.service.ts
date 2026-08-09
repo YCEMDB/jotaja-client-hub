@@ -1,7 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { VerificationLog, BackupStatus, ChecksumResult } from "./recovery-types";
 import { inventoryService } from "./inventory.service";
-import { integrityService } from "../integrity/integrity.service";
+import { IntegrityService } from "../integrity/integrity.service";
 
 export class VerificationService {
   /**
@@ -60,17 +60,9 @@ export class VerificationService {
     // Phase 17 Integration: Register in Proof of Integrity chain if successful
     if (status === "VERIFIED") {
       try {
-        await integrityService.recordIntegrity({
-          entity_type: "backup_verification",
-          entity_id: log.id,
-          payload: {
-            backup_id: backupId,
-            status,
-            checksum_status: checksumStatus,
-            verified_at: new Date().toISOString()
-          },
-          restaurant_id: backup.restaurant_id
-        });
+        await IntegrityService.recordIntegrity({
+          chain_type: "governance_audit",
+          restaurant_id: backup.restaurant_id || "global",
       } catch (err) {
         console.error("Failed to record backup integrity evidence:", err);
       }
