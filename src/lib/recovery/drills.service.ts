@@ -49,7 +49,16 @@ export class DrillsService {
       try {
         await IntegrityService.recordIntegrity({
           chain_type: "governance_audit",
-          restaurant_id: drill.restaurant_id || "global",
+          restaurant_id: (drill as any).restaurant_id || "00000000-0000-0000-0000-000000000000",
+          entity_type: "restore_drill",
+          entity_id: drillId,
+          payload: {
+            drill_id: drillId,
+            result,
+            rto: metrics.rto,
+            rpo: metrics.rpo
+          }
+        });
       } catch (err) {
         console.error("Failed to record drill integrity:", err);
       }

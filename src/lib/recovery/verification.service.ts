@@ -62,7 +62,16 @@ export class VerificationService {
       try {
         await IntegrityService.recordIntegrity({
           chain_type: "governance_audit",
-          restaurant_id: backup.restaurant_id || "global",
+          restaurant_id: backup.restaurant_id || "00000000-0000-0000-0000-000000000000",
+          entity_type: "backup_verification",
+          entity_id: log.id,
+          payload: {
+            backup_id: backupId,
+            status,
+            checksum_status: checksumStatus,
+            verified_at: new Date().toISOString()
+          }
+        });
       } catch (err) {
         console.error("Failed to record backup integrity evidence:", err);
       }
