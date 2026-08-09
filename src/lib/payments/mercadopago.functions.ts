@@ -271,3 +271,99 @@ export const mercadopagoCreateRealPix = createServerFn({ method: "POST" })
     };
   });
 
+
+/**
+ * Onda 2: Mercado Pago Cartão em Produção (Real)
+ */
+const createCardSchema = z.object({
+  orderId: z.string().uuid(),
+  token: z.string(),
+  installments: z.number().int().min(1).default(1),
+  paymentMethodId: z.string(),
+  issuerId: z.string().optional(),
+  email: z.string().email(),
+});
+
+export const mercadopagoCreateRealCard = createServerFn({ method: "POST" })
+  .inputValidator((d) => createCardSchema.parse(d))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { createCardCharge } = await import("./mercadopago-api.server");
+    
+    // 1. Obter dados do pedido
+    const { data: order, error: oErr } = await supabaseAdmin
+      .from("orders")
+      .select("id, total, restaurant_id, customer_name, payment_status")
+      .eq("id", data.orderId)
+      .maybeSingle();
+
+    if (oErr || !order) return { ok: false as const, error: "Pedido não encontrado" };
+    if (order.payment_status === 'paid') return { ok: true as const, alreadyPaid: true };
+
+    // 2. Obter token do restaurante (Seguro via RPC admin)
+    const { data: tokenData } = await supabaseAdmin.rpc("admin_get_restaurant_mp_token", {
+      p_restaurant_id: order.restaurant_id,
+    });
+    const mpToken = (tokenData as string | null) ?? null;
+
+    if (!mpToken) return { ok: false as const, error: "Mercado Pago não configurado para este restaurante." };
+
+    // 3. Obter nome do restaurante para descrição
+    const { data: restRow } = await supabaseAdmin
+      .from("restaurants")
+      .select("name")
+      .eq("id", order.restaurant_id)
+      .maybeSingle();
+
+    const idempotencyKey = `prod-mp-card-${order.id}`;
+    const notificationUrl = `${process.env.PUBLIC_SITE_URL ?? "https://comandahub.online"}/api/public/mercadopago-webhook`;
+    
+    // 4. Chamar API real via Adapter/API Server
+    const res = await createCardCharge({
+      accessToken: mpToken,
+      idempotencyKey,
+      referenceId: `order:${order.id}`,
+      amount: Number(order.total),
+      description: `Pedido em ${restRow?.name || 'Mesivo'}`,
+      notificationUrl,
+      token: data.token,
+      installments: data.installments,
+      paymentMethodId: data.paymentMethodId,
+      issuerId: data.issuerId,
+      email: data.email,
+    });
+
+    if (!res.ok) return res;
+
+    // 5. Persistir na infra canônica (Fase 7/17)
+    await supabaseAdmin.rpc("payment_create_pending", {
+      p_order_id: order.id,
+      p_provider: "mercado_pago",
+      p_provider_payment_id: res.provider_payment_id,
+      p_provider_order_id: null,
+      p_amount: Number(order.total),
+      p_currency: "BRL",
+      p_method: "credit_card",
+      p_qr_text: null,
+      p_qr_image_url: null,
+      p_expires_at: null,
+      p_reference_id: `order:${order.id}`,
+      p_idempotency_key: idempotencyKey,
+    } as never);
+
+    // 6. Atualizar a tabela orders para a UI pública refletir o status
+    // O webhook cuidará do status 'paid' se aprovado imediatamente, mas registramos o ID
+    await supabaseAdmin
+      .from("orders")
+      .update({
+        mp_payment_id: res.provider_payment_id,
+      })
+      .eq("id", order.id);
+
+    return {
+      ok: true as const,
+      paymentId: res.provider_payment_id,
+      status: res.status,
+      status_detail: res.status_detail,
+    };
+  });

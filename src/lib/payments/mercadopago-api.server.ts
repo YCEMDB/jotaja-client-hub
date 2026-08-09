@@ -1,8 +1,6 @@
 /**
- * Mercado Pago Connect + Pix API — cliente HTTP server-only.
- * Usa o SDK oficial 'mercadopago' para operações complexas se necessário.
+ * Mercado Pago Connect + Pix & Card API — cliente HTTP server-only.
  */
-import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 import { MercadoPagoConfig, Payment } from "mercadopago";
 
 export type MercadoPagoEnvironment = "sandbox" | "production";
@@ -114,7 +112,7 @@ export async function refreshToken(input: {
 }
 
 /**
- * Cria uma cobrança Pix via Mercado Pago (Checkout Pro / API v1).
+ * Cria uma cobrança Pix via Mercado Pago.
  */
 export type CreatePixResult =
   | {
@@ -135,15 +133,10 @@ export async function createPixCharge(input: {
   notificationUrl: string;
 }): Promise<CreatePixResult> {
   try {
-    // Se o token começar com APP_USR-, o MP exige produção. 
-    // Se começar com TEST-, exige sandbox.
-    // O erro "Unauthorized use of live credentials" ocorre quando usamos um token de produção (APP_USR-)
-    // em uma requisição que o MP identifica como sandbox ou vice-versa.
     const client = new MercadoPagoConfig({ 
       accessToken: input.accessToken,
       options: { timeout: 15000 }
     });
-
     
     const payment = new Payment(client);
     
@@ -152,7 +145,7 @@ export async function createPixCharge(input: {
       description: input.description,
       payment_method_id: "pix",
       payer: {
-        email: "test_user_123456@testuser.com",
+        email: "test_user_123456@testuser.com", // MP exige email, usamos um placeholder seguro ou do cliente se disponível
         first_name: "Test",
         last_name: "User",
         identification: {
@@ -181,11 +174,77 @@ export async function createPixCharge(input: {
       expires_at: response.date_of_expiration || new Date(Date.now() + 30 * 60_000).toISOString(),
     };
   } catch (e: any) {
-    console.error("[mercadopago] sdk error details:", {
-      message: e.message,
-      cause: e.cause,
-      stack: e.stack
+    console.error("[mercadopago] pix sdk error details:", e);
+    return { 
+      ok: false, 
+      error: e.cause?.[0]?.code ?? e.message ?? "sdk_error",
+      message: e.cause?.[0]?.description ?? e.message
+    };
+  }
+}
+
+/**
+ * Cria uma cobrança de Cartão via Mercado Pago.
+ */
+export type CreateCardResult =
+  | {
+      ok: true;
+      provider_payment_id: string;
+      status: string;
+      status_detail: string;
+    }
+  | { ok: false; error: string; message?: string };
+
+export async function createCardCharge(input: {
+  accessToken: string;
+  idempotencyKey: string;
+  referenceId: string;
+  amount: number;
+  description: string;
+  notificationUrl: string;
+  token: string;
+  installments: number;
+  paymentMethodId: string;
+  issuerId?: string;
+  email: string;
+}): Promise<CreateCardResult> {
+  try {
+    const client = new MercadoPagoConfig({ 
+      accessToken: input.accessToken,
+      options: { timeout: 15000 }
     });
+    
+    const payment = new Payment(client);
+    
+    const payload = {
+      transaction_amount: input.amount,
+      token: input.token,
+      description: input.description,
+      installments: input.installments,
+      payment_method_id: input.paymentMethodId,
+      issuer_id: input.issuerId,
+      payer: {
+        email: input.email,
+      },
+      external_reference: input.referenceId,
+      notification_url: input.notificationUrl,
+    };
+
+    const response = await payment.create({
+      body: payload,
+      requestOptions: {
+        idempotencyKey: input.idempotencyKey,
+      }
+    });
+    
+    return {
+      ok: true,
+      provider_payment_id: String(response.id),
+      status: response.status || "unknown",
+      status_detail: response.status_detail || "unknown",
+    };
+  } catch (e: any) {
+    console.error("[mercadopago] card sdk error details:", e);
     return { 
       ok: false, 
       error: e.cause?.[0]?.code ?? e.message ?? "sdk_error",
