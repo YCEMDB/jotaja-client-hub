@@ -80,608 +80,610 @@ function Index() {
         <ScrollProgress />
         <Header />
         <main>
-          {/* MESIVO — MIGRAÇÃO OFICIAL PARA DOMÍNIO CANÔNICO
+          {/* # MESIVO — SECURITY REMEDIATION SPRINT
 
-OBJETIVO
+## OBJETIVO
 
-O domínio oficial do Mesivo foi alterado para:
+Corrigir todas as vulnerabilidades reais identificadas pela auditoria do Lovable, priorizando P0/P1, sem alterar a arquitetura financeira existente.
 
-https://mesivo.com.br
+Esta execução é exclusivamente de **hardening de segurança**.
 
-Este será o DOMÍNIO CANÔNICO OFICIAL DE PRODUÇÃO.
+---
 
-O domínio:
-
-https://www.mesivo.com.br
-
-deve funcionar apenas como alias e redirecionar para:
-
-https://mesivo.com.br
-
-O domínio antigo:
-
-https://comandahub.online
-
-não deve mais ser utilizado como domínio de produção.
-
-REGRA CRÍTICA
-
-Esta execução é exclusivamente para migração de domínio e configuração de produção.
-
-NÃO reconstruir pagamentos.
-
-NÃO alterar adapters.
-
-NÃO alterar a lógica do Mercado Pago.
-
-NÃO alterar o núcleo financeiro.
-
-NÃO alterar as Fases 5–18.
-
-NÃO alterar Home, Landing, Checkout ou Orders.
-
-NÃO criar novas tabelas.
-
-NÃO executar migrations desnecessárias.
-
-NÃO alterar RLS.
-
-NÃO criar mocks.
-
-NÃO utilizar Sandbox como substituto de Production.
-
-1. DOMÍNIOS OFICIAIS
-
-CANÔNICO
-
-https://mesivo.com.br
-
-
-WWW
-
-https://www.mesivo.com.br
-
-
-Deve redirecionar para:
-
-https://mesivo.com.br
-
-
-DOMÍNIO ANTIGO
-
-https://comandahub.online
-
-
-Deve deixar de ser utilizado em produção.
-
-Não remover referências históricas legítimas.
-
-2. AUDITORIA GLOBAL
-
-Antes de alterar qualquer coisa, pesquisar globalmente por:
-
-comandahub.online
-
-
-www.comandahub.online
-
-
-https://comandahub.online
-
-
-Também pesquisar:
-
-mesivo.com.br
-
-
-www.mesivo.com.br
-
-
-Classificar todas as ocorrências.
-
-3. CLASSIFICAÇÃO
-
-Cada ocorrência deve ser classificada como:
-
-A — PRODUÇÃO
-
-Atualizar para:
-
-https://mesivo.com.br
-
-
-B — WWW
-
-Normalizar para o domínio canônico ou manter apenas quando necessário para o redirect.
-
-C — HISTÓRICA
-
-Não modificar.
-
-D — SANDBOX/TESTE
-
-Avaliar individualmente.
-
-E — LEGADA
-
-Atualizar ou remover somente quando comprovadamente obsoleta.
-
-NÃO fazer substituição cega.
-
-4. MERCADO PAGO — OAUTH
-
-O callback oficial de produção deve ser:
-
-https://mesivo.com.br/api/public/mercadopago/callback
-
-
-Confirmar:
-
-mercadopagoConnectInit
-↓
-MercadoPagoAdapter
-↓
-OAuth Production
-↓
-callback mesivo.com.br
-↓
-verify_and_consume_oauth_state
-↓
-restaurant_payment_accounts
-
-
-Não alterar:
-
-state;
-
-segurança;
-
-restaurant_id;
-
-OAuth validation;
-
-persistência;
-
-secrets.
-
-Somente corrigir o domínio.
-
-5. MERCADO PAGO — WEBHOOK
-
-O webhook oficial deve ser:
-
-https://mesivo.com.br/api/public/mercadopago-webhook
-
-
-Confirmar:
-
-endpoint público;
-
-HTTPS;
-
-assinatura;
-
-idempotência;
-
-processamento;
-
-integração com Fases 5–7.
-
-NÃO alterar a lógica do webhook.
-
-6. SUPABASE
-
-Auditar:
-
-Site URL;
-
-Redirect URLs;
-
-OAuth;
-
-callbacks;
-
-CORS;
-
-configurações públicas;
-
-Edge Functions;
-
-integrações.
-
-Domínio canônico:
-
-https://mesivo.com.br
-
-
-Se www.mesivo.com.br estiver cadastrado como URL adicional, avaliar se deve permanecer apenas como alias.
+# REGRA ABSOLUTA
 
 NÃO alterar:
 
-RLS;
+* Home
+* Landing
+* Checkout visual
+* Orders UI
+* Cardápio público
+* Payment Framework
+* Mercado Pago Adapter
+* PIX
+* Cartão
+* Webhooks
+* Fases 5–18
+* regras financeiras existentes
+* schema financeiro sem necessidade comprovada
 
-policies;
+NÃO criar mocks.
 
-schema;
+NÃO desabilitar RLS para contornar problemas.
 
-migrations.
+NÃO ignorar vulnerabilidades reais apenas para obter PASS no scanner.
 
-7. WWW → DOMÍNIO CANÔNICO
+Toda alteração deve ser mínima, localizada e auditável.
+
+---
+
+# PRIORIDADE P0 — CRÍTICO
+
+## 1. ORDERS — PUBLIC INSERT
+
+Auditar a policy:
+
+`Allow public order insertion`
+
+Eliminar qualquer:
+
+```sql
+WITH CHECK (true)
+```
+
+para criação de pedidos.
+
+O fluxo público deve continuar permitindo criação legítima de pedidos, mas somente com valores seguros.
+
+Validar:
+
+* `restaurant_id`
+* restaurante ativo
+* status inicial permitido
+* payment_status inicial permitido
+* valores financeiros
+* itens pertencentes ao restaurante
+* descontos válidos
+* total calculado pelo servidor
+
+Nunca permitir que o cliente escolha diretamente:
+
+```text
+status = paid
+status = delivered
+payment_status = paid
+financial totals arbitrários
+```
+
+O pedido deve nascer em estado seguro, por exemplo:
+
+```text
+status = pending
+payment_status = pending
+```
+
+Os estados financeiros posteriores devem depender exclusivamente dos fluxos autorizados existentes.
+
+NÃO quebrar a criação normal de pedidos.
+
+---
+
+# 2. markOrderPaid
+
+Auditar integralmente:
+
+`markOrderPaid`
+
+A função NÃO pode permitir que uma chamada pública marque um pedido como pago.
+
+Implementar:
+
+* autenticação;
+* autorização;
+* ownership/restaurant access;
+* validação do pedido;
+* validação do estado atual;
+* validação da origem do pagamento;
+* impossibilidade de declarar pagamento confirmado apenas pelo frontend.
+
+Quando o pagamento for Mercado Pago/PagBank, a confirmação deve continuar vindo pelo fluxo oficial de pagamento/webhook já existente.
+
+NÃO criar um novo caminho paralelo de confirmação financeira.
+
+---
+
+# 3. ORDERS — PUBLIC SELECT
+
+Remover a policy equivalente a:
+
+```sql
+USING (true)
+```
+
+que permita leitura pública da tabela `orders`.
+
+A tabela `orders` não deve ser diretamente enumerável por:
+
+```text
+anon
+authenticated
+```
+
+O acesso público deve ocorrer exclusivamente pelo mecanismo seguro já existente:
+
+```text
+get_public_order(order_id)
+```
+
+A RPC deve:
+
+* exigir identificador específico;
+* retornar somente campos públicos;
+* não permitir enumeração;
+* não retornar tokens;
+* não retornar secrets;
+* não expor dados de outros pedidos;
+* não expor dados internos financeiros.
+
+Validar especialmente:
+
+* customer_name
+* customer_phone
+* delivery_address
+* PIX data
+* payment IDs
+* restaurant_id
+* totals
+
+---
+
+# 4. ADMIN APIs / SERVER FUNCTIONS
+
+Auditar:
+
+```text
+/api/admin/monitoring/*
+/api/admin/governance/events
+```
+
+e todas as Server Functions correspondentes.
+
+Qualquer função que utilize:
+
+```text
+service-role
+admin client
+```
+
+deve validar autenticação e autorização ANTES da consulta.
+
+Implementar o padrão:
+
+```text
+request
+ ↓
+authenticate
+ ↓
+authorize
+ ↓
+validate input
+ ↓
+service-role operation
+ ↓
+response
+```
+
+Para dados globais financeiros, exigir:
+
+```text
+super_admin
+```
+
+Para dados tenant-scoped:
+
+```text
+restaurant access
+```
+
+Nunca confiar em:
+
+```text
+restaurant_id
+```
+
+fornecido pelo frontend sem validação server-side.
+
+---
+
+# PRIORIDADE P1
+
+## 5. MERCADOPAGO_OAUTH_STATES
+
+Corrigir a policy:
+
+`Users can manage their own states`
+
+A autorização deve verificar o vínculo do usuário com o:
+
+```text
+restaurant_id
+```
+
+Não basta verificar:
+
+```sql
+user_roles.user_id = auth.uid()
+```
+
+Usar o padrão de autorização existente, preferencialmente:
+
+```text
+private.has_restaurant_access(...)
+```
+
+ou:
+
+```text
+is_team_owner(...)
+```
+
+conforme a arquitetura já utilizada pelo projeto.
 
 Garantir:
 
-www.mesivo.com.br
-        ↓
-301
-        ↓
-mesivo.com.br
+```text
+Restaurant A
+   ↓
+OAuth State A
 
+Restaurant B
+   ↓
+OAuth State B
+```
 
-O objetivo é evitar duas versões independentes do aplicativo.
+Um usuário de A jamais poderá:
 
-Confirmar que:
+```text
+SELECT state B
+UPDATE state B
+DELETE state B
+```
 
-https://www.mesivo.com.br
+---
 
+# 6. SECURITY DEFINER
 
-não cria uma segunda sessão ou uma segunda origem lógica.
+Auditar todas as funções:
 
-8. FRONTEND
+```text
+SECURITY DEFINER
+```
 
-Auditar URLs absolutas.
+especialmente as detectadas pelo Supabase.
 
-Se houver:
+Classificar cada função como:
 
-https://comandahub.online
+### Pública intencional
 
+Exemplo:
 
-em produção, atualizar para:
+```text
+get_public_order
+get_public_restaurant
+validate_public_coupon
+```
 
-https://mesivo.com.br
+### Privada
 
+Deve ter:
 
-Não remodelar nenhuma interface.
+```text
+REVOKE EXECUTE FROM anon
+REVOKE EXECUTE FROM authenticated
+```
 
-Não alterar:
+quando aplicável.
 
-Home;
+Para funções públicas, verificar:
 
-Landing;
+* argumentos;
+* retorno;
+* enumeração;
+* autorização;
+* exposição de dados;
+* `search_path`.
 
-Checkout;
+Não simplesmente ignorar o alerta.
 
-Orders;
+---
 
-Cardápio;
+# 7. SEARCH_PATH
 
-componentes visuais.
+Localizar funções com:
 
-9. SEO
+```text
+search_path
+```
 
-Atualizar referências oficiais:
+mutável/não definido.
 
-canonical;
+Corrigir funções privilegiadas para utilizar um `search_path` explícito conforme o padrão seguro do Supabase.
 
-sitemap;
+Exemplo:
 
-robots;
+```sql
+SET search_path = public
+```
 
-Open Graph;
+ou padrão equivalente adotado no projeto.
 
-JSON-LD;
+Priorizar:
 
-llms.txt;
+```text
+SECURITY DEFINER
+```
 
-llms-full.txt;
+e funções administrativas.
 
-URLs absolutas.
+---
 
-Canonical oficial:
+# 8. DEPENDÊNCIAS VULNERÁVEIS
 
-https://mesivo.com.br
+Auditar:
 
+```text
+@tanstack/react-router
+@tanstack/react-start
+@tanstack/router-plugin
+seroval
+```
 
-Nunca usar:
+Identificar versões corrigidas compatíveis com a aplicação.
 
-https://www.mesivo.com.br
+Atualizar somente para versões estáveis e compatíveis.
 
+Depois executar:
 
-como canonical se o domínio sem www for o oficial.
-
-10. CONFIGURAÇÕES DE PRODUÇÃO
-
-Pesquisar variáveis como:
-
-SITE_URL
-APP_URL
-PUBLIC_URL
-BASE_URL
-VITE_SITE_URL
-VITE_APP_URL
-MERCADOPAGO_REDIRECT_URI
-MERCADOPAGO_WEBHOOK_URL
-
-
-ou equivalentes.
-
-Quando forem referências de produção, utilizar:
-
-https://mesivo.com.br
-
-
-OAuth:
-
-https://mesivo.com.br/api/public/mercadopago/callback
-
-
-Webhook:
-
-https://mesivo.com.br/api/public/mercadopago-webhook
-
-
-11. MERCADO PAGO — CONFIGURAÇÃO EXTERNA
-
-Não assumir que o painel do Mercado Pago foi atualizado.
-
-Verificar se for possível.
-
-Caso não seja possível acessar o painel, informar claramente que precisa ser configurado manualmente:
-
-Redirect URI
-
-https://mesivo.com.br/api/public/mercadopago/callback
-
-
-Webhook
-
-https://mesivo.com.br/api/public/mercadopago-webhook
-
-
-Evento
-
-payment
-
-
-NÃO manter o domínio antigo como callback principal.
-
-12. HTTPS
-
-Confirmar:
-
-https://mesivo.com.br
-
+```text
+npm audit
+```
 
 e:
 
-https://www.mesivo.com.br
+```text
+npm run build
+```
 
+e:
 
-com certificado válido.
+```text
+typecheck
+```
 
-Confirmar que:
+Não realizar upgrade amplo do ecossistema.
 
-http://mesivo.com.br
+---
 
+# TESTES OBRIGATÓRIOS
 
-redireciona para HTTPS.
+## Teste 1 — Tenant Isolation
 
-Idealmente:
+Usuário do Restaurante A tentando acessar dados do Restaurante B.
 
-http://www.mesivo.com.br
-        ↓
-https://mesivo.com.br
+Resultado esperado:
 
+```text
+DENIED
+```
 
-13. REDIRECTS
+---
 
-Esperado:
+## Teste 2 — Anonymous Order Enumeration
 
-http://mesivo.com.br
-        ↓
-https://mesivo.com.br
+Anon tentando:
 
+```text
+SELECT orders
+```
 
-http://www.mesivo.com.br
-        ↓
-https://mesivo.com.br
+Resultado:
 
+```text
+DENIED
+```
 
-https://www.mesivo.com.br
-        ↓
-https://mesivo.com.br
+---
 
+## Teste 3 — Fraudulent Order
 
-O domínio canônico final deve ser sempre:
+Anon tentando criar:
 
-https://mesivo.com.br
+```text
+payment_status = paid
+status = delivered
+```
 
+Resultado:
 
-14. DOCUMENTAÇÃO HISTÓRICA
+```text
+DENIED
+```
 
-NÃO alterar relatórios históricos apenas para substituir URLs.
+---
 
-Por exemplo, se uma auditoria anterior registra:
+## Teste 4 — markOrderPaid
 
-https://comandahub.online/api/public/mercadopago-webhook
+Usuário não autorizado tentando marcar pedido como pago.
 
+Resultado:
 
-e isso representa a realidade daquele momento, preservar.
+```text
+DENIED
+```
 
-Apenas atualizar documentação operacional atual quando necessário.
+---
 
-15. TESTES
+## Teste 5 — Admin Endpoint
 
-Executar:
+Anon acessando:
 
-Build
+```text
+/api/admin/monitoring/*
+```
 
-PASS / FAIL
+Resultado:
 
+```text
+401 / 403
+```
 
-Type Check
+---
 
-PASS / FAIL
+## Teste 6 — Governance
 
+Usuário comum tentando acessar auditoria global.
 
-Busca residual
+Resultado:
 
-Pesquisar:
+```text
+DENIED
+```
 
-comandahub.online
+---
 
+## Teste 7 — OAuth State
 
-Classificar todas as ocorrências restantes.
+Restaurant A tentando manipular OAuth State do Restaurant B.
 
-Canonical
+Resultado:
+
+```text
+DENIED
+```
+
+---
+
+## Teste 8 — Public RPC
+
+Testar:
+
+```text
+get_public_order
+```
+
+com:
+
+* ID válido;
+* ID inexistente;
+* ID de outro restaurante;
+* tentativa de enumeração.
+
+---
+
+# REGRESSÃO
+
+Depois das correções, validar:
+
+```text
+Criar pedido → PASS
+Pedido pendente → PASS
+PIX → PASS
+Mercado Pago webhook → PASS
+Settlement → PASS
+Reconciliation → PASS
+Admin monitoring → PASS para super_admin
+Governance → PASS para super_admin
+OAuth Mercado Pago → PASS
+```
+
+---
+
+# INTEGRIDADE DAS FASES
 
 Confirmar:
 
-https://mesivo.com.br
+```text
+Fases 5–9  → INTACTAS
+Fase 10    → INTACTA
+Fase 11    → INTACTA
+Fase 12    → INTACTA
+Fase 13    → INTACTA
+Fase 14    → INTACTA
+Fase 15    → INTACTA
+Fase 16    → INTACTA
+Fase 17    → INTACTA
+Fase 18    → INTACTA
+```
 
+Nenhuma lógica financeira deve ser reescrita.
 
-WWW
+---
 
-Confirmar redirect:
-
-www.mesivo.com.br
-→
-mesivo.com.br
-
-
-Mercado Pago OAuth
-
-Confirmar:
-
-mesivo.com.br/api/public/mercadopago/callback
-
-
-Mercado Pago Webhook
-
-Confirmar:
-
-mesivo.com.br/api/public/mercadopago-webhook
-
-
-16. INTEGRIDADE DAS FASES
-
-Confirmar explicitamente:
-
-Fases 5–9   → INTACTAS
-Fase 10     → INTACTA
-Fase 11     → INTACTA
-Fase 12     → INTACTA
-Fase 13     → INTACTA
-Fase 14     → INTACTA
-Fase 15     → INTACTA
-Fase 16     → INTACTA
-Fase 17     → INTACTA
-Fase 18     → INTACTA
-
-
-Também:
-
-Financial Core     → INTACTO
-Payment Framework  → INTACTO
-PIX                → INTACTO
-Card               → INTACTO
-RLS                → INTACTO
-Database Schema    → INTACTO
-
-
-17. CHECKPOINT FINAL
+# CHECKPOINT FINAL
 
 Gerar:
 
-MESIVO — DOMAIN MIGRATION CHECKPOINT
+## MESIVO — SECURITY REMEDIATION CHECKPOINT
 
-Canonical Domain
+### P0
 
-https://mesivo.com.br
+* Public Order Insert: PASS
+* markOrderPaid Protection: PASS
+* Public Orders Select: PASS
+* Admin API Authentication: PASS
 
-WWW Redirect
+### P1
 
-https://www.mesivo.com.br → https://mesivo.com.br
+* OAuth State Isolation: PASS
+* SECURITY DEFINER Audit: PASS
+* Dependency Security: PASS
 
-Old Domain
+### P2
 
-https://comandahub.online
+* search_path Hardening: PASS
 
-Production References
+### Regression
 
-PASS / FAIL
+* Order Creation: PASS
+* PIX: PASS
+* Webhooks: PASS
+* Financial Core: PASS
+* Mercado Pago OAuth: PASS
 
-Mercado Pago OAuth
-
-PASS / FAIL
-
-Mercado Pago Webhook
-
-PASS / FAIL
-
-Supabase
-
-PASS / FAIL / PENDING
-
-HTTPS
+### Build
 
 PASS / FAIL
 
-WWW Redirect
+### Type Check
 
 PASS / FAIL
 
-SEO / Canonical
+### Security Audit
 
 PASS / FAIL
 
-Build
+---
 
-PASS / FAIL
+## RESULTADO
 
-Type Check
+Somente declarar:
 
-PASS / FAIL
+**🟢 SECURITY REMEDIATION COMPLETE**
 
-Residual Old-Domain References
+quando os P0 estiverem comprovadamente corrigidos e os testes de regressão passarem.
 
-LISTAR
+Se qualquer P0 continuar aberto:
 
-Fases 5–18
+**🔴 SECURITY BLOCKED**
 
-INTACTAS
+e listar exatamente o problema restante.
 
-RESULTADO FINAL
+Depois de concluir esta sprint, retornar para:
 
-Se tudo estiver corretamente migrado:
+**FASE 19 — MERCADO PAGO PRODUCTION ACTIVATION**
 
-🟢 MESIVO DOMAIN MIGRATION COMPLETE
-
-Se houver configuração externa pendente:
-
-🟡 MESIVO DOMAIN MIGRATION — EXTERNAL CONFIGURATION PENDING
-
-Listar exatamente o que falta.
-
-NÃO declarar Mercado Pago Production Ready somente porque o domínio foi migrado.
-
-Depois da migração concluída, o próximo passo será:
-
-MERCADO PAGO PRODUCTION
-↓
-OAUTH
-↓
-CONECTAR PRIMEIRO RESTAURANTE
-↓
-VERIFICAR PRODUCTION ACCOUNT
-↓
-PIX REAL
-↓
-AUDITORIA E2E
-↓
-CARTÃO PRODUCTION
-
-
-A prioridade agora é estabelecer https://mesivo.com.br como única origem canônica de produção e eliminar dependências operacionais do domínio antigo. */}
+sem reconstruir nenhuma parte já existente. */}
           <Hero />
           <Stats />
           <Bento />
