@@ -155,7 +155,7 @@ function SidebarBody({
                   activeProps={{
                     className: "!bg-brand-orange !text-ink !border-background shadow-[3px_3px_0_0_oklch(0.62_0.24_0)] translate-x-0.5",
                   }}
-                  className={`flex items-center ${collapsed ? "justify-center" : "gap-3"} px-3 py-2.5 rounded-lg text-sm font-bold uppercase tracking-wide border-2 border-transparent hover:bg-background/10 hover:border-background/20 transition-all duration-200`}
+                  className={`flex items-center ${collapsed ? "justify-center" : "gap-3"} px-3 py-3 rounded-xl text-sm font-bold uppercase tracking-wide border-2 border-transparent hover:bg-background/10 hover:border-background/20 transition-all duration-200 active:scale-95`}
                 >
                   <item.icon className="h-4 w-4 shrink-0" />
                   {!collapsed && item.label}

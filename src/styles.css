@@ -160,6 +160,21 @@
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
     min-width: 0;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Melhoria de touch targets global */
+  button, a, input, select {
+    touch-action: manipulation;
+  }
+
+  /* Scrollbar custom para mobile otimizado */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
   /* Mídia fluida por padrão — evita overflow horizontal em qualquer viewport */
   img, video, iframe, canvas {
