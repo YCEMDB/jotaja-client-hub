@@ -53,9 +53,14 @@ function OrderTrackPage() {
   const syncPix = useServerFn(syncPixPayment);
 
   const load = async () => {
-    const { data } = await supabase.rpc("get_public_order", { p_id: orderId });
+    const { data, error } = await supabase.rpc("get_public_order", { p_id: orderId });
+    if (error) {
+      console.error("[LOAD ORDER ERROR]", error);
+      setLoading(false);
+      return;
+    }
     const payload = data as any;
-    setOrder((payload?.order ?? null) as any);
+    setOrder(payload?.order ?? null);
     setLoading(false);
   };
 
