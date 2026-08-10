@@ -155,7 +155,7 @@ function SidebarBody({
                   activeProps={{
                     className: "!bg-brand-orange !text-ink !border-background shadow-[3px_3px_0_0_oklch(0.62_0.24_0)] translate-x-0.5",
                   }}
-                  className={`flex items-center ${collapsed ? "justify-center" : "gap-3"} px-3 py-2.5 rounded-lg text-sm font-bold uppercase tracking-wide border-2 border-transparent hover:bg-background/10 hover:border-background/20 transition-all duration-200`}
+                  className={`flex items-center ${collapsed ? "justify-center" : "gap-3"} px-3 py-3 rounded-xl text-sm font-bold uppercase tracking-wide border-2 border-transparent hover:bg-background/10 hover:border-background/20 transition-all duration-200 active:scale-95`}
                 >
                   <item.icon className="h-4 w-4 shrink-0" />
                   {!collapsed && item.label}
@@ -185,13 +185,13 @@ function TopBar({
   const initial = (userEmail?.[0] ?? "U").toUpperCase();
 
   return (
-    <header className="sticky top-0 z-30 flex items-center gap-3 px-4 sm:px-6 lg:px-8 xl:px-10 h-14 md:h-16 bg-background/80 backdrop-blur-xl border-b-2 border-ink/5">
+    <header className="sticky top-0 z-30 flex items-center gap-3 px-4 sm:px-6 lg:px-8 xl:px-10 h-14 md:h-16 bg-background/90 backdrop-blur-xl border-b-4 border-ink shadow-sm">
       <button
         onClick={onOpenMobile}
         aria-label="Abrir menu"
-        className="md:hidden h-9 w-9 grid place-items-center rounded-lg border-2 border-ink/20 hover:bg-ink/5"
+        className="md:hidden h-10 w-10 grid place-items-center rounded-xl border-2 border-ink bg-brand-orange text-ink shadow-[2px_2px_0_0_oklch(0.12_0.025_25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
       >
-        <Menu className="h-5 w-5 text-ink" />
+        <Menu className="h-6 w-6" />
       </button>
 
       {/* Breadcrumb */}
@@ -200,18 +200,18 @@ function TopBar({
           {groupLabel}
         </span>
         <ChevronRight className="hidden sm:inline h-3.5 w-3.5 text-ink/30 shrink-0" />
-        <span className="font-display text-base md:text-lg text-ink truncate">
+        <span className="font-display text-base md:text-xl italic uppercase tracking-tight text-ink truncate drop-shadow-sm">
           {current?.label ?? "Painel"}
         </span>
       </nav>
 
       {/* User menu */}
       <DropdownMenu>
-        <DropdownMenuTrigger className="flex items-center gap-2 rounded-lg border-2 border-ink/15 hover:border-ink/40 hover:bg-ink/5 pl-1 pr-2 md:pr-3 py-1 transition-colors">
-          <div className="h-7 w-7 grid place-items-center rounded-md bg-ink text-background font-bold text-sm">
+        <DropdownMenuTrigger className="flex items-center gap-2 rounded-xl border-2 border-ink bg-background hover:bg-ink/5 pl-1.5 pr-2 md:pr-4 py-1.5 transition-all shadow-[2px_2px_0_0_oklch(0.12_0.025_25)] active:shadow-none active:translate-x-0.5 active:translate-y-0.5">
+          <div className="h-8 w-8 grid place-items-center rounded-lg bg-ink text-background font-display italic text-base border border-ink/20">
             {initial}
           </div>
-          <span className="hidden md:inline text-xs font-bold text-ink/70 max-w-[160px] truncate">
+          <span className="hidden md:inline text-xs font-bold uppercase tracking-widest text-ink/70 max-w-[160px] truncate">
             {userEmail}
           </span>
         </DropdownMenuTrigger>
@@ -313,9 +313,9 @@ function AuthLayout() {
 
       {/* Mobile drawer */}
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-        <SheetContent side="left" className="p-0 w-72 bg-ink text-background border-r-2 border-ink [&>button]:text-background">
-          <SheetTitle className="sr-only">Menu</SheetTitle>
-          <div className="flex flex-col h-full relative">
+        <SheetContent side="left" className="p-0 w-[280px] sm:w-80 bg-ink text-background border-r-4 border-ink [&>button]:text-background shadow-2xl">
+          <SheetTitle className="sr-only">Menu Administrativo</SheetTitle>
+          <div className="flex flex-col h-full relative overflow-hidden">
             <SidebarBody
               collapsed={false}
               isSuperAdmin={isSuperAdmin}

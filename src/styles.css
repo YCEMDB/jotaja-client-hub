@@ -160,6 +160,21 @@
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
     min-width: 0;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Melhoria de touch targets global */
+  button, a, input, select {
+    touch-action: manipulation;
+  }
+
+  /* Scrollbar custom para mobile otimizado */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
   /* Mídia fluida por padrão — evita overflow horizontal em qualquer viewport */
   img, video, iframe, canvas {
@@ -175,14 +190,23 @@
   }
   /* Container: padding menor em mobile, cresce em telas maiores */
   .container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
     padding-left: 1rem;
     padding-right: 1rem;
   }
   @media (min-width: 640px) {
-    .container { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .container { max-width: 640px; padding-left: 1.5rem; padding-right: 1.5rem; }
+  }
+  @media (min-width: 768px) {
+    .container { max-width: 768px; }
   }
   @media (min-width: 1024px) {
-    .container { padding-left: 2rem; padding-right: 2rem; }
+    .container { max-width: 1024px; padding-left: 2rem; padding-right: 2rem; }
+  }
+  @media (min-width: 1280px) {
+    .container { max-width: 1280px; }
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
