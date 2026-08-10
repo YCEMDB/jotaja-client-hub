@@ -88,19 +88,21 @@ export const markOrderPaid = createServerFn({ method: "POST" })
     if (oErr || !order) return { ok: false, error: "Pedido não encontrado ou sem permissão" };
     
     // 2. Apenas ADMIN ou Equipe do restaurante pode marcar como pago manualmente
-    // RLS (orders_team_update) deve cuidar disso se usarmos supabase (client), 
-    // mas validamos explicitamente para segurança extra P0.
+    // RLS (orders_team_update) deve cuidar disso, mas usamos supabaseAdmin para bypassar RLS
+    // e realizar a escrita privilegiada após a validação de autorização acima.
     
+    const updateData: any = { 
+      payment_status: "paid", 
+      paid_at: new Date().toISOString(),
+      metadata: { 
+        manual_confirmation_by: userId,
+        confirmed_at: new Date().toISOString()
+      }
+    };
+
     const { error } = await supabaseAdmin
       .from("orders")
-      .update({ 
-        payment_status: "paid", 
-        paid_at: new Date().toISOString(),
-        metadata: { 
-          manual_confirmation_by: userId,
-          confirmed_at: new Date().toISOString()
-        }
-      })
+      .update(updateData)
       .eq("id", data.orderId);
 
     if (error) return { ok: false, error: error.message };
