@@ -5,8 +5,11 @@ export const Route = createFileRoute('/api/admin/governance/events')({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        // Validação de SuperAdmin omitida para brevidade do scaffold, 
-        // mas deve estar no middleware de produção.
+        const authHeader = request.headers.get('Authorization');
+        if (!authHeader) {
+          return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
+        }
+
         
         const url = new URL(request.url);
         const limit = parseInt(url.searchParams.get('limit') || '50');
