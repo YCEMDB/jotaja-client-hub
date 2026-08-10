@@ -749,125 +749,235 @@ function CheckoutDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md w-[95vw] max-h-[90dvh] overflow-y-auto p-4 sm:p-6 rounded-2xl sm:rounded-3xl border-4 border-ink shadow-brutal-lg">
-        <DialogHeader><DialogTitle>Finalizar pedido</DialogTitle></DialogHeader>
-        <div className="space-y-4">
-          <div>
-            <Label>Como você quer receber?</Label>
-            <RadioGroup value={orderType} onValueChange={(v) => setOrderType(v as any)} className="grid grid-cols-2 gap-2 mt-2">
+      <DialogContent className="max-w-2xl w-[95vw] max-h-[90dvh] overflow-hidden p-0 rounded-2xl sm:rounded-3xl border-4 border-ink shadow-brutal-lg flex flex-col">
+        <DialogHeader className="p-4 sm:p-6 border-b-2 border-ink shrink-0 text-left bg-brand-amber/5">
+          <DialogTitle className="font-display text-xl sm:text-2xl uppercase italic tracking-tight">Finalizar Pedido</DialogTitle>
+        </DialogHeader>
+
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
+          <section className="space-y-4">
+            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-ink/40 border-b border-ink/5 pb-1">Tipo de Pedido</h3>
+            <div className="grid grid-cols-2 gap-3">
               {restaurant.accepts_delivery && (
-                <label className="border rounded-lg p-3 cursor-pointer flex items-center gap-2 has-[:checked]:border-primary has-[:checked]:bg-primary/5">
-                  <RadioGroupItem value="delivery" /><MapPin className="h-4 w-4" /> Entrega
-                </label>
+                <button
+                  onClick={() => setOrderType("delivery")}
+                  className={`p-3 rounded-xl border-2 font-display text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${
+                    orderType === "delivery"
+                      ? "bg-brand-orange border-ink shadow-[3px_3px_0_0_oklch(0.12_0.025_25)]"
+                      : "bg-background border-ink/10 text-ink/40"
+                  }`}
+                >
+                  <MapPin className="h-4 w-4" /> Entrega
+                </button>
               )}
               {restaurant.accepts_pickup && (
-                <label className="border rounded-lg p-3 cursor-pointer flex items-center gap-2 has-[:checked]:border-primary has-[:checked]:bg-primary/5">
-                  <RadioGroupItem value="pickup" /><Clock className="h-4 w-4" /> Retirada
-                </label>
+                <button
+                  onClick={() => setOrderType("pickup")}
+                  className={`p-3 rounded-xl border-2 font-display text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${
+                    orderType === "pickup"
+                      ? "bg-brand-orange border-ink shadow-[3px_3px_0_0_oklch(0.12_0.025_25)]"
+                      : "bg-background border-ink/10 text-ink/40"
+                  }`}
+                >
+                  <Clock className="h-4 w-4" /> Retirada
+                </button>
               )}
-            </RadioGroup>
-          </div>
+            </div>
+          </section>
 
-          <div className="grid grid-cols-2 gap-2">
-            <div><Label>Nome *</Label><Input value={name} onChange={(e) => setName(e.target.value)} /></div>
-            <div><Label>WhatsApp *</Label><Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="(11) 99999-9999" /></div>
-          </div>
+          <section className="space-y-4 pt-2">
+            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-ink/40 border-b border-ink/5 pb-1">Identificação</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label className="text-xs font-bold uppercase tracking-wider ml-1">Seu Nome</Label>
+                <Input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Ex: João Silva"
+                  className="h-12 rounded-xl border-2 border-ink/10 focus:border-ink focus:ring-0 transition-colors"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs font-bold uppercase tracking-wider ml-1">WhatsApp</Label>
+                <Input
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="(11) 99999-9999"
+                  className="h-12 rounded-xl border-2 border-ink/10 focus:border-ink focus:ring-0 transition-colors"
+                />
+              </div>
+            </div>
+          </section>
 
           {orderType === "delivery" && (
-            <div className="space-y-2 p-3 bg-muted/40 rounded-lg">
-              <p className="text-xs font-semibold text-muted-foreground">ENDEREÇO DE ENTREGA</p>
-              {areas.length > 0 ? (
-                <div>
-                  <Label>Bairro *</Label>
-                  <Select value={areaId} onValueChange={setAreaId}>
-                    <SelectTrigger><SelectValue placeholder="Selecione seu bairro" /></SelectTrigger>
-                    <SelectContent>
-                      {areas.map((a) => (
-                        <SelectItem key={a.id} value={a.id}>
-                          {a.neighborhood} — R$ {Number(a.fee).toFixed(2)} ({a.estimated_minutes ?? 30}min)
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+            <section className="space-y-4 pt-2 animate-in fade-in slide-in-from-top-2 duration-300">
+              <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-ink/40 border-b border-ink/5 pb-1">Endereço de Entrega</h3>
+              <div className="grid grid-cols-1 gap-4">
+                {areas.length > 0 ? (
+                  <div className="space-y-1.5">
+                    <Label className="text-xs font-bold uppercase tracking-wider ml-1">Bairro / Região</Label>
+                    <Select value={areaId} onValueChange={setAreaId}>
+                      <SelectTrigger className="h-12 rounded-xl border-2 border-ink/10">
+                        <SelectValue placeholder="Selecione seu bairro" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {areas.map((a) => (
+                          <SelectItem key={a.id} value={a.id}>
+                            {a.neighborhood} — R$ {Number(a.fee).toFixed(2)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                ) : (
+                  <p className="text-xs text-destructive bg-destructive/5 p-3 rounded-lg border border-destructive/20 italic">A entrega não está disponível no momento.</p>
+                )}
+                <div className="grid grid-cols-4 gap-3">
+                  <div className="col-span-3 space-y-1.5">
+                    <Label className="text-xs font-bold uppercase tracking-wider ml-1">Rua / Logradouro</Label>
+                    <Input
+                      value={street}
+                      onChange={(e) => setStreet(e.target.value)}
+                      placeholder="Nome da rua"
+                      className="h-12 rounded-xl border-2 border-ink/10 focus:border-ink transition-colors"
+                    />
+                  </div>
+                  <div className="col-span-1 space-y-1.5">
+                    <Label className="text-xs font-bold uppercase tracking-wider ml-1">Nº</Label>
+                    <Input
+                      value={number}
+                      onChange={(e) => setNumber(e.target.value)}
+                      placeholder="123"
+                      className="h-12 rounded-xl border-2 border-ink/10 focus:border-ink transition-colors"
+                    />
+                  </div>
                 </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-bold uppercase tracking-wider ml-1">Complemento / Referência</Label>
+                  <Input
+                    value={complement}
+                    onChange={(e) => setComplement(e.target.value)}
+                    placeholder="Apto, bloco, etc."
+                    className="h-12 rounded-xl border-2 border-ink/10 focus:border-ink transition-colors"
+                  />
+                </div>
+              </div>
+            </section>
+          )}
+
+          <section className="space-y-4 pt-2">
+            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-ink/40 border-b border-ink/5 pb-1">Pagamento</h3>
+            <div className="space-y-1.5">
+              {(allowPix || allowCash || allowCard) ? (
+                <Select value={payment} onValueChange={(v) => setPayment(v as any)}>
+                  <SelectTrigger className="h-12 rounded-xl border-2 border-ink/10">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {allowPix && <SelectItem value="pix">PIX (confirmado na hora)</SelectItem>}
+                    {allowCash && <SelectItem value="cash">Dinheiro</SelectItem>}
+                    {allowCard && <SelectItem value="credit_card">Cartão de Crédito</SelectItem>}
+                    {allowCard && <SelectItem value="debit_card">Cartão de Débito</SelectItem>}
+                  </SelectContent>
+                </Select>
               ) : (
-                <p className="text-xs text-destructive">Restaurante ainda não cadastrou áreas de entrega.</p>
+                <p className="text-xs text-destructive italic">Formas de pagamento não configuradas.</p>
               )}
-              <div className="grid grid-cols-3 gap-2">
-                <div className="col-span-2"><Label>Rua *</Label><Input value={street} onChange={(e) => setStreet(e.target.value)} /></div>
-                <div><Label>Nº *</Label><Input value={number} onChange={(e) => setNumber(e.target.value)} /></div>
-              </div>
-              <div><Label>Complemento</Label><Input value={complement} onChange={(e) => setComplement(e.target.value)} /></div>
+              {allowPix && (
+                <p className="text-[10px] text-ink/40 font-bold uppercase tracking-widest ml-1 mt-1">
+                   Pix agiliza seu pedido — confirmação imediata.
+                </p>
+              )}
             </div>
-          )}
 
-          <div>
-            <Label>Forma de pagamento</Label>
-            {(allowPix || allowCash || allowCard) ? (
-              <Select value={payment} onValueChange={(v) => setPayment(v as any)}>
-                <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  {allowPix && <SelectItem value="pix">PIX (pagar online agora)</SelectItem>}
-                  {allowCash && <SelectItem value="cash">Dinheiro (pagar na {orderType === "delivery" ? "entrega" : "retirada"})</SelectItem>}
-                  {allowCard && <SelectItem value="credit_card">Cartão de crédito (na {orderType === "delivery" ? "entrega" : "retirada"})</SelectItem>}
-                  {allowCard && <SelectItem value="debit_card">Cartão de débito (na {orderType === "delivery" ? "entrega" : "retirada"})</SelectItem>}
-                </SelectContent>
-              </Select>
-            ) : (
-              <p className="text-xs text-destructive mt-1">Este restaurante não configurou formas de pagamento.</p>
-            )}
-            {allowPix && (
-              <p className="text-[11px] text-muted-foreground mt-1">PIX: confirmação automática. Demais opções: pague ao receber.</p>
-            )}
-          </div>
-
-          {payment === "cash" && (
-            <div>
-              <Label>Troco para quanto?</Label>
-              <Input type="number" step="0.01" value={changeFor} onChange={(e) => setChangeFor(e.target.value)} placeholder="Deixe em branco se não precisa" />
-            </div>
-          )}
-
-          <div>
-            <Label>Cupom de desconto</Label>
-            {coupon ? (
-              <div className="flex items-center justify-between p-2 mt-1 bg-green-50 border border-green-200 rounded-md">
-                <div>
-                  <code className="font-mono font-bold text-sm text-green-700">{coupon.code}</code>
-                  <p className="text-xs text-green-700">aplicado com sucesso</p>
-                </div>
-                <Button size="sm" variant="ghost" onClick={() => { setCoupon(null); setCouponCode(""); }}>Remover</Button>
+            {payment === "cash" && (
+              <div className="space-y-1.5 animate-in fade-in slide-in-from-top-1 duration-200">
+                <Label className="text-xs font-bold uppercase tracking-wider ml-1">Troco para</Label>
+                <Input
+                  type="number"
+                  step="0.01"
+                  value={changeFor}
+                  onChange={(e) => setChangeFor(e.target.value)}
+                  placeholder="Ex: 100.00"
+                  className="h-12 rounded-xl border-2 border-ink/10 focus:border-ink transition-colors"
+                />
               </div>
-            ) : (
-              <div className="flex gap-2 mt-1">
-                <Input value={couponCode} onChange={(e) => setCouponCode(e.target.value.toUpperCase())} placeholder="Insira o código" className="font-mono" />
-                <Button variant="outline" onClick={applyCoupon} disabled={validatingCoupon}>
-                  {validatingCoupon ? "..." : "Aplicar"}
+            )}
+          </section>
+
+          <section className="space-y-4 pt-2 pb-2">
+            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-ink/40 border-b border-ink/5 pb-1">Extras</h3>
+            <div className="space-y-3">
+              <div className="flex gap-2">
+                <Input
+                  value={couponCode}
+                  onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                  placeholder="TEM CUPOM?"
+                  className="h-12 rounded-xl border-2 border-ink/10 focus:border-ink font-display uppercase tracking-widest placeholder:opacity-50"
+                />
+                <Button
+                  variant="outline"
+                  onClick={applyCoupon}
+                  disabled={validatingCoupon}
+                  className="h-12 px-6 rounded-xl border-2 border-ink font-display text-xs uppercase italic tracking-wider hover:bg-ink hover:text-background transition-all"
+                >
+                  {validatingCoupon ? "..." : "OK"}
                 </Button>
               </div>
-            )}
-          </div>
-
-          <div>
-            <Label>Observações</Label>
-            <Textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} placeholder="Ex: sem cebola" />
-          </div>
-
-          <div className="border-t pt-3 space-y-1 text-sm">
-            <div className="flex justify-between"><span>Subtotal</span><span>R$ {subtotal.toFixed(2)}</span></div>
-            {orderType === "delivery" && (
-              <div className="flex justify-between">
-                <span>Entrega {freeShipping && <span className="text-green-600 text-xs">(grátis)</span>}</span>
-                <span className={freeShipping ? "line-through text-muted-foreground" : ""}>R$ {deliveryFee.toFixed(2)}</span>
+              {coupon && (
+                <div className="flex items-center justify-between p-3 bg-green-50 border-2 border-green-200 rounded-xl shadow-[2px_2px_0_0_oklch(0.12_0.025_25/0.1)]">
+                  <div>
+                    <code className="font-display italic text-green-700 text-sm tracking-widest">{coupon.code}</code>
+                    <p className="text-[10px] uppercase font-bold text-green-600/60">Cupom Aplicado!</p>
+                  </div>
+                  <Button size="icon" variant="ghost" className="h-8 w-8 hover:bg-green-100 rounded-full" onClick={() => { setCoupon(null); setCouponCode(""); }}>
+                     <Minus className="h-3 w-3 text-green-700" />
+                  </Button>
+                </div>
+              )}
+              <div className="space-y-1.5">
+                <Label className="text-xs font-bold uppercase tracking-wider ml-1">Observações</Label>
+                <Textarea
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  rows={2}
+                  placeholder="Ex: sem cebola, retirar na portaria..."
+                  className="rounded-xl border-2 border-ink/10 focus:border-ink transition-colors min-h-[80px]"
+                />
               </div>
-            )}
-            {discount > 0 && coupon?.type !== "free_shipping" && (
-              <div className="flex justify-between text-green-600"><span>Desconto ({coupon?.code})</span><span>- R$ {discount.toFixed(2)}</span></div>
-            )}
-            <div className="flex justify-between font-bold text-base pt-1"><span>Total</span><span>R$ {total.toFixed(2)}</span></div>
-          </div>
+            </div>
+          </section>
+        </div>
 
-          <Button size="lg" className="w-full" style={{ background: restaurant.primary_color ?? undefined }} disabled={submitting} onClick={submit}>
+        <div className="p-4 sm:p-6 border-t-2 border-ink bg-background shrink-0 space-y-4 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
+          <div className="space-y-1.5 border-b border-ink/5 pb-3">
+             <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest text-ink/40">
+                <span>Subtotal</span>
+                <span>R$ {subtotal.toFixed(2)}</span>
+             </div>
+             {orderType === "delivery" && (
+                <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest text-ink/40">
+                   <span>Entrega {freeShipping && <span className="text-green-600">(grátis)</span>}</span>
+                   <span className={freeShipping ? "line-through opacity-50" : ""}>R$ {deliveryFee.toFixed(2)}</span>
+                </div>
+             )}
+             {discount > 0 && coupon?.type !== "free_shipping" && (
+                <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest text-green-600">
+                   <span>Desconto</span>
+                   <span>- R$ {discount.toFixed(2)}</span>
+                </div>
+             )}
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="font-display text-sm uppercase italic tracking-widest text-ink">Total</span>
+            <span className="font-display text-2xl sm:text-3xl italic text-brand-magenta">R$ {total.toFixed(2)}</span>
+          </div>
+          <Button
+            size="lg"
+            className="w-full h-14 font-display text-base uppercase tracking-wider rounded-xl bg-ink text-background border-2 border-ink shadow-[4px_4px_0_0_oklch(0.69_0.22_38)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all disabled:opacity-50"
+            disabled={submitting}
+            onClick={submit}
+          >
             {submitting ? "Enviando…" : "Confirmar pedido"}
           </Button>
         </div>
