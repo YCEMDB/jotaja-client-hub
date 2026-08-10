@@ -131,52 +131,79 @@ function OrderTrackPage() {
         )}
 
         {showPix && (
-          <Card className="p-5 space-y-4">
+          <Card className="p-5 space-y-4 shadow-brutal border-2 border-ink">
             <div>
-              <p className="font-semibold">Pague R$ {Number(order.total).toFixed(2)} via PIX</p>
-              <p className="text-xs text-muted-foreground">A confirmação é automática.</p>
+              <p className="font-display text-lg uppercase italic text-ink">Pague R$ {Number(order.total).toFixed(2)} via PIX</p>
+              <p className="text-xs text-ink/60 font-bold uppercase tracking-wider">A confirmação é automática.</p>
             </div>
-            {generating && <div className="flex items-center justify-center py-8"><Loader2 className="h-6 w-6 animate-spin" /></div>}
+            {generating && <div className="flex items-center justify-center py-8"><Loader2 className="h-6 w-6 animate-spin text-brand-orange" /></div>}
             {order.pix_qr_code_base64 && (
-              <img
-                src={`data:image/png;base64,${order.pix_qr_code_base64}`}
-                alt="QR Code PIX"
-                className="w-56 h-56 mx-auto border rounded-lg"
-              />
+              <div className="relative group">
+                <div className="absolute inset-0 bg-brand-orange/5 blur-xl group-hover:bg-brand-orange/10 transition-all" />
+                <img
+                  src={`data:image/png;base64,${order.pix_qr_code_base64}`}
+                  alt="QR Code PIX"
+                  className="relative w-full max-w-[240px] aspect-square mx-auto border-4 border-ink rounded-2xl shadow-sm bg-white"
+                />
+              </div>
             )}
             {order.pix_qr_code && (
-              <div>
-                <p className="text-xs font-semibold mb-1">PIX copia e cola</p>
+              <div className="space-y-2">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-ink/40">PIX copia e cola</p>
                 <div className="flex gap-2">
-                  <input readOnly value={order.pix_qr_code} className="flex-1 text-xs border rounded px-2 py-1.5 bg-muted/50 font-mono" />
-                  <Button size="sm" variant="outline" onClick={() => {
-                    navigator.clipboard.writeText(order.pix_qr_code!);
-                    toast.success("Código copiado");
-                  }}>
+                  <input readOnly value={order.pix_qr_code} className="flex-1 text-[10px] border-2 border-ink/20 rounded-lg px-3 py-2 bg-ink/5 font-mono truncate" />
+                  <Button
+                    size="sm"
+                    className="h-9 px-3 bg-brand-orange text-ink border-2 border-ink shadow-[2px_2px_0_0_oklch(0.12_0.025_25)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all"
+                    onClick={() => {
+                      navigator.clipboard.writeText(order.pix_qr_code!);
+                      toast.success("Código copiado");
+                    }}
+                  >
                     <Copy className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
             )}
             {order.pix_expires_at && (
-              <p className="text-xs text-muted-foreground text-center">
-                Expira em {new Date(order.pix_expires_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
+              <p className="text-[10px] text-ink/40 font-bold uppercase text-center tracking-widest">
+                Expira às {new Date(order.pix_expires_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
               </p>
             )}
           </Card>
         )}
 
-        <Card className="p-5 space-y-3">
-          <div className="flex items-center justify-between">
-            <p className="font-semibold">Status do pedido</p>
-            <Badge variant="secondary">{STATUS_LABELS[order.status] ?? order.status}</Badge>
+        <Card className="p-5 space-y-4 shadow-brutal border-2 border-ink">
+          <div className="flex items-center justify-between border-b-2 border-ink/5 pb-3">
+            <p className="font-display text-sm uppercase italic text-ink/70">Status</p>
+            <Badge className="bg-brand-orange text-ink border-2 border-ink shadow-[2px_2px_0_0_oklch(0.12_0.025_25)] text-[10px] uppercase font-bold px-2 py-1 tracking-wider">
+              {STATUS_LABELS[order.status] ?? order.status}
+            </Badge>
           </div>
           {order.estimated_minutes && (
-            <p className="text-sm text-muted-foreground flex items-center gap-1.5">
-              <Clock className="h-4 w-4" /> Tempo estimado: {order.estimated_minutes} min
-            </p>
+            <div className="flex items-center gap-3 p-3 bg-brand-amber/10 border-2 border-brand-amber/30 rounded-xl">
+              <Clock className="h-5 w-5 text-brand-amber shrink-0" />
+              <div>
+                <p className="text-[10px] font-bold uppercase text-brand-amber/70 leading-none">Previsão</p>
+                <p className="text-sm font-display italic text-ink">{order.estimated_minutes} minutos</p>
+              </div>
+            </div>
           )}
-          <p className="text-xs text-muted-foreground">A página atualiza sozinha.</p>
+          <div className="pt-2">
+            <div className="w-full bg-ink/5 h-2 rounded-full overflow-hidden">
+               <div
+                 className="h-full bg-gradient-sunset animate-shimmer bg-[length:200%_100%]"
+                 style={{
+                   width: order.status === 'pending' ? '15%' :
+                          order.status === 'confirmed' ? '30%' :
+                          order.status === 'preparing' ? '50%' :
+                          order.status === 'ready' ? '80%' :
+                          order.status === 'delivered' ? '100%' : '5%'
+                 }}
+               />
+            </div>
+          </div>
+          <p className="text-[9px] text-ink/30 font-bold uppercase text-center tracking-[0.2em]">O status é atualizado em tempo real</p>
         </Card>
       </div>
     </div>
