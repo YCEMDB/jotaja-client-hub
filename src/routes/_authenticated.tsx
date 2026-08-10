@@ -200,7 +200,7 @@ function TopBar({
           {groupLabel}
         </span>
         <ChevronRight className="hidden sm:inline h-3.5 w-3.5 text-ink/30 shrink-0" />
-        <span className="font-display text-base md:text-lg text-ink truncate">
+        <span className="font-display text-base md:text-xl italic uppercase tracking-tight text-ink truncate drop-shadow-sm">
           {current?.label ?? "Painel"}
         </span>
       </nav>
