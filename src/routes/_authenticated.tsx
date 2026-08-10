@@ -207,11 +207,11 @@ function TopBar({
 
       {/* User menu */}
       <DropdownMenu>
-        <DropdownMenuTrigger className="flex items-center gap-2 rounded-lg border-2 border-ink/15 hover:border-ink/40 hover:bg-ink/5 pl-1 pr-2 md:pr-3 py-1 transition-colors">
-          <div className="h-7 w-7 grid place-items-center rounded-md bg-ink text-background font-bold text-sm">
+        <DropdownMenuTrigger className="flex items-center gap-2 rounded-xl border-2 border-ink bg-background hover:bg-ink/5 pl-1.5 pr-2 md:pr-4 py-1.5 transition-all shadow-[2px_2px_0_0_oklch(0.12_0.025_25)] active:shadow-none active:translate-x-0.5 active:translate-y-0.5">
+          <div className="h-8 w-8 grid place-items-center rounded-lg bg-ink text-background font-display italic text-base border border-ink/20">
             {initial}
           </div>
-          <span className="hidden md:inline text-xs font-bold text-ink/70 max-w-[160px] truncate">
+          <span className="hidden md:inline text-xs font-bold uppercase tracking-widest text-ink/70 max-w-[160px] truncate">
             {userEmail}
           </span>
         </DropdownMenuTrigger>
