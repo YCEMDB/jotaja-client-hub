@@ -6338,7 +6338,21 @@ export type Database = {
           position: number
         }[]
       }
-      get_public_order: { Args: { p_id: string }; Returns: Json }
+      get_public_order: {
+        Args: { p_order_id: string }
+        Returns: {
+          created_at: string
+          customer_name: string
+          id: string
+          payment_status: Database["public"]["Enums"]["payment_status"]
+          pix_expires_at: string
+          pix_qr_code: string
+          pix_qr_code_base64: string
+          restaurant_id: string
+          status: Database["public"]["Enums"]["order_status"]
+          total: number
+        }[]
+      }
       get_public_products: {
         Args: { p_slug: string }
         Returns: {
