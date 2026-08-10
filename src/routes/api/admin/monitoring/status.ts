@@ -5,9 +5,13 @@ import { FinancialMonitorService } from "@/lib/monitoring/financial-monitor.serv
 export const Route = createFileRoute('/api/admin/monitoring/status')({
   server: {
     handlers: {
-      GET: async ({ request }) => {
-        // SuperAdmin check would normally happen here or via middleware
-        // For brevity in this phase, assuming auth is handled by gateway/middleware
+      GET: async ({ request, context }) => {
+        // P0.5: Force authentication in API routes
+        const authHeader = request.headers.get('Authorization');
+        if (!authHeader) {
+          return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
+        }
+
         
         try {
           const { data: providers } = await (supabaseAdmin.rpc as any)('get_providers_health_status');
