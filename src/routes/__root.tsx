@@ -167,7 +167,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body data-optimized-for="Load the security issues from the scan results and fix the selected issues.">
+      <body data-optimized-for="explique">
         {children}
         <Scripts />
       </body>
