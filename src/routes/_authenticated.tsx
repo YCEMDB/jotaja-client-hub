@@ -313,9 +313,9 @@ function AuthLayout() {
 
       {/* Mobile drawer */}
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-        <SheetContent side="left" className="p-0 w-72 bg-ink text-background border-r-2 border-ink [&>button]:text-background">
-          <SheetTitle className="sr-only">Menu</SheetTitle>
-          <div className="flex flex-col h-full relative">
+        <SheetContent side="left" className="p-0 w-[280px] sm:w-80 bg-ink text-background border-r-4 border-ink [&>button]:text-background shadow-2xl">
+          <SheetTitle className="sr-only">Menu Administrativo</SheetTitle>
+          <div className="flex flex-col h-full relative overflow-hidden">
             <SidebarBody
               collapsed={false}
               isSuperAdmin={isSuperAdmin}
