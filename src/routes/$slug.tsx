@@ -442,23 +442,31 @@ function ProductSheet({ product, onClose, onAdd, brand }: {
   const price = Number(product.promo_price ?? product.price);
   return (
     <Dialog open={!!product} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-lg p-0 overflow-hidden">
-        {product.image_url && (
-          <img src={product.image_url} alt={product.name} className="w-full h-56 object-cover" />
+      <DialogContent className="max-w-lg w-[95vw] sm:w-full p-0 overflow-hidden rounded-2xl sm:rounded-3xl border-4 border-ink shadow-brutal-lg">
+        {product.image_url ? (
+          <img src={product.image_url} alt={product.name} className="w-full h-48 sm:h-64 object-cover border-b-2 border-ink" />
+        ) : (
+          <div className="w-full h-32 sm:h-48 bg-muted border-b-2 border-ink grid place-items-center">
+             <ImageIcon className="h-10 w-10 text-ink/20" />
+          </div>
         )}
-        <div className="p-6 space-y-4">
-          <DialogHeader>
-            <DialogTitle>{product.name}</DialogTitle>
+        <div className="p-4 sm:p-6 space-y-4">
+          <DialogHeader className="text-left">
+            <DialogTitle className="font-display text-xl sm:text-2xl italic uppercase tracking-tight">{product.name}</DialogTitle>
           </DialogHeader>
-          {product.description && <p className="text-sm text-muted-foreground">{product.description}</p>}
-          <p className="text-2xl font-bold" style={{ color: brand }}>R$ {price.toFixed(2)}</p>
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-2 border rounded-full px-2">
-              <Button size="icon" variant="ghost" onClick={() => setQty(Math.max(1, qty - 1))}><Minus className="h-4 w-4" /></Button>
-              <span className="w-8 text-center font-semibold">{qty}</span>
-              <Button size="icon" variant="ghost" onClick={() => setQty(qty + 1)}><Plus className="h-4 w-4" /></Button>
+          {product.description && <p className="text-sm sm:text-base text-ink/70 leading-relaxed">{product.description}</p>}
+          <p className="text-2xl sm:text-3xl font-display italic text-brand-magenta">R$ {price.toFixed(2)}</p>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pt-2">
+            <div className="flex items-center justify-center gap-4 border-2 border-ink rounded-xl px-4 py-2 bg-background shadow-[3px_3px_0_0_oklch(0.12_0.025_25)]">
+              <Button size="icon" variant="ghost" className="h-8 w-8 hover:bg-ink/5" onClick={() => setQty(Math.max(1, qty - 1))}><Minus className="h-4 w-4" /></Button>
+              <span className="w-8 text-center font-display text-lg">{qty}</span>
+              <Button size="icon" variant="ghost" className="h-8 w-8 hover:bg-ink/5" onClick={() => setQty(qty + 1)}><Plus className="h-4 w-4" /></Button>
             </div>
-            <Button className="flex-1" size="lg" style={{ background: brand }} onClick={() => onAdd(product, qty)}>
+            <Button
+              className="flex-1 h-14 font-display text-base uppercase tracking-wider rounded-xl bg-ink text-background hover:bg-ink/90 border-2 border-ink shadow-[4px_4px_0_0_oklch(0.69_0.22_38)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all"
+              size="lg"
+              onClick={() => onAdd(product, qty)}
+            >
               Adicionar · R$ {(price * qty).toFixed(2)}
             </Button>
           </div>
