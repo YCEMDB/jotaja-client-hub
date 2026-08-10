@@ -1058,32 +1058,38 @@ function TrackOrderDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle>Acompanhar pedido</DialogTitle>
+      <DialogContent className="max-w-md w-[95vw] p-0 overflow-hidden rounded-2xl sm:rounded-3xl border-4 border-ink shadow-brutal-lg">
+        <DialogHeader className="p-4 sm:p-6 border-b-2 border-ink text-left bg-brand-violet/5">
+          <DialogTitle className="font-display text-xl sm:text-2xl uppercase italic tracking-tight">Acompanhar Pedido</DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
-          <div>
-            <Label>Seu telefone (WhatsApp)</Label>
-            <div className="flex gap-2 mt-1.5">
+        <div className="p-4 sm:p-6 space-y-6">
+          <div className="space-y-1.5">
+            <Label className="text-[10px] font-bold uppercase tracking-[0.2em] text-ink/40 ml-1">Seu Telefone (WhatsApp)</Label>
+            <div className="flex gap-2">
               <Input
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="(11) 99999-9999"
                 onKeyDown={(e) => { if (e.key === "Enter") search(); }}
+                className="h-12 rounded-xl border-2 border-ink/10 focus:border-ink transition-all"
               />
-              <Button onClick={search} disabled={loading} style={{ background: brand, color: "white" }}>
-                <Search className="h-4 w-4" />
+              <Button
+                onClick={search}
+                disabled={loading}
+                className="h-12 w-12 bg-brand-violet text-background border-2 border-ink shadow-[2px_2px_0_0_oklch(0.12_0.025_25)] active:shadow-none active:translate-x-0.5 active:translate-y-0.5 transition-all"
+              >
+                <Search className="h-5 w-5" />
               </Button>
             </div>
           </div>
 
           {orders !== null && (
-            <div className="space-y-2 max-h-[55vh] overflow-y-auto">
+            <div className="space-y-3 max-h-[50dvh] overflow-y-auto pr-1 scrollbar-hide">
               {orders.length === 0 ? (
-                <p className="text-sm text-muted-foreground text-center py-6">
-                  Nenhum pedido encontrado para este telefone.
-                </p>
+                <div className="text-center py-10 space-y-2 bg-ink/5 rounded-2xl border-2 border-dashed border-ink/10">
+                  <p className="font-display text-sm uppercase italic text-ink/40">Nenhum pedido encontrado</p>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-ink/20">Verifique o número informado</p>
+                </div>
               ) : (
                 orders.map((o) => (
                   <button
@@ -1092,15 +1098,17 @@ function TrackOrderDialog({
                       onOpenChange(false);
                       navigate({ to: "/pedido/$orderId", params: { orderId: o.id } });
                     }}
-                    className="w-full text-left border rounded-lg p-3 hover:bg-muted/50 transition"
+                    className="w-full text-left border-2 border-ink rounded-xl p-4 bg-background shadow-[3px_3px_0_0_oklch(0.12_0.025_25)] hover:bg-ink/5 active:shadow-none active:translate-x-0.5 active:translate-y-0.5 transition-all group"
                   >
-                    <div className="flex items-center justify-between">
-                      <span className="font-semibold">Pedido #{o.order_number}</span>
-                      <Badge variant="secondary">{STATUS_LABEL[o.status] ?? o.status}</Badge>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-display text-base italic uppercase text-ink group-hover:text-brand-violet transition-colors">#{o.order_number}</span>
+                      <Badge className="bg-ink text-background border-2 border-ink text-[9px] font-bold uppercase tracking-widest px-2 py-0.5">
+                         {STATUS_LABEL[o.status] ?? o.status}
+                      </Badge>
                     </div>
-                    <div className="flex items-center justify-between mt-1 text-sm text-muted-foreground">
-                      <span>{new Date(o.created_at).toLocaleString("pt-BR")}</span>
-                      <span className="font-medium text-foreground">R$ {Number(o.total).toFixed(2)}</span>
+                    <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-ink/40">
+                      <span>{new Date(o.created_at).toLocaleDateString("pt-BR")} · {new Date(o.created_at).toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit' })}</span>
+                      <span className="text-ink text-xs italic">R$ {Number(o.total).toFixed(2)}</span>
                     </div>
                   </button>
                 ))
