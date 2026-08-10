@@ -3074,6 +3074,7 @@ export type Database = {
           estimated_minutes: number | null
           id: string
           is_test_order: boolean
+          metadata: Json | null
           mp_payment_id: string | null
           notes: string | null
           order_number: number
@@ -3117,6 +3118,7 @@ export type Database = {
           estimated_minutes?: number | null
           id?: string
           is_test_order?: boolean
+          metadata?: Json | null
           mp_payment_id?: string | null
           notes?: string | null
           order_number?: number
@@ -3160,6 +3162,7 @@ export type Database = {
           estimated_minutes?: number | null
           id?: string
           is_test_order?: boolean
+          metadata?: Json | null
           mp_payment_id?: string | null
           notes?: string | null
           order_number?: number
