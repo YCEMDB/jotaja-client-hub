@@ -327,7 +327,7 @@ function LojaPage() {
         <Sheet>
           <SheetTrigger asChild>
             <button
-              className="fixed bottom-5 left-1/2 -translate-x-1/2 px-5 py-3.5 rounded-xl bg-brand-orange text-ink border-2 border-ink shadow-[5px_5px_0_0_oklch(0.15_0.02_30)] hover:shadow-[7px_7px_0_0_oklch(0.62_0.24_0)] hover:-translate-x-[calc(50%+2px)] hover:-translate-y-0.5 transition-all flex items-center gap-3 font-display z-20 text-sm uppercase tracking-wider"
+              className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90vw] max-w-sm px-5 py-4 rounded-2xl bg-brand-orange text-ink border-4 border-ink shadow-[6px_6px_0_0_oklch(0.12_0.025_25)] active:shadow-none active:translate-x-[calc(-50%+3px)] active:translate-y-1 transition-all flex items-center justify-between gap-3 font-display z-40 text-sm uppercase tracking-wider"
             >
               <ShoppingBag className="h-5 w-5" />
               <span>{itemCount} {itemCount === 1 ? "item" : "itens"}</span>
