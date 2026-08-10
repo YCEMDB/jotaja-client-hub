@@ -8,7 +8,7 @@ export const Route = createFileRoute("/api/public/mercadopago/callback")({
         const url = new URL(request.url);
         const state = url.searchParams.get("state");
         const code = url.searchParams.get("code");
-        const siteBase = process.env.PUBLIC_SITE_URL ?? "https://comandahub.online";
+        const siteBase = process.env.PUBLIC_SITE_URL ?? "https://mesivo.com.br";
 
         if (!state || !code) return redirectWithError(siteBase, "invalid_params");
 

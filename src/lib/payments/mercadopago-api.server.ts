@@ -14,7 +14,7 @@ function envCreds() {
 }
 
 export function siteUrl(): string {
-  return process.env.PUBLIC_SITE_URL ?? "https://comandahub.online";
+  return process.env.PUBLIC_SITE_URL ?? "https://mesivo.com.br";
 }
 
 export function mercadopagoRedirectUri(): string {

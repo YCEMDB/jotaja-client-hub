@@ -1,6 +1,6 @@
 /* TEAM */
 Plataforma: Mesivo
-Site: https://comandahub.online
+Site: https://mesivo.com.br
 
 /* SITE */
 Marca: Mesivo — Gestão completa para restaurantes

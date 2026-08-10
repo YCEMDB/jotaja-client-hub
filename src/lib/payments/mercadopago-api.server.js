@@ -6,7 +6,7 @@ function envCreds() {
     return cid && sec ? { clientId: cid, clientSecret: sec } : null;
 }
 export function siteUrl() {
-    return process.env.PUBLIC_SITE_URL ?? "https://comandahub.online";
+    return process.env.PUBLIC_SITE_URL ?? "https://mesivo.com.br";
 }
 export function mercadopagoRedirectUri() {
     return `${siteUrl()}/api/public/mercadopago/callback`;

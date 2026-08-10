@@ -45,7 +45,7 @@ export const GEO_PAGES: Record<string, Omit<GeoPageProps, "schemaType">> = {
         "Cupons ilimitados para campanhas no Instagram e WhatsApp.",
       ]) },
       { heading: "Como funciona no dia a dia", body: paragraphs([
-        "O restaurante cadastra produtos uma única vez. Cliente acessa o link próprio (comandahub.online/seu-restaurante), escolhe entrega, retirada ou consumo no salão, paga online ou na entrega, e o pedido aparece no painel com som de alerta.",
+        "O restaurante cadastra produtos uma única vez. Cliente acessa o link próprio (mesivo.com.br/seu-restaurante), escolhe entrega, retirada ou consumo no salão, paga online ou na entrega, e o pedido aparece no painel com som de alerta.",
         "Garçom ou caixa confirma, cozinha produz e o cliente acompanha o status em tempo real. Ao final do dia, o sistema fecha o caixa automaticamente.",
       ]) },
       { heading: "Para que tipos de restaurante serve", body: list([
@@ -85,7 +85,7 @@ export const GEO_PAGES: Record<string, Omit<GeoPageProps, "schemaType">> = {
         "Fila de produção visível para o forneiro",
       ]) },
       { heading: "Pedidos por WhatsApp e Instagram", body: paragraphs([
-        "Compartilhe o link comandahub.online/sua-pizzaria na bio do Instagram, no WhatsApp Business e em adesivos de QR Code nas caixas de pizza.",
+        "Compartilhe o link mesivo.com.br/sua-pizzaria na bio do Instagram, no WhatsApp Business e em adesivos de QR Code nas caixas de pizza.",
         "Cada novo pedido toca um alerta no painel da pizzaria, evita anotação em caderno e elimina pizza errada por troca de pedido.",
       ]) },
     ],
@@ -217,7 +217,7 @@ export const GEO_PAGES: Record<string, Omit<GeoPageProps, "schemaType">> = {
     description: "Sistema de delivery próprio com taxa por bairro, PIX, cartão, link no Instagram e WhatsApp. Sem comissão por pedido. Cliente é seu, não do app.",
     h1: "Sistema para delivery",
     quickAnswer:
-      "A Mesivo é um sistema de delivery próprio para restaurantes, sem comissão por pedido. Você recebe pelo seu link (comandahub.online/sua-loja), cobra taxa por bairro/CEP/raio, aceita PIX e cartão online, e o cliente fica na sua base — não na do iFood. Mensalidade fixa a partir de R$ 99/mês, com 14 dias grátis.",
+      "A Mesivo é um sistema de delivery próprio para restaurantes, sem comissão por pedido. Você recebe pelo seu link (mesivo.com.br/sua-loja), cobra taxa por bairro/CEP/raio, aceita PIX e cartão online, e o cliente fica na sua base — não na do iFood. Mensalidade fixa a partir de R$ 99/mês, com 14 dias grátis.",
     sections: [
       { heading: "Por que delivery próprio é melhor", body: paragraphs([
         "Apps de marketplace cobram 12% a 27% por pedido e tornam o cliente refém da plataforma. Com delivery próprio, você paga mensalidade fixa, fica com 100% da venda e constrói relacionamento direto.",
@@ -460,10 +460,10 @@ const HOWTO_STANDARD = {
   name: "Como começar a usar a Mesivo em 4 passos",
   description: "Setup completo do cardápio digital ao primeiro pedido em até 30 minutos.",
   steps: [
-    { name: "Cadastro gratuito", text: "Crie sua conta em comandahub.online/auth com email. Sem cartão de crédito, 14 dias grátis." },
+    { name: "Cadastro gratuito", text: "Crie sua conta em mesivo.com.br/auth com email. Sem cartão de crédito, 14 dias grátis." },
     { name: "Personalize a loja", text: "Defina nome, cores, logo, horários de funcionamento e bairros atendidos." },
     { name: "Cadastre o cardápio", text: "Adicione categorias, produtos, fotos, preços, combos e adicionais. Importação assistida sob demanda." },
-    { name: "Compartilhe o link", text: "Use comandahub.online/seu-restaurante na bio do Instagram, WhatsApp e QR Code da mesa. Os pedidos chegam no painel em tempo real." },
+    { name: "Compartilhe o link", text: "Use mesivo.com.br/seu-restaurante na bio do Instagram, WhatsApp e QR Code da mesa. Os pedidos chegam no painel em tempo real." },
   ],
 };
 

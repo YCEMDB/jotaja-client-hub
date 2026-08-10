@@ -10,4 +10,4 @@ Disallow: /reset-password
 Disallow: /pedido
 Disallow: /motoboy
 
-Sitemap: https://comandahub.online/sitemap.xml
+Sitemap: https://mesivo.com.br/sitemap.xml

@@ -5,6 +5,8 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 
 const PLATFORM_HOSTS = [
+  "mesivo.com.br",
+  "www.mesivo.com.br",
   "comandahub.online",
   "www.comandahub.online",
   "localhost",

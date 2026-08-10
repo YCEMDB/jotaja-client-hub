@@ -14,7 +14,7 @@ interface Props {
 const RestaurantWelcomeEmail = ({
   restaurantName = 'Seu restaurante',
   ownerName,
-  loginUrl = 'https://comandahub.online/auth',
+  loginUrl = 'https://mesivo.com.br/auth',
   email = '',
   temporaryPassword = '',
   isReset = false,
@@ -51,7 +51,7 @@ const RestaurantWelcomeEmail = ({
 
         <Text style={footer}>
           Precisa de ajuda? Responda este e-mail ou acesse o suporte em{' '}
-          <a href="https://comandahub.online/suporte" style={link}>comandahub.online/suporte</a>.
+          <a href="https://mesivo.com.br/suporte" style={link}>mesivo.com.br/suporte</a>.
         </Text>
       </Container>
     </Body>
@@ -68,7 +68,7 @@ export const template = {
   previewData: {
     restaurantName: 'Sabor da Casa',
     ownerName: 'Maria',
-    loginUrl: 'https://comandahub.online/auth',
+    loginUrl: 'https://mesivo.com.br/auth',
     email: 'dono@exemplo.com',
     temporaryPassword: 'Aa9XzPq2!9',
     isReset: false,

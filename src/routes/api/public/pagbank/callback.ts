@@ -15,7 +15,7 @@ export const Route = createFileRoute("/api/public/pagbank/callback")({
         const state = url.searchParams.get("state");
         const code = url.searchParams.get("code");
         const errorParam = url.searchParams.get("error");
-        const siteBase = process.env.PUBLIC_SITE_URL ?? "https://comandahub.online";
+        const siteBase = process.env.PUBLIC_SITE_URL ?? "https://mesivo.com.br";
 
         if (!state) return redirectWithError(siteBase, "oauth_state_not_found");
         if (errorParam) return redirectWithError(siteBase, "pagbank_connection_failed");

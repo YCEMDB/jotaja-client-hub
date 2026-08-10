@@ -72,7 +72,7 @@ export function CreateTenantDialog({
           templateData: {
             restaurantName: form.restaurant_name,
             ownerName: form.owner_full_name,
-            loginUrl: "https://comandahub.online/auth",
+            loginUrl: "https://mesivo.com.br/auth",
             email: form.owner_email,
             temporaryPassword: r.temporary_password,
             isReset: false,
