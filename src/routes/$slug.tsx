@@ -394,6 +394,7 @@ function LojaPage() {
                 </Button>
               </div>
             </SheetFooter>
+            </div>
           </SheetContent>
         </Sheet>
       )}
