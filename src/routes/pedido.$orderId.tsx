@@ -115,18 +115,18 @@ function OrderTrackPage() {
   const showPix = order.payment === "pix" && !paid;
 
   return (
-    <div className="min-h-dvh bg-muted/30 py-10 px-4">
+    <div className="min-h-dvh bg-muted/30 py-6 sm:py-10 px-4">
       <div className="max-w-md mx-auto space-y-4">
         <div className="text-center">
           <p className="text-muted-foreground text-sm">Pedido #{order.order_number}</p>
-          <h1 className="text-2xl font-bold">Olá, {order.customer_name.split(" ")[0]}!</h1>
+          <h1 className="font-display text-3xl sm:text-4xl italic uppercase tracking-tight text-ink">Olá, {order.customer_name.split(" ")[0]}!</h1>
         </div>
 
         {paid && (
-          <Card className="p-5 text-center bg-green-50 border-green-200">
+          <Card className="p-5 text-center bg-green-50 border-green-200 shadow-brutal border-2 border-ink">
             <CheckCircle2 className="h-10 w-10 text-green-600 mx-auto mb-2" />
-            <p className="font-semibold text-green-900">Pagamento confirmado!</p>
-            <p className="text-sm text-green-700">Já pode acompanhar o preparo abaixo.</p>
+            <p className="font-display text-lg italic uppercase text-green-900">Pagamento confirmado!</p>
+            <p className="text-sm text-green-700 font-medium">Já pode acompanhar o preparo abaixo.</p>
           </Card>
         )}
 
