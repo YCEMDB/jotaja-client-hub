@@ -104,7 +104,7 @@ export const createTestMercadoPagoPix = createServerFn({ method: "POST" })
 
     const { createPixCharge } = await import("./mercadopago-api.server");
     const idempotencyKey = `test-mp-${order.id}`;
-    const notificationUrl = `${process.env.PUBLIC_SITE_URL ?? "https://comandahub.online"}/api/public/mercadopago-webhook`;
+    const notificationUrl = `${process.env.PUBLIC_SITE_URL ?? "https://mesivo.com.br"}/api/public/mercadopago-webhook`;
     
     const res = await createPixCharge({
       accessToken: mpToken,
@@ -221,7 +221,7 @@ export const mercadopagoCreateRealPix = createServerFn({ method: "POST" })
       .maybeSingle();
 
     const idempotencyKey = `prod-mp-${order.id}`;
-    const notificationUrl = `${process.env.PUBLIC_SITE_URL ?? "https://comandahub.online"}/api/public/mercadopago-webhook`;
+    const notificationUrl = `${process.env.PUBLIC_SITE_URL ?? "https://mesivo.com.br"}/api/public/mercadopago-webhook`;
     
     // 4. Chamar API real via Adapter/API Server
     const res = await createPixCharge({
@@ -316,7 +316,7 @@ export const mercadopagoCreateRealCard = createServerFn({ method: "POST" })
       .maybeSingle();
 
     const idempotencyKey = `prod-mp-card-${order.id}`;
-    const notificationUrl = `${process.env.PUBLIC_SITE_URL ?? "https://comandahub.online"}/api/public/mercadopago-webhook`;
+    const notificationUrl = `${process.env.PUBLIC_SITE_URL ?? "https://mesivo.com.br"}/api/public/mercadopago-webhook`;
     
     // 4. Chamar API real via Adapter/API Server
     const res = await createCardCharge({

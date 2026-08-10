@@ -18,8 +18,8 @@ export const Route = createFileRoute("/_super/super/configuracoes")({
 
 const SETTINGS_KEYS = [
   { key: "support_whatsapp", label: "WhatsApp de suporte", placeholder: "5527992877008" },
-  { key: "support_email", label: "E-mail de suporte", placeholder: "contato@comandahub.online" },
-  { key: "public_url", label: "URL pública", placeholder: "https://comandahub.online" },
+  { key: "support_email", label: "E-mail de suporte", placeholder: "contato@mesivo.com.br" },
+  { key: "public_url", label: "URL pública", placeholder: "https://mesivo.com.br" },
   { key: "company_name", label: "Razão social", placeholder: "Mesivo Tecnologia" },
   { key: "company_cnpj", label: "CNPJ", placeholder: "00.000.000/0001-00" },
 ] as const;

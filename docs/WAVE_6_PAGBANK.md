@@ -164,7 +164,7 @@ recebido = header x-authenticity-token (fallback x-signature)
 
 | Item | Classificação |
 | --- | --- |
-| PagBank Connect application creation | **SANDBOX PASS** (HTTP 201 no `POST /oauth2/application` do ambiente sandbox — logo `https://comandahub.online/pagbank-logo.png`, callback `https://comandahub.online/api/public/pagbank/callback`) |
+| PagBank Connect application creation | **SANDBOX PASS** (HTTP 201 no `POST /oauth2/application` do ambiente sandbox — logo `https://mesivo.com.br/pagbank-logo.png`, callback `https://mesivo.com.br/api/public/pagbank/callback`) |
 | OAuth Sandbox E2E | **DEFERRED** — requer login interativo em conta vendedora Sandbox no PagBank |
 | Pix creation Sandbox E2E | **DEFERRED** — depende de OAuth concluído |
 | Webhook Sandbox E2E | **DEFERRED** — depende de OAuth + cobrança real (assinatura SHA-256 já implementada e coberta por teste estrutural) |
@@ -207,7 +207,7 @@ descrito nas Seções 3–8.
 - Homologação da aplicação PagBank Connect (produção).
 - Conta vendedora PagBank Sandbox para o E2E interativo.
 - Chave do vault `pagbank_token_encryption_key` provisionada.
-- `PUBLIC_SITE_URL` já configurado (default `https://comandahub.online`).
+- `PUBLIC_SITE_URL` já configurado (default `https://mesivo.com.br`).
 
 Fora do escopo desta entrega (não implementado): split, cartão, custódia, comissão automática.
 

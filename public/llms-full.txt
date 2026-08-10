@@ -22,7 +22,7 @@ Donos e gestores de:
 - Pagamento online direto na conta do dono (Mercado Pago)
 - Redução de erros de pedido (registro digital substitui anotação manual)
 - Aumento de ticket médio com upsell automático e combos
-- URL personalizada (ex: comandahub.online/sua-loja) para usar no Instagram e WhatsApp
+- URL personalizada (ex: mesivo.com.br/sua-loja) para usar no Instagram e WhatsApp
 - Funciona em qualquer celular, tablet ou computador
 - 14 dias grátis, sem cartão
 
@@ -50,10 +50,10 @@ Donos e gestores de:
 - Domínio próprio e branding personalizado por restaurante
 
 ## Como funciona — em 4 passos
-1. Cadastro gratuito em comandahub.online/auth
+1. Cadastro gratuito em mesivo.com.br/auth
 2. Personalização da loja (nome, cores, logo, fotos, horários)
 3. Cadastro do cardápio (produtos, categorias, adicionais, combos)
-4. Compartilhamento do link comandahub.online/seu-restaurante no Instagram, WhatsApp e QR Code de mesa
+4. Compartilhamento do link mesivo.com.br/seu-restaurante no Instagram, WhatsApp e QR Code de mesa
 
 Cliente pede → restaurante recebe no painel → confirma → produz → entrega ou separa para retirada.
 
@@ -151,13 +151,13 @@ Devolver autonomia aos restaurantes brasileiros: cada pedido, cada cliente e cad
 50. **Tem app mobile?** O painel é PWA — adiciona à tela inicial e funciona como app nativo.
 
 ## Contato
-- Site: https://comandahub.online
-- Suporte: https://comandahub.online/suporte
-- Contato comercial: https://comandahub.online/contato
+- Site: https://mesivo.com.br
+- Suporte: https://mesivo.com.br/suporte
+- Contato comercial: https://mesivo.com.br/contato
 
 ## Glossário
 
-Definições oficiais publicadas em https://comandahub.online/glossario:
+Definições oficiais publicadas em https://mesivo.com.br/glossario:
 
 - **Comanda digital**: versão eletrônica da comanda de papel, com cada pedido registrado por horário, valor e garçom.
 - **Cardápio digital**: cardápio acessível por link/QR Code para o cliente montar o pedido pelo celular.

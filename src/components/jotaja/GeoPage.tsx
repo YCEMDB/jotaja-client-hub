@@ -54,7 +54,7 @@ export interface GeoPageProps {
   dateModified?: string; // YYYY-MM-DD
 }
 
-const BASE = "https://comandahub.online";
+const BASE = "https://mesivo.com.br";
 const TODAY = new Date().toISOString().split("T")[0];
 const DEFAULT_PUBLISHED = "2024-06-01";
 

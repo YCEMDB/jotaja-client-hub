@@ -45,7 +45,7 @@ function EquipePage() {
           idempotencyKey: `admin-welcome-${r.user_id}`,
           templateData: {
             adminName: r.full_name,
-            loginUrl: "https://comandahub.online/auth",
+            loginUrl: "https://mesivo.com.br/auth",
             email: r.email,
             temporaryPassword: r.temporary_password,
           },

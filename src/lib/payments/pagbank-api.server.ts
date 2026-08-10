@@ -52,7 +52,7 @@ function envAuthToken(env: PagbankEnvironment): string | null {
 }
 
 export function siteUrl(): string {
-  return process.env.PUBLIC_SITE_URL ?? "https://comandahub.online";
+  return process.env.PUBLIC_SITE_URL ?? "https://mesivo.com.br";
 }
 
 export function pagbankRedirectUri(): string {
@@ -170,7 +170,7 @@ export async function createPixCharge(input: {
   const expiresAt = new Date(Date.now() + expiresInMinutes * 60_000);
   const body = {
     reference_id: input.referenceId,
-    customer: { name: "Cliente", email: "cliente@comandahub.online", tax_id: "12345678909" },
+    customer: { name: "Cliente", email: "cliente@mesivo.com.br", tax_id: "12345678909" },
     items: [
       {
         reference_id: input.referenceId,

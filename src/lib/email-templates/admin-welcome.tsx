@@ -11,7 +11,7 @@ interface Props {
 
 const AdminWelcomeEmail = ({
   adminName = 'parceiro',
-  loginUrl = 'https://comandahub.online/auth',
+  loginUrl = 'https://mesivo.com.br/auth',
   email = '',
   temporaryPassword = '',
 }: Props) => (
@@ -50,7 +50,7 @@ export const template = {
   displayName: 'Boas-vindas Super-Admin',
   previewData: {
     adminName: 'João',
-    loginUrl: 'https://comandahub.online/auth',
+    loginUrl: 'https://mesivo.com.br/auth',
     email: 'admin@exemplo.com',
     temporaryPassword: 'Aa9XzPq2!9',
   },

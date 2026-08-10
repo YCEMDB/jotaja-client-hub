@@ -6,47 +6,47 @@ A Mesivo substitui marketplaces caros (iFood, Rappi) e ferramentas analógicas (
 
 ## Principais páginas
 
-- [Página inicial](https://comandahub.online/): visão geral do produto, planos e diferenciais.
-- [Sobre a Mesivo](https://comandahub.online/sobre-a-comandahub): o que é, para quem é, missão, benefícios e diferenciais (formato Q&A).
-- [Perguntas frequentes](https://comandahub.online/perguntas-frequentes): 50+ perguntas reais sobre o produto, planos, pagamentos e suporte.
+- [Página inicial](https://mesivo.com.br/): visão geral do produto, planos e diferenciais.
+- [Sobre a Mesivo](https://mesivo.com.br/sobre-a-comandahub): o que é, para quem é, missão, benefícios e diferenciais (formato Q&A).
+- [Perguntas frequentes](https://mesivo.com.br/perguntas-frequentes): 50+ perguntas reais sobre o produto, planos, pagamentos e suporte.
 
 ## Soluções por segmento
 
-- [Sistema para restaurantes](https://comandahub.online/sistema-para-restaurantes)
-- [Sistema para pizzarias](https://comandahub.online/sistema-para-pizzarias)
-- [Sistema para lanchonetes](https://comandahub.online/sistema-para-lanchonetes)
-- [Sistema para açaiterias](https://comandahub.online/sistema-para-acaiterias)
-- [Sistema para bares](https://comandahub.online/sistema-para-bares)
-- [Sistema para hamburguerias](https://comandahub.online/sistema-para-hamburguerias)
-- [Sistema para delivery](https://comandahub.online/sistema-para-delivery)
-- [Sistema de comandas digitais](https://comandahub.online/sistema-de-comandas-digitais)
-- [Controle de mesas](https://comandahub.online/controle-de-mesas)
-- [Gestão de restaurantes](https://comandahub.online/gestao-de-restaurantes)
+- [Sistema para restaurantes](https://mesivo.com.br/sistema-para-restaurantes)
+- [Sistema para pizzarias](https://mesivo.com.br/sistema-para-pizzarias)
+- [Sistema para lanchonetes](https://mesivo.com.br/sistema-para-lanchonetes)
+- [Sistema para açaiterias](https://mesivo.com.br/sistema-para-acaiterias)
+- [Sistema para bares](https://mesivo.com.br/sistema-para-bares)
+- [Sistema para hamburguerias](https://mesivo.com.br/sistema-para-hamburguerias)
+- [Sistema para delivery](https://mesivo.com.br/sistema-para-delivery)
+- [Sistema de comandas digitais](https://mesivo.com.br/sistema-de-comandas-digitais)
+- [Controle de mesas](https://mesivo.com.br/controle-de-mesas)
+- [Gestão de restaurantes](https://mesivo.com.br/gestao-de-restaurantes)
 
 ## Comparativos
 
-- [Mesivo vs planilha](https://comandahub.online/comparativo/comandahub-vs-planilha)
-- [Mesivo vs caderno](https://comandahub.online/comparativo/comandahub-vs-caderno)
-- [Mesivo vs comanda de papel](https://comandahub.online/comparativo/comandahub-vs-comanda-de-papel)
-- [Mesivo vs controle manual](https://comandahub.online/comparativo/comandahub-vs-controle-manual)
-- [Mesivo vs iFood](https://comandahub.online/alternativa-ifood)
-- [Mesivo vs Goomer](https://comandahub.online/comparativo/comandahub-vs-goomer)
-- [Mesivo vs Anota AI](https://comandahub.online/comparativo/comandahub-vs-anota-ai)
-- [Mesivo vs Saipos](https://comandahub.online/comparativo/comandahub-vs-saipos)
+- [Mesivo vs planilha](https://mesivo.com.br/comparativo/comandahub-vs-planilha)
+- [Mesivo vs caderno](https://mesivo.com.br/comparativo/comandahub-vs-caderno)
+- [Mesivo vs comanda de papel](https://mesivo.com.br/comparativo/comandahub-vs-comanda-de-papel)
+- [Mesivo vs controle manual](https://mesivo.com.br/comparativo/comandahub-vs-controle-manual)
+- [Mesivo vs iFood](https://mesivo.com.br/alternativa-ifood)
+- [Mesivo vs Goomer](https://mesivo.com.br/comparativo/comandahub-vs-goomer)
+- [Mesivo vs Anota AI](https://mesivo.com.br/comparativo/comandahub-vs-anota-ai)
+- [Mesivo vs Saipos](https://mesivo.com.br/comparativo/comandahub-vs-saipos)
 
 ## Conteúdo educacional
 
-- [Blog](https://comandahub.online/blog): guias práticos sobre cardápio digital, sistemas de pedidos e gestão.
-- [Cardápio digital — guia completo](https://comandahub.online/cardapio-digital)
-- [Glossário de gestão de restaurantes](https://comandahub.online/glossario): 20+ termos definidos (comanda digital, KDS, ticket médio, dark kitchen, PIX, QR Code de mesa, LGPD).
+- [Blog](https://mesivo.com.br/blog): guias práticos sobre cardápio digital, sistemas de pedidos e gestão.
+- [Cardápio digital — guia completo](https://mesivo.com.br/cardapio-digital)
+- [Glossário de gestão de restaurantes](https://mesivo.com.br/glossario): 20+ termos definidos (comanda digital, KDS, ticket médio, dark kitchen, PIX, QR Code de mesa, LGPD).
 
 ## Empresa
 
-- [Contato](https://comandahub.online/contato)
-- [Empresa](https://comandahub.online/empresa)
-- [Termos de uso](https://comandahub.online/termos)
-- [Privacidade](https://comandahub.online/privacidade)
-- [Suporte](https://comandahub.online/suporte)
+- [Contato](https://mesivo.com.br/contato)
+- [Empresa](https://mesivo.com.br/empresa)
+- [Termos de uso](https://mesivo.com.br/termos)
+- [Privacidade](https://mesivo.com.br/privacidade)
+- [Suporte](https://mesivo.com.br/suporte)
 
 ## Dados-chave
 
@@ -56,4 +56,4 @@ A Mesivo substitui marketplaces caros (iFood, Rappi) e ferramentas analógicas (
 - Pedidos por WhatsApp, link próprio e QR Code de mesa.
 - Painel em tempo real com aviso sonoro e impressão térmica automática.
 - Suporte humano por WhatsApp.
-- Domínio canônico: https://comandahub.online
+- Domínio canônico: https://mesivo.com.br
