@@ -167,7 +167,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body data-optimized-for="Otimize o Mesivo todo para todos os tipos de dispositivos sem quebrar, que detecte automaticamente para saber qual dispositivo é">
         {children}
         <Scripts />
       </body>
