@@ -185,13 +185,13 @@ function TopBar({
   const initial = (userEmail?.[0] ?? "U").toUpperCase();
 
   return (
-    <header className="sticky top-0 z-30 flex items-center gap-3 px-4 sm:px-6 lg:px-8 xl:px-10 h-14 md:h-16 bg-background/80 backdrop-blur-xl border-b-2 border-ink/5">
+    <header className="sticky top-0 z-30 flex items-center gap-3 px-4 sm:px-6 lg:px-8 xl:px-10 h-14 md:h-16 bg-background/90 backdrop-blur-xl border-b-4 border-ink shadow-sm">
       <button
         onClick={onOpenMobile}
         aria-label="Abrir menu"
-        className="md:hidden h-9 w-9 grid place-items-center rounded-lg border-2 border-ink/20 hover:bg-ink/5"
+        className="md:hidden h-10 w-10 grid place-items-center rounded-xl border-2 border-ink bg-brand-orange text-ink shadow-[2px_2px_0_0_oklch(0.12_0.025_25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
       >
-        <Menu className="h-5 w-5 text-ink" />
+        <Menu className="h-6 w-6" />
       </button>
 
       {/* Breadcrumb */}
