@@ -91,17 +91,22 @@ function MesaPage() {
   const [commandId, setCommandId] = useState<string | null>(null);
 
   const loadAll = async () => {
-    const snap = await getPublicTableSession(token);
-    setSnapshot(snap);
-    if (snap?.table?.restaurant_slug) {
-      const [c, p] = await Promise.all([
-        supabase.rpc("get_public_categories", { p_slug: snap.table.restaurant_slug }),
-        supabase.rpc("get_public_products", { p_slug: snap.table.restaurant_slug }),
-      ]);
-      setCategories((c.data as Category[]) ?? []);
-      setProducts((p.data as Product[]) ?? []);
+    try {
+      const snap = await getPublicTableSession(token);
+      setSnapshot(snap);
+      if (snap?.table?.restaurant_slug) {
+        const [c, p] = await Promise.all([
+          supabase.rpc("get_public_categories", { p_slug: snap.table.restaurant_slug }),
+          supabase.rpc("get_public_products", { p_slug: snap.table.restaurant_slug }),
+        ]);
+        setCategories((c.data as Category[]) ?? []);
+        setProducts((p.data as Product[]) ?? []);
+      }
+    } catch {
+      setSnapshot(null);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => { void loadAll(); }, [token]);
