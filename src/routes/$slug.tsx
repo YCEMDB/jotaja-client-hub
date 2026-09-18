@@ -177,9 +177,8 @@ function LojaPage() {
     "--brand-accent": restaurant.accent_color ?? "#FFC627",
   } as React.CSSProperties;
 
-  // Fonte oficial: is_open_now (calculada no servidor a partir de open_mode + opening_hours + timezone).
-  const isForcedOpenSlug = ['sabor-da-casa', 'teste-mp-570e', 'demo', 'sabor-da-casa-demo'].includes(slug);
-  const openNow = isForcedOpenSlug || restaurant.is_open_now === true;
+  // Fonte oficial e única: is_open_now (calculada no servidor a partir de open_mode + opening_hours + timezone).
+  const openNow = restaurant.is_open_now === true;
 
   return (
     <div className="min-h-screen bg-background" style={themeStyle}>
